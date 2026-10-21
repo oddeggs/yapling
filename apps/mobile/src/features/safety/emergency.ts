@@ -61,5 +61,9 @@ export function deviceCountry(): string {
   }
 }
 
-/** Where "Find a support line" goes: a verified, free directory of helplines by country. */
+/**
+ * Where "Find a support line" goes: a verified, free directory of helplines by country. Vietnam has
+ * no national adult crisis line we could confirm (111 is the child protection line, not for
+ * adults), so the directory stands in until a verified one is chosen for each market.
+ */
 export const SUPPORT_LINES_URL = 'https://findahelpline.com';
