@@ -2,7 +2,7 @@ import { CallMetrics, type HeardWord } from '@yapling/contracts';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 
-import { fluencyDetail, fluencyMetrics, fluencyTrend } from './fluency';
+import { fluencyDetail, fluencyMetrics, fluencyTrend, longestRunSeconds } from './fluency';
 
 /** Words from `[text, startMs, endMs]` triples. */
 const words = (...triples: readonly [string, number, number][]): HeardWord[] =>
@@ -21,6 +21,7 @@ describe('fluency metrics', () => {
     // 60 words over 23.9 s: one run, no pauses.
     const detail = fluencyDetail([steady(60)]);
     expect(detail.flowSeconds).toBe(23.9);
+    expect(detail.longestRunSeconds).toBe(23.9);
     expect(detail.speakingSeconds).toBe(23.9);
     expect(detail.paceWpm).toBe(151);
     expect(detail.pausesPerMin).toBe(0);
@@ -35,8 +36,10 @@ describe('fluency metrics', () => {
       ['market.', 3_000, 3_600],
     );
     const detail = fluencyDetail([turn]);
-    expect(detail.flowSeconds).toBe(1.7);
-    expect(detail.meanRunSeconds).toBe(1.3);
+    // Runs of 1.7 s and 0.9 s: Flow is the mean length of run, the longest is kept apart.
+    expect(detail.flowSeconds).toBe(1.3);
+    expect(detail.longestRunSeconds).toBe(1.7);
+    expect(longestRunSeconds([turn])).toBe(1.7);
     expect(detail.pauses).toBe(2);
     expect(detail.speakingSeconds).toBe(3.6);
     expect(detail.paceWpm).toBe(83);
@@ -86,8 +89,8 @@ describe('fluency metrics', () => {
         const metrics = fluencyMetrics(turns);
         expect(CallMetrics.safeParse(metrics).success).toBe(true);
         const detail = fluencyDetail(turns);
-        expect(detail.flowSeconds).toBeLessThanOrEqual(detail.speakingSeconds + 0.1);
-        expect(detail.meanRunSeconds).toBeLessThanOrEqual(detail.flowSeconds + 0.1);
+        expect(detail.longestRunSeconds).toBeLessThanOrEqual(detail.speakingSeconds + 0.1);
+        expect(detail.flowSeconds).toBeLessThanOrEqual(detail.longestRunSeconds + 0.1);
       }),
     );
   });

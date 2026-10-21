@@ -10,8 +10,10 @@ import type { CallMetrics, HeardWord } from '@yapling/contracts';
  * - A turn's speaking time runs from its first word's start to its last word's end.
  * - A run is a stretch of words with no gap of 1 s or more between one word's end and the next
  *   word's start. A run's length is its first word's start to its last word's end.
- * - Flow (seconds): the longest run in the call. "48 s without stopping."
- * - Pace (words per minute): all words divided by all speaking time.
+ * - Flow (seconds): the mean length of run, the average run in the call (the research measure).
+ * - Longest run (seconds): the longest single run, for a "longest stretch" line on the post-call
+ *   card. Not part of the contract's metrics.
+ * - Pace (words per minute, not syllables): all words divided by all speaking time.
  * - Pauses (per minute): gaps of 0.7 s or more inside a sentence (the word before the gap doesn't
  *   end with . ? ! or …), divided by all speaking time.
  *
@@ -31,8 +33,8 @@ const FLOW_MAX = 3_600;
 const SENTENCE_END = /[.?!…]["'”’)]*$/;
 
 export interface FluencyDetail extends CallMetrics {
-  /** The mean run length in seconds (the research's "mean length of run"). */
-  readonly meanRunSeconds: number;
+  /** The longest single run in seconds ("the longest stretch"). */
+  readonly longestRunSeconds: number;
   readonly speakingSeconds: number;
   readonly words: number;
   readonly pauses: number;
@@ -69,19 +71,22 @@ export const fluencyDetail = (turns: readonly (readonly HeardWord[])[]): Fluency
     words += sorted.length;
   }
   const minutes = speakingMs / 60_000;
-  const flowSeconds = runs.length > 0 ? Math.max(...runs) / 1_000 : 0;
-  const meanRunSeconds =
-    runs.length > 0 ? runs.reduce((a, b) => a + b, 0) / runs.length / 1_000 : 0;
+  const flowSeconds = runs.length > 0 ? runs.reduce((a, b) => a + b, 0) / runs.length / 1_000 : 0;
+  const longestRunSeconds = runs.length > 0 ? Math.max(...runs) / 1_000 : 0;
   return {
     flowSeconds: Math.min(FLOW_MAX, round1(flowSeconds)),
     paceWpm: minutes > 0 ? Math.min(PACE_MAX, Math.round(words / minutes)) : 0,
     pausesPerMin: minutes > 0 ? Math.min(PAUSES_MAX, round1(pauses / minutes)) : 0,
-    meanRunSeconds: round1(meanRunSeconds),
+    longestRunSeconds: Math.min(FLOW_MAX, round1(longestRunSeconds)),
     speakingSeconds: round1(speakingMs / 1_000),
     words,
     pauses,
   };
 };
+
+/** The longest single run in seconds, for the post-call card's "longest stretch". */
+export const longestRunSeconds = (turns: readonly (readonly HeardWord[])[]): number =>
+  fluencyDetail(turns).longestRunSeconds;
 
 /** The metrics as the post-call summary carries them. */
 export const fluencyMetrics = (turns: readonly (readonly HeardWord[])[]): CallMetrics => {
