@@ -39,3 +39,16 @@ States built from existing components because the design does not show them.
 | Me sheet | Fixes you now own | Left out of the first-week sheet: no fix can graduate in the first week (five self-corrections over three days) |
 | Safety sheet | A country with no verified number | No call button; the emergency row asks the learner to call their local emergency number |
 | "Pip is an AI" sheet | Opened from the Me sheet | The C2 board's sheet, with the onboarding catalogue's lines (the voice line reads "Delete it any time") |
+| After the call | Feedback still being written | The summary arrives a few seconds after the call. The page shows "Xong rồi!", the roommate thinking and "Pip đang ghi lại…", with "Về hang" still available; it fills in when the server has the summary (polled, backing off) |
+| After the call | A call with no wins (a short one) | No win rows and no fix: "Pip rất vui được trò chuyện" and a kind line in their place. Never a miss |
+| After the call | One win only | The label reads "1 ĐIỀU LÀM TỐT" instead of "2 ĐIỀU LÀM TỐT" |
+| After the call | Phrases that leaf or bloom, or are only met | The phrases label follows the biggest move ("TỪ MẦM THÀNH LÁ", "ĐÃ NỞ HOA", "GÓI HẠT MỚI"); each tile shows its new stage and grows from its old object. More than four phrases wrap to a second row of four |
+| After the call | Bar line after week one | Only week one has boxes to unpack. Later calls say how many things are new in the burrow (newly sprouted phrases), or show the ring tag alone |
+| After the call | Fluency numbers | The first call shows none (nothing to compare with). Later calls show a small receipt from the post-call board (Flow, Pace, Pauses in Courier New), with "up from" only when Flow grew since the first call, highlighted mint instead of the board's green text (no dark-mint colour in the theme) |
+| After the call | Something follows (fix graduation, keepsake) | The button reads "Tiếp tục" instead of "Về hang", and goes to the graduation, then the keepsake, then the burrow |
+| After the call | A phrase in bloom | The bloom card from the phrase-lifecycle board ("NỞ HOA · CỦA RIÊNG BẠN", the bloom, sparkles) sits under the phrase tiles |
+| Fix graduation | Roommate pose | The board's Pip holds a book; `@yapling/art`'s critter has no props, so Pip stands proud without it |
+| Keepsake | Full ring with no can-do ticked that week | The certificate reads "fill a whole week with calls", signed by the roommate |
+| Keepsake | Several keepsakes from one call | Each is drawn and hung in turn; the ring header shows on the first only |
+| Keepsake | A can-do ticked mid-week (ring not full) | The can-do board's bar: track tag, "Thêm một điều bạn làm được", the count in that track; the frame hangs higher with no ring header |
+| Keepsake | Hanging it | "Treo lên tường" shows the "Đã treo trên tường hang" toast with the roommate's face and returns to the burrow, whose wall lists every earned keepsake |
