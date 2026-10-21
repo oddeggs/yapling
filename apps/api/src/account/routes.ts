@@ -5,6 +5,7 @@ import { requireSession, sessionRoutes, type SessionEnv } from '../auth';
 import { memoryRoutes } from '../memory';
 import { profileRoutes } from '../profile';
 import { progressRoutes } from '../progress';
+import { pushRoutes } from '../push';
 
 /** The call socket takes its session token in `hello`, so its upgrade request carries none. */
 const CALL_SOCKET_PATH = '/api/calls/socket';
@@ -33,6 +34,7 @@ export function accountRoutes(): Hono<SessionEnv> {
   routes.route('/', profileRoutes());
   routes.route('/', progressRoutes());
   routes.route('/', memoryRoutes());
+  routes.route('/', pushRoutes());
 
   return routes;
 }
