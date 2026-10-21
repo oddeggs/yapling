@@ -12,11 +12,18 @@ export default defineConfig(async () => {
     plugins: [
       cloudflareTest({
         wrangler: { configPath: './wrangler.jsonc', environment: 'dev' },
-        // A fresh auth secret per run: tests never share one with `.dev.vars` or a deployment.
+        // Fake secrets: tests never read `.dev.vars` or share a secret with a deployment. Provider
+        // calls go to the in-process fakes (`test/call/providers.ts`), so the keys are never sent.
         miniflare: {
           bindings: {
             TEST_MIGRATIONS: migrations,
             BETTER_AUTH_SECRET: `${randomUUID()}${randomUUID()}`,
+            ANTHROPIC_API_KEY: 'test-anthropic-key',
+            ELEVENLABS_API_KEY: 'test-elevenlabs-key',
+            // Empty is unset: the Apple key stays off whatever a local `.dev.vars` holds.
+            APPLE_TEAM_ID: '',
+            APPLE_KEY_ID: '',
+            APPLE_PRIVATE_KEY: '',
           },
         },
       }),
