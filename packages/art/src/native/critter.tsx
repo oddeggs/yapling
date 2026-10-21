@@ -1,6 +1,6 @@
 import { Canvas, Group, Picture } from '@shopify/react-native-skia';
 import { useMemo } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { ComponentProps } from 'react';
 import {
   isSharedValue,
   useDerivedValue,
@@ -12,6 +12,9 @@ import {
 import { speciesOf, type Character, type Mood, type Mouth, type PipSpecies } from '../critter';
 import { blinkingAt, critterIdle, idleHash, idleTransformAt } from '../motion';
 import { useArtRenderer } from './context';
+
+/** The canvas's own style type (React Native's `ViewStyle` can widen past what Skia accepts). */
+type CanvasStyle = ComponentProps<typeof Canvas>['style'];
 
 export interface CritterArtProps {
   character: Character;
@@ -91,7 +94,7 @@ export function CritterArt({
 }
 
 export interface CritterProps extends Omit<CritterArtProps, 'x' | 'y'> {
-  style?: StyleProp<ViewStyle>;
+  style?: CanvasStyle;
 }
 
 /** A cast member in its own canvas, `size` wide and `1.2 × size` tall, with room to move. */

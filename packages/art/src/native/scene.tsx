@@ -1,9 +1,12 @@
 import { Canvas, Group, Picture } from '@shopify/react-native-skia';
 import { useMemo } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { ComponentProps } from 'react';
 
 import type { BurrowObjectId, SceneName, SceneOptions, TimeOfDay } from '../art';
 import { useArtRenderer } from './context';
+
+/** The canvas's own style type (React Native's `ViewStyle` can widen past what Skia accepts). */
+type CanvasStyle = ComponentProps<typeof Canvas>['style'];
 
 export interface SceneProps {
   name: SceneName;
@@ -14,7 +17,7 @@ export interface SceneProps {
   extra?: object;
   /** Width in points; the scene keeps its design proportions (390 × 844 for a screen). */
   width?: number;
-  style?: StyleProp<ViewStyle>;
+  style?: CanvasStyle;
 }
 
 /** A scene, recorded once into a picture and scaled to `width`. */
@@ -46,7 +49,7 @@ export interface BurrowObjectProps {
   id: BurrowObjectId;
   /** Width in points (the prototype draws them 56 wide); 4/3 as tall. */
   size?: number;
-  style?: StyleProp<ViewStyle>;
+  style?: CanvasStyle;
 }
 
 /** A burrow word object (jar, desk, plant, mail at stages 0–2; desk kinds; the seed packet). */
