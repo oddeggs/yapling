@@ -5,7 +5,7 @@ import type { Href } from 'expo-router';
  * features and may not exist yet; the paths are the agreed names, kept in one place so the
  * integration only has to check this file.
  */
-const href = (path: string): Href => path as Href;
+const href = (path: string): Href => path;
 
 export const BURROW_ROUTES = {
   /** The burrow itself. */
