@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Throwaway latency spike for the live call. One CallDO per call.
+  "name": "yapling-voice-spike",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "durable_objects": {
+    "bindings": [{ "name": "CALL", "class_name": "CallDO" }],
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallDO"] }],
+  "observability": { "enabled": true },
+}

@@ -1,0 +1,28 @@
+{
+  "name": "yapling-voice-spike",
+  "private": true,
+  "type": "module",
+  "description": "Throwaway latency spike for the live call cascade (Scribe v2 Realtime -> Claude Haiku 5.5 -> ElevenLabs TTS). Not part of the root workspace.",
+  "scripts": {
+    "dev": "wrangler dev --port 8799",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "utterances": "node client/make-utterances.ts",
+    "bench": "node client/run.ts",
+    "summary": "node client/summarize.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261021.1",
+    "@types/node": "26.6.5",
+    "typescript": "5.9.3",
+    "wrangler": "4.151.3"
+  },
+  "allowScripts": {
+    "workerd@1.20261019.1": true,
+    "esbuild@0.28.2": true,
+    "sharp@0.35.5": true
+  }
+}
