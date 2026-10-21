@@ -1,0 +1,2 @@
+{"round":1,"type":"call_summary","reason":"hangup","totals":{"audioBytes":2347520,"ttsChars":1134,"input":24,"cacheRead":12276,"cacheWrite":4905,"output":455,"turns":12,"audioSeconds":73.36}}
+{"round":2,"type":"call_summary","reason":"hangup","totals":{"audioBytes":2361600,"ttsChars":1323,"input":24,"cacheRead":12346,"cacheWrite":5015,"output":488,"turns":12,"audioSeconds":73.8}}

@@ -1,0 +1,3 @@
+{"round":1,"type":"call_summary","reason":"hangup","totals":{"audioBytes":2337920,"ttsChars":1279,"input":24,"cacheRead":12466,"cacheWrite":4794,"output":474,"turns":12,"audioSeconds":73.06}}
+{"round":2,"type":"call_summary","reason":"hangup","totals":{"audioBytes":2303360,"ttsChars":1045,"input":24,"cacheRead":12346,"cacheWrite":4604,"output":414,"turns":12,"audioSeconds":71.98}}
+{"round":1,"type":"call_summary","reason":"hangup","totals":{"audioBytes":2348800,"ttsChars":1162,"input":24,"cacheRead":12466,"cacheWrite":4758,"output":447,"turns":12,"audioSeconds":73.4}}

@@ -1,0 +1,4 @@
+ANTHROPIC_API_KEY=
+ELEVENLABS_API_KEY=
+# Shared token the bench client passes as ?token= (keeps the public workers.dev URL from burning credits)
+SPIKE_TOKEN=

@@ -1,0 +1,18 @@
+{
+  "_note": "Learner turns for the day-one burrow unpacking scene, A2 level. Each utterance is a list of spoken segments (strings) and pauses in ms (numbers). Pauses are learner hesitations inside one turn: the call must not answer during them.",
+  "voice": "linh",
+  "utterances": [
+    { "id": "u01", "parts": ["Hi Pip! Yes, I can help you."] },
+    { "id": "u02", "parts": ["My name is Lan. I am a marketing", 800, "executive."] },
+    { "id": "u03", "parts": ["This box is... very heavy. What is inside?"] },
+    { "id": "u04", "parts": ["I think we put the books", 1000, "on the shelf."] },
+    { "id": "u05", "parts": ["I live in Ho Chi Minh City. I work in an office."] },
+    { "id": "u06", "parts": ["Yesterday I go to the", 700, "supermarket", 800, "and buy some cups."] },
+    { "id": "u07", "parts": ["The lamp is", 900, "next to the bed."] },
+    { "id": "u08", "parts": ["I like cooking. I can cook pho for you."] },
+    { "id": "u09", "parts": ["Where do you want", 750, "the plants?"] },
+    { "id": "u10", "parts": ["Sorry, can you say again? More slowly, please."] },
+    { "id": "u11", "parts": ["My hobby is", 1000, "reading books and", 700, "listening music."] },
+    { "id": "u12", "parts": ["Okay. Let's open the kitchen box first."] }
+  ]
+}
