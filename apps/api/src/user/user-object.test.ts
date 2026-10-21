@@ -3,7 +3,7 @@ import { env } from 'cloudflare:workers';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { call, newGuest } from '../auth/testing/client';
-import { userObject } from '.';
+import { userObject } from './object';
 import { ScheduledPushJob } from './jobs';
 import { userClock } from './user-object';
 
