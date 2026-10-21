@@ -78,11 +78,6 @@ export function PaywallScreen({
             {view.body}
           </Txt>
           <Table rows={view.table} />
-          {view.notice ? (
-            <Txt variant="noteStrong" colour={colours.textHand}>
-              {view.notice}
-            </Txt>
-          ) : null}
           <View style={{ flexDirection: 'row', gap: 8, marginTop: 4 }}>
             {view.cards.map((c) => (
               <Plan key={c.plan} card={c} onPress={() => onSelect(c.plan)} />
@@ -104,6 +99,12 @@ export function PaywallScreen({
           <Txt variant="note" colour={colours.textMuted}>
             {view.autoRenew}
           </Txt>
+          {/* Last, so the auto-renew wording stays in view without scrolling. */}
+          {view.notice ? (
+            <Txt variant="noteStrong" colour={colours.textHand}>
+              {view.notice}
+            </Txt>
+          ) : null}
         </ScrollView>
         <View style={{ gap: 8 }}>
           <View style={{ flexDirection: 'row', gap: 8 }}>
