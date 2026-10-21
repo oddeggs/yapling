@@ -249,7 +249,7 @@ export const EndedFrame = z.object({
   type: z.literal('ended'),
   seq: Seq,
   reason: CallEndReason,
-  /** The post-call summary is still being written; poll `GET /v1/calls/:id`. */
+  /** The post-call summary is still being written; poll `GET /api/calls/:id`. */
   summaryPending: z.boolean(),
   callRecordId: OpaqueId,
 });

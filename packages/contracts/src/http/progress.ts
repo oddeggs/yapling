@@ -1,0 +1,186 @@
+import { z } from 'zod';
+
+import {
+  CharacterId,
+  EpochMs,
+  Id,
+  LIMITS,
+  LocalDate,
+  OpaqueId,
+  Phrase,
+  PHRASE_STATES,
+  PhraseState,
+  RING_SLOT_KINDS,
+  RingSlotKind,
+  Stage,
+} from '../primitives';
+
+/**
+ * A phrase (chunk) on its way from seed to bloom, with when it reached each state. A state not yet
+ * reached has a null time. Phrases never wilt: a phrase not used for a while stays where it is.
+ */
+export const PhraseProgress = z
+  .object({
+    id: Id,
+    text: Phrase,
+    state: PhraseState,
+    seedAt: EpochMs,
+    sproutAt: EpochMs.nullable(),
+    leafAt: EpochMs.nullable(),
+    bloomAt: EpochMs.nullable(),
+    lastUsedAt: EpochMs.nullable(),
+  })
+  .refine(
+    (p) => {
+      const reached = PHRASE_STATES.indexOf(p.state);
+      const times = [p.seedAt, p.sproutAt, p.leafAt, p.bloomAt];
+      return times.every((t, i) => i <= reached === (t !== null));
+    },
+    { message: 'Each reached state has a time; later states have none' },
+  );
+export type PhraseProgress = z.infer<typeof PhraseProgress>;
+
+/**
+ * A recurring error. Two are `active` at once (prompted in calls); the rest `waiting`. A target
+ * graduates after 5 self-corrections across 3 different days.
+ */
+export const ERROR_TARGET_STATUSES = ['waiting', 'active', 'graduated'] as const;
+export const ErrorTargetStatus = z.enum(ERROR_TARGET_STATUSES);
+export type ErrorTargetStatus = z.infer<typeof ErrorTargetStatus>;
+
+export const ErrorTargetProgress = z
+  .object({
+    /** `past_ed`, `final_s`, `articles`… */
+    id: Id,
+    status: ErrorTargetStatus,
+    selfCorrections: z.int().min(0),
+    /** Different days with a self-correction. */
+    correctionDays: z.int().min(0),
+    activatedAt: EpochMs.nullable(),
+    graduatedAt: EpochMs.nullable(),
+  })
+  .refine((t) => (t.status === 'graduated') === (t.graduatedAt !== null), {
+    message: 'Only a graduated target has a graduation time',
+  })
+  .refine((t) => t.status === 'waiting' || t.activatedAt !== null, {
+    message: 'An active or graduated target was activated',
+  })
+  .refine((t) => t.correctionDays <= t.selfCorrections, {
+    message: 'No more correction days than corrections',
+  });
+export type ErrorTargetProgress = z.infer<typeof ErrorTargetProgress>;
+
+/** A line from a call that counts toward a can-do. */
+export const CanDoEvidence = z.object({
+  callRecordId: OpaqueId,
+  quote: z.string().min(1).max(LIMITS.textMax),
+  at: EpochMs,
+});
+export type CanDoEvidence = z.infer<typeof CanDoEvidence>;
+
+/**
+ * A can-do with evidence so far. A ticked one names the neighbour who witnessed it and the day;
+ * it becomes a keepsake.
+ */
+export const CanDoProgress = z
+  .object({
+    id: Id,
+    stage: Stage,
+    status: z.enum(['in_progress', 'ticked']),
+    evidence: z.array(CanDoEvidence).max(20),
+    witness: CharacterId.nullable(),
+    tickedOn: LocalDate.nullable(),
+  })
+  .refine(
+    (c) =>
+      c.status === 'ticked'
+        ? c.witness !== null && c.tickedOn !== null
+        : c.witness === null && c.tickedOn === null,
+    {
+      message: 'A ticked can-do has a witness and a day; one in progress has neither',
+    },
+  )
+  .refine((c) => c.status === 'in_progress' || c.evidence.length > 0, {
+    message: 'A ticked can-do has evidence',
+  });
+export type CanDoProgress = z.infer<typeof CanDoProgress>;
+
+/** Burrow keepsakes: a can-do certificate signed by its witness, a season keepsake, a story gift. */
+export const KEEPSAKE_KINDS = ['can_do', 'season', 'story'] as const;
+export const KeepsakeKind = z.enum(KEEPSAKE_KINDS);
+export type KeepsakeKind = z.infer<typeof KeepsakeKind>;
+
+export const Keepsake = z
+  .object({
+    id: Id,
+    kind: KeepsakeKind,
+    canDoId: Id.nullable(),
+    signedBy: CharacterId.nullable(),
+    earnedOn: LocalDate,
+  })
+  .refine((k) => (k.kind === 'can_do') === (k.canDoId !== null), {
+    message: 'Only a can-do keepsake names its can-do',
+  });
+export type Keepsake = z.infer<typeof Keepsake>;
+
+/**
+ * One call of the weekly ring. `upcoming`: not offered yet; `open`: ready to take (a missed week's
+ * call waits here, never lost); `done`: taken.
+ */
+export const RING_SLOT_STATUSES = ['upcoming', 'open', 'done'] as const;
+export const RingSlotStatus = z.enum(RING_SLOT_STATUSES);
+export type RingSlotStatus = z.infer<typeof RingSlotStatus>;
+
+export const RingSlot = z
+  .object({
+    kind: RingSlotKind,
+    status: RingSlotStatus,
+    sceneId: Id.nullable(),
+    callRecordId: OpaqueId.nullable(),
+    doneAt: EpochMs.nullable(),
+  })
+  .refine(
+    (s) =>
+      s.status === 'done'
+        ? s.callRecordId !== null && s.doneAt !== null
+        : s.callRecordId === null && s.doneAt === null,
+    { message: 'A done slot has its call and time; others have neither' },
+  );
+export type RingSlot = z.infer<typeof RingSlot>;
+
+/** One week's ring: an episode, a real-week and a practice call, in that order. */
+export const WeekRing = z
+  .object({
+    week: z.int().min(1),
+    slots: z.array(RingSlot).length(RING_SLOT_KINDS.length),
+  })
+  .refine((w) => w.slots.every((s, i) => s.kind === RING_SLOT_KINDS[i]), {
+    message: 'Slots are episode, real_week, practice',
+  });
+export type WeekRing = z.infer<typeof WeekRing>;
+
+/**
+ * `GET /api/me/progress`: everything the burrow, the week view and the Me sheet show. `dayIndex`
+ * counts days since install in the learner's timezone (the install day is day 1). `revision` grows
+ * on every change; the phone's cached copy loses to a higher one.
+ */
+export const Progress = z
+  .object({
+    revision: z.int().min(1),
+    installedOn: LocalDate,
+    dayIndex: z.int().min(1),
+    phrases: z.array(PhraseProgress).max(2_000),
+    errorTargets: z.array(ErrorTargetProgress).max(50),
+    canDos: z.array(CanDoProgress).max(200),
+    keepsakes: z.array(Keepsake).max(500),
+    /** Oldest first; the last is the current week. */
+    weeks: z.array(WeekRing).max(520),
+  })
+  .refine(
+    (p) => p.errorTargets.filter((t) => t.status === 'active').length <= LIMITS.activeTargets,
+    { message: 'At most two active error targets' },
+  )
+  .refine((p) => p.weeks.every((w, i) => w.week === i + 1), {
+    message: 'Weeks run 1, 2, 3… with none missing',
+  });
+export type Progress = z.infer<typeof Progress>;

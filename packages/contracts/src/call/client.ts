@@ -29,7 +29,7 @@ export const HelloFrame = z.object({
   seq: Seq,
   /** `PROTOCOL_VERSION` of the app's contracts. */
   protocol: z.int().min(1),
-  /** The session token from `POST /v1/session/*`. */
+  /** The session token from `POST /api/session/*`. */
   token: Token,
   kind: CallKind,
   /** The scene to run (`s1-e1`, `placement`, a practice or voicemail id). */

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /*
- * The call socket: `GET /v1/calls/socket`, one WebSocket per live call between the phone and its
+ * The call socket: `GET /api/calls/socket`, one WebSocket per live call between the phone and its
  * call object. The phone's first frame is `hello` (it carries the token; never put it in the URL);
  * the call answers `ready` or `error` and closes.
  *

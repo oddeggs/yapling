@@ -35,6 +35,9 @@ export const LIMITS = {
   tokenMax: 2_048,
   /** "Chờ chút" pauses turn detection for 10 s by default, never longer than this. */
   holdSecondsMax: 30,
+  /** Memory items one learner keeps; call records one list answers. */
+  memoryItemsMax: 1_000,
+  callsListMax: 100,
 } as const;
 
 /** A lowercase slug id: scene, beat, phrase, can-do, error target, keepsake. */
