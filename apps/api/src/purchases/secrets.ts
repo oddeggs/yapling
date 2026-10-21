@@ -2,12 +2,11 @@ import type { Bindings } from '../env';
 
 /**
  * RevenueCat's webhook secret: the whole `Authorization` header RevenueCat sends, set in its
- * dashboard and as the Worker secret `REVENUECAT_WEBHOOK_AUTH`. Read through here until the name
- * joins `secretNames` in `env.ts`; undefined (or empty) until it is set for the environment.
+ * dashboard and as the Worker secret `REVENUECAT_WEBHOOK_AUTH`; undefined until it is set (an
+ * empty value counts as unset).
  */
 export function webhookAuthOf(env: Bindings): string | undefined {
-  const value = (env as Bindings & { readonly REVENUECAT_WEBHOOK_AUTH?: string })
-    .REVENUECAT_WEBHOOK_AUTH;
+  const value = env.REVENUECAT_WEBHOOK_AUTH;
   return value === undefined || value === '' ? undefined : value;
 }
 

@@ -11,3 +11,5 @@ BETTER_AUTH_SECRET=
 APPLE_TEAM_ID=
 APPLE_KEY_ID=
 APPLE_PRIVATE_KEY=
+# RevenueCat webhook: the Authorization header value set in RevenueCat's dashboard.
+REVENUECAT_WEBHOOK_AUTH=
