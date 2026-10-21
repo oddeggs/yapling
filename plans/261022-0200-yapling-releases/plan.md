@@ -51,6 +51,8 @@ Built for parallel agents, following Bricked Party's plan (`~/oddeggs/bricked-pa
 
 Gate 0: CI green, contracts frozen, renders and art goldens pass, **the voice spike passes**.
 
+Gate 0 progress (22 Oct 2026): 0a, 0b, 0c, 0d merged. **Voice spike passed narrowly** (deployed P50 1.489 s, P90 1.686 s, first character audio 0.92 s, no cut-offs; `spikes/voice/REPORT.md`) after four changes now in `tech-decisions.md` §3: endpointing in the DO, hedged Haiku, Flash v2.5 for alignment, the CallDO pinned to US West (Hong Kong is refused by Anthropic). Open for the founder: Pip's voices are too fast for Newcomer pace (re-brief the voice designs); whether the gate counts the recorded reaction as first audio. 0e art port in progress. Wave 1 lanes 1a, 1b, 1d merged early (no dependency on the spike); 1e in progress.
+
 ## Wave 1: Engines · critical path 3 runs
 
 | Lane | Owns | Does | Runs | Done when |
