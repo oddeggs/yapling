@@ -10,7 +10,10 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "0.134.0",
     "@yapling/contracts": "workspace:*",
+    "@yapling/domain": "workspace:*",
+    "@yapling/story": "workspace:*",
     "better-auth": "catalog:",
     "hono": "catalog:",
     "zod": "catalog:"
