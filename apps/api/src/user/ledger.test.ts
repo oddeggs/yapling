@@ -2,11 +2,20 @@ import { MinutesSummary } from '@yapling/contracts';
 import { describe, expect, it } from 'vitest';
 
 import {
+  FREE_FIRST_WEEK_SECONDS,
+  FREE_WEEKLY_SECONDS,
+  PLUS_MONTHLY_SECONDS,
+  startOfLocalDay,
+} from '@yapling/domain';
+
+import {
   chargeResult,
+  domainLedgerRules,
   FIRST_WEEK_SECONDS,
   FREE_WEEK_SECONDS,
   localLedgerRules,
   minutesSummary,
+  LEDGER_TIMEZONE,
   PLUS_PERIOD_SECONDS,
 } from './ledger';
 
@@ -72,5 +81,52 @@ describe('the ledger rules', () => {
     const period = localLedgerRules.period(free, start);
     const summary = MinutesSummary.parse(minutesSummary(period, 4_000));
     expect(summary).toMatchObject({ usedSeconds: 4_000, leftSeconds: 0, firstWeek: true });
+  });
+});
+
+describe('the learning model behind the seam', () => {
+  // 22 Oct 2026, 16:00 in Ho Chi Minh City.
+  const installed = Date.UTC(2026, 9, 22, 9);
+  const midnight = startOfLocalDay('2026-10-22', LEDGER_TIMEZONE);
+  const learner = { plan: 'free', planPeriodStart: installed, startedAt: installed } as const;
+
+  it('runs the free first week and then weekly allowances from the install day', () => {
+    expect(domainLedgerRules.period(learner, installed + DAY)).toEqual({
+      plan: 'free',
+      start: midnight,
+      end: midnight + 7 * DAY,
+      allowanceSeconds: FREE_FIRST_WEEK_SECONDS,
+      firstWeek: true,
+    });
+    expect(domainLedgerRules.period(learner, midnight + 9 * DAY)).toEqual({
+      plan: 'free',
+      start: midnight + 7 * DAY,
+      end: midnight + 14 * DAY,
+      allowanceSeconds: FREE_WEEKLY_SECONDS,
+      firstWeek: false,
+    });
+  });
+
+  it('gives Plus calendar months', () => {
+    const plus = { ...learner, plan: 'plus' } as const;
+    expect(domainLedgerRules.period(plus, installed)).toEqual({
+      plan: 'plus',
+      start: startOfLocalDay('2026-10-01', LEDGER_TIMEZONE),
+      end: startOfLocalDay('2026-11-01', LEDGER_TIMEZONE),
+      allowanceSeconds: PLUS_MONTHLY_SECONDS,
+      firstWeek: false,
+    });
+  });
+
+  it('wraps up and runs out by the same rule', () => {
+    const period = domainLedgerRules.period(learner, installed);
+    expect(chargeResult(period, FREE_FIRST_WEEK_SECONDS - 60)).toMatchObject({
+      wrappingUp: true,
+      exhausted: false,
+    });
+    expect(chargeResult(period, FREE_FIRST_WEEK_SECONDS)).toMatchObject({
+      secondsLeft: 0,
+      exhausted: true,
+    });
   });
 });
