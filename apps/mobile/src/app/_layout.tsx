@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { DataProvider } from '../data';
 import { UiProvider } from '../ui/ui-provider';
 import { useReduceMotion } from '../ui/motion/reduce-motion';
 
@@ -54,10 +55,12 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colours.background }}>
       <SafeAreaProvider>
-        <UiProvider>
-          <StatusBar style="dark" />
-          <RootStack />
-        </UiProvider>
+        <DataProvider>
+          <UiProvider>
+            <StatusBar style="dark" />
+            <RootStack />
+          </UiProvider>
+        </DataProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
