@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#FBFAFD;-webkit-font-smoothing:antialiased}a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}</style>
+</helmet>
+<div style="min-height:100vh;padding:44px 48px 60px;box-sizing:border-box;font-family:Lexend,system-ui,sans-serif;color:#17131C;background-image:radial-gradient(rgba(23,19,28,.09) 1.1px,transparent 1.4px);background-size:20px 20px">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px">
+    <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:800;letter-spacing:.06em;color:#9A5AA6">YAPLING · WEEK 1 PROTOTYPE</span><span style="font-size:44px;font-weight:900;letter-spacing:-0.05em;line-height:1">Every screen and branch</span><span style="font-size:15px;font-weight:600;color:#5D5366;max-width:760px">Season 1, Episode 1 "The Letter", day 1 to day 8. Click a card to open the prototype on that screen. Pink = live call or scene with speaking, white = screen, dark = lock screen.</span></div>
+    <a href="Yapling%20Week%201.dc.html" style="height:44px;padding:0 18px;border-radius:22px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font-size:15px;font-weight:800;display:flex;align-items:center;text-decoration:none">▶ Open the prototype</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(8,minmax(150px,1fr));gap:12px;align-items:start">
+    <sc-for list="{{ days }}" as="d" hint-placeholder-count="8">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:16px;background:#17131C;color:#fff"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#EFA3F4">DAY {{ d.n }}</span><span style="font-size:16px;font-weight:800;letter-spacing:-0.02em;line-height:1.1">{{ d.title }}</span></div>
+        <sc-for list="{{ d.steps }}" as="s" hint-placeholder-count="3">
+          <a href="{{ s.href }}" style="display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:14px;background:{{ s.bg }};color:{{ s.fg }};border:2px solid #17131C;box-shadow:0 3px 0 #17131C;text-decoration:none">
+            <span style="font-size:10px;font-weight:800;letter-spacing:.06em;opacity:.7">{{ s.n }} · {{ s.id }}</span>
+            <span style="font-size:13.5px;font-weight:800;line-height:1.15">{{ s.t }}</span>
+            <span style="font-size:11.5px;font-weight:600;line-height:1.3;opacity:.85">{{ s.d }}</span>
+          </a>
+          <sc-if value="{{ s.hasBr }}" hint-placeholder-val="{{ false }}"><div style="margin:-2px 0 0 14px;padding:6px 9px;border-left:3px dashed #9A5AA6;font-size:11px;font-weight:700;line-height:1.3;color:#5B4A8C">{{ s.br }}</div></sc-if>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px">
+    <div style="padding:16px 18px;border-radius:18px;background:#FFFFFF;border:2px solid #17131C;display:flex;flex-direction:column;gap:8px"><span style="font-size:15px;font-weight:800">Reachable from the facilitator panel</span><sc-for list="{{ extras }}" as="e" hint-placeholder-count="4"><a href="{{ e.href }}" style="font-size:13px;font-weight:700">{{ e.t }}</a></sc-for></div>
+    <div style="padding:16px 18px;border-radius:18px;background:#FFFFFF;border:2px solid #17131C;display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;line-height:1.4"><span style="font-size:15px;font-weight:800">Facilitator controls</span><span>Strip beside the phone on desktop (Shift+F hides it), three-finger tap inside the phone on a device.</span><span>Jump to any day or step · next answer lands as Script, Fine, Target error or Silent · "came back after 3 days" · VI/EN · voices on/off · reset.</span></div>
+    <div style="padding:16px 18px;border-radius:18px;background:#FFFFFF;border:2px solid #17131C;display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;line-height:1.4"><span style="font-size:15px;font-weight:800">How speaking works</span><span>Hold the mic, speak out loud, let go. Where the browser supports speech recognition the caption shows what was said; otherwise a believable scripted answer appears.</span><span>Recorded lines (prologue, Episode 1) play the real voice with mouths synced to the timing files. Other lines use the browser voice, a different pitch per character.</span></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const D=[
+ [1,'Moving in',[['d1-splash','Splash · first language','Pick Tiếng Việt (8 options)'],['d1-ai','Pip is an AI','What the characters are and aren\'t'],['d1-pick','Choose your roommate','Red panda (Pip), capybara, cat'],['d1-unpack','Unpacking chat','4 questions = one-minute placement · recorded intro + outro','talk','Silent → "didn\'t catch that" + retry. 4s idle → phrase hint'],['d1-card','Residency card','Newcomer · 3 strengths · 2 can-dos','','Too easy / Too hard → toast, adjusts pace'],['d1-notif','Notifications in context','Quiet hours toggle','','Allow or Not now, both continue'],['d1-linh','Linh knocks · dusk','Recorded welcome · letter slides under the café door','talk']]],
+ [2,'The Letter',[['d2-lock','Lock screen','Pip: "Something\'s going on at the café."','lock'],['d2-week','The week','Empty ring · 4 seed packets'],['d2-call','Call at the café','Mei behind the counter · letter with tap-to-gloss · rent? · office call · advice · "I\'ll get a job!"','talk','Office intro: Script = target error → Pip asks "You… calling?" → retry → fixed ✦. Fine skips it. Silent → catch + retry. "What does that mean?" on "goes funny" → English, then Vietnamese'],['d2-post','After the call','2 wins · 1 fix · seeds sprout · ring 1/3 · a box unpacked']]],
+ [3,'Something new',[['d3-lock','Lock screen','"Pip got lost today."','lock'],['d3-story','Voice story + postcard','Seagull story, tappable captions · Linh\'s recorded tip · new object','talk','Nothing to fail, no minutes used']]],
+ [4,'Real week',[['d4-lock','Lock screen','"Can you teach me how to introduce myself at work?"','lock'],['d4-teach','Teach Pip','Your intro (30s ring) · Pip tries it back · one more try · ring 2/3','talk','Timer ends the turn at 0s']]],
+ [5,'Pass it on',[['d5-lock','Lock screen','Bea: "Bus 45 leaves at nine sharp."','lock'],['d5-bus','Bus 45','Same story to Pip 90s, Linh 60s, Bea 45s · fluency mirror after each','talk','Round 3 shows the smoothest Flow, Pace, Pauses'],['d5-keep','Ring full · keepsake','Certificate witnessed by Linh, hung on the wall']]],
+ [6,'The cliffhanger',[['d6-lock','Lock screen','"Pip left you a voicemail."','lock'],['d6-vm','Voicemail + fix','Recorded "Big news! Hollowbrook is hiring" · "Can I helping you?" → you fix it → leaf','talk'],['d6-season','Season map','Episode 2 glowing']]],
+ [7,'End of free week',[['d7-lock','Lock screen','"Your first week is done."','lock'],['d7-pay','Paywall (Vietnamese)','Free ~10 min/week + every story · Plus ~150 min/month · 149.000 / 799.000 / 599.000 VND · student price','','Not now and Try Plus are the same size; both continue']]],
+ [8,'Coming back',[['d8-lock','Lock screen','"How was your week?"','lock','Away on: Thu 1 Oct, "You\'re back? I kept your seat warm."'],['d8-back','Back in the burrow','Normal: "How was your week?" + Episode 2 peek','talk','Away on: happy Pip + recorded recap, episode exactly where they left it'],['end','End of week 1','Start again']]]];
+class Component extends DCLogic {
+  renderVals(){ const href=id=>'Yapling%20Week%201.dc.html?step='+id; let n=0;
+    return { days:D.map(([d,title,steps])=>({n:d,title,steps:steps.map(([id,t,dd,k,br])=>({id,t,d:dd,n:++n,href:href(id),br:br||'',hasBr:!!br,bg:k==='talk'?'#F9DAFB':k==='lock'?'#2A2140':'#FFFFFF',fg:k==='lock'?'#FFFFFF':'#17131C'}))})),
+      extras:[['err-net','No connection: "Pip\'s line is crackly, try a voice note"'],['err-mic','Microphone denied'],['err-catch','"Sorry, I didn\'t catch that, say it another way?"'],['safety','Safety sheet · 115 (localised per market)']].map(([id,t])=>({t,href:href(id)})) }; }
+}
+</script>
+</body>
+</html>

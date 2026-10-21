@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ybob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-5px) scale(.985,1.02)}}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes ysp{0%{transform:scale(0) rotate(0);opacity:0}40%{transform:scale(1.2) rotate(20deg);opacity:1}100%{transform:scale(.8) rotate(45deg);opacity:0}}
+@keyframes yglow{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 8px rgba(239,163,244,.35)}50%{box-shadow:0 4px 0 #17131C,0 0 0 18px rgba(239,163,244,.15)}}
+@keyframes ybar{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+@keyframes yswing{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes ydrop{0%{transform:translateY(-60px) scale(.6);opacity:0}60%{transform:translateY(6px) scale(1.05);opacity:1}100%{transform:translateY(0) scale(1)}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;max-width:2300px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#22BFF2;border:2px solid #17131C"></span>Yapling · Round 5 · 2 of 3</div>
+      <div style="font-size:64px;font-weight:800;letter-spacing:-0.05em;line-height:.95">How you <span style="background:#5FD98A;padding:0 10px;border-radius:12px">grow</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><a href="../Yapling%20Prototype.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#EFA3F4;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">▶ Prototype</a><span style="font-size:12px;font-weight:800;color:#5D5366">ROUND 5</span>
+        <a href="Yapling%20R5%20Journey.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Journey &amp; story</a>
+        <a href="Yapling%20R5%20Learning.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Learning</a>
+        <a href="Yapling%20R5%20Real%20week.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Real week &amp; care</a>
+        <button onClick="{{ toggleSound }}" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font:800 13px Lexend,sans-serif;cursor:pointer;color:#17131C">{{ soundLabel }}</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span style="font-size:12px;font-weight:800;color:#5D5366">ROUND 4</span>
+        <a href="Yapling%20R4%20Brand.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Brand &amp; system</a>
+        <a href="Yapling%20R4%20Onboarding.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Onboarding</a>
+        <a href="Yapling%20R4%20Home.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Home &amp; calls</a>
+        <a href="Yapling%20R4%20Town.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Town &amp; story</a>
+      </div>
+    </div>
+  </div>
+
+  <section id="5e" style="display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">5e</span><span style="font-weight:700;font-size:17px">Placement result and the Me sheet · English and Vietnamese</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start;max-width:2560px">
+      <sc-for list="{{ placements }}" as="p" hint-placeholder-count="2">
+        <div data-screen-label="Placement" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+          <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ p.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ p.label }}</span></div>
+          <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+            <div style="position:absolute;inset:-24px;filter:blur(12px)">{{ blurBurrow }}</div>
+            <div style="position:absolute;inset:0;background:rgba(251,250,253,.35)"></div>
+            <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+            <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+            <div style="position:absolute;top:140px;left:228px">{{ placePip }}</div>
+            <div style="position:absolute;top:66px;left:24px;width:262px;padding:16px 18px;border-radius:22px;background:#EFA3F4;border:3.5px solid #17131C;box-shadow:5px 7px 0 #17131C;display:flex;flex-direction:column;gap:10px;transform:rotate(-4deg);box-sizing:border-box;z-index:2">
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:10.5px;font-weight:800;letter-spacing:.06em">{{ p.cardTop }}</span><span style="font-size:10.5px;font-weight:800;padding:2px 6px;border-radius:7px;background:#fff;border:2px solid #17131C;white-space:nowrap">{{ p.stageN }}</span></div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:52px;height:52px;border-radius:13px;overflow:hidden;border:2.5px solid #17131C;background:#fff;box-sizing:border-box">{{ placeFace }}</div>
+                <div style="display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700">Lan</span><span style="font-size:32px;font-weight:800;letter-spacing:-0.05em;line-height:.9">{{ p.stage }}</span></div>
+              </div>
+              <span style="font-size:14px;font-weight:800">{{ p.welcome }}</span>
+            </div>
+            <div style="position:absolute;left:10px;right:10px;top:300px;bottom:10px;border-radius:42px;padding:20px 16px 16px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:0 4px">{{ p.goodTitle }}</span>
+                <sc-for list="{{ p.good }}" as="g" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:14px;background:rgba(255,255,255,.8)"><span style="width:22px;height:22px;border-radius:11px;background:#5FD98A;border:2px solid #17131C;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box">✓</span><span style="font-size:14.5px;font-weight:700;line-height:1.2">{{ g }}</span></div></sc-for>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:0 4px">{{ p.aimTitle }}</span>
+                <sc-for list="{{ p.aim }}" as="g" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:14px;background:#FFFFFF;border:2.5px solid #17131C"><span style="width:22px;height:22px;border-radius:7px;border:2.5px solid #17131C;flex:none;box-sizing:border-box"></span><span style="font-size:14.5px;font-weight:700;line-height:1.2">{{ g }}</span></div></sc-for>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:0 4px"><span style="font-size:13px;font-weight:700;color:#5D5366;flex:1">{{ p.adjust }}</span><button style="height:36px;padding:0 12px;border-radius:18px;border:1.5px solid rgba(23,19,28,.15);background:rgba(255,255,255,.8);font:800 13px Lexend,sans-serif;color:#17131C">{{ p.easy }}</button><button style="height:36px;padding:0 12px;border-radius:18px;border:1.5px solid rgba(23,19,28,.15);background:rgba(255,255,255,.8);font:800 13px Lexend,sans-serif;color:#17131C">{{ p.hard }}</button></div>
+              <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;margin-top:auto">{{ p.cta }}</button>
+            </div>
+            <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+          </div>
+        </div>
+      </sc-for>
+
+      <sc-for list="{{ mes }}" as="m" hint-placeholder-count="2">
+        <div data-screen-label="Me sheet" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+          <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ m.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ m.label }}</span></div>
+          <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+            <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+            <div style="position:absolute;inset:0;background:rgba(23,19,28,.12)"></div>
+            <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+            <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+            <div style="position:absolute;left:6px;right:6px;top:58px;bottom:0;border-radius:40px 40px 0 0;padding:10px 16px 0;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;background:rgba(251,250,253,.86);backdrop-filter:blur(30px) saturate(1.8);border:1px solid rgba(255,255,255,.95);box-shadow:inset 0 1.5px 0 #fff,0 -10px 30px rgba(46,20,70,.16)">
+              <div style="align-self:center;width:40px;height:5px;border-radius:3px;background:#D3CCDC"></div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:58px;height:58px;border-radius:29px;overflow:hidden;border:3px solid #17131C;box-sizing:border-box">{{ meFace }}</div>
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1"><span style="font-size:24px;font-weight:800;letter-spacing:-0.04em;line-height:1">Lan</span>
+                  <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:800;padding:2px 8px;border-radius:8px;background:#D7F7E2;border:2px solid #17131C;white-space:nowrap">{{ m.stage }}</span><div style="display:flex;gap:3px"><span style="width:14px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:14px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:14px;height:6px;border-radius:3px;background:#D3CCDC"></span><span style="width:14px;height:6px;border-radius:3px;background:#D3CCDC"></span><span style="width:14px;height:6px;border-radius:3px;background:#D3CCDC"></span></div></div>
+                </div>
+              </div>
+              <span style="font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-top:2px">{{ m.canTitle }}</span>
+              <sc-for list="{{ m.groups }}" as="g" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;border-radius:18px;background:#FFFFFF;border:2px solid #E4DEEA;overflow:hidden">
+                  <div style="padding:6px 12px;font-size:11px;font-weight:800;letter-spacing:.05em;background:{{ g.bg }}">{{ g.name }}</div>
+                  <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid #F1ECF4"><span style="width:20px;height:20px;border-radius:6px;border:2px solid #17131C;background:{{ it.box }};font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box">{{ it.tick }}</span><span style="font-size:13.5px;font-weight:700;line-height:1.2;color:{{ it.c }}">{{ it.t }}</span></div></sc-for>
+                </div>
+              </sc-for>
+              <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase">{{ m.fixTitle }}</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ m.fixes }}" as="f" hint-placeholder-count="2"><span style="padding:5px 10px;border-radius:10px;background:#5FD98A;border:2.5px solid #17131C;font-size:13px;font-weight:800;white-space:nowrap">{{ f }}</span></sc-for></div></div>
+              <div style="display:flex;flex-direction:column;border-radius:18px;background:#FFFFFF;border:2px solid #E4DEEA;overflow:hidden">
+                <sc-for list="{{ m.rows }}" as="r" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:10px;min-height:42px;padding:5px 12px;box-sizing:border-box;border-top:1px solid #F1ECF4"><span style="width:10px;height:10px;border-radius:5px;background:{{ r.c }};border:2px solid #17131C;flex:none"></span><span style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-size:14.5px;font-weight:700">{{ r.t }}</span><span style="font-size:11.5px;font-weight:600;color:#5D5366">{{ r.note }}</span><span style="font-size:12px;font-weight:800;color:#7A3B86;text-decoration:underline;text-decoration-color:#EFA3F4;text-decoration-thickness:2px">{{ r.link }}</span></span><span style="font-size:12.5px;font-weight:600;color:#5D5366">{{ r.v }}</span><span style="font-size:16px;font-weight:800;color:#B9B0C4">›</span></div></sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="5f" style="display:flex;flex-direction:column;gap:22px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">5f</span><span style="font-weight:700;font-size:17px">Can-dos, phrases and fixes grow over weeks</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start;max-width:2560px">
+      <div data-screen-label="L5 Keepsake" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L5</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Can-do keepsake on the burrow wall</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F9DAFB;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ keepScene }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:96px;left:60px;width:270px;transform-origin:50% 0;animation:yswing 4s ease-in-out infinite;z-index:3">
+            <svg width="270" height="40" viewBox="0 0 270 40" style="display:block"><path d="M40 40 L135 6 L230 40" fill="none" stroke="#17131C" stroke-width="2.5"></path><circle cx="135" cy="6" r="5" fill="#17131C"></circle></svg>
+            <div style="padding:10px;border-radius:8px;background:#F2CFA8;border:3.5px solid #17131C;box-shadow:0 6px 0 #17131C">
+              <div style="position:relative;padding:16px 18px 14px;border-radius:4px;background:#FFFDF6;border:2px solid #17131C;display:flex;flex-direction:column;gap:6px;text-align:center">
+                <span style="font-family:'Kithfield Hand',cursive;font-size:17px;color:#9A5AA6">Lan can now…</span>
+                <span style="font-family:'Kithfield Hand',cursive;font-size:27px;line-height:1.05">give a 1-minute standup update!</span>
+                <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px"><div style="width:40px;height:40px;border-radius:20px;overflow:hidden;border:2px solid #17131C">{{ solFace }}</div><span style="font-family:'Kithfield Hand',cursive;font-size:17px;text-align:left;line-height:1.1">witnessed by Sol<br>Oct 21 · the office</span></div>
+                <span style="position:absolute;top:-14px;right:-12px;font-size:26px;color:#EFA3F4;-webkit-text-stroke:1.5px #17131C">✦</span>
+              </div>
+            </div>
+          </div>
+          <div style="position:absolute;top:520px;left:115px">{{ keepPip }}</div>
+          <div style="position:absolute;top:486px;left:22px;max-width:150px;padding:9px 13px;border-radius:18px 18px 6px 18px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:15px;font-weight:800;line-height:1.15;z-index:3">I drew it myself. Sol signed it!</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:16px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.6);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16);z-index:4">
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:11px;font-weight:800;padding:2px 8px;border-radius:8px;background:#CFF0FD;border:2px solid #17131C;white-space:nowrap">WORK</span><span style="font-size:16px;font-weight:800;flex:1">New can-do ticked</span><span style="font-size:13px;font-weight:700;color:#5D5366">4 of 6</span></div>
+            <button style="height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Hang it up</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="L6 Phrase lifecycle" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L6</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Pip reuses your phrase, slightly wrong</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(12px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.4)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:84px;left:24px;right:24px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:22px;font-weight:700;line-height:1.2">Our sync is on Thursday. Could we <span style="text-decoration:underline wavy #17131C;text-underline-offset:4px">pull</span> that to Friday?</div>
+          <div style="position:absolute;top:194px;left:100px">{{ reusePip }}</div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px">
+            <div style="padding:12px 16px;border-radius:22px;background:rgba(255,255,255,.75);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.95);font-size:17px;font-weight:700"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366;display:block">YOU</span>Almost! We say "<span style="background:#5FD98A;border-radius:6px;padding:0 4px">push</span> it to Friday".</div>
+            <sc-if value="{{ reuseFixed }}" hint-placeholder-val="{{ true }}">
+              <div style="position:relative;display:flex;align-items:center;gap:12px;padding:10px 14px 10px 10px;border-radius:22px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;animation:ypop .5s ease-out both">
+                <div style="width:64px;height:85px;flex:none">{{ reuseBloom }}</div>
+                <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">BLOOM · YOUR OWN</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.03em">push it to Friday</span><span style="font-size:12.5px;font-weight:600;color:#5D5366">You taught it twice. Now it's in bloom.</span></div>
+                <span style="position:absolute;top:-14px;right:20px;font-size:22px;color:#EFA3F4;animation:ysp 1.2s ease-out infinite">✦</span><span style="position:absolute;top:-8px;right:56px;font-size:15px;color:#22BFF2;animation:ysp 1.2s .4s ease-out infinite">✦</span>
+              </div>
+            </sc-if>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div style="width:420px;padding:26px;border-radius:30px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:24px;font-weight:800;letter-spacing:-0.04em">A phrase's life in the burrow</span>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;border-radius:18px;background:#F4F1F7"><div style="width:70px;height:93px">{{ lifeSeed }}</div><span style="font-size:13px;font-weight:800">Seed packet</span><span style="font-size:11px;font-weight:600;color:#5D5366">Heard it</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;border-radius:18px;background:#F4F1F7"><div style="width:70px;height:93px">{{ lifeSprout }}</div><span style="font-size:13px;font-weight:800">Sprout</span><span style="font-size:11px;font-weight:600;color:#5D5366">Said it once</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;border-radius:18px;background:#F4F1F7"><div style="width:70px;height:93px">{{ lifeLeaf }}</div><span style="font-size:13px;font-weight:800">Leaf</span><span style="font-size:11px;font-weight:600;color:#5D5366;text-align:center">Again, another day</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;border-radius:18px;background:#F9DAFB;border:2.5px solid #17131C"><div style="width:70px;height:93px">{{ lifeBloom }}</div><span style="font-size:13px;font-weight:800">Bloom</span><span style="font-size:11px;font-weight:600;color:#5D5366;text-align:center">On your own, weeks later</span></div>
+        </div>
+        <span style="font-size:14px;font-weight:600;line-height:1.4">Pantry jars grow from food words, desk things from work phrases and houseplants from feelings. Desk things don't grow leaves. They fill up instead: one sticky note, then two, then a stack that sparkles.</span>
+      </div>
+
+      <div data-screen-label="L7 Correction beat 1" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L7</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Correction beat 1 · Pip asks</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(12px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.4)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:70px;left:24px;right:24px;display:flex;flex-direction:column;gap:6px;align-items:center"><span style="font-size:13px;font-weight:600;color:#5D5366">You said</span><div style="padding:10px 14px;border-radius:18px;background:rgba(255,255,255,.75);font-size:17px;font-weight:700">My landlord <span style="text-decoration:underline wavy #EFA3F4;text-decoration-thickness:2px;text-underline-offset:4px">fix</span> the sink yesterday.</div></div>
+          <div style="position:absolute;top:168px;left:24px;right:24px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:24px;font-weight:700;line-height:1.2">He <i>fix</i> it… every day? Or yesterday?</div>
+          <div style="position:absolute;top:270px;left:85px">{{ beat1Pip }}</div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;align-items:center">
+            <span style="font-size:13px;font-weight:600;color:#5D5366;text-align:center">No red marks. Pip asks the way a friend would.</span>
+            <div style="display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:15px;background:#EFA3F4;border:2.5px solid #17131C;font-size:12px;font-weight:800;letter-spacing:.04em">YOUR TURN · SAY IT AGAIN</div>
+            <div style="width:80px;height:80px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;animation:yglow 1.6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box"><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s .15s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s .3s ease-in-out infinite"></div></div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="L8 Correction beat 2" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L8</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Correction beat 2 · you say it again</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(12px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.4)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:84px;left:24px;right:24px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:24px;font-weight:700;line-height:1.2">Fixed! Got it. Lucky sink.</div>
+          <div style="position:absolute;top:186px;left:85px">{{ beat2Pip }}</div>
+          <div style="position:absolute;left:14px;right:14px;bottom:40px;display:flex;flex-direction:column;gap:14px;align-items:center">
+            <div style="position:relative;padding:14px 18px;border-radius:22px;background:rgba(255,255,255,.8);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.95);box-shadow:0 8px 22px rgba(46,20,70,.12);font-size:20px;font-weight:700;text-align:center">Yesterday. He <span style="background:#5FD98A;border-radius:6px;padding:0 5px">fixed</span> it yesterday.
+              <span style="position:absolute;top:-14px;left:46%;font-size:22px;color:#EFA3F4;animation:ysp 1.2s ease-out infinite">✦</span><span style="position:absolute;top:-18px;left:62%;font-size:15px;color:#22BFF2;animation:ysp 1.2s .3s ease-out infinite">✦</span><span style="position:absolute;bottom:-12px;left:52%;font-size:14px;color:#EFA3F4;animation:ysp 1.2s .6s ease-out infinite">✦</span>
+            </div>
+            <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:12px;background:#5FD98A;border:3px solid #17131C;box-shadow:3px 4px 0 #17131C;font-size:15px;font-weight:800;transform:rotate(-3deg)">You fixed it yourself</div>
+            <span style="font-size:13px;font-weight:600;color:#5D5366">The sparkle only comes after you say it again.</span>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="L9 Fix graduation" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L9</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Fix graduation</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(95,217,138,.55),transparent 45%),radial-gradient(circle at 90% 90%,rgba(239,163,244,.4),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:80px;left:236px;width:112px;height:112px;border-radius:56px;background:#5FD98A;border:4px solid #17131C;box-shadow:4px 6px 0 #17131C;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:900;letter-spacing:-0.05em;transform:rotate(8deg);animation:ypop .6s ease-out both">-ed</div>
+          <div style="position:absolute;top:120px;left:30px">{{ gradPip }}</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:22px 18px 16px;border-radius:42px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <span style="font-size:30px;font-weight:800;letter-spacing:-0.05em;line-height:1">Pip stopped asking about your -ed. It's yours now.</span>
+            <span style="font-size:14px;font-weight:600;color:#5D5366">You've used it right 41 times in three weeks, on your own.</span>
+            <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:#FFFFFF;border:2.5px solid #17131C">
+              <span style="font-size:11px;font-weight:800;padding:2px 7px;border-radius:7px;background:#F9DAFB;border:2px solid #17131C;flex:none;white-space:nowrap">NEXT</span>
+              <span style="font-size:14.5px;font-weight:700;line-height:1.25">Pip might start asking about "a" and "the". Gently, and not every time.</span>
+            </div>
+            <button style="height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Nice</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="5g" style="display:flex;flex-direction:column;gap:22px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">5g</span><span style="font-weight:700;font-size:17px">First-language help (Vietnamese) and the listening checkpoint</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start;max-width:2560px">
+      <div data-screen-label="L10 Gloss on story text" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L10</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Tap any English line · gloss below</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.45)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:60px;left:14px;right:14px;display:flex;align-items:center;gap:10px;height:46px;padding:0 14px 0 6px;border-radius:23px;background:rgba(255,255,255,.6);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.9)"><span style="width:34px;height:34px;border-radius:17px;background:rgba(23,19,28,.06);display:flex;align-items:center;justify-content:center;font-weight:800">‹</span><span style="font-size:15px;font-weight:800;flex:1">Bưu thiếp từ Mei</span><span style="font-size:12px;font-weight:700;color:#5D5366">Hộp thư</span></div>
+          <div style="position:absolute;top:130px;left:20px;right:20px;padding:20px;border-radius:12px;background:#FFFDF6;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;transform:rotate(-1deg);display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px"><div style="width:44px;height:44px;border-radius:22px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box">{{ cardFace }}</div><span style="font-size:15px;font-weight:800">From Mei · Lantern Café</span></div>
+            <span style="font-size:19px;font-weight:700;line-height:1.3">Hi Lan! Bad news from the café.</span>
+            <div style="display:flex;flex-direction:column;gap:2px;padding:8px 10px;margin:0 -10px;border-radius:12px;background:#FFE48A;border:2px solid #17131C">
+              <span style="font-size:19px;font-weight:700;line-height:1.3">The rent doubled. I need a plan by Friday.</span>
+              <span style="font-family:'Kithfield Hand',cursive;font-size:19px;line-height:1.2;color:#5B4A8C">Tiền thuê tăng gấp đôi. Mình cần một kế hoạch trước thứ Sáu.</span>
+            </div>
+            <span style="font-size:19px;font-weight:700;line-height:1.3">Can you come by? Bring Pip.</span>
+          </div>
+          <div style="position:absolute;top:500px;left:24px;right:24px;display:flex;align-items:center;gap:12px;padding:10px 14px 10px 10px;border-radius:20px;background:rgba(255,255,255,.75);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.95);box-shadow:0 8px 22px rgba(46,20,70,.12)">
+            <div style="width:46px;height:61px;flex:none">{{ glossSeed }}</div>
+            <div style="display:flex;flex-direction:column"><span style="font-size:15px;font-weight:800">Đã thêm "need a plan" vào hang</span><span style="font-size:12.5px;font-weight:600;color:#5D5366">Một gói hạt mới trên kệ của Pip</span></div>
+          </div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;display:flex;gap:10px;background:rgba(255,255,255,.6);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <button style="flex:1;height:54px;border-radius:27px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 15px Lexend,sans-serif;color:#17131C">Để sau</button>
+            <button style="flex:1.6;height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 15px Lexend,sans-serif;color:#17131C">Trả lời bằng giọng nói</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="L11 What does that mean" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L11</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">"What does that mean?" · step 1, simple English first</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ cafeScene }}</div>
+          <div style="position:absolute;top:262px;left:20px">{{ meiCall }}</div>
+          <div style="position:absolute;inset:0">{{ cafeFront }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:60px;left:14px;display:flex;align-items:center;gap:8px;height:42px;padding:0 14px;border-radius:21px;background:rgba(255,255,255,.6);backdrop-filter:blur(22px) saturate(1.8);border:1px solid rgba(255,255,255,.9)"><span style="width:8px;height:8px;border-radius:4px;background:#5FD98A;border:1.5px solid #17131C"></span><span style="font-size:14px;font-weight:800">Quán Lantern · 02:40</span></div>
+          <div style="position:absolute;top:116px;left:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:3">
+            <div style="padding:12px 16px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:19px;font-weight:700;line-height:1.2"><span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;margin-bottom:3px">Mei<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;white-space:nowrap">AI</span></span>Kaya toast lah. Damn <span style="background:#FFE48A;border-radius:5px;padding:0 4px">shiok</span>, I tell you.</div>
+            <span style="align-self:flex-start;padding:6px 12px;border-radius:14px;background:#17131C;color:#fff;font-size:13px;font-weight:800;white-space:nowrap">What does that mean?</span>
+          </div>
+          <div style="position:absolute;top:440px;left:250px">{{ pipHelp }}</div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px">
+            <div style="padding:12px 16px;border-radius:22px 22px 6px 22px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:18px;font-weight:700;line-height:1.25"><span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;margin-bottom:3px">Pip whispers<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;white-space:nowrap">AI</span></span>"Shiok" means really, really good. Like "yum!"
+              <span style="display:flex;margin-top:8px"><span style="padding:4px 10px;border-radius:9px;background:#fff;border:2px solid #17131C;box-shadow:0 2px 0 #17131C;font-size:12.5px;font-weight:800;white-space:nowrap">Xem bản dịch</span></span>
+            </div>
+            <div style="height:88px;border-radius:44px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 #fff,0 12px 32px rgba(46,20,70,.18)">
+              <button style="height:48px;width:100px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">Chờ chút</button>
+              <div style="width:66px;height:66px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 4px 0 #17131C"></div>
+              <button style="height:48px;width:100px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">Rời đi</button>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="L11b Translation revealed" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L11b</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Step 2 · tapped "Xem bản dịch"</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ cafeScene }}</div>
+          <div style="position:absolute;top:262px;left:20px">{{ meiCall }}</div>
+          <div style="position:absolute;inset:0">{{ cafeFront }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:60px;left:14px;display:flex;align-items:center;gap:8px;height:42px;padding:0 14px;border-radius:21px;background:rgba(255,255,255,.6);backdrop-filter:blur(22px) saturate(1.8);border:1px solid rgba(255,255,255,.9)"><span style="width:8px;height:8px;border-radius:4px;background:#5FD98A;border:1.5px solid #17131C"></span><span style="font-size:14px;font-weight:800">Quán Lantern · 02:40</span></div>
+          <div style="position:absolute;top:116px;left:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:3">
+            <div style="padding:12px 16px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:19px;font-weight:700;line-height:1.2"><span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;margin-bottom:3px">Mei<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;white-space:nowrap">AI</span></span>Kaya toast lah. Damn <span style="background:#FFE48A;border-radius:5px;padding:0 4px">shiok</span>, I tell you.</div>
+            <span style="align-self:flex-start;padding:6px 12px;border-radius:14px;background:#17131C;color:#fff;font-size:13px;font-weight:800;white-space:nowrap">What does that mean?</span>
+          </div>
+          <div style="position:absolute;top:440px;left:250px">{{ pipHelp }}</div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px">
+            <div style="padding:12px 16px;border-radius:22px 22px 6px 22px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:18px;font-weight:700;line-height:1.25"><span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;margin-bottom:3px">Pip whispers<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;white-space:nowrap">AI</span></span>"Shiok" means really, really good. Like "yum!"
+              <span style="display:block;margin-top:6px;padding-top:6px;border-top:2px dashed rgba(23,19,28,.25);font-family:'Kithfield Hand',cursive;font-size:21px;line-height:1.15;color:#5B4A8C;animation:ypop .4s ease-out both">"shiok" nghĩa là rất ngon, rất đã</span><span style="display:flex;margin-top:8px"><span style="padding:4px 10px;border-radius:9px;background:#17131C;color:#fff;border:2px solid #17131C;font-size:12.5px;font-weight:800;white-space:nowrap">Ẩn bản dịch</span></span>
+            </div>
+            <div style="height:88px;border-radius:44px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 #fff,0 12px 32px rgba(46,20,70,.18)">
+              <button style="height:48px;width:100px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">Chờ chút</button>
+              <div style="width:66px;height:66px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 4px 0 #17131C"></div>
+              <button style="height:48px;width:100px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">Rời đi</button>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="L12 Listening checkpoint" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L12</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Listening checkpoint before a move-in</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.45)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:74px;left:24px;right:24px;display:flex;flex-direction:column;gap:8px"><div style="display:inline-flex;align-self:flex-start;align-items:center;gap:6px;height:26px;padding:0 11px 0 7px;border-radius:13px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#22BFF2;border:2px solid #17131C"></span>Someone's moving in</div><span style="font-size:34px;font-weight:800;letter-spacing:-0.05em;line-height:.95">Sol left you a voicemail</span></div>
+          <div style="position:absolute;top:184px;left:16px;right:16px;display:flex;align-items:center;gap:12px;padding:14px;border-radius:24px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 5px 0 #17131C">
+            <div style="width:52px;height:52px;border-radius:26px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box;flex:none">{{ solVm }}</div>
+            <div style="display:flex;align-items:center;gap:2.5px;flex:1;height:34px"><sc-for list="{{ chkBars }}" as="b" hint-placeholder-count="32"><span style="width:3.5px;height:{{ b.h }};border-radius:2px;background:{{ b.c }}"></span></sc-for></div>
+            <span style="font-size:13px;font-weight:800">0:40</span>
+          </div>
+          <div style="position:absolute;top:290px;left:200px">{{ chkPip }}</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:20px 16px 16px;border-radius:42px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <span style="font-size:24px;font-weight:800;letter-spacing:-0.04em;padding:0 4px">Where did Sol say to meet?</span>
+            <button style="height:52px;border-radius:18px;border:1.5px solid rgba(23,19,28,.12);background:rgba(255,255,255,.85);font:800 16px Lexend,sans-serif;color:#17131C;text-align:left;padding:0 16px">At the bus stop</button>
+            <button style="height:52px;border-radius:18px;border:3px solid #17131C;background:#5FD98A;box-shadow:0 4px 0 #17131C;font:800 16px Lexend,sans-serif;color:#17131C;text-align:left;padding:0 16px">By the fountain</button>
+            <button style="height:52px;border-radius:18px;border:1.5px solid rgba(23,19,28,.12);background:rgba(255,255,255,.85);font:800 16px Lexend,sans-serif;color:#17131C;text-align:left;padding:0 16px">Outside the inn</button>
+            <span style="font-size:12.5px;font-weight:600;color:#5D5366;text-align:center">You can listen again as many times as you like.</span>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="L13 Checkpoint miss" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L13</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">On a miss · step 1, Pip replays it slower</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.45)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:80px;left:24px;right:24px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:21px;font-weight:700;line-height:1.2">Hmm, I heard something different. Let's listen again, a bit slower. Just ears.</div>
+          <div style="position:absolute;top:180px;left:120px">{{ missPip }}</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:18px 16px 16px;border-radius:42px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <div style="display:flex;gap:8px;align-items:center"><span style="padding:5px 11px;border-radius:12px;background:#17131C;color:#fff;font-size:13px;font-weight:800;white-space:nowrap">0.75×</span><span style="display:flex;align-items:center;gap:7px;padding:4px 11px 4px 5px;border-radius:12px;background:rgba(255,255,255,.85);border:1.5px solid rgba(23,19,28,.15);font-size:13px;font-weight:800;white-space:nowrap"><span style="width:28px;height:16px;border-radius:8px;background:#D3CCDC;position:relative"><span style="position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:6px;background:#fff"></span></span>Words on</span><span style="font-size:12px;font-weight:600;color:#5D5366">if you want them</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:#FFFFFF;border:2.5px solid #17131C"><div style="width:44px;height:44px;border-radius:22px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box;flex:none">{{ solVm }}</div><div style="display:flex;align-items:center;gap:2.5px;flex:1;height:34px"><sc-for list="{{ chkBars }}" as="b" hint-placeholder-count="32"><span style="width:3.5px;height:{{ b.h }};border-radius:2px;background:{{ b.c }}"></span></sc-for></div><span style="font-size:13px;font-weight:800">0:53</span></div>
+            <div style="display:flex;gap:10px">
+              <button style="flex:1;height:54px;border-radius:27px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);font:800 15px Lexend,sans-serif;color:#17131C">▶ Play slower</button>
+              <button style="flex:1.2;height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 15px Lexend,sans-serif;color:#17131C">Answer again</button>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="L13b Words on" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L13b</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Step 2 · the user turned words on</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.45)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:80px;left:24px;right:24px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:21px;font-weight:700;line-height:1.2">Here are the words. Where do they meet?</div>
+          <div style="position:absolute;top:180px;left:120px">{{ missPip }}</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:18px 16px 16px;border-radius:42px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <div style="display:flex;gap:8px;align-items:center"><span style="padding:5px 11px;border-radius:12px;background:#17131C;color:#fff;font-size:13px;font-weight:800;white-space:nowrap">0.75×</span><span style="display:flex;align-items:center;gap:7px;padding:4px 11px 4px 5px;border-radius:12px;background:#17131C;color:#fff;font-size:13px;font-weight:800;white-space:nowrap"><span style="width:28px;height:16px;border-radius:8px;background:#5FD98A;position:relative"><span style="position:absolute;top:2px;right:2px;width:12px;height:12px;border-radius:6px;background:#fff"></span></span>Words on</span></div>
+            <div style="padding:14px 16px;border-radius:18px;background:#FFFFFF;border:2.5px solid #17131C;font-size:19px;font-weight:700;line-height:1.45"><sc-for list="{{ karaoke }}" as="k" hint-placeholder-count="3"><span style="background:{{ k.bg }};border-radius:6px;margin-right:.28em">{{ k.t }}</span></sc-for></div>
+            <div style="display:flex;gap:10px">
+              <button style="flex:1;height:54px;border-radius:27px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);font:800 15px Lexend,sans-serif;color:#17131C">▶ Play slower</button>
+              <button style="flex:1.2;height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 15px Lexend,sans-serif;color:#17131C">Answer again</button>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="L14 Checkpoint success" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">L14</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">On success · the van rolls in</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 15% 10%,rgba(239,163,244,.5),transparent 40%),radial-gradient(circle at 70% 95%,rgba(34,191,242,.55),transparent 45%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;inset:0">{{ okTown }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:556px;left:150px;width:72px;height:36px;border-radius:18px;background:#FFFFFF;border:2.5px dashed #17131C;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800">?</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;display:flex;align-items:center;gap:12px;padding:14px 14px 14px 10px;border-radius:36px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <div style="width:110px;height:132px;flex:none;margin-top:-40px">{{ okPip }}</div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:22px;font-weight:800;letter-spacing:-0.04em;line-height:1">By the fountain! The van's here.</span><span style="font-size:13px;font-weight:600;color:#5D5366">Meet Sol there at five to help with boxes.</span></div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const PL={
+  en:{id:'L1',label:'Placement result',cardTop:'NATTERWICK RESIDENCY',stageN:'Stage 1 of 5',stage:'Newcomer',welcome:'Welcome to Natterwick!',goodTitle:'You already do these well',good:["You keep going when you're stuck","You ask questions back","Your 'th' is clear"],aimTitle:'Aim for these first',aim:['Order at the café and ask one question','Introduce yourself in 30 seconds'],adjust:'Not quite right?',easy:'Too easy',hard:'Too hard',cta:'Move in'},
+  vn:{id:'L2',label:'Placement result · Vietnamese',cardTop:'THẺ CƯ TRÚ NATTERWICK',stageN:'Chặng 1/5',stage:'Người mới',welcome:'Chào mừng đến Natterwick!',goodTitle:'Bạn đã làm tốt những điều này',good:['Bạn vẫn nói tiếp khi bí từ','Bạn biết hỏi lại','Âm "th" của bạn rõ ràng'],aimTitle:'Mục tiêu đầu tiên',aim:['Gọi món ở quán cà phê và hỏi một câu','Giới thiệu bản thân trong 30 giây'],adjust:'Chưa phù hợp?',easy:'Dễ quá',hard:'Khó quá',cta:'Dọn vào ở'}
+};
+const ME={
+  en:{id:'L3',label:'The Me sheet · from Pip\'s face',stage:'Neighbour',canTitle:'Things you can now do',groups:[['LIFE','#D7F7E2',[['Order at the café and ask one question',1],['Keep small talk going for 2 minutes',1],['Tell a story the bus driver can follow',0]]],['WORK','#CFF0FD',[['Introduce yourself in 30 seconds',1],['Give a 1-minute standup update',1],['Explain a problem to a client',0]]]],fixTitle:'Fixes you now own',fixes:['-ed for the past','a / an'],rows:[['Your progress','Time capsule','#FFE48A','Flow 48s · Pace 112 wpm · Pauses 3/min',''],['Live minutes this week','6 of 10 left','#5FD98A','','Get more with Plus'],['What Pip remembers','14 notes','#EFA3F4','',''],['Notifications and quiet hours','22:00–08:00','#22BFF2','',''],['Help and safety','','#FFFFFF','','']]},
+  vn:{id:'L4',label:'The Me sheet · Vietnamese',stage:'Hàng xóm',canTitle:'Những điều bạn đã làm được',groups:[['CUỘC SỐNG','#D7F7E2',[['Gọi món ở quán cà phê và hỏi một câu',1],['Nói chuyện phiếm liền 2 phút',1],['Kể chuyện để bác tài xe buýt theo kịp',0]]],['CÔNG VIỆC','#CFF0FD',[['Giới thiệu bản thân trong 30 giây',1],['Cập nhật standup trong 1 phút',1],['Giải thích vấn đề với khách hàng',0]]]],fixTitle:'Lỗi bạn đã làm chủ',fixes:['-ed cho quá khứ','a / an'],rows:[['Tiến bộ của bạn','Hộp thời gian','#FFE48A','Trôi chảy 48 giây · 112 từ/phút · ngắt 3 lần/phút',''],['Phút gọi tuần này','còn 6/10','#5FD98A','','Thêm phút với Plus'],['Pip nhớ gì về bạn','14 ghi chú','#EFA3F4','',''],['Thông báo và giờ yên tĩnh','22:00–08:00','#22BFF2','',''],['Trợ giúp và an toàn','','#FFFFFF','','']]}
+};
+class Component extends DCLogic {
+  state={bt:0,sound:false};
+  sim={ph:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.step(),90); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  step(){ this.sim.ph=(this.sim.ph+1)%140; this.setState(s=>({bt:s.bt+1})); }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {};
+    const st=this.state, S=this.sim, {b1,b2,b3}=K.blinkers(st.bt); if(!this.sfx) this.sfx=K.makeSfx(()=>this.state.sound); const sfx=this.sfx;
+    const h=K.h, Cv=K.Cv, sp='redpanda', ob=(fam,stage,key,w,x)=>h(Cv,{key,fn:'s_obj',w,hh:w*4/3,o:Object.assign({fam,stage,t:K.tk(200)},x||{})});
+    const meMap=m=>({id:m.id,label:m.label,stage:m.stage,canTitle:m.canTitle,fixTitle:m.fixTitle,fixes:m.fixes,
+      groups:m.groups.map(([name,bg,items])=>({name,bg,items:items.map(([t,d])=>({t,tick:d?'✓':'',box:d?'#5FD98A':'#FFFFFF',c:d?'#17131C':'#5D5366'}))})),
+      rows:m.rows.map(([t,v,c,note,link])=>({t,v,c,note,link}))});
+    const P=S.ph;
+    return {
+      soundLabel:st.sound?'Sound on':'Turn sound on', toggleSound:()=>this.setState({sound:!st.sound},()=>sfx('pop')),
+      blurBurrow:K.sc('burrow2',438,892,{}),
+      placements:[PL.en,PL.vn], placePip:K.cr(sp,{size:140,mood:'excited',blink:b1}), placeFace:K.fc(sp,52,'happy','#FFFFFF'),
+      mes:[meMap(ME.en),meMap(ME.vn)], meFace:K.fc(sp,58,'happy'),
+      keepScene:K.sc('burrow2',390,844,{t:K.tk(200)}), keepPip:K.cr(sp,{size:160,mood:'proud',blink:b1,k:'kp'}), solFace:K.fc('tarsier',40,'happy','#CFF0FD'),
+      lifeSeed:ob('seed',0,'ls',70), lifeSprout:ob('desk',0,'l0',70,{kind:'notes'}), lifeLeaf:ob('desk',1,'l1',70,{kind:'notes'}), lifeBloom:ob('desk',2,'l2',70,{kind:'notes'}),
+      reusePip:K.cr(sp,{size:190,mood:P<60?'happy':'excited',blink:b2,mouth:P<40?K.mouthFor('Could we pull that to Friday?',Math.floor(P*0.8)):'rest',k:'rp'}),
+      reuseFixed:P>=70, reuseBloom:ob('desk',2,'rb'+(P>=70?1:0),64,{kind:'notes'}),
+      beat1Pip:K.cr(sp,{size:220,mood:'confused',tilt:10,blink:b1,mouth:P%70<40?K.mouthFor('He fix it… every day? Or yesterday?',Math.floor((P%70)*0.9)):'rest',k:'b1'}),
+      beat2Pip:K.cr(sp,{size:220,mood:'excited',blink:b2,k:'b2'}),
+      gradPip:K.cr(sp,{size:180,mood:'proud',pose:'book',prop:'book',blink:b1,k:'gp'}),
+      cardFace:K.fc('otter',44,'worried','#CFF0FD'), glossSeed:h('div',{key:'gs'+Math.floor(P/70),style:{animation:'ydrop .8s ease-out both'}},ob('seed',0,'gsd',46)),
+      cafeScene:K.sc('cafe',390,844,{t:K.tk(250)}), cafeFront:K.sc('cafeFront',390,844,{}), meiCall:K.cr('otter',{size:170,mood:'happy',blink:b3,k:'mc'}), pipHelp:K.cr(sp,{size:120,mood:'happy',blink:b1,k:'ph'}),
+      chkPip:K.cr(sp,{size:150,mood:'listen',blink:b1,k:'cp'}), solVm:K.fc('tarsier',52,'happy','#CFF0FD'),
+      chkBars:Array.from({length:32},(_,i)=>({h:(6+((i*37)%20))+'px',c:i<Math.floor(P/140*32)?'#17131C':'rgba(23,19,28,.25)'})),
+      missPip:K.cr(sp,{size:150,mood:'warm',blink:b2,k:'mp'}),
+      karaoke:[['Hi! It\'s Sol. The van gets in at five, so let\'s meet',0],['by the fountain',1],['and help carry boxes.',0]].map(([t,k])=>({t,bg:'transparent',b:k?'2px solid #17131C':'none'})),
+      okTown:K.sc('town',390,844,{t:K.tk(150),vanX:((P*3)%420)-60}), okPip:K.cr(sp,{size:110,mood:'excited',blink:b1,k:'op'})
+    };
+  }
+}
+</script>
+</body>
+</html>

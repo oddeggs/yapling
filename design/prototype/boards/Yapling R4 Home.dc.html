@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ybob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-5px) scale(.985,1.02)}}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yin{0%{transform:translateY(8px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes ybar{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+@keyframes yglow{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 8px rgba(239,163,244,.35)}50%{box-shadow:0 4px 0 #17131C,0 0 0 18px rgba(239,163,244,.15)}}
+@keyframes ydot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes ysp{0%{transform:scale(0) rotate(0);opacity:0}40%{transform:scale(1.2) rotate(20deg);opacity:1}100%{transform:scale(.8) rotate(45deg);opacity:0}}
+@keyframes yping{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-6px) rotate(-3deg)}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;max-width:2300px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#EFA3F4;border:2px solid #17131C"></span>Yapling · Round 4 · 3 of 4</div>
+      <div style="font-size:64px;font-weight:800;letter-spacing:-0.05em;line-height:.95">Home, calls and <span style="background:#EFA3F4;padding:0 10px;border-radius:12px">gentle limits</span></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button onClick="{{ toggleSound }}" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font:800 14px Lexend,sans-serif;cursor:pointer;color:#17131C">{{ soundLabel }}</button>
+      <a href="Yapling%20R4%20Brand.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">1 Brand &amp; system</a>
+      <a href="Yapling%20R4%20Onboarding.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">2 Onboarding</a>
+      <a href="Yapling%20R4%20Home.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">3 Home &amp; calls</a>
+      <a href="Yapling%20R4%20Town.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">4 Town &amp; story</a>
+    </div>
+  </div>
+  <section id="4g" style="display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">4g</span><span style="font-weight:700;font-size:17px">Every open shows what changed · English and Vietnamese UI</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start;max-width:2560px">
+
+      <div data-screen-label="H1 Burrow" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">H1</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">The burrow · since you were away</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F9DAFB;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ burrowScene }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:58px;left:12px;right:12px;padding:10px 12px 12px;border-radius:28px;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.18);z-index:4">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase">Since you were away</span><div style="display:flex;gap:4px"><sc-for list="{{ awayDots }}" as="d" hint-placeholder-count="4"><span style="width:{{ d.w }};height:6px;border-radius:3px;background:{{ d.c }}"></span></sc-for></div></div>
+            <div style="display:flex;align-items:center;gap:10px;animation:yin .35s ease-out both" key="{{ awayKey }}">
+              <div style="width:44px;height:44px;border-radius:22px;overflow:hidden;border:2.5px solid #17131C;flex:none;box-sizing:border-box">{{ away.face }}</div>
+              <div style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-size:16px;font-weight:800;letter-spacing:-0.02em;line-height:1.1">{{ away.title }}</span><span style="font-size:12.5px;font-weight:600;color:#5D5366">{{ away.sub }}</span></div>
+              <button style="width:40px;height:40px;border-radius:20px;border:2.5px solid #17131C;background:{{ away.btn }};box-shadow:0 3px 0 #17131C;font:800 13px Lexend,sans-serif;color:#17131C;cursor:pointer;flex:none">{{ away.icon }}</button>
+            </div>
+          </div>
+          <div style="position:absolute;top:323px;left:22px;display:flex;gap:0">
+            <sc-for list="{{ jars }}" as="o" hint-placeholder-count="3"><div style="width:56px;height:75px">{{ o.el }}</div></sc-for>
+          </div>
+          <div style="position:absolute;top:412px;left:22px;display:flex;gap:0"><sc-for list="{{ jars }}" as="o" hint-placeholder-count="3"><span style="width:56px;text-align:center;font-size:10px;font-weight:800;white-space:nowrap">{{ o.word }}</span></sc-for></div>
+          <div style="position:absolute;top:323px;left:216px;display:flex;gap:0">
+            <sc-for list="{{ plants }}" as="o" hint-placeholder-count="3"><div style="width:52px;height:75px">{{ o.el }}</div></sc-for>
+          </div>
+          <div style="position:absolute;top:412px;left:216px;display:flex;gap:0"><sc-for list="{{ plants }}" as="o" hint-placeholder-count="3"><span style="width:52px;text-align:center;font-size:10px;font-weight:800;white-space:nowrap">{{ o.word }}</span></sc-for></div>
+          <div style="position:absolute;top:454px;left:62px;display:flex;gap:0">
+            <sc-for list="{{ desk }}" as="o" hint-placeholder-count="2"><div style="width:50px;height:67px">{{ o.el }}</div></sc-for>
+          </div>
+          <button style="position:absolute;top:515px;left:236px;width:56px;height:75px;padding:0;border:none;background:none;cursor:pointer">{{ mailbox }}</button>
+          <div style="position:absolute;top:490px;left:230px;padding:3px 8px;border-radius:9px;background:#FFFFFF;border:2px solid #17131C;font-size:10.5px;font-weight:800;white-space:nowrap;transform:rotate(-4deg)">Mei's postcard</div>
+          <div style="position:absolute;top:606px;left:14px;display:flex;align-items:center;gap:6px;padding:5px 10px 5px 5px;border-radius:18px;background:rgba(255,255,255,.6);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.9)">
+            <svg width="28" height="28" viewBox="0 0 56 56"><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="#17131C" stroke-width="11" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="#17131C" stroke-width="11" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="#17131C" stroke-width="11" stroke-linecap="round"></path><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="#EFA3F4" stroke-width="5" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="#EFA3F4" stroke-width="5" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path></svg>
+            <span style="font-size:12px;font-weight:800">2 of 3 calls</span>
+          </div>
+          <div style="position:absolute;top:520px;left:110px">{{ burrowPip }}</div>
+          <div style="position:absolute;top:478px;left:206px;max-width:160px;padding:9px 13px;border-radius:18px 18px 18px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:15px;font-weight:800;line-height:1.1;letter-spacing:-0.02em;z-index:3">{{ pipLine }}</div>
+          <div style="position:absolute;bottom:26px;left:22px;right:22px;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-radius:35px;background:rgba(255,255,255,.45);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),inset 0 -1px 1px rgba(255,255,255,.4),0 12px 32px rgba(46,20,70,.18)">
+            <div style="width:88px;height:54px;border-radius:27px;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">Burrow</div>
+            <button style="width:124px;height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Chat</button>
+            <div style="width:88px;text-align:center;font-size:14px;font-weight:700;color:#5D5366">Town</div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="H2 Burrow VN" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">H2</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Same screen, Vietnamese UI</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F9DAFB;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ burrowScene2 }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:58px;left:12px;right:12px;padding:10px 12px 12px;border-radius:28px;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.18);z-index:4">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase">Trong lúc bạn đi vắng</span><div style="display:flex;gap:4px"><sc-for list="{{ awayDots }}" as="d" hint-placeholder-count="4"><span style="width:{{ d.w }};height:6px;border-radius:3px;background:{{ d.c }}"></span></sc-for></div></div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:44px;height:44px;border-radius:22px;overflow:hidden;border:2.5px solid #17131C;flex:none;box-sizing:border-box">{{ awayVn.face }}</div>
+              <div style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-size:16px;font-weight:800;letter-spacing:-0.02em;line-height:1.1">{{ awayVn.title }}</span><span style="font-size:12.5px;font-weight:600;color:#5D5366">{{ awayVn.sub }}</span></div>
+              <button style="width:40px;height:40px;border-radius:20px;border:2.5px solid #17131C;background:{{ awayVn.btn }};box-shadow:0 3px 0 #17131C;font:800 13px Lexend,sans-serif;color:#17131C;cursor:pointer;flex:none">{{ awayVn.icon }}</button>
+            </div>
+          </div>
+          <div style="position:absolute;top:323px;left:22px;display:flex"><sc-for list="{{ jars }}" as="o" hint-placeholder-count="3"><div style="width:56px;height:75px">{{ o.el2 }}</div></sc-for></div>
+          <div style="position:absolute;top:412px;left:22px;display:flex"><sc-for list="{{ jars }}" as="o" hint-placeholder-count="3"><span style="width:56px;text-align:center;font-size:10px;font-weight:800;white-space:nowrap">{{ o.word }}</span></sc-for></div>
+          <div style="position:absolute;top:323px;left:216px;display:flex"><sc-for list="{{ plants }}" as="o" hint-placeholder-count="3"><div style="width:52px;height:75px">{{ o.el2 }}</div></sc-for></div>
+          <div style="position:absolute;top:412px;left:216px;display:flex"><sc-for list="{{ plants }}" as="o" hint-placeholder-count="3"><span style="width:52px;text-align:center;font-size:10px;font-weight:800;white-space:nowrap">{{ o.word }}</span></sc-for></div>
+          <div style="position:absolute;top:454px;left:62px;display:flex"><sc-for list="{{ desk }}" as="o" hint-placeholder-count="2"><div style="width:50px;height:67px">{{ o.el2 }}</div></sc-for></div>
+          <div style="position:absolute;top:515px;left:236px;width:56px;height:75px">{{ mailbox2 }}</div>
+          <div style="position:absolute;top:490px;left:226px;padding:3px 8px;border-radius:9px;background:#FFFFFF;border:2px solid #17131C;font-size:10.5px;font-weight:800;white-space:nowrap;transform:rotate(-4deg)">Bưu thiếp của Mei</div>
+          <div style="position:absolute;top:606px;left:14px;display:flex;align-items:center;gap:6px;padding:5px 10px 5px 5px;border-radius:18px;background:rgba(255,255,255,.6);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.9)">
+            <svg width="28" height="28" viewBox="0 0 56 56"><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="#17131C" stroke-width="11" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="#17131C" stroke-width="11" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="#17131C" stroke-width="11" stroke-linecap="round"></path><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="#EFA3F4" stroke-width="5" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="#EFA3F4" stroke-width="5" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path></svg>
+            <span style="font-size:12px;font-weight:800">2/3 cuộc gọi</span>
+          </div>
+          <div style="position:absolute;top:520px;left:110px">{{ burrowPip2 }}</div>
+          <div style="position:absolute;top:478px;left:206px;max-width:160px;padding:9px 13px;border-radius:18px 18px 18px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:15px;font-weight:800;line-height:1.1;letter-spacing:-0.02em;z-index:3">{{ pipLine }}</div>
+          <div style="position:absolute;bottom:26px;left:22px;right:22px;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-radius:35px;background:rgba(255,255,255,.45);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),inset 0 -1px 1px rgba(255,255,255,.4),0 12px 32px rgba(46,20,70,.18)">
+            <div style="width:88px;height:54px;border-radius:27px;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">Hang</div>
+            <button style="width:124px;height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Trò chuyện</button>
+            <div style="width:88px;text-align:center;font-size:14px;font-weight:700;color:#5D5366">Thị trấn</div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="H3 Live call" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">H3</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Live call · Pip rings from the pier</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#E4F7FE;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ pierScene }}</div>
+          <div style="position:absolute;top:404px;left:24px">{{ pierPip }}</div>
+          <div style="position:absolute;top:60px;left:14px;right:14px;display:flex;align-items:center;justify-content:space-between;z-index:4">
+            <div style="display:flex;align-items:center;gap:8px;height:42px;padding:0 14px;border-radius:21px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)"><span style="width:8px;height:8px;border-radius:4px;background:#5FD98A;border:1.5px solid #17131C"></span><span style="font-size:14px;font-weight:800">Pip</span><span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800;white-space:nowrap">AI</span><span style="font-size:13px;font-weight:600;color:#5D5366">on the pier · 03:12</span></div>
+          </div>
+          <div style="position:absolute;top:340px;left:190px;padding:8px 12px;border-radius:10px;background:#fff;border:2.5px solid #17131C;box-shadow:2px 4px 0 #17131C;font-size:15px;font-weight:800;transform:rotate(5deg);animation:yflag 2s ease-in-out infinite">so windy!</div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:12px;align-items:center;z-index:4">
+            <sc-if value="{{ livePipSays }}" hint-placeholder-val="{{ true }}"><div style="max-width:340px;padding:10px 16px;border-radius:12px;background:rgba(23,19,28,.82);color:#fff;font-size:20px;font-weight:700;line-height:1.25;text-align:center"><span>{{ liveSaid }}</span><span style="color:#8A8094">{{ liveUnsaid }}</span></div></sc-if>
+            <sc-if value="{{ liveYouSays }}" hint-placeholder-val="{{ false }}"><div style="max-width:340px;padding:10px 16px;border-radius:12px;background:rgba(255,255,255,.88);font-size:19px;font-weight:700;line-height:1.25;text-align:center"><span>{{ liveSaid }}</span><span style="color:#A79FB2">{{ liveUnsaid }}</span></div></sc-if>
+            <div style="align-self:stretch;height:96px;border-radius:48px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <button style="height:50px;width:96px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 15px Lexend,sans-serif;color:#17131C">Hold on</button>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:66px;height:66px;border-radius:50%;background:{{ liveMicBg }};border:3px solid {{ liveMicBd }};animation:{{ liveMicAnim }};display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box"><div style="width:5px;height:26px;border-radius:3px;background:{{ liveBar }};animation:ybar .9s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:{{ liveBar }};animation:ybar .9s .15s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:{{ liveBar }};animation:ybar .9s .3s ease-in-out infinite"></div></div><span style="font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase">{{ liveTurn }}</span></div>
+              <button style="height:50px;width:96px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 15px Lexend,sans-serif;color:#17131C">Leave</button>
+            </div>
+          </div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+
+      <div data-screen-label="H4 Correction" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">H4</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Correction · a close-up question</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F9DAFB;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(12px)">{{ callBg }}</div><div style="position:absolute;inset:0;background:rgba(249,218,251,.45)"></div>
+          <div style="position:absolute;top:96px;left:-85px">{{ fixClose }}</div>
+          <div style="position:absolute;top:66px;left:20px;right:20px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;z-index:3"><span style="font-size:12px;font-weight:800;letter-spacing:.05em;color:#5D5366">YOU SAID</span><span style="padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.85);font-size:17px;font-weight:700">My landlord <span style="text-decoration:underline wavy #17131C;text-underline-offset:4px">fix</span> the sink yesterday.</span></div>
+          <div style="position:absolute;top:190px;left:16px;padding:10px 16px;border-radius:14px;background:#FFFFFF;border:3.5px solid #17131C;box-shadow:3px 6px 0 #17131C;font-size:30px;font-weight:900;letter-spacing:-0.05em;--r:-8deg;transform:rotate(-8deg);animation:ypanel 3.4s ease-out infinite;z-index:3">every day?</div>
+          <div style="position:absolute;top:262px;right:14px;padding:10px 16px;border-radius:14px;background:#22BFF2;border:3.5px solid #17131C;box-shadow:3px 6px 0 #17131C;font-size:30px;font-weight:900;letter-spacing:-0.05em;--r:7deg;transform:rotate(7deg);animation:ypanel 3.4s .5s ease-out infinite;z-index:3">yesterday?</div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:210px;background:linear-gradient(transparent,rgba(249,218,251,.95) 40%);z-index:3"></div>
+          <div style="position:absolute;left:14px;right:14px;bottom:30px;display:flex;flex-direction:column;gap:10px;align-items:center;z-index:4"><span style="font-size:16px;font-weight:800">Pip asks. You say it again.</span><div style="width:80px;height:80px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;animation:yglow 1.6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box"><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s .15s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s .3s ease-in-out infinite"></div></div></div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+
+      <div data-screen-label="H5 Teach" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">H5</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Teach the yapling</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 18%,rgba(95,217,138,.45),transparent 42%),radial-gradient(circle at 10% 60%,rgba(239,163,244,.45),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:70px;left:200px;padding:10px 18px;border-radius:14px;background:#FFFFFF;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;font-size:30px;font-weight:800;letter-spacing:-0.04em;animation:yping 2.6s ease-in-out infinite">oat milk?</div>
+          <div style="position:absolute;top:84px;left:22px">{{ teachPip }}</div>
+          <div style="position:absolute;top:300px;left:24px;right:24px;min-height:240px;padding:22px 22px 18px 44px;border-radius:12px;background-color:#FFFFFF;background-image:repeating-linear-gradient(transparent 0,transparent 33px,#CFF0FD 33px,#CFF0FD 35px);border:3px solid #17131C;box-shadow:0 6px 0 #17131C;transform:rotate(-1.5deg);box-sizing:border-box">
+            <div style="position:absolute;top:0;bottom:0;left:30px;width:2px;background:#EFA3F4"></div>
+            <div style="position:absolute;top:-14px;left:50%;margin-left:-40px;width:80px;height:20px;border-radius:3px;background:#5FD98A;border:2px solid #17131C;transform:rotate(2deg)"></div>
+            <div style="font-family:'Kithfield Hand',cursive;font-size:30px;line-height:35px;color:#17131C">oat milk</div>
+            <div style="font-family:'Kithfield Hand',cursive;font-size:23px;line-height:35px;color:#3E3646;min-height:105px">{{ teachPipText }}<sc-if value="{{ teachWriting }}" hint-placeholder-val="{{ false }}"><span style="display:inline-block;width:14px;height:3px;background:#17131C;margin-left:2px;animation:ydot .7s ease-in-out infinite"></span></sc-if></div>
+            <div style="display:flex;justify-content:flex-end;font-family:'Kithfield Hand',cursive;font-size:17px;color:#9A5AA6">taught by Lan · Oct 21</div>
+          </div>
+          <sc-if value="{{ teachThanks }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:572px;left:24px;right:24px;padding:12px 16px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:18px;font-weight:700;line-height:1.2;animation:ypop .5s ease-out both">Thank you! I'll ask Mei for one tomorrow.</div>
+          </sc-if>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px">
+            <div style="padding:12px 16px;border-radius:22px;background:rgba(255,255,255,.7);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.95);box-shadow:0 8px 22px rgba(46,20,70,.12);font-size:17px;font-weight:700;line-height:1.25;min-height:46px;box-sizing:border-box"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366;display:block">YOU</span>{{ teachYou }}</div>
+            <div style="height:84px;border-radius:42px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.45);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),0 12px 32px rgba(46,20,70,.18)">
+              <button style="height:48px;padding:0 16px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">Say it another way</button>
+              <div style="width:62px;height:62px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 4px 0 #17131C;display:flex;align-items:center;justify-content:center;gap:4px"><div style="width:4px;height:22px;border-radius:2px;background:#17131C;animation:ybar .9s ease-in-out infinite"></div><div style="width:4px;height:22px;border-radius:2px;background:#17131C;animation:ybar .9s .15s ease-in-out infinite"></div><div style="width:4px;height:22px;border-radius:2px;background:#17131C;animation:ybar .9s .3s ease-in-out infinite"></div></div>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="H6 Voicemail" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">H6</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Voicemail as a postcard</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFE9C2;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-16px;filter:blur(5px)">{{ vmCafe }}</div><div style="position:absolute;inset:0;background:rgba(255,236,214,.35)"></div>
+          <div style="position:absolute;top:64px;left:22px;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px 0 7px;border-radius:13px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;z-index:3"><span style="width:10px;height:10px;border-radius:5px;background:#22BFF2;border:2px solid #17131C"></span>In your mailbox</div>
+          <div style="position:absolute;top:116px;left:18px;right:18px;height:400px;padding:18px;border-radius:6px;background:#FFFDF6;border:3px solid #17131C;box-shadow:0 8px 0 #17131C;box-sizing:border-box;animation:yflyin 8s cubic-bezier(.2,.8,.3,1) infinite;z-index:3;display:grid;grid-template-columns:1fr 98px;grid-template-rows:auto 1fr auto;gap:12px">
+            <div style="grid-column:1;grid-row:1 / 3;display:flex;flex-direction:column;gap:8px;border-right:2px dashed #D3CCDC;padding-right:12px">
+              <span style="font-family:'Kithfield Hand',cursive;font-size:22px">Lan,</span>
+              <span style="font-family:'Kithfield Hand',cursive;font-size:24px;line-height:1.15">sit down. Someone wants to buy the café, and you'll never guess who…</span>
+              <span style="font-family:'Kithfield Hand',cursive;font-size:20px;color:#9A5AA6;margin-top:auto">Mei</span>
+            </div>
+            <div style="grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:center;gap:10px">
+              <div style="padding:5px;background:#fff;border:2.5px dashed #17131C;transform:rotate(4deg)"><div style="width:76px;height:88px;overflow:hidden;border:2px solid #17131C">{{ vmStamp }}</div></div>
+              <div style="width:78px;height:78px;border-radius:39px;border:2.5px solid #5B4A8C;display:flex;align-items:center;justify-content:center;text-align:center;font-size:9.5px;font-weight:800;color:#5B4A8C;line-height:1.1;transform:rotate(-14deg)">NATTERWICK<br>OCT 20<br>18:20</div>
+            </div>
+            <div style="grid-column:2;grid-row:2;display:flex;flex-direction:column;gap:6px;justify-content:flex-end"><span style="height:2px;background:#D3CCDC"></span><span style="font-size:11px;font-weight:800">Lan</span><span style="font-size:10px;font-weight:600;color:#5D5366">The Burrow, Natterwick</span></div>
+            <button onClick="{{ vmPlay }}" style="grid-column:1 / 3;grid-row:3;display:flex;align-items:center;gap:10px;padding:8px 12px 8px 8px;border-radius:18px;border:2px solid #17131C;background:#F9DAFB;cursor:pointer;font-family:inherit"><span style="width:38px;height:38px;border-radius:19px;background:#EFA3F4;border:2.5px solid #17131C;color:#17131C;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box">{{ vmIcon }}</span><span style="display:flex;align-items:center;gap:3px;flex:1;height:28px"><sc-for list="{{ vmBars }}" as="b" hint-placeholder-count="34"><span style="width:3px;height:{{ b.h }};border-radius:2px;background:{{ b.c }}"></span></sc-for></span><span style="font-size:13px;font-weight:800">0:24</span></button>
+          </div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:16px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4">
+            <button onClick="{{ vmBack }}" style="height:56px;border-radius:28px;border:3px solid #17131C;background:#5FD98A;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Call Mei back</button>
+            <button style="height:48px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);color:#17131C;font:800 15px Lexend,sans-serif">Later · it'll wait in your mailbox</button>
+          </div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+
+      <div data-screen-label="H7 Voice notes" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">H7</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Voice notes and text · the gentle first rung</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(239,163,244,.5),transparent 40%),radial-gradient(circle at 10% 70%,rgba(34,191,242,.3),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:58px;left:12px;right:12px;height:58px;display:flex;align-items:center;gap:10px;padding:0 8px 0 10px;border-radius:29px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 10px 26px rgba(46,20,70,.14);z-index:4">
+            <div style="width:38px;height:38px;border-radius:19px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box">{{ chatFace }}</div>
+            <span style="display:flex;align-items:center;gap:6px;font-size:17px;font-weight:800;flex:1">Pip<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800;white-space:nowrap">AI</span></span>
+            <div style="display:flex;padding:3px;border-radius:18px;background:rgba(23,19,28,.06)"><span style="height:34px;padding:0 14px;border-radius:15px;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center">Voice</span><span style="height:34px;padding:0 14px;font-size:13px;font-weight:800;display:flex;align-items:center">Text</span></div>
+          </div>
+          <div style="position:absolute;top:132px;left:14px;right:14px;display:flex;flex-direction:column;gap:12px">
+            <div style="align-self:flex-start;max-width:280px;display:flex;flex-direction:column;gap:6px;padding:10px 14px 10px 10px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C">
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;border-radius:16px;background:#fff;border:2px solid #17131C;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;box-sizing:border-box">▶</span><span style="display:flex;align-items:center;gap:2.5px;height:26px"><sc-for list="{{ vnBarsA }}" as="b" hint-placeholder-count="22"><span style="width:3px;height:{{ b.h }};border-radius:2px;background:#17131C"></span></sc-for></span><span style="font-size:12px;font-weight:800">0:06</span></div>
+              <span style="font-size:14px;font-weight:600">Morning! Did you sleep well?</span>
+            </div>
+            <div style="align-self:flex-end;max-width:260px;padding:11px 15px;border-radius:22px 22px 6px 22px;background:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(46,20,70,.08);font-size:16px;font-weight:700">Not really. Big meeting today.</div>
+            <div style="align-self:flex-start;max-width:280px;display:flex;flex-direction:column;gap:6px;padding:10px 14px 10px 10px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C">
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;border-radius:16px;background:#fff;border:2px solid #17131C;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;box-sizing:border-box">▶</span><span style="display:flex;align-items:center;gap:2.5px;height:26px"><sc-for list="{{ vnBarsB }}" as="b" hint-placeholder-count="22"><span style="width:3px;height:{{ b.h }};border-radius:2px;background:#17131C"></span></sc-for></span><span style="font-size:12px;font-weight:800">0:08</span></div>
+              <span style="font-size:14px;font-weight:600">Want to practise your opening line with me?</span>
+            </div>
+            <sc-if value="{{ vnSent }}" hint-placeholder-val="{{ false }}">
+              <div style="align-self:flex-end;display:flex;align-items:center;gap:8px;padding:10px 14px 10px 10px;border-radius:22px 22px 6px 22px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;animation:yin .3s ease-out both"><span style="width:32px;height:32px;border-radius:16px;background:#CFF0FD;border:2px solid #17131C;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;box-sizing:border-box">▶</span><span style="display:flex;align-items:center;gap:2.5px;height:26px"><sc-for list="{{ vnBarsMe }}" as="b" hint-placeholder-count="26"><span style="width:3px;height:{{ b.h }};border-radius:2px;background:#17131C"></span></sc-for></span><span style="font-size:12px;font-weight:800">0:09</span></div>
+              <div style="align-self:flex-start;display:flex;align-items:center;gap:6px;padding:10px 14px;border-radius:18px;background:#EFA3F4;border:2.5px solid #17131C"><span style="font-size:13px;font-weight:800">Pip is recording</span><span style="width:6px;height:6px;border-radius:3px;background:#17131C;animation:ydot 1s ease-in-out infinite"></span><span style="width:6px;height:6px;border-radius:3px;background:#17131C;animation:ydot 1s .15s ease-in-out infinite"></span><span style="width:6px;height:6px;border-radius:3px;background:#17131C;animation:ydot 1s .3s ease-in-out infinite"></span></div>
+            </sc-if>
+          </div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.5);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <sc-if value="{{ vnRec }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:12px;height:64px;padding:0 8px">
+                <span style="width:14px;height:14px;border-radius:7px;background:#EFA3F4;border:2px solid #17131C;animation:ydot 1s ease-in-out infinite"></span>
+                <span style="font-size:17px;font-weight:800;flex:1">Recording {{ vnSecs }}</span>
+                <div style="width:64px;height:64px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;animation:yglow 1.6s ease-in-out infinite;display:flex;align-items:center;justify-content:center"><span style="width:20px;height:20px;border-radius:5px;background:#17131C"></span></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ vnReview }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;gap:3px;height:34px;padding:0 10px;border-radius:17px;background:rgba(255,255,255,.75)"><sc-for list="{{ vnBarsMe }}" as="b" hint-placeholder-count="26"><span style="width:4px;height:{{ b.h }};border-radius:2px;background:{{ b.c }}"></span></sc-for></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px">
+                  <button style="height:50px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">▶ Listen</button>
+                  <button style="height:50px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">↺ Again</button>
+                  <button style="height:50px;border-radius:25px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 15px Lexend,sans-serif;color:#17131C">Send</button>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ vnSent }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:10px;height:64px;padding:0 4px">
+                <div style="flex:1;height:50px;border-radius:25px;background:rgba(255,255,255,.75);display:flex;align-items:center;padding:0 16px;font-size:15px;font-weight:600;color:#8A8094">Type instead…</div>
+                <div style="width:56px;height:56px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 4px 0 #17131C;display:flex;align-items:center;justify-content:center;gap:3px"><div style="width:4px;height:20px;border-radius:2px;background:#17131C"></div><div style="width:4px;height:20px;border-radius:2px;background:#17131C"></div><div style="width:4px;height:20px;border-radius:2px;background:#17131C"></div></div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="H8 Post-call" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">H8</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">After the call · a comic strip and a receipt</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFF7EE;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:62px;left:22px;right:22px;font-size:46px;font-weight:900;letter-spacing:-0.06em;line-height:1.02;animation:ytype 5s ease-out infinite;transform-origin:0 50%">That was<br><span style="display:inline-block;margin-top:4px;background:#5FD98A;border-radius:10px;padding:0 8px;border:2.5px solid #17131C">shiok.</span></div>
+          <div style="position:absolute;top:184px;left:16px;right:16px;display:flex;gap:8px"><div style="position:relative;flex:1;height:150px;border:3px solid #17131C;background:#FFE9C2;overflow:hidden;--r:-2deg;transform:rotate(-2deg);animation:ypanel 6s 0s ease-out infinite;box-shadow:0 4px 0 #17131C"><div style="position:absolute;bottom:-14px;left:50%;margin-left:-55px;width:110px;height:110px">{{ pc1 }}</div><div style="position:absolute;top:6px;left:6px;right:6px;padding:5px 7px;border-radius:12px;background:#fff;border:2px solid #17131C;font-size:12px;font-weight:800;line-height:1.1">Kaya toast lah!</div></div><div style="position:relative;flex:1;height:150px;border:3px solid #17131C;background:#F9DAFB;overflow:hidden;--r:1.5deg;transform:rotate(1.5deg);animation:ypanel 6s 0.4s ease-out infinite;box-shadow:0 4px 0 #17131C"><div style="position:absolute;bottom:-14px;left:50%;margin-left:-55px;width:110px;height:110px">{{ pc2 }}</div><div style="position:absolute;top:6px;left:6px;right:6px;padding:5px 7px;border-radius:12px;background:#fff;border:2px solid #17131C;font-size:12px;font-weight:800;line-height:1.1">A sneeze?</div><span style="position:absolute;bottom:8px;right:6px;font-size:26px;font-weight:900;color:#EFA3F4;-webkit-text-stroke:2px #17131C;transform:rotate(-10deg)">?</span></div><div style="position:relative;flex:1;height:150px;border:3px solid #17131C;background:#D7F7E2;overflow:hidden;--r:-1deg;transform:rotate(-1deg);animation:ypanel 6s 0.8s ease-out infinite;box-shadow:0 4px 0 #17131C"><div style="position:absolute;bottom:-14px;left:50%;margin-left:-55px;width:110px;height:110px">{{ pc3 }}</div><div style="position:absolute;top:6px;left:6px;right:6px;padding:5px 7px;border-radius:12px;background:#fff;border:2px solid #17131C;font-size:12px;font-weight:800;line-height:1.1">Really, really good!</div><span style="position:absolute;bottom:8px;right:6px;font-size:26px;font-weight:900;color:#EFA3F4;-webkit-text-stroke:2px #17131C;transform:rotate(-10deg)">HA!</span></div></div>
+          <div style="position:absolute;top:372px;left:40px;right:40px;padding:18px 18px 26px;background:#FFFFFF;border:2.5px solid #17131C;transform:rotate(-2deg);box-shadow:0 6px 0 rgba(23,19,28,.2);font-family:'Courier New',monospace;font-size:13.5px;font-weight:700;line-height:1.7;clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),95% 100%,90% calc(100% - 10px),85% 100%,80% calc(100% - 10px),75% 100%,70% calc(100% - 10px),65% 100%,60% calc(100% - 10px),55% 100%,50% calc(100% - 10px),45% 100%,40% calc(100% - 10px),35% 100%,30% calc(100% - 10px),25% 100%,20% calc(100% - 10px),15% 100%,10% calc(100% - 10px),5% 100%,0 calc(100% - 10px))">
+            <div style="text-align:center;font-weight:800">LANTERN CAFÉ · CALL #12</div>
+            <div style="border-top:2px dashed #17131C;margin:6px 0"></div>
+            <div style="display:flex;justify-content:space-between"><span>FLOW (no stopping)</span><span>48s</span></div>
+            <div style="display:flex;justify-content:space-between;color:#3E9A60"><span>  up from</span><span>20s</span></div>
+            <div style="display:flex;justify-content:space-between"><span>PACE</span><span>112 wds/min</span></div>
+            <div style="display:flex;justify-content:space-between"><span>PAUSES</span><span>3 / min</span></div>
+            <div style="display:flex;justify-content:space-between"><span>NEW PHRASES</span><span>x3</span></div>
+            <div style="border-top:2px dashed #17131C;margin:6px 0"></div>
+            <div style="text-align:center">PIP LEARNED 3 THINGS · COME AGAIN</div>
+          </div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;padding:0 10px"><span style="font-size:13px;font-weight:800;align-self:center;width:70px;line-height:1.1">New in the burrow</span><sc-for list="{{ postObjs }}" as="w" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:50px;height:67px">{{ w.el }}</div><span style="font-size:10.5px;font-weight:800;white-space:nowrap">{{ w.word }}</span></div></sc-for></div>
+            <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">See what Pip learned</button>
+          </div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+
+      <div data-screen-label="H9 Minutes resting" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">H9</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Gentle limit · free minutes used</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 35%,rgba(34,191,242,.4),transparent 45%),radial-gradient(circle at 90% 90%,rgba(239,163,244,.4),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:96px;left:95px">{{ restPip }}</div>
+          <div style="position:absolute;top:112px;left:24px;padding:6px 12px;border-radius:10px;background:#CFF0FD;border:3px solid #17131C;box-shadow:3px 4px 0 #17131C;font-size:15px;font-weight:800;transform:rotate(-6deg)">Back Monday</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;height:410px;border-radius:44px;padding:24px 18px 16px;box-sizing:border-box;display:flex;flex-direction:column;gap:14px;background:rgba(255,255,255,.5);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),0 14px 36px rgba(46,20,70,.16)">
+            <span style="font-size:30px;font-weight:800;letter-spacing:-0.05em;line-height:1;padding:0 4px">Pip's voice needs a rest until Monday.</span>
+            <span style="font-size:17px;font-weight:700;padding:0 4px">Voice notes are still open.</span>
+            <div style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.72)">
+              <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:800"><span>Live minutes this week</span><span>10 of 10 min</span></div>
+              <div style="height:12px;border-radius:6px;background:#CFF0FD;border:2px solid #17131C"></div>
+              <span style="font-size:12px;font-weight:600;color:#5D5366">Your weekly ring, episodes and the burrow keep going.</span>
+            </div>
+            <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer;margin-top:auto">Send Pip a voice note</button>
+            <button style="height:50px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.72);color:#17131C;font:800 15px Lexend,sans-serif;cursor:pointer">More minutes with Plus</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="H10 Break" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">H10</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Three-hour break reminder</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(95,217,138,.5),transparent 45%),radial-gradient(circle at 10% 90%,rgba(34,191,242,.35),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:80px;left:24px;right:24px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:21px;font-weight:700;line-height:1.2;letter-spacing:-0.02em">Three hours of chatting! My ears are sleepy. Walk to the harbour with me?</div>
+          <button onClick="{{ breakTap }}" style="position:absolute;top:196px;left:85px;padding:0;border:none;background:none;cursor:pointer">{{ yawnPip }}</button>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:20px 16px 16px;border-radius:44px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.5);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <div style="display:flex;gap:8px;padding:0 4px 6px">
+              <span style="padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.75);font-size:13px;font-weight:800;white-space:nowrap">Today · 3 h 04 min</span>
+              <span style="padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.75);font-size:13px;font-weight:800;white-space:nowrap">Harbour walk · 15 min</span>
+            </div>
+            <button style="height:58px;border-radius:29px;border:3px solid #17131C;background:#5FD98A;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Take a break</button>
+            <button style="height:52px;border-radius:26px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.72);color:#17131C;font:800 16px Lexend,sans-serif;cursor:pointer">10 more minutes</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const AWAY=[
+  {who:'pip',title:'Pip went to the market alone',sub:"Arjun said its 'please' was perfect · 0:18",icon:'▶',btn:'#EFA3F4',mood:'proud',vt:'Pip tự đi chợ một mình',vs:"Arjun khen chữ 'please' của Pip · 0:18"},
+  {who:'otter',title:'Voice postcard from Mei',sub:'From the café roof · 0:12',icon:'▶',btn:'#22BFF2',mood:'happy',vt:'Bưu thiếp giọng nói từ Mei',vs:'Từ sân thượng quán cà phê · 0:12'},
+  {who:'bison',title:'New episode: Hank wants it cheaper',sub:'Season 1 · Episode 3 · 6 min',icon:'▶',btn:'#5FD98A',mood:'surprised',vt:'Tập mới: Hank muốn giảm giá',vs:'Mùa 1 · Tập 3 · 6 phút',sil:1},
+  {who:'pip',title:'Your Flow: 48s, up from 20s',sub:'Seconds speaking without stopping',icon:'→',btn:'#FFFFFF',mood:'excited',vt:'Flow: 48 giây, tăng từ 20 giây',vs:'Số giây nói liền mạch'}
+];
+const LIVE=[{who:'pip',text:'How was your weekend?'},{who:'you',text:'I went to Vũng Tàu with my sister.'},{who:'pip',text:'Ooh! Was the sea warm?'},{who:'you',text:'Very warm. We ate seafood all day.'}];
+const FIX=[{who:'you',parts:[['My landlord ',0],['fix',2],[' the sink yesterday.',0]]},{who:'pip',text:'He fix it… every day? Or yesterday?'},{who:'you',parts:[['Yesterday. He ',0],['fixed',1],[' it yesterday.',0]]},{who:'pip',text:'Fixed! Got it. Lucky sink.'}];
+const TEACH_YOU="It's milk made from oats, not from cows. Mei has it.";
+const TEACH_PIP="oat milk = milk from oats, not cows! Mei sells it. Lan likes it in coffee.";
+class Component extends DCLogic {
+  state={bt:0,sound:false,playing:false};
+  sim={away:0,li:0,lc:0,lw:0,fi:0,fc:0,fw:0,tp:0,tc:0,vm:0,vn:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.step(),90); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  step(){ const S=this.sim, bt=this.state.bt;
+    if (bt%46===45) S.away=(S.away+1)%AWAY.length;
+    const L=LIVE[S.li]; if(S.lw>0){ S.lw--; if(!S.lw){ S.li=(S.li+1)%LIVE.length; S.lc=0; } } else { S.lc++; if(S.lc>L.text.length) S.lw=L.who==='you'?18:14; }
+    const F=FIX[S.fi], flen=F.text?F.text.length:F.parts.reduce((n,p)=>n+p[0].length,0);
+    if(S.fw>0){ S.fw--; if(!S.fw){ S.fi=(S.fi+1)%FIX.length; S.fc=0; if(S.fi===3&&this.sfx) this.sfx('sparkle'); } } else { S.fc++; if(S.fc>flen) S.fw=S.fi===2?26:18; }
+    S.tc++; const tl=[TEACH_YOU.length+14,TEACH_PIP.length+10,30]; if(S.tc>tl[S.tp]){ S.tc=0; S.tp=(S.tp+1)%3; }
+    if (this.state.playing){ S.vm+=0.012; if(S.vm>=1){ S.vm=0; this.setState({playing:false}); } }
+    S.vn=(S.vn+1)%120;
+    this.setState(s=>({bt:s.bt+1})); }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {};
+    const st=this.state, S=this.sim, {b1,b2,b3}=K.blinkers(st.bt); if(!this.sfx) this.sfx=K.makeSfx(()=>this.state.sound); const sfx=this.sfx;
+    const sp='redpanda', a=AWAY[S.away];
+    const faceOf=x=>x.sil?K.h(K.Cv,{key:'sil',fn:'s_sil',w:44,hh:52,o:{sp:'bison',color:'#17131C'}}):K.fc(x.who==='pip'?sp:x.who,44,'happy',x.who==='pip'?'#F9DAFB':'#CFF0FD');
+    const awayDots=AWAY.map((_,i)=>({w:i===S.away?'16px':'6px',c:i===S.away?'#17131C':'#C7BFD0'}));
+    const J=[['kopi',2,'#7A4E33'],['kaya',1,'#9BD36B'],['oat milk',0,'#F3E7D3']], PL=[['proud',2],['nervous',1],['relieved',0]], DK=[["I'm on it",2],['circle back',1]];
+    const ob=(fam,stage,key,w,extra)=>K.h(K.Cv,{key,fn:'s_obj',w,hh:w*4/3,o:Object.assign({fam,stage,t:K.tk(200)},extra||{})});
+    const L=LIVE[S.li], lt=S.lw>0?L.text.length:Math.min(S.lc,L.text.length), pipTalk=L.who==='pip'&&S.lw===0;
+    const F=FIX[S.fi], ft=S.fw>0?999:S.fc;
+    let n=ft; const parts=F.parts?F.parts.map(([t,k])=>{ const vis=t.slice(0,Math.max(0,n)); n-=t.length; return {t:vis,bg:k===1?'#5FD98A':'transparent',ul:k===2?'underline wavy #EFA3F4':'none',pad:k===1&&vis?'0 4px':'0'}; }):[];
+    const fixPipTalk=!!F.text&&S.fw===0, fixed=S.fi===2&&S.fw>0||S.fi===3;
+    const tpYou=TEACH_YOU.slice(0,Math.min(S.tp===0?S.tc:999,TEACH_YOU.length)), tpPip=S.tp===0?'':TEACH_PIP.slice(0,S.tp===1?S.tc:999);
+    const bars=(seed,nb,prog,on)=>{ let s=seed; const r=()=>((s=(s*16807)%2147483647)/2147483647); return Array.from({length:nb},(_,i)=>({h:(r()<0.12?4:8+r()*20)+'px',c:prog!=null&&i/nb<prog?on:'rgba(23,19,28,.25)'})); };
+    const vnPhase=S.vn<40?'rec':S.vn<80?'review':'sent';
+    return {
+      pierScene:K.sc('harbour',390,844,{t:K.tk(150),pierY:600}), pierPip:K.cr(sp,{size:170,mood:pipTalk?'happy':'listen',blink:b1,mouth:pipTalk?K.mouthFor(L.text,lt):'rest',k:'pier'}),
+      fixClose:K.cr(sp,{size:560,noTail:true,mood:'confused',tilt:8,blink:b2,still:true,k:'fxc'}),
+      vmCafe:K.sc('cafeWarm',422,876,{t:K.tk(300)}), vmStamp:K.fc('otter',76,'worried','#CFF0FD'),
+      pc1:K.fc('otter',110,'happy','#FFE9C2'), pc2:K.fc(sp,110,'confused','#F9DAFB'), pc3:K.fc(sp,110,'laugh','#D7F7E2'),
+      soundLabel:st.sound?'Sound on':'Turn sound on', toggleSound:()=>this.setState({sound:!st.sound},()=>sfx('pop')),
+      burrowScene:K.sc('burrow2',390,844,{t:K.tk(200)}), burrowScene2:K.sc('burrow2',390,844,{t:K.tk(200)}),
+      away:{face:faceOf(a),title:a.title,sub:a.sub,icon:a.icon,btn:a.btn}, awayVn:{face:faceOf(a),title:a.vt,sub:a.vs,icon:a.icon,btn:a.btn}, awayDots, awayKey:'a'+S.away,
+      pipLine:["You're back! I have news.",'Mei sent you a postcard!','Ooh, a new episode!','Look how long you talked!'][S.away],
+      burrowPip:K.cr(sp,{size:170,mood:st.bt%46<10?'wave':a.mood,blink:b1,look:4}), burrowPip2:K.cr(sp,{size:170,mood:a.mood,blink:b2,look:4,k:'v'}),
+      jars:J.map(([w,s,c],i)=>({word:w,el:ob('jar',s,'j'+i,56,{fill:c}),el2:ob('jar',s,'jv'+i,56,{fill:c})})),
+      plants:PL.map(([w,s],i)=>({word:w,el:ob('plant',s,'p'+i,52),el2:ob('plant',s,'pv'+i,52)})),
+      desk:DK.map(([w,s],i)=>({word:w,el:ob('desk',s,'d'+i,50,{kind:i?'notes':'mug'}),el2:ob('desk',s,'dv'+i,50,{kind:i?'notes':'mug'})})),
+      callBg:K.sc('burrow2',438,892,{}), mailbox:ob('mail',1,'mb',56), mailbox2:ob('mail',1,'mb2',56),
+      livePip:K.cr(sp,{size:230,mood:pipTalk?'happy':'listen',blink:b1,mouth:pipTalk?K.mouthFor(L.text,lt):'rest'}),
+      livePipSays:L.who==='pip', liveYouSays:L.who==='you', liveSaid:L.text.slice(0,lt), liveUnsaid:L.text.slice(lt),
+      liveTurn:L.who==='you'?'Your turn':'Pip is talking', liveMicBg:L.who==='you'?'#EFA3F4':'#FFFFFF', liveMicBd:L.who==='you'?'#17131C':'#D3CCDC', liveMicAnim:L.who==='you'?'yglow 1.6s ease-in-out infinite':'none', liveBar:L.who==='you'?'#17131C':'#D3CCDC', liveTurnBg:L.who==='you'?'#EFA3F4':'#FFFFFF',
+      fixPip:K.cr(sp,{size:220,mood:S.fi===1?'confused':S.fi===3?'excited':'listen',tilt:S.fi===1?10:undefined,blink:b2,mouth:fixPipTalk?K.mouthFor(F.text,S.fc):'rest',k:'fx'}),
+      fixPipSays:!!F.text, fixPipText:F.text?F.text.slice(0,Math.min(ft,F.text.length)):'', fixYou:!!F.parts, fixParts:parts, fixed, fixedKey:'s'+S.fi,
+      fixPrev:S.fi===2||S.fi===3?'My landlord fix the sink yesterday.':'',
+      teachPip:K.cr(sp,{size:170,mood:S.tp===2?'warm':S.tp===1?'think':'listen',pose:'book',prop:'book',blink:b1,k:'tp'}),
+      teachYou:tpYou, teachPipText:tpPip, teachThanks:S.tp===2, teachWriting:S.tp===1,
+      vmFace:K.fc('otter',64,'worried','#CFF0FD'), vmMei:K.cr('otter',{size:120,mood:'worried',blink:b3}),
+      vmBars:bars(7,34,st.playing?S.vm:null,'#17131C'), vmPlay:()=>{ this.sim.vm=0; this.setState({playing:!st.playing}); sfx('soft'); }, vmIcon:st.playing?'❚❚':'▶',
+      vmBack:()=>sfx('ring'),
+      chatFace:K.fc(sp,34), vnBarsA:bars(3,22,null), vnBarsB:bars(11,22,null), vnBarsMe:bars(5,26,vnPhase==='review'?((S.vn-40)/40):null,'#17131C'),
+      vnRec:vnPhase==='rec', vnReview:vnPhase==='review', vnSent:vnPhase==='sent', vnSecs:'0:0'+Math.min(9,Math.floor((S.vn%40)/4)),
+      postPip:K.cr(sp,{size:160,mood:'excited',blink:b1,k:'pp'}),
+      postObjs:[['jar',0,'oat milk',{fill:'#F3E7D3'}],['desk',0,'quick sync',{kind:'headphones'}],['plant',0,'relieved',{}]].map(([f,s,w,x],i)=>({word:w,el:K.obj(f,s,'po'+i,50,x)})),
+      restPip:K.cr(sp,{size:200,mood:'sleepy',pose:'mug',prop:'mug',blink:b1,k:'rp'}),
+      yawnPip:K.cr(sp,{size:220,mood:'sleepy',mouth:st.bt%60<22?'O':'rest',blink:b2,k:'yp'}),
+      breakTap:()=>sfx('yawn')
+    };
+  }
+}
+</script>
+</body>
+</html>

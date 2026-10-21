@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ybob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-5px) scale(.985,1.02)}}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yglow{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 8px rgba(239,163,244,.35)}50%{box-shadow:0 4px 0 #17131C,0 0 0 18px rgba(239,163,244,.15)}}
+@keyframes ybar{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+@keyframes ydot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes yzz{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;max-width:2300px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#22BFF2;border:2px solid #17131C"></span>Yapling · Round 5 · 3 of 3</div>
+      <div style="font-size:64px;font-weight:800;letter-spacing:-0.05em;line-height:.95">Your real week, and <span style="background:#EFA3F4;padding:0 10px;border-radius:12px">care</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><a href="../Yapling%20Prototype.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#EFA3F4;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">▶ Prototype</a><span style="font-size:12px;font-weight:800;color:#5D5366">ROUND 5</span>
+        <a href="Yapling%20R5%20Journey.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Journey &amp; story</a>
+        <a href="Yapling%20R5%20Learning.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Learning</a>
+        <a href="Yapling%20R5%20Real%20week.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Real week &amp; care</a>
+        <button onClick="{{ toggleSound }}" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font:800 13px Lexend,sans-serif;cursor:pointer;color:#17131C">{{ soundLabel }}</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span style="font-size:12px;font-weight:800;color:#5D5366">ROUND 4</span>
+        <a href="Yapling%20R4%20Brand.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Brand &amp; system</a>
+        <a href="Yapling%20R4%20Onboarding.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Onboarding</a>
+        <a href="Yapling%20R4%20Home.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Home &amp; calls</a>
+        <a href="Yapling%20R4%20Town.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Town &amp; story</a>
+      </div>
+    </div>
+  </div>
+
+  <section id="5h" style="display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">5h</span><span style="font-weight:700;font-size:17px">The real-week loop · job post → rehearsal → good luck → "How did it go?"</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start;max-width:2560px">
+
+      <div data-screen-label="R1 Homework" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">R1</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Bring your homework</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.4)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:70px;left:24px;right:24px;display:flex;flex-direction:column;gap:6px"><span style="font-size:34px;font-weight:800;letter-spacing:-0.05em;line-height:.95">Bring your <span style="background:#22BFF2;border-radius:8px;padding:0 6px">homework</span></span><span style="font-size:14px;font-weight:600;color:#5D5366">Paste a job post, an agenda or a client email.</span></div>
+          <div style="position:absolute;top:170px;left:22px;right:22px;padding:18px;border-radius:12px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;transform:rotate(-1deg);font-size:15px;font-weight:600;line-height:1.45">
+            <div style="position:absolute;top:-12px;left:42%;width:64px;height:18px;border-radius:3px;background:#EFA3F4;border:2px solid #17131C;transform:rotate(3deg)"></div>
+            <span style="display:block;font-size:12px;font-weight:800;letter-spacing:.05em;color:#5D5366;margin-bottom:6px">PASTED · JOB POST</span>
+            <b>Junior Data Analyst, Harbour Logistics.</b> You'll turn messy shipping data into clear weekly stories for the ops team, and present them every Monday.
+          </div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:18px 16px 16px;border-radius:42px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <div style="display:flex;align-items:center;gap:12px"><div style="width:52px;height:52px;border-radius:26px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box">{{ dexFace }}</div><div style="display:flex;flex-direction:column"><span style="font-size:18px;font-weight:800">Interview room with Dex</span><span style="font-size:13px;font-weight:600;color:#5D5366">12 min · 3 questions from this post</span></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:14.5px;font-weight:700">
+              <span>1 · Tell me about yourself</span><span>2 · A time data changed a decision</span><span>3 · How would you explain a delay to the ops team?</span>
+            </div>
+            <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Rehearse with Dex</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="R2 Rehearsal" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">R2</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Rehearsal with Dex, in the interview room</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 15%,rgba(34,191,242,.4),transparent 40%),radial-gradient(circle at 10% 40%,rgba(95,217,138,.3),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;top:-110px;left:0">{{ officeBack }}</div>
+          <div style="position:absolute;top:178px;left:40px">{{ dexEl }}</div>
+          <div style="position:absolute;left:-10px;right:-10px;top:478px;bottom:0;background:#F9DAFB;border-top:3px solid #17131C"></div>
+          <div style="position:absolute;left:-10px;right:-10px;top:466px;height:18px;border-radius:6px;background:#FFFFFF;border:3px solid #17131C"></div>
+          <div style="position:absolute;top:444px;left:236px;width:74px;height:26px;background:#FFFFFF;border:2.5px solid #17131C;border-radius:3px;transform:rotate(-6deg);box-sizing:border-box"><div style="margin:6px 8px 0;height:2.5px;background:#D3CCDC"></div><div style="margin:4px 8px 0;width:60%;height:2.5px;background:#D3CCDC"></div></div>
+          <div style="position:absolute;top:436px;left:56px;width:30px;height:32px;border-radius:4px 4px 10px 10px;background:#22BFF2;border:3px solid #17131C;box-sizing:border-box"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:60px;left:14px;display:flex;align-items:center;gap:8px;height:42px;padding:0 14px;border-radius:21px;background:rgba(255,255,255,.6);backdrop-filter:blur(22px) saturate(1.8);border:1px solid rgba(255,255,255,.9);z-index:4"><span style="width:8px;height:8px;border-radius:4px;background:#5FD98A;border:1.5px solid #17131C"></span><span style="font-size:14px;font-weight:800">Interview rehearsal · Q2 of 3</span></div>
+          <div style="position:absolute;top:116px;left:20px;right:20px;padding:12px 16px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:19px;font-weight:700;line-height:1.2;z-index:3"><span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;margin-bottom:3px">Dex<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;white-space:nowrap">AI</span></span><span>{{ dexSaid }}</span><span style="color:#C7BFD0">{{ dexUnsaid }}</span></div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;align-items:center;z-index:4">
+            <div style="display:flex;gap:8px"><span style="padding:6px 12px;border-radius:14px;background:#17131C;color:#fff;font-size:13px;font-weight:800;white-space:nowrap">What does that mean?</span><span style="padding:6px 12px;border-radius:14px;background:rgba(255,255,255,.85);border:1.5px solid rgba(23,19,28,.12);font-size:13px;font-weight:800;white-space:nowrap">Give me a moment</span></div>
+            <div style="align-self:stretch;display:flex;align-items:flex-end;gap:8px"><div style="width:62px;height:74px;flex:none">{{ pipBuddy }}</div><div style="flex:1;padding:10px 14px;border-radius:18px 18px 18px 6px;background:rgba(255,255,255,.82);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.95);box-shadow:0 6px 18px rgba(46,20,70,.12)"><span style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366"><span>YOU</span><span>{{ turnLabel }}</span></span><span style="font-size:16px;font-weight:700;line-height:1.2">Last spring, our delivery data showed one route was always late…</span></div></div>
+            <div style="align-self:stretch;height:92px;border-radius:46px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 #fff,0 12px 32px rgba(46,20,70,.18)">
+              <button style="height:50px;width:100px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 15px Lexend,sans-serif;color:#17131C">Hold on</button>
+              <div style="width:72px;height:72px;border-radius:50%;background:{{ micBg }};border:3px solid {{ micBd }};animation:{{ micAnim }};display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box"><div style="width:5px;height:24px;border-radius:3px;background:{{ barC }};animation:ybar .9s ease-in-out infinite"></div><div style="width:5px;height:24px;border-radius:3px;background:{{ barC }};animation:ybar .9s .15s ease-in-out infinite"></div><div style="width:5px;height:24px;border-radius:3px;background:{{ barC }};animation:ybar .9s .3s ease-in-out infinite"></div></div>
+              <button style="height:50px;width:100px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 15px Lexend,sans-serif;color:#17131C">Leave</button>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="R3 Good luck" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">R3</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">"Good luck tomorrow"</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.4)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:84px;left:24px;right:24px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:22px;font-weight:700;line-height:1.2">You sounded ready. Good luck tomorrow, Lan!</div>
+          <div style="position:absolute;top:190px;left:95px">{{ luckPip }}</div>
+          <div style="position:absolute;top:420px;left:36px;right:36px;padding:16px 18px;border-radius:8px;background:#FFE48A;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;transform:rotate(-2deg);font-family:'Kithfield Hand',cursive;font-size:21px;line-height:1.25">Remember: start with the shipping story. Breathe before numbers. You've got this!</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:16px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.8)"><span style="font-size:11px;font-weight:800;padding:2px 7px;border-radius:7px;background:#CFF0FD;border:2px solid #17131C;white-space:nowrap">THU 18:00</span><span style="font-size:14px;font-weight:700">Pip will ask how it went</span></div>
+            <button style="height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Thanks, Pip</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="R4 How did it go" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">R4</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Next day · "How did it go?" in close-up</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFE48A;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#FFF3C4,#FFE48A 70%)"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:150px;left:-85px">{{ askClose }}</div>
+          <div style="position:absolute;top:66px;left:22px;right:22px;font-size:44px;font-weight:900;letter-spacing:-0.06em;line-height:.88;z-index:3">So…<br>how did it go?</div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:300px;background:linear-gradient(transparent,rgba(255,228,138,.95) 35%);z-index:3"></div>
+          <div style="position:absolute;left:18px;right:18px;bottom:40px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;z-index:4">
+            <button onClick="{{ pickWell }}" style="height:118px;border:2.5px solid #17131C;background:#D7F7E2;box-shadow:0 5px 0 #17131C;transform:rotate(-4deg);font:800 17px Lexend,sans-serif;color:#17131C;line-height:1.05;cursor:pointer">It went<br>well!</button>
+            <button onClick="{{ pickOk }}" style="height:118px;border:2.5px solid #17131C;background:#CFF0FD;box-shadow:0 5px 0 #17131C;transform:rotate(2deg) translateY(-8px);font:800 17px Lexend,sans-serif;color:#17131C;line-height:1.05;cursor:pointer">It was<br>OK</button>
+            <button onClick="{{ pickBad }}" style="height:118px;border:2.5px solid #17131C;background:#F9DAFB;box-shadow:0 5px 0 #17131C;transform:rotate(-1deg);font:800 17px Lexend,sans-serif;color:#17131C;line-height:1.05;cursor:pointer">It went<br>badly</button>
+          </div>
+          <span style="position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:12px;font-weight:700;z-index:4">Or just tell Pip with your voice</span><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+
+      <div data-screen-label="R5 It went badly" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">R5</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">"It went badly" · Pip is kind</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.4)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>18:02</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:84px;left:24px;right:24px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:21px;font-weight:700;line-height:1.25">That sounds hard. You still walked in and did it. Which question felt worst?</div>
+          <div style="position:absolute;top:220px;left:95px">{{ badPip }}</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:18px 16px 16px;border-radius:42px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><span style="padding:7px 12px;border-radius:14px;background:#17131C;color:#fff;font-size:13px;font-weight:800;white-space:nowrap">"A time data changed a decision"</span><span style="padding:7px 12px;border-radius:14px;background:rgba(255,255,255,.85);font-size:13px;font-weight:800;white-space:nowrap">The salary bit</span></div>
+            <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Do-over with Dex, just that question</button>
+            <button style="height:50px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 15px Lexend,sans-serif">Not today. Just talk</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div style="width:360px;display:flex;flex-direction:column;gap:14px">
+        <div style="padding:20px;border-radius:26px;background:#D7F7E2;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:800;letter-spacing:.05em">IT WENT WELL</span><span style="font-size:18px;font-weight:800;letter-spacing:-0.03em;line-height:1.15">The whole town throws a party in the square, with your name on the banner.</span><span style="font-size:13px;font-weight:600;color:#3E3646">See Round 4 · Town &amp; story · T4</span></div>
+        <div style="padding:20px;border-radius:26px;background:#CFF0FD;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;display:flex;align-items:center;gap:12px"><div style="width:90px;height:108px;flex:none;overflow:hidden">{{ okPip }}</div><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:800;letter-spacing:.05em">IT WAS OK</span><span style="font-size:17px;font-weight:800;letter-spacing:-0.02em;line-height:1.15">"OK is good! What's one thing you'd say differently next time?"</span></div></div>
+        <div style="padding:20px;border-radius:26px;background:#F9DAFB;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:800;letter-spacing:.05em">IT WENT BADLY</span><span style="font-size:17px;font-weight:800;letter-spacing:-0.02em;line-height:1.15">No score, no streak talk. Pip listens first, then offers a short do-over of the one hard question.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="5i" style="display:flex;flex-direction:column;gap:22px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">5i</span><span style="font-weight:700;font-size:17px">Day one, honesty and safety, and when things go wrong</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start;max-width:2560px">
+      <div data-screen-label="C1 Day one" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">C1</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Day-one burrow</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F9DAFB;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ day1Scene }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:58px;left:12px;right:12px;padding:12px 14px;border-radius:26px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4">
+            <span style="font-size:11px;font-weight:800;padding:2px 8px;border-radius:8px;background:#D7F7E2;border:2px solid #17131C;white-space:nowrap">DAY 1</span>
+            <span style="font-size:15px;font-weight:800;flex:1">Your first words will fill these shelves.</span>
+          </div>
+          <div style="position:absolute;top:323px;left:78px;width:56px;height:75px">{{ day1Seed }}</div>
+          <div style="position:absolute;top:412px;left:68px;width:76px;text-align:center;font-size:10px;font-weight:800">nice to meet you</div>
+          <div style="position:absolute;top:520px;left:110px">{{ day1Pip }}</div>
+          <div style="position:absolute;top:470px;left:210px;max-width:150px;padding:9px 13px;border-radius:18px 18px 18px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:15px;font-weight:800;line-height:1.15;z-index:3">One box left! Help me unpack?</div>
+          <div style="position:absolute;bottom:26px;left:22px;right:22px;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-radius:35px;background:rgba(255,255,255,.45);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),0 12px 32px rgba(46,20,70,.18)">
+            <div style="width:88px;height:54px;border-radius:27px;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">Burrow</div>
+            <button style="width:124px;height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Chat</button>
+            <div style="width:88px;text-align:center;font-size:14px;font-weight:700;color:#5D5366">Town</div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="C2 Pip is an AI" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">C2</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">"Pip is an AI" · from any AI tag</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(23,19,28,.14)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:110px;left:120px">{{ aiPip }}</div>
+          <div style="position:absolute;left:6px;right:6px;top:300px;bottom:0;border-radius:40px 40px 0 0;padding:12px 20px 0;box-sizing:border-box;display:flex;flex-direction:column;gap:14px;background:rgba(251,250,253,.9);backdrop-filter:blur(30px) saturate(1.8);border:1px solid rgba(255,255,255,.95);box-shadow:0 -10px 30px rgba(46,20,70,.16)">
+            <div style="align-self:center;width:40px;height:5px;border-radius:3px;background:#D3CCDC"></div>
+            <span style="font-size:30px;font-weight:800;letter-spacing:-0.05em;line-height:1">Pip and the neighbours are AI</span>
+            <div style="display:flex"><sc-for list="{{ aiFaces }}" as="f" hint-placeholder-count="7"><div style="width:32px;height:32px;border-radius:16px;overflow:hidden;border:2px solid #17131C;margin-right:-8px;box-shadow:0 0 0 2px #FBFAFD">{{ f.el }}</div></sc-for></div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:15px;font-weight:600;line-height:1.4">
+              <span>They're characters made to help you practise English. They can get things wrong.</span>
+              <span>Your voice is used to reply to you and to track your progress. Delete any recording or memory in the Me sheet.</span>
+              <span>They aren't therapists, doctors or lawyers. For real help, they'll point you to real people.</span>
+            </div>
+            <button style="height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Got it</button>
+          </div>
+        </div>
+      </div>
+
+      <div data-screen-label="C3 Safety" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">C3</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Safety sheet · calm and out of character</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F4F1F7;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:80px;left:24px;right:24px;display:flex;flex-direction:column;gap:14px">
+            <span style="font-size:13px;font-weight:700;color:#5D5366">The story is paused</span>
+            <span style="font-size:32px;font-weight:700;letter-spacing:-0.04em;line-height:1.05">It sounds like things are really hard right now.</span>
+            <span style="font-size:16px;font-weight:500;line-height:1.45;color:#3E3646">Pip is an AI and can't help with this, but a person can. You don't have to explain anything to us.</span>
+          </div>
+          <div style="position:absolute;top:350px;left:16px;right:16px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;border:1.5px solid #E4DEEA"><span style="display:flex;flex-direction:column;flex:1"><span style="font-size:17px;font-weight:700">Emergency</span><span style="font-size:13px;font-weight:500;color:#5D5366">If you're in danger right now</span><span style="font-size:11.5px;font-weight:600;color:#5D5366;margin-top:4px">Vietnam · 115 ambulance</span></span><span style="height:44px;padding:0 18px;border-radius:22px;background:#17131C;color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center">Call 115</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;border:1.5px solid #E4DEEA"><span style="display:flex;flex-direction:column;flex:1"><span style="font-size:17px;font-weight:700">Find a support line</span><span style="font-size:13px;font-weight:500;color:#5D5366">Free and confidential, near you</span></span><span style="font-size:18px;color:#8A8094">›</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;border:1.5px solid #E4DEEA"><span style="display:flex;flex-direction:column;flex:1"><span style="font-size:17px;font-weight:700">Message someone you trust</span><span style="font-size:13px;font-weight:500;color:#5D5366">Opens your contacts</span></span><span style="font-size:18px;color:#8A8094">›</span></div>
+          </div>
+          <div style="position:absolute;left:16px;right:16px;bottom:30px;display:flex;flex-direction:column;gap:8px;align-items:center">
+            <button style="width:100%;height:52px;border-radius:26px;border:1.5px solid #D3CCDC;background:#FFFFFF;font:700 16px Lexend,sans-serif;color:#17131C">Back to Natterwick later</button>
+            <span style="font-size:12px;font-weight:500;color:#5D5366">Shown in the language you chose. No characters, no sounds.</span>
+          </div>
+        </div>
+      </div>
+      <div style="width:250px;align-self:center;padding:16px 18px;border-radius:20px;background:#FFFFFF;border:2.5px dashed #17131C;display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:600;line-height:1.4"><span style="font-size:12px;font-weight:800;letter-spacing:.05em">NOTE · C3</span><span>The emergency number and support lines follow the user's country, set from the app store region and confirmed in settings.</span><span>Shown here for Vietnam: 115 (ambulance). Each market gets its own verified number and helplines before launch.</span></div>
+
+      <div data-screen-label="E1 No connection" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">E1</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">No connection</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.45)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:150px;left:110px;animation:yzz .3s linear infinite">{{ errPip1 }}</div>
+          <svg width="80" height="60" viewBox="0 0 80 60" style="position:absolute;top:160px;left:270px"><path d="M4 30 L16 14 L26 44 L38 10 L50 40 L62 18 L76 30" fill="none" stroke="#17131C" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"></path></svg>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:22px 18px 16px;border-radius:42px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <span style="font-size:28px;font-weight:800;letter-spacing:-0.05em;line-height:1">Pip's line is crackly. Try a voice note?</span>
+            <span style="font-size:14px;font-weight:600;color:#5D5366">It'll send when you're back online.</span>
+            <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Record a voice note</button>
+            <button style="height:50px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 15px Lexend,sans-serif">Try the call again</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="E2 Mic denied" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">E2</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Microphone is off</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.45)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:150px;left:110px">{{ errPip2 }}</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:22px 18px 16px;border-radius:42px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <span style="font-size:28px;font-weight:800;letter-spacing:-0.05em;line-height:1">Pip can't hear you yet</span>
+            <span style="font-size:14px;font-weight:600;color:#5D5366;line-height:1.35">The microphone is off for Yapling. Turn it on in Settings, or keep chatting by text.</span>
+            <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Open Settings</button>
+            <button style="height:50px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 15px Lexend,sans-serif">Type to Pip instead</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="E3 Didn't catch that" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">E3</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">In a call · didn't catch that</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(12px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.4)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:84px;left:24px;right:24px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:22px;font-weight:700;line-height:1.2">Sorry, I didn't catch that. Say it another way?</div>
+          <div style="position:absolute;top:200px;left:95px">{{ errPip3 }}</div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;align-items:center">
+            <div style="display:flex;gap:8px"><span style="padding:6px 12px;border-radius:14px;background:rgba(255,255,255,.85);border:1.5px solid rgba(23,19,28,.12);font-size:13px;font-weight:800;white-space:nowrap">Type it</span><span style="padding:6px 12px;border-radius:14px;background:rgba(255,255,255,.85);border:1.5px solid rgba(23,19,28,.12);font-size:13px;font-weight:800;white-space:nowrap">Say it in Tiếng Việt</span></div>
+            <div style="width:80px;height:80px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;animation:yglow 1.6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box"><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s .15s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s .3s ease-in-out infinite"></div></div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="E4 Slow reply" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">E4</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">In a call · slow reply</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(12px)">{{ blurBurrow }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.4)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:100px;left:24px;display:flex;align-items:center;gap:6px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C"><span style="font-size:18px;font-weight:700">Hmm, let me think</span><span style="width:8px;height:8px;border-radius:4px;background:#17131C;animation:ydot 1s ease-in-out infinite"></span><span style="width:8px;height:8px;border-radius:4px;background:#17131C;animation:ydot 1s .15s ease-in-out infinite"></span><span style="width:8px;height:8px;border-radius:4px;background:#17131C;animation:ydot 1s .3s ease-in-out infinite"></span></div>
+          <div style="position:absolute;top:200px;left:95px">{{ errPip4 }}</div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;align-items:center">
+            <span style="font-size:13px;font-weight:600;color:#5D5366;text-align:center">After 2 seconds Pip tilts its head and fills the gap, so there's no dead air.</span>
+            <div style="display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:15px;background:#FFFFFF;border:2.5px solid #17131C;font-size:12px;font-weight:800;letter-spacing:.04em">PIP IS THINKING</div>
+            <div style="width:80px;height:80px;border-radius:50%;background:#FFFFFF;border:3px solid #D3CCDC;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box"><div style="width:5px;height:10px;border-radius:3px;background:#D3CCDC"></div><div style="width:5px;height:10px;border-radius:3px;background:#D3CCDC"></div><div style="width:5px;height:10px;border-radius:3px;background:#D3CCDC"></div></div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DEXQ="Tell me about a time data changed a decision.";
+class Component extends DCLogic {
+  state={bt:0,sound:false,pick:null};
+  sim={dc:0,dw:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.step(),90); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  step(){ const S=this.sim; if(S.dw>0){ S.dw--; if(!S.dw) S.dc=0; } else { S.dc++; if(S.dc>DEXQ.length) S.dw=40; } this.setState(s=>({bt:s.bt+1})); }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {};
+    const st=this.state, S=this.sim, {b1,b2,b3}=K.blinkers(st.bt); if(!this.sfx) this.sfx=K.makeSfx(()=>this.state.sound); const sfx=this.sfx;
+    const sp='redpanda', dt=S.dw>0?DEXQ.length:Math.min(S.dc,DEXQ.length), dexTalk=S.dw===0, youTurn=S.dw>0;
+    const pick=k=>()=>{ this.setState({pick:k}); sfx(k==='well'?'fanfare':'soft'); };
+    return {
+      pipBuddy:K.cr(sp,{size:62,mood:'warm',blink:b1,k:'buddy'}), askClose:K.cr(sp,{size:560,noTail:true,mood:'listen',tilt:6,blink:b2,still:true,k:'askc'}),
+      soundLabel:st.sound?'Sound on':'Turn sound on', toggleSound:()=>this.setState({sound:!st.sound},()=>sfx('pop')),
+      blurBurrow:K.sc('burrow2',438,892,{}), dexFace:K.fc('bison',52,'happy','#CFF0FD'),
+      officeBack:K.sc('officeCrisp',390,844,{}), officeFront:K.sc('office',390,844,{layer:'front'}),
+      dexEl:K.cr('bison',{size:300,mood:dexTalk?'happy':'listen',blink:b3,mouth:dexTalk?K.mouthFor(DEXQ,dt):'rest',speed:3.6}),
+      dexSaid:DEXQ.slice(0,dt), dexUnsaid:DEXQ.slice(dt), youTurn, turnLabel:youTurn?'Your turn':'Dex is asking', micBg:youTurn?'#EFA3F4':'#FFFFFF', micBd:youTurn?'#17131C':'#D3CCDC', micAnim:youTurn?'yglow 1.6s ease-in-out infinite':'none', barC:youTurn?'#17131C':'#D3CCDC',
+      luckPip:K.cr(sp,{size:200,mood:'warm',blink:b1,k:'lp'}),
+      askPip:K.cr(sp,{size:200,mood:'listen',blink:b2,k:'ap'}),
+      pickWell:pick('well'), pickOk:pick('ok'), pickBad:pick('bad'),
+      wellBg:st.pick==='well'?'#5FD98A':'rgba(255,255,255,.85)', okBg:st.pick==='ok'?'#CFF0FD':'rgba(255,255,255,.85)', badBg:st.pick==='bad'?'#F9DAFB':'rgba(255,255,255,.85)',
+      badPip:K.cr(sp,{size:200,mood:'warm',blink:b1,k:'bp'}), okPip:K.cr(sp,{size:90,mood:'happy',blink:b2,k:'okp'}),
+      day1Scene:K.h(K.Cv,{key:'d1',fn:'s_burrowDay1',w:390,hh:844,o:{t:K.tk(200)}}), day1Pip:K.cr(sp,{size:170,mood:'surprised',blink:b1,look:-4,k:'d1p'}), day1Seed:K.obj('seed',0,'d1s',56),
+      aiPip:K.cr(sp,{size:150,mood:'happy',blink:b2,k:'aip'}), aiFaces:['otter','tiger','bulldog','bison','tarsier','koala','pangolin'].map((k,i)=>({el:K.fc(k,32,'happy',['#F9DAFB','#CFF0FD','#D7F7E2'][i%3])})),
+      errPip1:K.cr(sp,{size:170,mood:'worried',blink:b1,k:'e1'}), errPip2:K.cr(sp,{size:170,mood:'listen',tilt:8,blink:b2,k:'e2'}),
+      errPip3:K.cr(sp,{size:200,mood:'confused',tilt:10,blink:b1,k:'e3'}), errPip4:K.cr(sp,{size:200,mood:'think',blink:b3,k:'e4'})
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ybob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-5px) scale(.985,1.02)}}
+@keyframes yjump{0%,100%{transform:translateY(0) scale(1,1)}20%{transform:translateY(0) scale(1.1,.9)}45%{transform:translateY(-26px) scale(.94,1.08)}70%{transform:translateY(0) scale(1.08,.92)}}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yping{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-6px) rotate(-3deg)}}
+@keyframes yglowdot{0%,100%{box-shadow:0 3px 0 #17131C,0 0 0 6px rgba(239,163,244,.5)}50%{box-shadow:0 3px 0 #17131C,0 0 0 14px rgba(239,163,244,.15)}}
+@keyframes ywave{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(-4deg) translateY(-4px)}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;max-width:2300px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#22BFF2;border:2px solid #17131C"></span>Yapling · Round 5 · 1 of 3</div>
+      <div style="font-size:64px;font-weight:800;letter-spacing:-0.05em;line-height:.95">The journey and <span style="background:#22BFF2;padding:0 10px;border-radius:12px">the story</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><a href="../Yapling%20Prototype.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#EFA3F4;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">▶ Prototype</a><span style="font-size:12px;font-weight:800;color:#5D5366">ROUND 5</span>
+        <a href="Yapling%20R5%20Journey.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Journey &amp; story</a>
+        <a href="Yapling%20R5%20Learning.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Learning</a>
+        <a href="Yapling%20R5%20Real%20week.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Real week &amp; care</a>
+        <button onClick="{{ toggleSound }}" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font:800 13px Lexend,sans-serif;cursor:pointer;color:#17131C">{{ soundLabel }}</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span style="font-size:12px;font-weight:800;color:#5D5366">ROUND 4</span>
+        <a href="Yapling%20R4%20Brand.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Brand &amp; system</a>
+        <a href="Yapling%20R4%20Onboarding.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Onboarding</a>
+        <a href="Yapling%20R4%20Home.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Home &amp; calls</a>
+        <a href="Yapling%20R4%20Town.dc.html" style="height:34px;padding:0 12px;border-radius:17px;border:2px solid #17131C;background:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;text-decoration:none">Town &amp; story</a>
+      </div>
+    </div>
+  </div>
+
+  <section id="5a" style="display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">5a</span><span style="font-weight:700;font-size:17px">Five residency stages · learners only see "things you can now do"</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,300px);gap:16px;max-width:1600px">
+      <sc-for list="{{ stages }}" as="s" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:28px;background:{{ s.bg }};border:3px solid #17131C;box-shadow:0 6px 0 #17131C">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;font-weight:800">Stage {{ s.n }}</span><span style="font-size:11px;font-weight:700;color:#5D5366;padding:2px 7px;border-radius:7px;border:1.5px dashed #8A8094;white-space:nowrap">internal · {{ s.cefr }}</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:52px;height:52px;border-radius:26px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box;flex:none">{{ s.face }}</div><span style="font-size:24px;font-weight:800;letter-spacing:-0.04em;line-height:1">{{ s.name }}</span></div>
+          <div style="padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.7);font-size:13.5px;font-weight:600;line-height:1.35"><span style="font-weight:800">How the town talks: </span>{{ s.talk }}</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase">You can now…</span>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:9px 11px;border-radius:12px;background:#FFFFFF;border:2px solid #17131C"><span style="font-size:10px;font-weight:800;padding:1px 6px;border-radius:6px;background:#D7F7E2;border:1.5px solid #17131C;flex:none;white-space:nowrap">LIFE</span><span style="font-size:13.5px;font-weight:700;line-height:1.25">{{ s.life }}</span></div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:9px 11px;border-radius:12px;background:#FFFFFF;border:2px solid #17131C"><span style="font-size:10px;font-weight:800;padding:1px 6px;border-radius:6px;background:#CFF0FD;border:1.5px solid #17131C;flex:none;white-space:nowrap">WORK</span><span style="font-size:13.5px;font-weight:700;line-height:1.25">{{ s.work }}</span></div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,520px);gap:16px;max-width:1600px">
+      <sc-for list="{{ callTypes }}" as="c" hint-placeholder-count="3">
+        <div style="display:flex;gap:16px;align-items:center;padding:16px 20px 16px 16px;border-radius:26px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 5px 0 #17131C">
+          <div style="width:120px;height:90px;border-radius:16px;overflow:hidden;border:2.5px solid #17131C;flex:none">{{ c.art }}</div>
+          <div style="display:flex;flex-direction:column;gap:4px"><span style="align-self:flex-start;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:8px;background:{{ c.bg }};border:2px solid #17131C;white-space:nowrap">{{ c.tag }}</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.03em">{{ c.name }}</span><span style="font-size:13.5px;font-weight:600;color:#5D5366;line-height:1.3">{{ c.desc }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="5b" style="display:flex;flex-direction:column;gap:22px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">5b</span><span style="font-weight:700;font-size:17px">Week, season and stage-up</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start;max-width:2560px">
+      <div data-screen-label="J1 Week" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">J1</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">This week · three calls fill the ring</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 12%,rgba(239,163,244,.55),transparent 40%),radial-gradient(circle at 10% 50%,rgba(34,191,242,.3),transparent 40%),radial-gradient(circle at 80% 90%,rgba(95,217,138,.3),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:66px;left:22px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700;color:#5D5366">Oct 19 – 25</span><span style="font-size:38px;font-weight:800;letter-spacing:-0.055em;line-height:.95">This week</span></div>
+          <div style="position:absolute;top:58px;right:18px">{{ weekPip }}</div>
+          <div style="position:absolute;top:150px;left:22px;display:flex;align-items:center;gap:16px">
+            <svg width="120" height="120" viewBox="0 0 56 56"><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="#17131C" stroke-width="10" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="#17131C" stroke-width="10" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="#17131C" stroke-width="10" stroke-linecap="round"></path><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="#5FD98A" stroke-width="5" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path><text x="28" y="31" text-anchor="middle" font-family="Lexend" font-weight="800" font-size="9" fill="#17131C">1/3</text></svg>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:800">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:6px;background:#EFA3F4;border:2px solid #17131C"></span>Episode</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:6px;background:#5FD98A;border:2px solid #17131C"></span>Real week · done</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:6px;background:#FFFFFF;border:2px solid #17131C"></span>Practice</span>
+            </div>
+          </div>
+          <div style="position:absolute;top:290px;left:12px;right:12px;display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ weekCalls }}" as="c" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:12px;padding:8px 12px 8px 8px;border-radius:22px;background:rgba(255,255,255,.6);backdrop-filter:blur(22px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 8px 20px rgba(46,20,70,.1)">
+                <div style="width:92px;height:70px;border-radius:14px;overflow:hidden;border:2.5px solid #17131C;flex:none">{{ c.art }}</div>
+                <div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">{{ c.tag }}</span><span style="font-size:16px;font-weight:800;letter-spacing:-0.02em;line-height:1.1">{{ c.title }}</span></div>
+                <span style="font-size:12px;font-weight:800;padding:4px 9px;border-radius:10px;background:{{ c.sbg }};border:2px solid #17131C;white-space:nowrap">{{ c.status }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;height:252px;border-radius:40px;padding:18px 16px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 5px 0 #17131C">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:20px;font-weight:800;letter-spacing:-0.03em">New phrases this week</span><span style="font-size:12px;font-weight:700;color:#5D5366">4</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <sc-for list="{{ weekPhrases }}" as="p" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:16px;background:#F9DAFB">
+                  <div style="width:30px;height:40px;flex:none">{{ p.el }}</div>
+                  <div style="display:flex;flex-direction:column;min-width:0"><span style="font-size:13.5px;font-weight:800;line-height:1.1">{{ p.word }}</span><span style="font-size:11px;font-weight:700;color:#5D5366">{{ p.stage }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+            <span style="font-size:12px;font-weight:600;color:#5D5366">A missed week pauses the ring. Your phrases keep growing.</span>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="J2 Season map" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">J2</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Season map · six episodes through town</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 15% 10%,rgba(239,163,244,.5),transparent 40%),radial-gradient(circle at 70% 95%,rgba(34,191,242,.55),transparent 45%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;inset:0">{{ mapTown }}</div>
+          <svg width="390" height="844" viewBox="0 0 390 844" style="position:absolute;inset:0;pointer-events:none"><path d="M56 462 Q90 401 158 384 Q113 445 128 520" fill="none" stroke="#17131C" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.1 12"></path><path d="M56 462 Q90 401 158 384 Q113 445 128 520" fill="none" stroke="#EFA3F4" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="0.1 12"></path><path d="M128 520 Q144 322 300 200 Q281 279 326 346 Q307 500 180 590" fill="none" stroke="#17131C" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 11" opacity=".55"></path><path d="M180 590 Q211 671 292 702" fill="none" stroke="#22BFF2" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 9"></path></svg>
+          <sc-for list="{{ marks }}" as="m" hint-placeholder-count="6">
+            <div style="position:absolute;left:{{ m.left }};top:{{ m.top }};width:36px;height:36px;border-radius:18px;background:{{ m.bg }};border:{{ m.bd }};box-shadow:0 3px 0 #17131C;animation:{{ m.anim }};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;box-sizing:border-box">{{ m.n }}<span style="position:absolute;top:38px;left:50%;transform:translateX(-50%);padding:1px 7px;border-radius:7px;background:#17131C;color:#fff;font-size:10.5px;font-weight:800;white-space:nowrap">{{ m.tag }}</span>
+              <sc-if value="{{ m.done }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-12px;right:-14px;width:20px;height:16px;border-radius:3px;background:#FFFFFF;border:2px solid #17131C;transform:rotate(8deg);box-sizing:border-box"></span></sc-if>
+            </div>
+          </sc-for>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:60px;left:14px;right:14px;display:flex;flex-direction:column;gap:2px;padding:10px 16px;border-radius:24px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 10px 26px rgba(46,20,70,.16);z-index:4">
+            <span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">Season 1 · Episode 3 of 6</span>
+            <span style="font-size:22px;font-weight:800;letter-spacing:-0.04em">The Café Might Close</span>
+          </div>
+          <div style="position:absolute;top:676px;left:232px;width:120px;height:88px">{{ mapBoat }}</div>
+          <div style="position:absolute;top:714px;left:96px;padding:4px 9px;border-radius:9px;background:#17131C;color:#fff;font-size:11px;font-weight:800;transform:rotate(-4deg);white-space:nowrap">Season 2 · coming soon →</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;display:flex;align-items:center;gap:12px;padding:12px 12px 12px 14px;border-radius:32px;background:rgba(255,255,255,.6);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.18);z-index:4">
+            <div style="width:44px;height:44px;border-radius:22px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box;flex:none">{{ hankFace }}</div>
+            <div style="display:flex;flex-direction:column;flex:1"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">EPISODE 3 · AT THE CAFÉ</span><span style="font-size:18px;font-weight:800;letter-spacing:-0.03em">Cheaper Beans</span></div>
+            <button style="height:48px;padding:0 18px;border-radius:24px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 15px Lexend,sans-serif;color:#17131C">Play</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="J3 Stage-up" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">J3</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Stage-up · a stamp in your passport</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ stageTown }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.25)"></div>
+          <sc-for list="{{ stageCast }}" as="c" hint-placeholder-count="6"><div style="position:absolute;left:{{ c.left }};top:{{ c.top }}">{{ c.el }}</div></sc-for>
+          <div style="position:absolute;top:470px;left:125px;z-index:2">{{ stagePip }}</div>
+          <div style="position:absolute;top:58px;left:0;right:0;text-align:center;font-size:78px;font-weight:900;letter-spacing:-0.07em;line-height:.8;color:#fff;text-shadow:3px 0 0 #17131C,-3px 0 0 #17131C,0 3px 0 #17131C,0 -3px 0 #17131C,2px 2px 0 #17131C,-2px -2px 0 #17131C,2px -2px 0 #17131C,-2px 2px 0 #17131C,0 8px 0 #17131C;animation:ytype 6s ease-out infinite;z-index:3">REGULAR!</div>
+          <div style="position:absolute;top:150px;left:30px;width:330px;height:220px;display:flex;border:3.5px solid #17131C;border-radius:10px;box-shadow:0 8px 0 #17131C;overflow:hidden;transform:rotate(-3deg);z-index:3">
+            <div style="flex:1;background:#22BFF2;border-right:3px solid #17131C;padding:12px 14px;display:flex;flex-direction:column;gap:6px;box-sizing:border-box"><span style="font-size:10px;font-weight:800;letter-spacing:.08em">NATTERWICK<br>RESIDENCY</span><div style="width:58px;height:58px;border-radius:10px;overflow:hidden;border:2.5px solid #17131C;background:#fff">{{ stageFace }}</div><span style="font-size:13px;font-weight:800">Lan</span><span style="font-size:10px;font-weight:700">since Sep 21</span></div>
+            <div style="flex:1.3;background:#FFFDF6;position:relative;padding:10px;box-sizing:border-box;background-image:repeating-linear-gradient(transparent 0,transparent 27px,#E4DEEA 27px,#E4DEEA 28px)">
+              <div style="position:absolute;top:12px;left:12px;width:70px;height:70px;border-radius:35px;border:3px solid #5FD98A;color:#3E9A60;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;text-align:center;line-height:1;transform:rotate(-14deg)">NEWCOMER<br>SEP 21</div>
+              <div style="position:absolute;top:18px;left:100px;width:70px;height:70px;border-radius:8px;border:3px solid #9A5AA6;color:#9A5AA6;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;text-align:center;line-height:1;transform:rotate(10deg)">NEIGHBOUR<br>NOV 2</div>
+              <div style="position:absolute;top:112px;left:28px;width:100px;height:68px;border-radius:12px;border:4px solid #17131C;background:rgba(239,163,244,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:15px;font-weight:900;letter-spacing:-0.02em;line-height:1;text-align:center;animation:ystamp 6s ease-out infinite">REGULAR<br><span style="font-size:11px">JAN 18</span></div>
+            </div>
+          </div>
+          <div style="position:absolute;inset:0;pointer-events:none;z-index:3">{{ stageConf }}</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;display:flex;gap:12px;align-items:center;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4">
+            <div style="display:flex;flex-direction:column;gap:6px;flex:1;padding-left:6px"><span style="font-size:19px;font-weight:800;letter-spacing:-0.03em;line-height:1.05">The town talks a little faster now.</span><span style="font-size:12.5px;font-weight:600;color:#5D5366">New on the map: the harbour office and the night market.</span></div>
+            <button style="height:50px;padding:0 16px;border-radius:25px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 14px Lexend,sans-serif;color:#17131C">See the map</button>
+          </div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="5c" style="display:flex;flex-direction:column;gap:22px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">5c</span><span style="font-weight:700;font-size:17px">Key frames · Season 1 "The Café Might Close" and Season 2 "The Mystery Boat"</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,304px);gap:22px;max-width:1400px">
+      <sc-for list="{{ keyframes }}" as="k" hint-placeholder-count="6">
+        <div style="display:flex;flex-direction:column;border-radius:26px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;overflow:hidden">
+          <div style="position:relative;height:210px;overflow:hidden;border-bottom:3px solid #17131C">
+            <div style="position:absolute;inset:0">{{ k.art }}</div>
+            <sc-for list="{{ k.cast }}" as="c" hint-placeholder-count="2"><div style="position:absolute;left:{{ c.left }};top:{{ c.top }}">{{ c.el }}</div></sc-for>
+            <sc-if value="{{ k.hasTag }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:14px;right:14px;padding:5px 10px;border-radius:9px;background:#EFA3F4;border:3px solid #17131C;box-shadow:2px 4px 0 #17131C;font-size:16px;font-weight:800;transform:rotate(6deg)">{{ k.tag }}</span></sc-if>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;padding:14px 16px 16px"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">{{ k.n }}</span><span style="font-size:22px;font-weight:800;letter-spacing:-0.04em">{{ k.title }}</span><span style="font-size:13.5px;font-weight:600;line-height:1.3">{{ k.line }}</span></div>
+        </div>
+      </sc-for>
+      <div style="display:flex;flex-direction:column;border-radius:26px;background:#17131C;color:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #EFA3F4;overflow:hidden">
+        <div style="position:relative;height:210px;overflow:hidden;border-bottom:3px solid #17131C">
+          <div style="position:absolute;inset:0">{{ s2Art }}</div>
+          <div style="position:absolute;top:20px;left:70px">{{ s2Boat }}</div>
+          <div style="position:absolute;top:120px;left:8px">{{ s2Pip }}</div>
+          <div style="position:absolute;top:150px;left:96px;width:70px;height:50px;border-radius:8px;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 4px 0 #17131C;box-sizing:border-box"><div style="position:absolute;top:-12px;left:20px;width:24px;height:12px;border:3px solid #17131C;border-bottom:none;border-radius:8px 8px 0 0;box-sizing:border-box"></div></div>
+          <div style="position:absolute;top:142px;left:162px;padding:3px 8px;border-radius:5px;background:#fff;border:2.5px solid #17131C;color:#17131C;font-size:13px;font-weight:800;transform:rotate(10deg)">LAN</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;padding:14px 16px 16px"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#EFA3F4">Season 2 · E1</span><span style="font-size:22px;font-weight:800;letter-spacing:-0.04em">The Boat Docks</span><span style="font-size:13.5px;font-weight:600;line-height:1.3;color:#E4DEEA">A strange boat arrives, and someone carries off a suitcase with your name on the tag.</span></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;max-width:1400px">
+      <div style="flex:1;min-width:300px;padding:18px 20px;border-radius:22px;background:#FFFFFF;border:2.5px solid #17131C;font-size:14px;font-weight:600;line-height:1.45"><span style="font-weight:800">Season 2 arc · </span>E1 The Boat Docks · E2 Whose Suitcase? · E3 The Inn Overflows · E4 Lost in Translation · E5 Lanterns at Dusk · E6 The Travelling Festival. The boat turns out to be a festival that tours harbour towns, and the suitcase holds your invitation.</div>
+      <div style="flex:1;min-width:300px;padding:18px 20px;border-radius:22px;background:#D7F7E2;border:2.5px solid #17131C;font-size:14px;font-weight:600;line-height:1.45"><span style="font-weight:800">Story rules · </span>Every conflict is solved by speaking. Nobody gets hurt and nothing closes for good. A missed week waits for you, with Pip's recap.</div>
+    </div>
+  </section>
+
+  <section id="5d" style="display:flex;flex-direction:column;gap:22px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">5d</span><span style="font-weight:700;font-size:17px">Same scene, two stages · Hank at the café counter</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+      <div data-screen-label="J4 Hank Newcomer" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">J4</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">As a Newcomer sees it · over your shoulder</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFE9C2;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ hankCafeW }}</div>
+          <div style="position:absolute;top:262px;left:200px">{{ hankMei }}</div>
+          <div style="position:absolute;inset:0">{{ hankFront }}</div>
+          <div style="position:absolute;top:300px;left:30px">{{ hankN }}</div>
+          <div style="position:absolute;top:470px;left:150px;filter:blur(1.5px);z-index:3">{{ otsPip }}</div>
+          <div style="position:absolute;top:60px;left:14px;right:14px;display:flex;align-items:center;justify-content:space-between;z-index:4"><div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:20px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)"><span style="font-size:13.5px;font-weight:800">Lantern Café · behind the counter</span></div><span style="height:30px;padding:0 11px;border-radius:15px;background:#D7F7E2;border:2.5px solid #17131C;font-size:12px;font-weight:800;display:flex;align-items:center">Newcomer</span></div>
+          <div style="position:absolute;top:116px;left:18px;right:60px;padding:12px 16px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:20px;font-weight:700;line-height:1.22;z-index:4"><span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;margin-bottom:3px">Hank<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;white-space:nowrap">AI</span></span><span>{{ nSaid }}</span><span style="color:#C7BFD0">{{ nUnsaid }}</span></div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;z-index:5"><div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:20px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)"><span style="font-size:11px;font-weight:800;padding:2px 7px;border-radius:7px;background:#FFE48A;border:2px solid #17131C;flex:none;white-space:nowrap">HINT</span><span style="display:flex;flex-direction:column"><span style="font-size:15px;font-weight:800">Try: "I can do five percent."</span><span style="font-family:'Kithfield Hand',cursive;font-size:16px;color:#5D5366">Tôi có thể giảm năm phần trăm.</span></span></div>
+            <div style="height:88px;border-radius:44px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)"><button style="height:48px;width:96px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">Hold on</button><div style="width:66px;height:66px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 4px 0 #17131C"></div><button style="height:48px;width:96px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">Leave</button></div>
+          </div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+
+      <div data-screen-label="J5 Hank Local" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">J5</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">As a Local sees it · he cuts in</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFE9C2;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ hankCafeW }}</div>
+          <div style="position:absolute;top:262px;left:200px">{{ hankMei2 }}</div>
+          <div style="position:absolute;inset:0">{{ hankFront }}</div>
+          <div style="position:absolute;top:300px;left:30px">{{ hankL }}</div>
+          <div style="position:absolute;top:470px;left:150px;filter:blur(1.5px);z-index:3">{{ otsPip }}</div>
+          <div style="position:absolute;top:60px;left:14px;right:14px;display:flex;align-items:center;justify-content:space-between;z-index:4"><div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:20px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)"><span style="font-size:13.5px;font-weight:800">Lantern Café · behind the counter</span></div><span style="height:30px;padding:0 11px;border-radius:15px;background:#FFE9C2;border:2.5px solid #17131C;font-size:12px;font-weight:800;display:flex;align-items:center">Local</span></div>
+          <div style="position:absolute;top:116px;left:18px;right:60px;padding:12px 16px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:17px;font-weight:700;line-height:1.22;z-index:4"><span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;margin-bottom:3px">Hank<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;white-space:nowrap">AI</span></span><span>{{ lSaid }}</span><span style="color:#C7BFD0">{{ lUnsaid }}</span></div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;z-index:5"><div style="position:relative;padding:12px 16px;border-radius:20px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);font-size:16px;font-weight:700"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366;display:block">YOU</span>Well, our beans are roasted here every—<span style="position:absolute;top:-12px;right:14px;padding:3px 8px;border-radius:8px;background:#EFA3F4;border:2.5px solid #17131C;font-size:12px;font-weight:800;transform:rotate(4deg);white-space:nowrap">Hank cut in</span></div>
+            <div style="height:88px;border-radius:44px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)"><button style="height:48px;width:96px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">Hold on</button><div style="width:66px;height:66px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 4px 0 #17131C"></div><button style="height:48px;width:96px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.75);font:800 14px Lexend,sans-serif;color:#17131C">Leave</button></div>
+          </div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+      <div style="width:360px;padding:22px;border-radius:26px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:10px;font-size:14px;font-weight:600;line-height:1.4">
+        <span style="font-size:20px;font-weight:800;letter-spacing:-0.03em">What changes by stage</span>
+        <span><b>Speed.</b> Newcomer hears about 110 words a minute. Local hears natural speed, about 170.</span>
+        <span><b>Asks.</b> One simple request versus several reasons at once.</span>
+        <span><b>Turn-taking.</b> Newcomers always finish. Locals get interrupted, like real life.</span>
+        <span><b>Help.</b> Hints appear after a pause for Newcomers. Locals only get help if they ask.</span>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const STAGES=[
+  ['Newcomer','A2','redpanda','#F9DAFB','Slower, simpler sentences. Neighbours offer a phrase hint when you pause.','Order at the café and ask one question','Introduce yourself in 30 seconds'],
+  ['Neighbour','A2+ / B1','pangolin','#D7F7E2','Normal pace. Fewer hints. Small talk wanders off-topic like real small talk.','Keep small talk going for 2 minutes','Give a 1-minute standup update'],
+  ['Regular','B1+','otter','#CFF0FD','Idioms appear. Accents get a little stronger. Hints only when you ask.','Tell a story the bus driver can follow in 45 seconds','Explain a problem to a client and suggest a fix'],
+  ['Local','B2','tiger','#FFE9C2','Fast, warm and interrupting. People change their minds mid-sentence.','Disagree politely and keep the chat friendly','Handle interruptions in a meeting'],
+  ['Voice of Natterwick','C1','bison','#EFA3F4','Everyone, every accent, no hints. The town asks you for help.','Tell a joke that lands','Negotiate a price and close the deal']
+];
+class Component extends DCLogic {
+  state={bt:0,sound:false};
+  sim={hi:0,hc:0,hw:0,li:0,lc:0,lw:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.step(),90); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  step(){ const S=this.sim, N="Hi. I want cheaper beans, please. Can you do ten percent?", F="Look, I buy fifty kilos a month, the place across the harbour does it for less, so unless you can match—";
+    if(S.hw>0){ S.hw--; if(!S.hw) S.hc=0; } else { if(this.state.bt%2===0) S.hc++; if(S.hc>N.length) S.hw=24; }
+    if(S.lw>0){ S.lw--; if(!S.lw) S.lc=0; } else { S.lc+=2; if(S.lc>F.length) S.lw=24; }
+    this.setState(s=>({bt:s.bt+1})); }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {};
+    const st=this.state, S=this.sim, {b1,b2,b3}=K.blinkers(st.bt); if(!this.sfx) this.sfx=K.makeSfx(()=>this.state.sound); const sfx=this.sfx;
+    const h=K.h, Cv=K.Cv, sp='redpanda';
+    const crop=(key,w,hh,o)=>h(Cv,{key,fn:'s_crop',w,hh,o});
+    const N="Hi. I want cheaper beans, please. Can you do ten percent?", F="Look, I buy fifty kilos a month, the place across the harbour does it for less, so unless you can match—";
+    const nt=S.hw>0?N.length:Math.min(S.hc,N.length), ft=S.lw>0?F.length:Math.min(S.lc,F.length);
+    const EP=[['E1','The Letter','Mei\'s rent doubles overnight. You help her read the letter and call the landlord.','cafe',{x:10,y:250,s:.78},[['otter',120,30,60,'worried']],'RENT ×2'],
+      ['E2','Help Wanted','Pip wants a job to help. You rehearse its first interview with Sol.','office',{x:40,y:120,s:.78,front:1},[['tarsier',90,30,96,'happy'],['redpanda',120,150,70,'excited']],null],
+      ['E3','Cheaper Beans','Hank, a fast-talking regular, wants a discount. You help Mei hold her price.','cafe',{x:10,y:250,s:.78},[['raccoon',130,140,56,'proud'],['otter',100,20,80,'worried']],'−20%?'],
+      ['E4','The Plan','At Nell\'s inn, the town pitches ideas. You chair the chat so everyone gets a turn.','burrow2',{x:40,y:300,s:.78},[['koala',100,10,96,'happy'],['tiger',110,90,60,'think'],['redpanda',100,180,96,'excited']],null],
+      ['E5','The Petition','Pip collects signatures on Bus 45. Bea gives you 45 seconds per stop.','bus',{x:20,y:230,s:.78},[['bulldog',120,80,40,'laugh'],['redpanda',90,190,110,'excited']],'45s'],
+      ['E6','The Town Meeting','The square votes. You speak for the café, and Mei stays.','square',{x:20,y:380,s:.78},[['bison',96,10,90,'happy'],['otter',90,90,80,'warm'],['redpanda',100,150,92,'wave'],['pangolin',84,230,104,'excited']],null]];
+    const keyframes=EP.map(([n,title,line,fn,cp,cast,tag],i)=>({n:'Season 1 · '+n,title,line,tag:tag||'',hasTag:!!tag,
+      art:crop('kf'+i,300,210,Object.assign({fn,bg:'#FBFAFD',t:K.tk(300)},cp)),
+      cast:cast.map(([k,s,x,y,m],j)=>({left:x+'px',top:y+'px',el:K.cr(k,{size:s,mood:m,blink:[b1,b2,b3][j%3],k:'kf'+i+j,still:true})}))}));
+    const pathPts=[[56,462],[158,384],[128,520],[300,200],[326,346],[180,590]], TAGS=['Café','Office','Café','Inn','Bus 45','Square'];
+    return {
+      hankCafeW:K.sc('cafeWarm',390,844,{t:K.tk(300)}), otsPip:K.cr(sp,{size:300,mood:'listen',back:true,k:'ots',anim:'ybreathe 3.4s'}),
+      soundLabel:st.sound?'Sound on':'Turn sound on', toggleSound:()=>this.setState({sound:!st.sound},()=>sfx('pop')),
+      stages:STAGES.map(([name,cefr,face,bg,talk,life,work],i)=>({n:i+1,name,cefr,bg,talk,life,work,face:K.fc(face,52,'happy','#FFFFFF')})),
+      callTypes:[['Episode call','Story','#EFA3F4',"This week's scene. You help a neighbour solve something by talking.",{fn:'cafe',x:0,y:280,s:.32}],['Real-week call','Your life','#CFF0FD','Your own week: a job post, a meeting, a client email, or "how did it go?"',{fn:'office',x:60,y:140,s:.32,front:1}],['Practice call','Practice','#D7F7E2','Pass it on, Teach the yapling, a pronunciation drill or an accent warm-up.',{fn:'bus',x:20,y:220,s:.32}]].map(([name,tag,bg,desc,cp],i)=>({name,tag,bg,desc,art:crop('ct'+i,120,90,Object.assign({bg:'#FBFAFD'},cp))})),
+      weekPip:K.cr(sp,{size:110,mood:'happy',blink:b1}),
+      weekCalls:[['Episode','S1 · E3 Cheaper Beans','Today','#EFA3F4',{fn:'cafe',x:0,y:280,s:.25}],['Real week','Interview prep with Dex','Done','#5FD98A',{fn:'office',x:60,y:140,s:.25,front:1}],['Practice','Pass it on with Bea','Open','#FFFFFF',{fn:'bus',x:20,y:220,s:.25}]].map(([tag,title,status,sbg,cp],i)=>({tag,title,status,sbg,art:crop('wc'+i,92,70,Object.assign({bg:'#FBFAFD'},cp))})),
+      weekPhrases:[['push it to Friday','desk',0,{kind:'notes'}],["that's a fair point",'seed',0,{}],["I'll circle back",'desk',1,{kind:'mug'}],['less sugar, please','jar',2,{fill:'#7A4E33'}]].map(([w,f,s,x],i)=>({word:w,stage:f==='seed'?'Heard it':['Said once','Said again','Your own'][s],el:K.h(K.Cv,{key:'wp'+i,fn:'s_obj',w:30,hh:40,o:Object.assign({fam:f,stage:s,t:0},x)})})),
+      mapTown:K.sc('town',390,844,{t:K.tk(250)}), mapBoat:K.h(K.Cv,{key:'mb',fn:'s_fboat',w:120,hh:88,o:{t:K.tk(150)}}), hankFace:K.fc('raccoon',44,'proud','#FFE9C2'),
+      marks:pathPts.map(([x,y],i)=>({tag:TAGS[i],left:(x-18)+'px',top:(y-18)+'px',n:i+1,bg:i<2?'#5FD98A':i===2?'#EFA3F4':'#FFFFFF',anim:i===2?'yglowdot 1.6s ease-in-out infinite':'none',bd:i>2?'2.5px dashed #17131C':'2.5px solid #17131C',done:i<2})),
+      stageTown:K.sc('square',390,844,{t:K.tk(150)}), stageConf:K.sc('confetti',390,844,{t:K.tk(100)}),
+      stageCast:[['bulldog',110,10,380,'laugh'],['koala',104,280,384,'excited'],['tiger',112,-10,470,'wave'],['otter',104,290,470,'laugh'],['tarsier',110,100,500,'excited'],['pangolin',100,200,506,'warm']].map(([k,s,x,y,m],i)=>({left:x+'px',top:y+'px',el:K.cr(k,{size:s,mood:m,blink:[b1,b2,b3][i%3],speed:2+i*.3,k:'st'+k})})),
+      stagePip:K.h('div',{style:{animation:'yjump .8s ease-in-out infinite',transformOrigin:'50% 100%'}},K.cr(sp,{size:140,mood:'excited',blink:b1,still:true,k:'spj'})), stageFace:K.fc(sp,46,'excited','#FFFFFF'),
+      stageMap:K.h(K.Cv,{key:'smap',fn:'s_mini',w:130,hh:281,o:{fn:'town'}}),
+      keyframes,
+      s2Art:crop('s2',300,210,{fn:'town',x:0,y:620,s:1,bg:'#CFF0FD',t:K.tk(300)}), s2Boat:K.h(K.Cv,{key:'s2b',fn:'s_fboat',w:210,hh:154,o:{t:K.tk(150)}}), s2Pip:K.cr(sp,{size:84,mood:'surprised',blink:b2,k:'s2p'}),
+      hankCafe:K.sc('cafe',390,844,{t:K.tk(250)}), hankFront:K.sc('cafeFront',390,844,{}),
+      hankMei:K.cr('otter',{size:160,mood:'worried',blink:b2,k:'hm'}), hankMei2:K.cr('otter',{size:160,mood:'surprised',blink:b3,k:'hm2'}),
+      hankN:K.cr('raccoon',{size:200,mood:S.hw>0?'patient':'happy',blink:b1,mouth:S.hw>0?'rest':K.mouthFor(N,nt),k:'hn'}),
+      hankL:K.cr('raccoon',{size:200,mood:S.lw>0?'proud':'excited',blink:b3,mouth:S.lw>0?'rest':K.mouthFor(F,ft),k:'hl'}),
+      nSaid:N.slice(0,nt), nUnsaid:N.slice(nt), lSaid:F.slice(0,ft), lUnsaid:F.slice(ft), lCut:S.lw>0
+    };
+  }
+}
+</script>
+</body>
+</html>

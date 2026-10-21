@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('./fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+input:focus{outline:none}
+button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+@keyframes pIn{from{transform:translateX(100%)}to{transform:none}}
+@keyframes pOut{to{transform:translateX(-28%);filter:brightness(.82)}}
+@keyframes bIn{from{transform:translateX(-28%);filter:brightness(.82)}to{transform:none}}
+@keyframes bOut{to{transform:translateX(100%)}}
+@keyframes rIn{from{transform:translateY(100%)}to{transform:none}}
+@keyframes sOut{to{transform:translateY(100%)}}
+@keyframes zIn{0%{transform:scale(.86);opacity:0;border-radius:40px}100%{transform:none;opacity:1}}
+@keyframes zOut{to{transform:scale(1.1);opacity:0}}
+@keyframes fIn{from{opacity:0}to{opacity:1}}
+@keyframes fOut{to{opacity:0}}
+@keyframes hold{to{opacity:1}}
+@keyframes ywig{0%,58%,100%{transform:rotate(0)}62%{transform:rotate(-1.4deg)}66%{transform:rotate(1.4deg)}70%{transform:rotate(-1deg)}74%{transform:rotate(.8deg)}78%{transform:rotate(0)}}
+@keyframes ypulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.7);opacity:0}}
+@keyframes ybar{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+@keyframes yglow{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 8px rgba(239,163,244,.45)}50%{box-shadow:0 4px 0 #17131C,0 0 0 20px rgba(239,163,244,.12)}}
+@keyframes ysp{0%{transform:scale(0) rotate(0);opacity:0}40%{transform:scale(1.2) rotate(20deg);opacity:1}100%{transform:scale(.8) rotate(45deg);opacity:0}}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.2,.84)}65%{transform:scale(.9,1.1)}82%{transform:scale(1.04,.97)}100%{transform:scale(1,1)}}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes ytoast{0%{transform:translate(-50%,-24px);opacity:0}10%,86%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,-10px);opacity:0}}
+@keyframes ybounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes yletter{0%{transform:translate(-40px,-4px) rotate(-8deg);opacity:0}20%{opacity:1}70%{transform:translate(18px,0) rotate(0)}100%{transform:translate(30px,0) rotate(0);opacity:0}}
+@keyframes yfly{0%{transform:translateY(-260px) rotate(-14deg);opacity:0}60%{transform:translateY(10px) rotate(3deg);opacity:1}100%{transform:translateY(0) rotate(-3deg)}}
+@keyframes yring{from{stroke-dashoffset:276}to{stroke-dashoffset:0}}
+@keyframes ytype{0%{letter-spacing:-0.2em;opacity:0}60%{letter-spacing:-0.04em;opacity:1}100%{letter-spacing:-0.065em}}
+@keyframes ysway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+</style>
+<script src="./art/yap-art.js?v=5"></script>
+<script src="./art/yap-cast.js?v=9"></script>
+<script src="./art/yap-sticker.js?v=4"></script>
+<script src="./art/yap-r4.js?v=5"></script>
+<script src="./art/yap-r5.js?v=3"></script>
+<script src="./art/yap-r6.js?v=4"></script>
+<script src="./art/yap-dc.js?v=3"></script>
+<script src="./art/yap-voice.js?v=1"></script>
+</helmet>
+<div style="min-height:100vh;padding:28px 24px 50px;box-sizing:border-box;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;display:flex;gap:28px;justify-content:center;align-items:flex-start;flex-wrap:wrap">
+
+  <div onTouchStart="{{ phoneTouch }}" data-screen-label="Week 1 prototype" style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#17131C;box-shadow:0 0 0 11px #17131C,0 40px 80px -24px rgba(46,20,70,.45);flex:none;isolation:isolate;margin-top:12px">
+    <sc-for list="{{ slots }}" as="s" hint-placeholder-count="2">
+      <sc-if value="{{ s.on }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;overflow:hidden;background:#FBFAFD;z-index:{{ s.z }};animation:{{ s.a }}">
+          
+<sc-if value="{{ s.isLock }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#2A2140">
+    <div style="position:absolute;inset:-20px;filter:blur(8px) saturate(1.2)">{{ s.lk.wall }}</div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(23,19,28,.45),rgba(23,19,28,.15) 40%,rgba(23,19,28,.55))"></div>
+    <div style="position:absolute;top:70px;left:0;right:0;display:flex;flex-direction:column;align-items:center;color:#FFFFFF">
+      <span style="font-size:18px;font-weight:700;opacity:.92">{{ s.lk.date }}</span>
+      <span style="font-size:96px;font-weight:700;letter-spacing:-0.04em;line-height:1">{{ s.lk.time }}</span>
+      <span style="margin-top:6px;padding:3px 10px;border-radius:10px;background:rgba(255,255,255,.2);font-size:12px;font-weight:800;letter-spacing:.05em;white-space:nowrap">{{ s.lk.day }}</span>
+    </div>
+    <button onClick="{{ s.lk.onTap }}" style="position:absolute;top:330px;left:12px;right:12px;display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:26px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.28);backdrop-filter:blur(26px) saturate(1.6);-webkit-backdrop-filter:blur(26px) saturate(1.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 12px 30px rgba(0,0,0,.22);color:#FFFFFF;text-align:left;cursor:pointer;font-family:inherit;animation:yup .6s .4s cubic-bezier(.2,.9,.25,1) both">
+      <span style="width:42px;height:42px;border-radius:11px;overflow:hidden;flex:none;border:1.5px solid rgba(255,255,255,.7)">{{ s.lk.icon }}</span>
+      <span style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0"><span style="display:flex;justify-content:space-between;font-size:14px;font-weight:800"><span>{{ s.lk.from }}</span><span style="font-weight:600;opacity:.8">{{ s.lk.now }}</span></span><span style="font-size:15.5px;font-weight:600;line-height:1.25">{{ s.lk.body }}</span></span>
+    </button>
+    <div style="position:absolute;bottom:52px;left:0;right:0;display:flex;justify-content:space-between;padding:0 46px;align-items:center">
+      <span style="width:50px;height:50px;border-radius:25px;background:rgba(255,255,255,.22);backdrop-filter:blur(16px)"></span>
+      <span style="font-size:13px;font-weight:700;color:#FFFFFF;opacity:.85;animation:ybounce 1.6s ease-in-out infinite">{{ s.lk.tap }}</span>
+      <span style="width:50px;height:50px;border-radius:25px;background:rgba(255,255,255,.22);backdrop-filter:blur(16px)"></span>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ s.isSplash }}" hint-placeholder-val="{{ true }}">
+  <div style="position:absolute;inset:0;background:#E4F7FE">
+    <div style="position:absolute;inset:0">{{ s.sp.art }}</div>
+    <div style="position:absolute;top:286px;left:150px;width:220px;height:160px">{{ s.sp.boat }}</div>
+    <div style="position:absolute;top:248px;left:236px">{{ s.sp.pip }}</div>
+    <div style="position:absolute;top:76px;left:14px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:4px 16px 10px 12px;border-radius:26px;background:rgba(228,247,254,.82);backdrop-filter:blur(6px)">
+      <span style="font-size:70px;font-weight:900;letter-spacing:-0.065em;line-height:1.05;animation:ytype 1.4s ease-out both">yapling</span>
+      <span style="font-size:17px;font-weight:700;letter-spacing:-0.02em">{{ s.sp.tag }}</span>
+    </div>
+    <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:20px 16px 16px;border-radius:44px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);animation:yup .6s .3s cubic-bezier(.2,.9,.25,1) both">
+      <span style="font-size:26px;font-weight:800;letter-spacing:-0.04em;padding:0 4px">{{ s.sp.title }}</span>
+      <span style="font-size:13.5px;font-weight:600;color:#5D5366;padding:0 4px">{{ s.sp.sub }}</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ s.sp.langs }}" as="l" hint-placeholder-count="9"><button onClick="{{ l.onClick }}" style="height:38px;padding:0 13px;border-radius:19px;border:2px solid {{ l.bd }};background:{{ l.bg }};font:700 14px Lexend,sans-serif;color:#17131C;cursor:pointer">{{ l.l }}</button></sc-for>
+      </div>
+      <button onClick="{{ s.sp.onNext }}" style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer;margin-top:4px">{{ s.sp.cta }}</button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ s.isInfo }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#F4F1F7">
+    <sc-if value="{{ s.inf.hasArt }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;inset:-24px;filter:blur(10px)">{{ s.inf.art }}</div><div style="position:absolute;inset:0;background:rgba(251,250,253,.35)"></div></sc-if>
+    <sc-if value="{{ s.inf.hasHero }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:96px;left:120px;animation:ypop .6s .15s ease-out both">{{ s.inf.hero }}</div></sc-if>
+    <div style="position:absolute;left:8px;right:8px;top:{{ s.inf.sheetTop }};bottom:8px;border-radius:42px;padding:22px 18px 16px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);animation:yup .55s .1s cubic-bezier(.2,.9,.25,1) both">
+      <span style="font-size:11.5px;font-weight:800;letter-spacing:.06em;color:#5D5366">{{ s.inf.kicker }}</span>
+      <span style="font-size:28px;font-weight:800;letter-spacing:-0.045em;line-height:1.02">{{ s.inf.title }}</span>
+      <sc-for list="{{ s.inf.body }}" as="b" hint-placeholder-count="2"><span style="font-size:15px;font-weight:600;line-height:1.38;color:#3E3646">{{ b }}</span></sc-for>
+      <sc-if value="{{ s.inf.hasTable }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;border-radius:16px;border:2.5px solid #17131C;overflow:hidden;flex-shrink:0">
+          <sc-for list="{{ s.inf.table }}" as="r" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:1fr 70px 96px;padding:6px 10px;background:{{ r.bg }};border-top:1px solid #F1ECF4;font-size:12.5px;font-weight:{{ r.fw }}"><span>{{ r.a }}</span><span>{{ r.b }}</span><span>{{ r.c }}</span></div></sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ s.inf.hasPlans }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+          <sc-for list="{{ s.inf.plans }}" as="p" hint-placeholder-count="2"><button onClick="{{ p.onClick }}" style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:12px;border-radius:18px;border:2.5px solid #17131C;background:{{ p.bg }};cursor:pointer;font-family:inherit;color:#17131C;text-align:left"><sc-if value="{{ p.hasB }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-10px;left:10px;padding:1px 7px;border-radius:7px;background:#5FD98A;border:2px solid #17131C;font-size:10px;font-weight:800;white-space:nowrap">{{ p.b }}</span></sc-if><span style="font-size:12px;font-weight:700">{{ p.l }}</span><span style="font-size:19px;font-weight:800;letter-spacing:-0.03em">{{ p.p }}</span><span style="font-size:11px;font-weight:600">{{ p.s }}</span></button></sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ s.inf.hasRows }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ s.inf.rows }}" as="r" hint-placeholder-count="2"><button onClick="{{ r.onClick }}" style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;border:1.5px solid #E4DEEA;background:#FFFFFF;cursor:pointer;font-family:inherit;color:#17131C;text-align:left"><span style="display:flex;flex-direction:column;flex:1"><span style="font-size:16px;font-weight:700">{{ r.t }}</span><span style="font-size:12.5px;font-weight:600;color:#5D5366">{{ r.s }}</span></span><sc-if value="{{ r.hasBtn }}" hint-placeholder-val="{{ false }}"><span style="height:42px;padding:0 18px;border-radius:21px;background:#17131C;color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center">{{ r.btn }}</span></sc-if><sc-if value="{{ r.hasToggle }}" hint-placeholder-val="{{ false }}"><span style="position:relative;width:46px;height:28px;border-radius:14px;background:{{ r.knob }};border:2px solid #17131C;box-sizing:border-box;flex:none"><span style="position:absolute;top:2px;left:{{ r.kx }};width:20px;height:20px;border-radius:10px;background:#fff;border:2px solid #17131C;box-sizing:border-box;transition:left .2s"></span></span></sc-if></button></sc-for>
+        </div>
+      </sc-if>
+      <span style="font-size:12px;font-weight:600;color:#5D5366">{{ s.inf.note }}</span>
+      <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
+        <sc-if value="{{ s.inf.equal }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button onClick="{{ s.inf.sec.onClick }}" style="height:54px;border-radius:27px;border:3px solid #17131C;background:#FFFFFF;color:#17131C;font:800 16px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">{{ s.inf.sec.l }}</button>
+            <button onClick="{{ s.inf.pri.onClick }}" style="height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 16px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">{{ s.inf.pri.l }}</button>
+          </div>
+          <span style="font-size:12.5px;font-weight:700;text-align:center">{{ s.inf.foot }}</span>
+        </sc-if>
+        <sc-if value="{{ s.inf.solo }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ s.inf.pri.onClick }}" style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">{{ s.inf.pri.l }}</button>
+          <sc-if value="{{ s.inf.hasSec }}" hint-placeholder-val="{{ false }}"><button onClick="{{ s.inf.sec.onClick }}" style="height:48px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 15px Lexend,sans-serif;cursor:pointer">{{ s.inf.sec.l }}</button></sc-if>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ s.isPick }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0">
+    <div style="position:absolute;top:-60px;left:0">{{ s.pk.town }}</div>
+    <div style="position:absolute;left:10px;right:10px;bottom:10px;height:440px;border-radius:44px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+      <div style="position:absolute;top:26px;left:0;right:0;text-align:center;font-size:32px;font-weight:800;letter-spacing:-0.05em">{{ s.pk.title }}</div>
+      <div style="position:absolute;top:80px;left:8px;right:8px;height:196px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+        <sc-for list="{{ s.pk.starters }}" as="c" hint-placeholder-count="3">
+          <button onClick="{{ c.onClick }}" style="position:relative;height:196px;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;color:#17131C">
+            <div style="position:absolute;left:50%;bottom:46px;margin-left:-55px;width:110px;height:132px;transform:translateY({{ c.lift }});transition:transform .45s cubic-bezier(.34,1.56,.64,1)">{{ c.el }}</div>
+            <div style="position:absolute;left:8px;right:8px;bottom:4px;height:58px;border-radius:14px;background:{{ c.box }};border:3px solid #17131C;box-shadow:0 4px 0 #17131C;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:800;text-align:center;line-height:1.05;padding:0 4px">{{ c.label }}</div>
+          </button>
+        </sc-for>
+      </div>
+      <div style="position:absolute;top:300px;left:16px;right:16px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:12px;font-weight:800;letter-spacing:.05em;padding-left:8px">{{ s.pk.nameL }}</span>
+        <div style="display:flex;gap:10px"><input value="{{ s.pk.name }}" onChange="{{ s.pk.onName }}" maxlength="12" style="flex:1;min-width:0;height:60px;border-radius:30px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);padding:0 22px;font:800 24px Lexend,sans-serif;color:#17131C"><button onClick="{{ s.pk.onNext }}" style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer;height:60px;padding:0 22px">{{ s.pk.cta }}</button></div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+
+<sc-if value="{{ s.isTalk }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#F9DAFB">
+    <sc-if value="{{ s.tk.blurred }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-24px;filter:blur(12px)">{{ s.tk.blurBg }}</div><div style="position:absolute;inset:0;background:rgba(251,250,253,.38)"></div></sc-if>
+    <sc-if value="{{ s.tk.sharp }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;inset:0">{{ s.tk.bg }}</div></sc-if>
+    <sc-for list="{{ s.tk.cast }}" as="c" hint-placeholder-count="1"><div style="position:absolute;left:{{ c.left }};top:{{ c.top }}">{{ c.el }}</div></sc-for>
+    <sc-if value="{{ s.tk.hasFront }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;pointer-events:none">{{ s.tk.front }}</div></sc-if>
+    <sc-for list="{{ s.tk.castFront }}" as="c" hint-placeholder-count="0"><div style="position:absolute;left:{{ c.left }};top:{{ c.top }}">{{ c.el }}</div></sc-for>
+
+    <div style="position:absolute;top:58px;left:62px;right:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;z-index:4">
+      <div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 5px;border-radius:20px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);min-width:0"><span style="width:30px;height:30px;border-radius:15px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ s.tk.top.face }}</span><span style="font-size:14px;font-weight:800">{{ s.tk.top.name }}</span><span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800;white-space:nowrap">AI</span><span style="font-size:12px;font-weight:600;color:#5D5366;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.tk.top.sub }}</span></div>
+      <sc-if value="{{ s.tk.top.hasEp }}" hint-placeholder-val="{{ false }}"><span style="height:30px;padding:0 10px;border-radius:15px;background:#FFFFFF;border:2.5px solid #17131C;font-size:11px;font-weight:800;display:flex;align-items:center;flex:none">{{ s.tk.top.ep }}</span></sc-if>
+    </div>
+
+    <sc-if value="{{ s.tk.rounds.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:108px;left:14px;right:14px;display:flex;justify-content:space-between;padding:8px 14px;border-radius:24px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4">
+        <sc-for list="{{ s.tk.rounds.items }}" as="r" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:7px;opacity:{{ r.op }}"><span style="width:34px;height:34px;border-radius:17px;overflow:hidden;border:2.5px solid #17131C;box-shadow:0 0 0 3px {{ r.ring }};box-sizing:border-box">{{ r.face }}</span><span style="font-size:15px;font-weight:800">{{ r.tt }}</span></div></sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ s.tk.phone.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:108px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:8px 14px 8px 8px;border-radius:22px;background:#17131C;color:#fff;z-index:5;animation:yup .4s ease-out both;white-space:nowrap"><span style="width:28px;height:28px;border-radius:14px;background:#5FD98A;display:flex;align-items:center;justify-content:center;animation:ybounce 1s ease-in-out infinite"><svg width="16" height="16" viewBox="0 0 32 32"><path d="M9 5 C7 5 5 7 5 9 C5 19 13 27 23 27 C25 27 27 25 27 23 L27 20 L21 18 L19 21 C15 19 13 17 11 13 L14 11 L12 5 Z" fill="#17131C"></path></svg></span><span style="font-size:13px;font-weight:800">{{ s.tk.phone.t }}</span></div>
+    </sc-if>
+
+    <sc-if value="{{ s.tk.letter.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:156px;left:150px;width:222px;padding:12px 14px;border-radius:4px;background:#FFFDF6;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;transform:rotate(4deg);display:flex;flex-direction:column;gap:6px;z-index:3;animation:yfly .9s cubic-bezier(.2,.8,.3,1) both">
+        <span style="font-size:9.5px;font-weight:800;letter-spacing:.08em;color:#5D5366">HARBOUR LANE OFFICE · NOTICE</span>
+        <sc-for list="{{ s.tk.letter.lines }}" as="l" hint-placeholder-count="3"><button onClick="{{ l.onClick }}" style="display:flex;flex-direction:column;gap:2px;padding:3px 4px;margin:0 -4px;border:none;border-radius:6px;background:transparent;text-align:left;cursor:pointer;font-family:inherit;color:#17131C"><span style="font-size:13.5px;font-weight:700;line-height:1.25;text-decoration:underline dotted #B9B0C4;text-underline-offset:3px">{{ l.en }}</span><sc-if value="{{ l.showVi }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Kithfield Hand',cursive;font-size:15px;line-height:1.15;color:#5B4A8C;animation:yin .3s ease-out both">{{ l.vi }}</span></sc-if></button></sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ s.tk.bub.show }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ s.tk.bub.onTap }}" style="position:absolute;top:{{ s.tk.bub.top }};left:{{ s.tk.bub.left }};right:{{ s.tk.bub.right }};display:flex;flex-direction:column;gap:3px;padding:11px 15px;border-radius:22px;background:{{ s.tk.bub.bg }};border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;text-align:left;cursor:pointer;font-family:inherit;color:#17131C;z-index:4">
+        <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800"><span>{{ s.tk.bub.name }}</span><span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px;white-space:nowrap">AI</span></span>
+        <span style="font-size:18px;font-weight:700;line-height:1.22"><span>{{ s.tk.bub.said }}</span><span style="opacity:.3">{{ s.tk.bub.unsaid }}</span></span>
+        <sc-if value="{{ s.tk.bub.showGloss }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Kithfield Hand',cursive;font-size:18px;line-height:1.15;color:#5B4A8C;border-top:2px dashed rgba(23,19,28,.2);padding-top:4px;animation:yin .3s ease-out both">{{ s.tk.bub.gloss }}</span></sc-if>
+        <sc-if value="{{ s.tk.bub.showTap }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:700;opacity:.6">{{ s.tk.bub.tapHint }}</span></sc-if>
+      </button>
+    </sc-if>
+
+    <sc-if value="{{ s.tk.ask.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:350px;left:16px;padding:8px 13px;border-radius:13px;background:#FFFFFF;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;font-size:22px;font-weight:900;letter-spacing:-0.04em;transform:rotate(-7deg);animation:ypop .5s ease-out both;z-index:5">{{ s.tk.ask.a }}</div>
+      <div style="position:absolute;top:410px;left:40px;padding:8px 13px;border-radius:13px;background:#22BFF2;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;font-size:22px;font-weight:900;letter-spacing:-0.04em;transform:rotate(5deg);animation:ypop .5s .3s ease-out both;z-index:5">{{ s.tk.ask.b }}</div>
+    </sc-if>
+    <sc-if value="{{ s.tk.fixed.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:380px;left:24px;padding:8px 14px;border-radius:12px;background:#5FD98A;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;font-size:17px;font-weight:800;transform:rotate(-4deg);animation:ypop .5s ease-out both;z-index:5">{{ s.tk.fixed.t }}<span style="position:absolute;top:-16px;left:28%;font-size:22px;color:#EFA3F4;animation:ysp 1.2s ease-out infinite">✦</span><span style="position:absolute;top:-12px;left:72%;font-size:16px;color:#22BFF2;animation:ysp 1.2s .4s ease-out infinite">✦</span><span style="position:absolute;bottom:-14px;left:55%;font-size:14px;color:#FFD66B;animation:ysp 1.2s .7s ease-out infinite">✦</span></div>
+    </sc-if>
+    <sc-if value="{{ s.tk.timer.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:110px;right:16px;width:96px;height:96px;z-index:5;animation:ypop .4s ease-out both"><svg width="96" height="96" viewBox="0 0 96 96" style="position:absolute;inset:0;transform:rotate(-90deg)"><circle cx="48" cy="48" r="44" fill="#FFFFFF" stroke="#17131C" stroke-width="3"></circle><circle cx="48" cy="48" r="38" fill="none" stroke="#F1ECF4" stroke-width="9"></circle><circle cx="48" cy="48" r="38" fill="none" stroke="{{ s.tk.timer.c }}" stroke-width="9" stroke-linecap="round" stroke-dasharray="238.8" stroke-dashoffset="{{ s.tk.timer.off }}"></circle></svg><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;letter-spacing:-0.04em">{{ s.tk.timer.secs }}</span></div>
+    </sc-if>
+
+    <sc-if value="{{ s.tk.vm.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:110px;left:18px;right:18px;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:8px;background:#FFFDF6;border:3px solid #17131C;box-shadow:0 7px 0 #17131C;transform:rotate(-2deg);z-index:5;animation:yfly 1s cubic-bezier(.2,.8,.3,1) both">
+        <div style="display:flex;align-items:center;gap:12px"><div style="padding:4px;background:#fff;border:2.5px dashed #17131C;transform:rotate(4deg)"><div style="width:62px;height:70px;overflow:hidden;border:2px solid #17131C">{{ s.tk.vm.face }}</div></div><span style="font-family:'Kithfield Hand',cursive;font-size:26px;line-height:1">{{ s.tk.vm.title }}</span></div>
+        <div style="display:flex;align-items:center;gap:3px;height:30px"><sc-for list="{{ s.tk.vm.bars }}" as="b" hint-placeholder-count="34"><span style="width:4px;height:{{ b.h }};border-radius:2px;background:{{ b.c }}"></span></sc-for></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ s.tk.story.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:108px;left:14px;right:14px;bottom:150px;display:flex;flex-direction:column;gap:10px;z-index:3">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 14px 10px 10px;border-radius:26px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)"><span style="width:52px;height:52px;border-radius:26px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box;flex:none">{{ s.tk.story.face }}</span><div style="display:flex;align-items:center;gap:3px;flex:1;height:34px"><sc-for list="{{ s.tk.story.bars }}" as="b" hint-placeholder-count="30"><span style="width:4px;height:{{ b.h }};border-radius:2px;background:{{ b.c }}"></span></sc-for></div></div>
+        <span style="align-self:flex-start;padding:4px 10px;border-radius:10px;background:#D7F7E2;border:2px solid #17131C;font-size:11.5px;font-weight:800;white-space:nowrap">{{ s.tk.story.note }}</span>
+        <sc-for list="{{ s.tk.story.items }}" as="it" hint-placeholder-count="0"><button onClick="{{ it.onClick }}" style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;border-radius:18px;border:2px solid #17131C;background:#FFFFFF;text-align:left;cursor:pointer;font-family:inherit;color:#17131C;animation:yin .4s ease-out both"><span style="font-size:16px;font-weight:700;line-height:1.25">{{ it.t }}</span><sc-if value="{{ it.showVi }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Kithfield Hand',cursive;font-size:17px;line-height:1.15;color:#5B4A8C">{{ it.vi }}</span></sc-if></button></sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ s.tk.postcard.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:300px;left:20px;right:20px;display:grid;grid-template-columns:1fr 84px;gap:12px;padding:16px;border-radius:6px;background:#FFFDF6;border:3px solid #17131C;box-shadow:0 7px 0 #17131C;transform:rotate(-3deg);z-index:6;animation:yfly 1.1s cubic-bezier(.2,.8,.3,1) both">
+        <span style="font-family:'Kithfield Hand',cursive;font-size:21px;line-height:1.15;border-right:2px dashed #D3CCDC;padding-right:10px">{{ s.tk.postcard.text }}<span style="display:block;color:#9A5AA6;margin-top:6px">{{ s.tk.postcard.from }}</span></span>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="padding:4px;background:#fff;border:2.5px dashed #17131C;transform:rotate(4deg)"><div style="width:66px;height:74px;overflow:hidden;border:2px solid #17131C">{{ s.tk.postcard.face }}</div></div><span style="width:60px;height:60px;border-radius:30px;border:2.5px solid #5B4A8C;display:flex;align-items:center;justify-content:center;text-align:center;font-size:8.5px;font-weight:800;color:#5B4A8C;transform:rotate(-14deg)">NATTERWICK<br>SEP 23</span></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ s.tk.dusk.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:110px;left:30px;width:330px;height:250px;border-radius:165px 165px 10px 10px;border:6px solid #17131C;overflow:hidden;box-shadow:0 8px 0 #17131C;z-index:5;animation:ypop .6s ease-out both;background:#3B3160">
+        <div style="position:absolute;left:15px;top:20px;opacity:.85;filter:hue-rotate(-20deg) brightness(.62) saturate(1.3)">{{ s.tk.dusk.art }}</div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(239,163,244,.35),rgba(43,30,80,.35))"></div>
+        <div style="position:absolute;left:150px;top:176px;width:46px;height:12px;background:#FFFDF6;border:2px solid #17131C;border-radius:2px;animation:yletter 3.2s 1s ease-in-out infinite"></div>
+        <div style="position:absolute;left:0;right:0;top:118px;height:6px;background:#17131C"></div><div style="position:absolute;top:0;bottom:0;left:160px;width:6px;background:#17131C"></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ s.tk.peek.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:110px;left:16px;right:16px;display:flex;align-items:center;gap:12px;padding:12px;border-radius:22px;background:#17131C;color:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #EFA3F4;z-index:5;animation:yup .5s ease-out both"><span style="width:44px;height:44px;border-radius:22px;overflow:hidden;border:2px solid #fff;flex:none">{{ s.tk.peek.face }}</span><span style="display:flex;flex-direction:column;flex:1"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#EFA3F4">{{ s.tk.peek.sub }}</span><span style="font-size:22px;font-weight:800;letter-spacing:-0.04em">{{ s.tk.peek.title }}</span><span style="font-size:12px;font-weight:600;color:#D3CCDC">{{ s.tk.peek.note }}</span></span></div>
+    </sc-if>
+    <sc-if value="{{ s.tk.leaf.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:150px;left:50%;transform:translateX(-50%) rotate(-3deg);display:flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;border-radius:20px;background:#5FD98A;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;z-index:5;animation:ypop .5s ease-out both;white-space:nowrap"><span style="width:56px;height:75px">{{ s.tk.leaf.el }}</span><span style="display:flex;flex-direction:column"><span style="font-size:11px;font-weight:800;letter-spacing:.05em">{{ s.tk.leaf.s }}</span><span style="font-size:19px;font-weight:800">{{ s.tk.leaf.t }}</span></span></div>
+    </sc-if>
+    <sc-if value="{{ s.tk.mir.show }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:170px;left:16px;right:16px;padding:16px;border-radius:24px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:10px;z-index:6;animation:ypop .5s ease-out both">
+        <span style="font-size:22px;font-weight:800;letter-spacing:-0.04em">{{ s.tk.mir.title }}</span>
+        <sc-for list="{{ s.tk.mir.rows }}" as="r" hint-placeholder-count="1"><div style="display:flex;flex-direction:column;gap:4px;animation:yin .4s ease-out both"><div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:800"><span>{{ r.n }}</span><span style="display:flex;gap:10px;color:#3E3646"><span>Flow {{ r.f }}</span><span>{{ r.p }}</span><span>Pauses {{ r.z }}</span></span></div><div style="height:12px;border-radius:6px;background:#F1ECF4;border:2px solid #17131C;overflow:hidden"><div style="height:100%;width:{{ r.fw }};background:{{ r.hi }};transition:width .8s"></div></div></div></sc-for>
+        <span style="font-size:12.5px;font-weight:700;color:#5D5366">{{ s.tk.mir.note }}</span>
+      </div>
+    </sc-if>
+
+    <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;z-index:6">
+      <sc-if value="{{ s.tk.ex.show }}" hint-placeholder-val="{{ false }}">
+        <div style="position:relative;padding:12px 16px;border-radius:20px 20px 20px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;animation:yup .35s ease-out both"><span style="display:block;font-size:11px;font-weight:800">Pip whispers</span><span style="display:block;font-size:16px;font-weight:700;line-height:1.25">{{ s.tk.ex.en }}</span><sc-if value="{{ s.tk.ex.showVi }}" hint-placeholder-val="{{ false }}"><span style="display:block;font-family:'Kithfield Hand',cursive;font-size:19px;color:#5B4A8C;margin-top:4px;padding-top:4px;border-top:2px dashed rgba(23,19,28,.25)">{{ s.tk.ex.vi }}</span></sc-if><sc-if value="{{ s.tk.ex.showBtn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ s.tk.ex.onVi }}" style="margin-top:6px;padding:4px 10px;border-radius:9px;border:2px solid #17131C;background:#fff;font:800 12px Lexend,sans-serif;color:#17131C;cursor:pointer">{{ s.tk.ex.btn }}</button></sc-if><button onClick="{{ s.tk.ex.onClose }}" style="position:absolute;top:6px;right:8px;width:26px;height:26px;border-radius:13px;border:none;background:rgba(23,19,28,.1);font:800 12px Lexend,sans-serif;cursor:pointer">✕</button></div>
+      </sc-if>
+      <sc-if value="{{ s.tk.ex.chip }}" hint-placeholder-val="{{ false }}"><button onClick="{{ s.tk.ex.onChip }}" style="align-self:flex-start;padding:7px 13px;border-radius:15px;border:none;background:#17131C;color:#fff;font:800 13px Lexend,sans-serif;cursor:pointer;animation:yin .3s ease-out both">What does that mean?</button></sc-if>
+      <sc-if value="{{ s.tk.hint.show }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:20px;background:rgba(255,255,255,.88);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.95);box-shadow:0 8px 22px rgba(46,20,70,.14);animation:yup .45s cubic-bezier(.2,.9,.25,1) both"><span style="font-size:11px;font-weight:800;padding:2px 7px;border-radius:7px;background:#FFE48A;border:2px solid #17131C;flex:none;white-space:nowrap">HINT</span><span style="display:flex;flex-direction:column"><span style="font-size:15.5px;font-weight:800">{{ s.tk.hint.en }}</span><span style="font-family:'Kithfield Hand',cursive;font-size:16px;color:#5D5366">{{ s.tk.hint.vi }}</span></span></div>
+      </sc-if>
+      <sc-if value="{{ s.tk.you.show }}" hint-placeholder-val="{{ false }}">
+        <div style="align-self:flex-end;max-width:310px;padding:10px 14px;border-radius:20px 20px 6px 20px;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.95);box-shadow:0 8px 22px rgba(46,20,70,.14)"><span style="display:block;font-size:10.5px;font-weight:800;letter-spacing:.05em;color:#5D5366">{{ s.tk.you.label }}</span><span style="font-size:16.5px;font-weight:700;line-height:1.25"><span>{{ s.tk.you.said }}</span><span style="opacity:.3">{{ s.tk.you.unsaid }}</span></span></div>
+      </sc-if>
+      <sc-if value="{{ s.tk.controls }}" hint-placeholder-val="{{ true }}">
+        <div style="height:104px;border-radius:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+          <button onClick="{{ s.tk.hold.onClick }}" style="height:50px;width:96px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:{{ s.tk.hold.bg }};color:{{ s.tk.hold.fg }};font:800 14px Lexend,sans-serif;cursor:pointer">{{ s.tk.hold.l }}</button>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+            <button onPointerDown="{{ s.tk.mic.onDown }}" onPointerUp="{{ s.tk.mic.onUp }}" onPointerLeave="{{ s.tk.mic.onUp }}" onContextMenu="{{ s.tk.mic.onDown }}" style="width:72px;height:72px;border-radius:50%;background:{{ s.tk.mic.bg }};border:3px solid {{ s.tk.mic.bd }};animation:{{ s.tk.mic.anim }};transform:{{ s.tk.mic.scale }};transition:transform .15s;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none"><span style="width:5px;height:26px;border-radius:3px;background:{{ s.tk.mic.bar }};animation:{{ s.tk.mic.barA }}"></span><span style="width:5px;height:26px;border-radius:3px;background:{{ s.tk.mic.bar }};animation:{{ s.tk.mic.barA }};animation-delay:.15s"></span><span style="width:5px;height:26px;border-radius:3px;background:{{ s.tk.mic.bar }};animation:{{ s.tk.mic.barA }};animation-delay:.3s"></span></button>
+            <span style="font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap">{{ s.tk.mic.label }}</span>
+          </div>
+          <button onClick="{{ s.tk.done.onClick }}" style="height:50px;width:96px;border-radius:25px;border:{{ s.tk.done.bd }};background:{{ s.tk.done.bg }};box-shadow:{{ s.tk.done.sh }};color:#17131C;font:800 13px Lexend,sans-serif;cursor:pointer;line-height:1.05;padding:0 6px">{{ s.tk.done.l }}</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ s.tk.listenBar }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:10px;padding:12px;border-radius:40px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)"><button onClick="{{ s.tk.hold.onClick }}" style="flex:1;height:52px;border-radius:26px;border:1px solid rgba(255,255,255,.9);background:{{ s.tk.hold.bg }};color:{{ s.tk.hold.fg }};font:800 15px Lexend,sans-serif;cursor:pointer">{{ s.tk.hold.l }}</button><button onClick="{{ s.tk.done.onClick }}" style="flex:1.4;height:52px;border-radius:26px;border:{{ s.tk.done.bd }};background:{{ s.tk.done.bg }};box-shadow:{{ s.tk.done.sh }};color:#17131C;font:800 15px Lexend,sans-serif;cursor:pointer">{{ s.tk.done.l }}</button></div>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ s.isResid }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#F9DAFB">
+    <div style="position:absolute;inset:-24px;filter:blur(12px)">{{ s.rs.bg }}</div><div style="position:absolute;inset:0;background:rgba(251,250,253,.35)"></div>
+    <div style="position:absolute;top:166px;left:252px">{{ s.rs.pip }}</div>
+    <div style="position:absolute;top:112px;left:16px;width:236px;padding:16px 18px;border-radius:22px;background:#EFA3F4;border:3.5px solid #17131C;box-shadow:5px 7px 0 #17131C;display:flex;flex-direction:column;gap:9px;box-sizing:border-box;animation:yfly 1.1s cubic-bezier(.2,.8,.3,1) both;z-index:2">
+      <span style="font-size:10px;font-weight:800;letter-spacing:.04em;white-space:nowrap">{{ s.rs.top }}</span>
+      <div style="display:flex;align-items:center;gap:10px"><div style="width:52px;height:52px;flex:none;border-radius:13px;overflow:hidden;border:2.5px solid #17131C;background:#fff;box-sizing:border-box">{{ s.rs.face }}</div><div style="display:flex;flex-direction:column;min-width:0"><span style="font-size:27px;font-weight:800;letter-spacing:-0.05em;line-height:.95;white-space:nowrap">Newcomer</span><span style="font-size:13px;font-weight:700">{{ s.rs.sub }}</span><span style="align-self:flex-start;margin-top:4px;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:7px;background:#fff;border:2px solid #17131C;white-space:nowrap">{{ s.rs.stageN }}</span></div></div>
+      <span style="font-family:'Kithfield Hand',cursive;font-size:21px">{{ s.rs.welcome }}</span>
+      <span style="position:absolute;right:14px;bottom:-22px;width:58px;height:58px;border-radius:29px;border:3px solid #17131C;background:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;text-align:center;line-height:1;transform:rotate(-10deg)">NW<br>SEP 21</span>
+    </div>
+    <div style="position:absolute;left:10px;right:10px;top:330px;bottom:10px;border-radius:42px;padding:20px 16px 16px;box-sizing:border-box;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);animation:yup .6s .35s cubic-bezier(.2,.9,.25,1) both">
+      <span style="font-size:11.5px;font-weight:800;letter-spacing:.05em;padding:0 4px">{{ s.rs.goodT }}</span>
+      <sc-for list="{{ s.rs.good }}" as="g" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:14px;background:rgba(255,255,255,.85);animation:yin .4s ease-out both;animation-delay:{{ g.d }}"><span style="width:22px;height:22px;border-radius:11px;background:#5FD98A;border:2px solid #17131C;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box">✓</span><span style="font-size:14.5px;font-weight:700">{{ g.g }}</span></div></sc-for>
+      <span style="font-size:11.5px;font-weight:800;letter-spacing:.05em;padding:6px 4px 0">{{ s.rs.aimT }}</span>
+      <sc-for list="{{ s.rs.aim }}" as="a" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:14px;background:#FFFFFF;border:2.5px solid #17131C"><span style="width:22px;height:22px;border-radius:7px;border:2.5px solid #17131C;flex:none;box-sizing:border-box"></span><span style="font-size:14.5px;font-weight:700">{{ a }}</span></div></sc-for>
+      <div style="display:flex;align-items:center;gap:6px;padding:0 4px"><span style="font-size:13px;font-weight:700;color:#5D5366;flex:1">{{ s.rs.adj }}</span><button onClick="{{ s.rs.onEasy }}" style="height:34px;padding:0 12px;border-radius:17px;border:1.5px solid rgba(23,19,28,.15);background:rgba(255,255,255,.85);font:800 12.5px Lexend,sans-serif;color:#17131C;cursor:pointer">{{ s.rs.easy }}</button><button onClick="{{ s.rs.onHard }}" style="height:34px;padding:0 12px;border-radius:17px;border:1.5px solid rgba(23,19,28,.15);background:rgba(255,255,255,.85);font:800 12.5px Lexend,sans-serif;color:#17131C;cursor:pointer">{{ s.rs.hard }}</button></div>
+      <button onClick="{{ s.rs.onNext }}" style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer;margin-top:auto">{{ s.rs.cta }}</button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ s.isWeek }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#FBFAFD;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px">
+    <div style="position:absolute;top:104px;left:22px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700;color:#5D5366">{{ s.wk.dates }}</span><span style="font-size:40px;font-weight:800;letter-spacing:-0.055em;line-height:.95">{{ s.wk.title }}</span></div>
+    <div style="position:absolute;top:66px;right:16px">{{ s.wk.pip }}</div>
+    <div style="position:absolute;top:196px;left:14px;right:14px;display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ s.wk.calls }}" as="c" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;gap:12px;padding:8px 12px 8px 8px;border-radius:22px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);animation:yin .4s ease-out both">
+          <div style="width:84px;height:64px;border-radius:14px;overflow:hidden;border:2.5px solid #17131C;flex:none">{{ c.art }}</div>
+          <div style="display:flex;flex-direction:column;gap:1px;flex:1;min-width:0"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">{{ c.tag }}</span><span style="font-size:15.5px;font-weight:800;letter-spacing:-0.02em;line-height:1.1">{{ c.ti }}</span><span style="font-size:12px;font-weight:600;color:#5D5366">{{ c.when }}</span></div>
+          <span style="width:26px;height:26px;border-radius:13px;background:{{ c.dot }};border:2.5px dashed #17131C;flex:none;box-sizing:border-box"></span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:18px 16px 16px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 5px 0 #17131C">
+      <span style="font-size:11.5px;font-weight:800;letter-spacing:.05em">{{ s.wk.phT }}</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <sc-for list="{{ s.wk.phrases }}" as="p" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:8px;padding:6px 10px 6px 6px;border-radius:16px;background:#F9DAFB"><div style="width:36px;height:48px;flex:none">{{ p.el }}</div><div style="display:flex;flex-direction:column;min-width:0"><span style="font-size:14px;font-weight:800;line-height:1.1">{{ p.en }}</span><span style="font-family:'Kithfield Hand',cursive;font-size:14px;color:#5B4A8C;line-height:1.1">{{ p.vi }}</span></div></div></sc-for>
+      </div>
+      <span style="font-size:12px;font-weight:600;color:#5D5366">{{ s.wk.seedNote }}</span>
+      <button onClick="{{ s.wk.onNext }}" style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">{{ s.wk.cta }}</button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ s.isPost }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#FFF7EE;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px">
+    <div style="position:absolute;top:100px;left:22px;right:22px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700;color:#5D5366">{{ s.po.title }}</span><span style="font-size:54px;font-weight:900;letter-spacing:-0.06em;line-height:1;animation:ytype 1s ease-out both">{{ s.po.big }}</span></div>
+    <div style="position:absolute;top:184px;right:20px;width:86px;height:86px;animation:ypop .6s .4s ease-out both"><svg width="86" height="86" viewBox="0 0 56 56"><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="#17131C" stroke-width="10" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="#17131C" stroke-width="10" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="#17131C" stroke-width="10" stroke-linecap="round"></path><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="#EFA3F4" stroke-width="5" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path></svg></div>
+    <div style="position:absolute;top:196px;left:16px;right:120px;display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:11px;font-weight:800;letter-spacing:.05em">{{ s.po.winT }}</span>
+      <sc-for list="{{ s.po.wins }}" as="w" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:#FFFFFF;border:2px solid #17131C;animation:yin .4s .3s ease-out both"><span style="width:20px;height:20px;border-radius:10px;background:#5FD98A;border:2px solid #17131C;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box">✓</span><span style="font-size:13.5px;font-weight:700;line-height:1.15">{{ w }}</span></div></sc-for>
+    </div>
+    <div style="position:absolute;top:340px;left:16px;right:16px;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;animation:yin .4s .6s ease-out both"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;flex:none">{{ s.po.fixT }}</span><span style="font-size:16px;font-weight:700;text-decoration:line-through;text-decoration-color:#EFA3F4;text-decoration-thickness:3px">{{ s.po.fixA }}</span><span style="font-size:16px;font-weight:800">→</span><span style="font-size:16px;font-weight:800;background:#5FD98A;border-radius:6px;padding:0 6px">{{ s.po.fixB }}</span></div>
+    <div style="position:absolute;top:410px;left:16px;right:16px;display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:11px;font-weight:800;letter-spacing:.05em">{{ s.po.phT }}</span>
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px"><sc-for list="{{ s.po.phrases }}" as="p" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border-radius:16px;background:#F9DAFB"><div style="width:40px;height:53px">{{ p.el }}</div><span style="font-size:11px;font-weight:800;text-align:center;line-height:1.1">{{ p.p }}</span><span style="font-size:10px;font-weight:700;color:#5D5366">{{ p.st }}</span></div></sc-for></div>
+    </div>
+    <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);animation:yup .6s 1s cubic-bezier(.2,.9,.25,1) both">
+      <div style="display:flex;align-items:center;gap:10px;padding:0 6px"><span style="position:relative;width:46px;height:38px;border-radius:4px;background:#F2CFA8;border:2.5px solid #17131C;box-sizing:border-box;flex:none"><span style="position:absolute;top:-10px;left:-4px;width:24px;height:10px;background:#E6BE93;border:2.5px solid #17131C;border-radius:2px;transform:rotate(-24deg);transform-origin:100% 100%"></span></span><span style="font-size:14px;font-weight:700;flex:1">{{ s.po.box }}</span><span style="font-size:12px;font-weight:800;padding:3px 8px;border-radius:9px;background:#EFA3F4;border:2px solid #17131C;white-space:nowrap">{{ s.po.ringT }}</span></div>
+      <button onClick="{{ s.po.onNext }}" style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">{{ s.po.cta }}</button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ s.isKeep }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#F9DAFB">
+    <div style="position:absolute;inset:0">{{ s.kp.bg }}</div>
+    <div style="position:absolute;top:96px;left:22px;right:22px;display:flex;align-items:center;gap:14px;z-index:2">
+      <div style="position:relative;width:96px;height:96px;flex:none;animation:ypop .6s ease-out both"><svg width="96" height="96" viewBox="0 0 96 96" style="transform:rotate(-90deg)"><circle cx="48" cy="48" r="44" fill="#FFFFFF" stroke="#17131C" stroke-width="3"></circle><circle cx="48" cy="48" r="36" fill="none" stroke="#17131C" stroke-width="14"></circle><circle cx="48" cy="48" r="36" fill="none" stroke="#5FD98A" stroke-width="8" stroke-dasharray="226" style="animation:yring 1.4s .3s ease-out both"></circle></svg><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900">3/3</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="align-self:flex-start;padding:3px 9px;border-radius:9px;background:#22BFF2;border:2.5px solid #17131C;font-size:12px;font-weight:800;transform:rotate(-4deg);white-space:nowrap">{{ s.kp.week }}</span><span style="font-size:30px;font-weight:800;letter-spacing:-0.05em;line-height:1">{{ s.kp.title }}</span></div>
+    </div>
+    <div style="position:absolute;top:222px;left:56px;width:278px;transform-origin:50% 0;animation:ysway 4s ease-in-out infinite;z-index:2">
+      <svg width="278" height="34" viewBox="0 0 278 34" style="display:block"><path d="M40 34 L139 6 L238 34" fill="none" stroke="#17131C" stroke-width="2.5"></path><circle cx="139" cy="6" r="5" fill="#17131C"></circle></svg>
+      <div style="padding:10px;border-radius:8px;background:#F2CFA8;border:3.5px solid #17131C;box-shadow:0 6px 0 #17131C;animation:yfly 1.1s .5s cubic-bezier(.2,.8,.3,1) both"><div style="padding:14px 16px;border-radius:4px;background:#FFFDF6;border:2px solid #17131C;display:flex;flex-direction:column;gap:6px;text-align:center"><span style="font-family:'Kithfield Hand',cursive;font-size:16px;color:#9A5AA6">Lan can now…</span><span style="font-family:'Kithfield Hand',cursive;font-size:26px;line-height:1.05">{{ s.kp.can }}</span><div style="display:flex;align-items:center;justify-content:center;gap:8px"><span style="width:40px;height:40px;border-radius:20px;overflow:hidden;border:2px solid #17131C">{{ s.kp.linh }}</span><span style="font-family:'Kithfield Hand',cursive;font-size:16px">{{ s.kp.wit }}</span></div></div></div>
+    </div>
+    <div style="position:absolute;top:536px;left:116px">{{ s.kp.pip }}</div>
+    <div style="position:absolute;top:500px;left:20px;max-width:150px;padding:9px 13px;border-radius:18px 18px 6px 18px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:14.5px;font-weight:800;line-height:1.15;z-index:3">{{ s.kp.pipSays }}</div>
+    <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4"><button onClick="{{ s.kp.onNext }}" style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer;width:100%">{{ s.kp.cta }}</button></div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ s.isSeason }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#F4FCFF">
+    <div style="position:absolute;inset:0">{{ s.ss.bg }}</div><div style="position:absolute;inset:0;background:rgba(251,250,253,.35)"></div>
+    <svg width="390" height="844" viewBox="0 0 390 844" style="position:absolute;inset:0;pointer-events:none"><path d="{{ s.ss.route.done }}" fill="none" stroke="#17131C" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.1 12"></path><path d="{{ s.ss.route.done }}" fill="none" stroke="#EFA3F4" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="0.1 12"></path><path d="{{ s.ss.route.rest }}" fill="none" stroke="#17131C" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 11" opacity=".55"></path><path d="{{ s.ss.route.tail }}" fill="none" stroke="#22BFF2" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 9"></path></svg>
+    <sc-for list="{{ s.ss.marks }}" as="m" hint-placeholder-count="6"><div style="position:absolute;left:{{ m.left }};top:{{ m.top }};width:36px;height:36px;border-radius:18px;background:{{ m.bg }};border:{{ m.bd }};box-shadow:0 3px 0 #17131C;animation:{{ m.anim }};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;box-sizing:border-box">{{ m.n }}<span style="position:absolute;top:38px;left:50%;transform:translateX(-50%);padding:1px 7px;border-radius:7px;background:#17131C;color:#fff;font-size:10.5px;font-weight:800;white-space:nowrap">{{ m.tag }}</span></div></sc-for>
+    <div style="position:absolute;top:676px;left:232px;width:120px;height:88px">{{ s.ss.boat }}</div>
+    <div style="position:absolute;top:714px;left:96px;padding:4px 9px;border-radius:9px;background:#17131C;color:#fff;font-size:11px;font-weight:800;transform:rotate(-4deg);white-space:nowrap">{{ s.ss.s2 }}</div>
+    <div style="position:absolute;top:58px;left:62px;right:14px;display:flex;flex-direction:column;padding:8px 14px;border-radius:22px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">{{ s.ss.top }}</span><span style="font-size:19px;font-weight:800;letter-spacing:-0.04em">The Café Might Close</span></div>
+    <div style="position:absolute;left:10px;right:10px;bottom:10px;display:flex;align-items:center;gap:12px;padding:12px 12px 12px 14px;border-radius:32px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4">
+      <span style="width:44px;height:44px;border-radius:22px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box;flex:none">{{ s.ss.face }}</span>
+      <span style="display:flex;flex-direction:column;flex:1"><span style="font-size:10.5px;font-weight:800;letter-spacing:.05em;color:#5D5366">{{ s.ss.ep }}</span><span style="font-size:18px;font-weight:800;letter-spacing:-0.03em">Help Wanted · {{ s.ss.when }}</span></span>
+      <button onClick="{{ s.ss.onNext }}" style="height:48px;padding:0 16px;border-radius:24px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 14px Lexend,sans-serif;color:#17131C;cursor:pointer">{{ s.ss.cta }}</button>
+    </div>
+  </div>
+</sc-if>
+
+        </div>
+      </sc-if>
+    </sc-for>
+
+    <sc-if value="{{ toast.on }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:58px;left:50%;z-index:35;width:max-content;max-width:330px;display:flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;border-radius:22px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 5px 0 #17131C;animation:ytoast 2.8s ease-out both">
+        <div style="width:34px;height:44px;flex:none">{{ toast.el }}</div>
+        <span style="font-size:14px;font-weight:800;line-height:1.15">{{ toast.text }}</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ backOn }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ goBack }}" style="position:absolute;top:58px;left:14px;z-index:30;width:40px;height:40px;border-radius:20px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.62);backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 1.5px 0 #fff,0 6px 16px rgba(46,20,70,.14);font:800 20px Lexend,sans-serif;color:#17131C;cursor:pointer;padding:0">‹</button>
+    </sc-if>
+
+    <sc-if value="{{ fac.inPhone }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;z-index:50;background:rgba(23,19,28,.55);display:flex;align-items:flex-end">
+        <div style="width:100%;max-height:80%;overflow:auto;padding:16px 16px 30px;box-sizing:border-box;border-radius:30px 30px 0 0;background:#FFFFFF;display:flex;flex-direction:column;gap:12px">
+          
+      <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:15px;font-weight:800">Facilitator</span><button onClick="{{ fac.close }}" style="width:32px;height:32px;border-radius:16px;border:none;background:#F1ECF4;font:800 13px Lexend,sans-serif;cursor:pointer">✕</button></div>
+      <span style="font-size:11.5px;font-weight:600;color:#5D5366">Now: {{ fac.cur }} · testers should not see this</span>
+      <span style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#5D5366">JUMP TO DAY</span>
+      <div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ fac.days }}" as="d" hint-placeholder-count="8"><button onClick="{{ d.onClick }}" style="height:30px;min-width:38px;padding:0 9px;border-radius:15px;border:2px solid #17131C;background:{{ d.bg }};color:{{ d.fg }};font:800 12px Lexend,sans-serif;cursor:pointer">{{ d.l }}</button></sc-for></div>
+      <span style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#5D5366">NEXT ANSWER LANDS AS</span>
+      <div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ fac.outs }}" as="d" hint-placeholder-count="4"><button onClick="{{ d.onClick }}" style="height:30px;padding:0 10px;border-radius:15px;border:2px solid #17131C;background:{{ d.bg }};color:{{ d.fg }};font:700 12px Lexend,sans-serif;cursor:pointer">{{ d.l }}</button></sc-for></div>
+      <button onClick="{{ fac.away.onClick }}" style="height:32px;padding:0 12px;border-radius:16px;border:2px solid #17131C;background:{{ fac.away.bg }};color:{{ fac.away.fg }};font:700 12px Lexend,sans-serif;cursor:pointer;text-align:left">{{ fac.away.l }}</button>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center"><sc-for list="{{ fac.langs }}" as="d" hint-placeholder-count="2"><button onClick="{{ d.onClick }}" style="height:30px;padding:0 12px;border-radius:15px;border:2px solid #17131C;background:{{ d.bg }};color:{{ d.fg }};font:800 12px Lexend,sans-serif;cursor:pointer">{{ d.l }}</button></sc-for><button onClick="{{ fac.sound.onClick }}" style="height:30px;padding:0 12px;border-radius:15px;border:2px solid #17131C;background:{{ fac.sound.bg }};color:{{ fac.sound.fg }};font:700 12px Lexend,sans-serif;cursor:pointer">{{ fac.sound.l }}</button><button onClick="{{ fac.reset }}" style="height:30px;padding:0 12px;border-radius:15px;border:2px solid #17131C;background:#FFE48A;font:800 12px Lexend,sans-serif;cursor:pointer;color:#17131C">Reset</button></div>
+      <span style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#5D5366">STATES</span>
+      <div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ fac.errs }}" as="d" hint-placeholder-count="4"><button onClick="{{ d.onClick }}" style="height:30px;padding:0 10px;border-radius:15px;border:2px solid #17131C;background:{{ d.bg }};color:{{ d.fg }};font:700 12px Lexend,sans-serif;cursor:pointer">{{ d.l }}</button></sc-for></div>
+      
+        </div>
+      </div>
+    </sc-if>
+
+    <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:{{ statusC }};z-index:40;pointer-events:none"><span>{{ clock }}</span><div style="width:25px;height:12px;border:1.5px solid {{ statusC }};border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:{{ statusC }};border-radius:1.5px"></div></div></div>
+    <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:41;pointer-events:none"></div>
+    <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:{{ statusC }};z-index:41;pointer-events:none"></div>
+  </div>
+
+  <sc-if value="{{ fac.open }}" hint-placeholder-val="{{ true }}">
+    <div style="width:290px;margin-top:12px;padding:16px;border-radius:22px;background:#FFFFFF;border:2px solid #D3CCDC;display:flex;flex-direction:column;gap:9px;opacity:.96">
+      <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:15px;font-weight:800">Facilitator</span><button onClick="{{ fac.toggle }}" style="height:28px;padding:0 10px;border-radius:14px;border:none;background:#F1ECF4;font:700 11px Lexend,sans-serif;cursor:pointer;color:#17131C">Hide</button></div>
+      <span style="font-size:11.5px;font-weight:600;color:#5D5366">Now: {{ fac.cur }} · testers should not see this</span>
+      <span style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#5D5366">JUMP TO DAY</span>
+      <div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ fac.days }}" as="d" hint-placeholder-count="8"><button onClick="{{ d.onClick }}" style="height:30px;min-width:38px;padding:0 9px;border-radius:15px;border:2px solid #17131C;background:{{ d.bg }};color:{{ d.fg }};font:800 12px Lexend,sans-serif;cursor:pointer">{{ d.l }}</button></sc-for></div>
+      <span style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#5D5366">NEXT ANSWER LANDS AS</span>
+      <div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ fac.outs }}" as="d" hint-placeholder-count="4"><button onClick="{{ d.onClick }}" style="height:30px;padding:0 10px;border-radius:15px;border:2px solid #17131C;background:{{ d.bg }};color:{{ d.fg }};font:700 12px Lexend,sans-serif;cursor:pointer">{{ d.l }}</button></sc-for></div>
+      <button onClick="{{ fac.away.onClick }}" style="height:32px;padding:0 12px;border-radius:16px;border:2px solid #17131C;background:{{ fac.away.bg }};color:{{ fac.away.fg }};font:700 12px Lexend,sans-serif;cursor:pointer;text-align:left">{{ fac.away.l }}</button>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center"><sc-for list="{{ fac.langs }}" as="d" hint-placeholder-count="2"><button onClick="{{ d.onClick }}" style="height:30px;padding:0 12px;border-radius:15px;border:2px solid #17131C;background:{{ d.bg }};color:{{ d.fg }};font:800 12px Lexend,sans-serif;cursor:pointer">{{ d.l }}</button></sc-for><button onClick="{{ fac.sound.onClick }}" style="height:30px;padding:0 12px;border-radius:15px;border:2px solid #17131C;background:{{ fac.sound.bg }};color:{{ fac.sound.fg }};font:700 12px Lexend,sans-serif;cursor:pointer">{{ fac.sound.l }}</button><button onClick="{{ fac.reset }}" style="height:30px;padding:0 12px;border-radius:15px;border:2px solid #17131C;background:#FFE48A;font:800 12px Lexend,sans-serif;cursor:pointer;color:#17131C">Reset</button></div>
+      <span style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#5D5366">STATES</span>
+      <div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ fac.errs }}" as="d" hint-placeholder-count="4"><button onClick="{{ d.onClick }}" style="height:30px;padding:0 10px;border-radius:15px;border:2px solid #17131C;background:{{ d.bg }};color:{{ d.fg }};font:700 12px Lexend,sans-serif;cursor:pointer">{{ d.l }}</button></sc-for></div>
+      <span style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#5D5366">EVERY STEP</span>
+      <div style="display:flex;flex-wrap:wrap;gap:4px"><sc-for list="{{ fac.steps }}" as="d" hint-placeholder-count="26"><button onClick="{{ d.onClick }}" style="height:26px;padding:0 8px;border-radius:13px;border:1.5px solid #17131C;background:{{ d.bg }};color:{{ d.fg }};font:600 11px Lexend,sans-serif;cursor:pointer">{{ d.l }}</button></sc-for></div>
+      <a href="Yapling%20Week%201%20Map.dc.html" style="font-size:12.5px;font-weight:800">Open the screen and branch map →</a>
+      <span style="font-size:11px;font-weight:600;color:#5D5366;line-height:1.35">On a phone: three-finger tap opens this. Shift+F hides this strip.</span>
+    </div>
+  </sc-if>
+  <sc-if value="{{ fac.closed }}" hint-placeholder-val="{{ false }}"><button onClick="{{ fac.toggle }}" style="margin-top:12px;height:34px;padding:0 12px;border-radius:17px;border:1.5px solid #D3CCDC;background:#FFFFFF;font:700 12px Lexend,sans-serif;color:#5D5366;cursor:pointer">Facilitator</button></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;start&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;d1-splash&quot;,&quot;d2-lock&quot;,&quot;d2-call&quot;,&quot;d5-bus&quot;,&quot;d7-pay&quot;,&quot;d8-lock&quot;],&quot;default&quot;:&quot;d1-splash&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const NAMES={pip:'Pip',mei:'Mei',linh:'Linh',bea:'Bea',office:'Mags',sol:'Sol'};
+const SPEC={mei:'otter',linh:'pangolin',bea:'bulldog',sol:'tarsier'};
+const FLOW=['d1-splash','d1-ai','d1-pick','d1-unpack','d1-card','d1-notif','d1-linh','d2-lock','d2-week','d2-call','d2-post','d3-lock','d3-story','d4-lock','d4-teach','d5-lock','d5-bus','d5-keep','d6-lock','d6-vm','d6-season','d7-lock','d7-pay','d8-lock','d8-back','end'];
+const DAYSTART={1:'d1-splash',2:'d2-lock',3:'d3-lock',4:'d4-lock',5:'d5-lock',6:'d6-lock',7:'d7-lock',8:'d8-lock'};
+const KIND={'d1-ai':'rise','d1-pick':'push','d1-unpack':'zoom','d1-card':'rise','d1-notif':'rise','d1-linh':'fade','d2-week':'zoom','d2-call':'zoom','d2-post':'rise','d3-story':'zoom','d4-teach':'zoom','d5-bus':'zoom','d5-keep':'rise','d6-vm':'zoom','d6-season':'push','d7-pay':'zoom','d8-back':'zoom','end':'fade','err-net':'rise','err-mic':'rise','err-catch':'zoom','safety':'fade'};
+const ANIM={push:['pIn .55s cubic-bezier(.2,.8,.2,1) both','pOut .55s cubic-bezier(.2,.8,.2,1) both',0],back:['bIn .5s cubic-bezier(.2,.8,.2,1) both','bOut .5s cubic-bezier(.4,0,.6,1) both',1],
+  rise:['rIn .55s cubic-bezier(.2,.9,.25,1) both','hold .55s both',0],sink:['hold .5s both','sOut .45s cubic-bezier(.4,0,.8,.6) both',1],
+  zoom:['zIn .6s cubic-bezier(.2,.9,.25,1.1) both','zOut .45s ease-in both',0],fade:['fIn .45s both','fOut .45s both',0]};
+const DATE={1:['Thứ Hai, 21 tháng 9','Monday 21 September'],2:['Thứ Ba, 22 tháng 9','Tuesday 22 September'],3:['Thứ Tư, 23 tháng 9','Wednesday 23 September'],4:['Thứ Năm, 24 tháng 9','Thursday 24 September'],5:['Thứ Sáu, 25 tháng 9','Friday 25 September'],6:['Thứ Bảy, 26 tháng 9','Saturday 26 September'],7:['Chủ Nhật, 27 tháng 9','Sunday 27 September'],8:['Thứ Hai, 28 tháng 9','Monday 28 September'],'8a':['Thứ Năm, 1 tháng 10','Thursday 1 October']};
+const DAYOF=sid=>sid==='end'?8:sid.startsWith('d')?+sid[1]:0;
+const SCRIPT={
+  'd1-unpack':{scene:'day1',cast:[['pip',230,80,330]],bub:{pip:[236,20,20]},top:['pip','Hang của bạn · Ngày 1','Your burrow · Day 1'],done:['Xem thẻ cư trú','See my residency card'],beats:[
+    {w:'pip',id:'s1-pro-01',t:"[excited] This is it. Our burrow! It's… mostly boxes. One box left! Help me unpack?",m:'excited',vi:'Đây rồi. Hang của tụi mình! Toàn thùng là thùng. Còn một thùng! Giúp mình dỡ đồ nhé?'},
+    {w:'pip',t:"Ooh, this box says WORK. What do you do for work?",m:'happy',vi:'Ồ, thùng này ghi CÔNG VIỆC. Bạn làm nghề gì?'},
+    {w:'you',fine:"I'm a data analyst at a logistics company.",hint:"Try: I'm a … at …",hintVi:'Thử: Tôi là … ở …'},
+    {w:'pip',t:"A data analyst! What's a normal day like for you?",m:'listen',vi:'Một ngày bình thường của bạn thế nào?'},
+    {w:'you',fine:"I check reports in the morning and have meetings after lunch.",hint:'Try: In the morning, I …',hintVi:'Thử: Buổi sáng, tôi …'},
+    {w:'pip',t:"Last box! What do you want to get better at, in English?",m:'think',vi:'Thùng cuối! Bạn muốn giỏi hơn ở điều gì khi nói tiếng Anh?'},
+    {w:'you',fine:"I want to speak up more in meetings.",hint:'Try: I want to …',hintVi:'Thử: Tôi muốn …'},
+    {w:'pip',id:'s1-pro-02',t:"Okay. I know three things about you already. You keep going when you're stuck. You ask questions. And you're very good at unpacking.",m:'proud',vi:'Mình đã biết ba điều về bạn rồi.'}]},
+  'd1-linh':{scene:'day1',cast:[['pip',140,8,474],['linh',142,146,446]],bub:{pip:[404,16,150],linh:[306,96,16]},top:['linh','Ở cửa nhà','At the door'],done:['Chúc ngủ ngon','Good night'],beats:[
+    {w:'sys',fx:'knock',gap:10},
+    {w:'linh',id:'s1-pro-03',t:"Hi! I'm Linh, from next door. I heard someone new moved in. When you're settled, come by the café. Mei makes the best kaya toast in town.",m:'wave',vi:'Chào! Mình là Linh, nhà bên cạnh. Khi ổn định rồi, ghé quán cà phê nhé.'},
+    {w:'you',fine:"Thanks, Linh! Nice to meet you.",hint:'Try: Nice to meet you!',hintVi:'Thử: Rất vui được gặp bạn!'},
+    {w:'sys',fx:'dusk',gap:18},
+    {w:'pip',t:"Look, through the window! Someone's pushing a letter under the café door…",m:'surprised',vi:'Nhìn kìa! Có ai đang nhét một lá thư dưới cửa quán cà phê…'}]},
+  'd2-call':{scene:'cafe',cast:[['mei',220,40,212]],castFront:[['pip',130,252,486]],bub:{mei:[124,16,120],pip:[404,96,16],office:[124,16,16]},top:['mei','Quán Lantern · sau quầy','Lantern Café · behind the counter'],done:['Kết thúc cuộc gọi','Wrap up'],ep:'S1 · E1',beats:[
+    {w:'mei',id:'s1-e1-02',t:"Oh! Hi, you two. Sorry, I'm a bit… [sighs] Sit, sit. Kaya toast?",m:'worried',vi:'Ồ! Chào hai bạn. Xin lỗi, mình hơi… Ngồi đi. Bánh mì kaya nhé?'},
+    {w:'pip',id:'s1-e1-03',t:"[whispers] She looks sad. Can you ask her what's wrong?",m:'worried',vi:'Cô ấy trông buồn. Bạn hỏi cô ấy có chuyện gì không?'},
+    {w:'you',fine:"Mei, what's wrong?",hint:"Try: What's wrong?",hintVi:'Thử: Có chuyện gì vậy?',seed:"What's wrong?"},
+    {w:'mei',t:"Oh, it's nothing… Okay. It's this letter.",m:'worried',fx:'letter',vi:'Ồ, không có gì… Thôi được. Là lá thư này.'},
+    {w:'mei',id:'s1-e1-04',t:"[upset] Double! I can't pay double. I need a plan by Friday.",m:'worried',vi:'Gấp đôi! Mình không trả nổi gấp đôi. Mình cần một kế hoạch trước thứ Sáu.'},
+    {w:'pip',id:'s1-e1-05',t:"[curious] What does rent mean? Is it a kind of bread?",m:'confused',vi:'"Rent" nghĩa là gì? Là một loại bánh mì à?'},
+    {w:'you',fine:"No! Rent is the money you pay to use a place.",hint:'Try: Rent is the money you pay …',hintVi:'Thử: Rent là tiền bạn trả để …',seed:'Can I help?'},
+    {w:'mei',id:'s1-e1-06',t:"Can you call them for me? My English goes funny when I'm angry.",m:'worried',vi:'Bạn gọi cho họ giúp mình được không? Tiếng Anh của mình lộn xộn khi mình bực.',wdm:{en:"\"Goes funny\" means it stops working well. Like your words get mixed up.",vi:'"goes funny" = trở nên lộn xộn, không còn ổn'}},
+    {w:'sys',fx:'phone',gap:22},
+    {w:'office',t:"Harbour Lane Office, Mags speaking. How can I help?",m:'happy',vi:'Văn phòng Harbour Lane, Mags nghe. Tôi giúp gì được?'},
+    {w:'you',fine:"Hi, I'm Lan. I'm calling for Mei, from Lantern Café.",err:"Hi, I'm Lan. I calling for Mei, from Lantern Café.",defErr:true,ask:"You… calling? Or you're calling?",badges:['I calling?',"I'm calling?"],fix:"I'm calling for Mei, from Lantern Café.",hint:"Try: Hi, I'm … I'm calling for …",hintVi:'Thử: Xin chào, tôi là … Tôi gọi thay cho …',catchW:'office'},
+    {w:'office',t:"Thanks, Lan. Mei can come in on Thursday and talk it through.",m:'happy',vi:'Cảm ơn Lan. Thứ Năm Mei có thể đến nói chuyện.'},
+    {w:'sys',fx:'hangup',gap:6},
+    {w:'mei',id:'s1-e1-07',t:"[tired] Okay. So… what do I do?",m:'worried',vi:'Được rồi. Vậy… mình làm gì đây?'},
+    {w:'you',fine:"I think you should talk to the town. People love this café.",hint:'Try: I think you should …',hintVi:'Thử: Mình nghĩ bạn nên …',seed:'I think you should…'},
+    {w:'pip',id:'s1-e1-08',t:"[excited] I have an idea too! I'll get a job! I'll help pay!",m:'excited',vi:'Mình cũng có ý! Mình sẽ đi làm! Mình sẽ giúp trả tiền!'},
+    {w:'mei',id:'s1-e1-09',t:"You? A job? [laughs] Okay, okay. Thank you, both of you.",m:'laugh',vi:'Bạn? Đi làm? Được rồi. Cảm ơn cả hai.'}]},
+  'd3-story':{scene:'blur',listen:true,cast:[],top:['pip','Tin nhắn thoại · 0:40','Voice story · 0:40'],done:['Cảm ơn Pip','Thanks, Pip'],beats:[
+    {w:'pip',t:"Okay, so. Today I wanted to buy bread. But I forgot the word. Bakery? Breadery?",m:'think',story:1,vi:'Hôm nay mình muốn mua bánh mì. Nhưng mình quên mất từ đó.'},
+    {w:'pip',t:"So I asked a seagull. Excuse me, where is the bread house? The seagull looked at me. Then it took my map.",m:'surprised',story:1,vi:'Mình hỏi một con hải âu. Nó nhìn mình. Rồi nó cướp luôn tấm bản đồ.'},
+    {w:'pip',t:"Then I remembered: describe it! I asked a lady, where is the shop that sells bread? She pointed. It was right behind me!",m:'laugh',story:1,vi:'Rồi mình nhớ ra: hãy mô tả nó! Tiệm bánh ở ngay sau lưng mình!'},
+    {w:'sys',fx:'postcard',gap:8},
+    {w:'linh',id:'s1-e1-01',t:"Tip from a neighbour: when you forget a word, describe it. 'The thing you use to cut bread' works fine!",m:'happy',vi:'Mẹo nhỏ: khi quên một từ, hãy mô tả nó.'},
+    {w:'sys',fx:'newobj',gap:8}]},
+  'd4-teach':{scene:'blur',cast:[['pip',230,80,300]],bub:{pip:[200,20,20]},top:['pip','đang gọi từ hang','calling from the burrow'],done:['Xong','Done'],beats:[
+    {w:'pip',t:"At Hollowbrook, I have to say who I am. How do people introduce themselves at work?",m:'think',vi:'Ở Hollowbrook mình phải giới thiệu bản thân. Mọi người giới thiệu ở chỗ làm thế nào?'},
+    {w:'you',fine:"Hi, I'm Lan. I'm a data analyst at Harbour Logistics. I turn shipping data into weekly reports.",timer:30,hint:"Try: Hi, I'm … I work as … I help …",hintVi:'Thử: Xin chào, tôi là … Tôi làm … Tôi giúp …'},
+    {w:'pip',t:"Let me try! Hi, I'm Pip. I'm a… dish analyst at Lantern Café. I turn dirty dishes into clean dishes.",m:'proud',vi:'Để mình thử! Mình là… chuyên viên phân tích bát đĩa.'},
+    {w:'pip',t:"Your turn again. Your best one. Thirty seconds!",m:'excited',vi:'Đến lượt bạn. Ba mươi giây!'},
+    {w:'you',fine:"I'm Lan, a data analyst at Harbour Logistics. I make our shipping data easy to read.",timer:30,hint:'Try: shorter. Name, job, one thing you do.',hintVi:'Thử ngắn hơn: tên, nghề, một việc bạn làm.'},
+    {w:'pip',t:"Shorter and clearer! I'm writing that down.",m:'excited',fx:'ring2',vi:'Ngắn hơn và rõ hơn! Mình ghi lại đây.'}]},
+  'd5-bus':{scene:'bus',cast:[['bea',190,100,292]],castFront:[['pip',112,4,600],['linh',118,272,596]],bub:{pip:[500,16,140],linh:[500,140,16],bea:[150,16,120]},top:['bea','Bến xe buýt 45','Bus 45 stop'],done:['Xuống xe','Hop off'],rounds:true,beats:[
+    {w:'pip',t:"Bus 45 is late. Tell me about your day while we wait! Ninety seconds.",m:'excited',round:1,vi:'Kể mình nghe ngày của bạn đi! Chín mươi giây.'},
+    {w:'you',fine:"So, um, today I had a meeting, and, um, my manager asked about the report, and I wasn't ready, but, um, then I explained it.",timer:90,round:1,hint:'Try: Today I … Then … In the end …',hintVi:'Thử: Hôm nay tôi … Sau đó … Cuối cùng …'},
+    {w:'sys',fx:'mirror',round:1,gap:46},
+    {w:'linh',t:"Pip says you had a busy day! Tell me too. One minute?",m:'happy',round:2,vi:'Kể mình nghe nữa nhé. Một phút?'},
+    {w:'you',fine:"Today my manager asked about the report. I wasn't ready, but I explained the numbers, and she liked it.",timer:60,round:2},
+    {w:'sys',fx:'mirror',round:2,gap:46},
+    {w:'bea',t:"Morning, love! Go on then, tell me. You've got till the next stop.",m:'happy',round:3,vi:'Chào cưng! Kể đi. Bạn có thời gian đến trạm sau.'},
+    {w:'you',fine:"My manager asked about the report. I wasn't ready, but I explained the numbers clearly, and she liked it.",timer:45,round:3},
+    {w:'sys',fx:'mirror',round:3,gap:52},
+    {w:'bea',t:"Cheers, love. Lovely story, that.",m:'laugh',vi:'Cảm ơn cưng. Câu chuyện hay lắm.'}]},
+  'd6-vm':{scene:'blur',cast:[['pip',210,90,360]],bub:{pip:[250,20,20]},top:['pip','Hộp thư thoại','Voicemail'],done:['Xem bản đồ mùa','See the season map'],beats:[
+    {w:'sys',fx:'vm',gap:14},
+    {w:'pip',id:'s1-e1-10',t:"Big news! Hollowbrook is hiring. I have an interview on Thursday. [gulps] Can you help me practise?",m:'excited',vi:'Tin lớn! Hollowbrook đang tuyển người. Thứ Năm mình có buổi phỏng vấn. Bạn giúp mình luyện tập nhé?'},
+    {w:'sys',fx:'vmoff',gap:6},
+    {w:'pip',t:"Oh! And today at the café, a customer came in, and I said: Can I helping you?",m:'proud',vi:'Hôm nay ở quán có khách vào, mình nói: Can I helping you?'},
+    {w:'you',fine:"Almost! We say: Can I help you?",hint:"Try: We say 'Can I help you?'",hintVi:'Thử: Mình nói là "Can I help you?"'},
+    {w:'sys',fx:'leaf',gap:6},
+    {w:'pip',t:"Can I help you? Can I help you! Thank you. It's growing a leaf!",m:'excited',vi:'Cảm ơn! Nó mọc lá rồi!'}]},
+  'err-catch':{scene:'blur',cast:[['pip',220,85,330]],bub:{pip:[220,20,20]},top:['pip','đang gọi','on a call'],done:['Xong','Done'],beats:[
+    {w:'pip',t:"Sorry, I didn't catch that. Say it another way?",m:'confused',vi:'Xin lỗi, mình nghe không rõ. Bạn nói cách khác được không?'},
+    {w:'you',fine:"I said the meeting moved to Friday.",hint:'Try: I said …',hintVi:'Thử: Tôi nói là …'},
+    {w:'pip',t:"Ah, Friday! Got it.",m:'happy'}]}
+};
+const D8={normal:[{w:'pip',t:"Hi! How was your week?",m:'happy',vi:'Chào! Tuần của bạn thế nào?'},{w:'you',fine:"It was busy, but good. I spoke up in a meeting!",hint:'Try: It was … I …',hintVi:'Thử: Tuần này … Tôi đã …'},{w:'pip',t:"You did? Shiok! Episode 2 is ready. Sol from Hollowbrook says hi.",m:'excited',fx:'peek'}],
+  away:[{w:'pip',t:"You're back! I kept your seat warm.",m:'excited',vi:'Bạn về rồi! Mình giữ chỗ cho bạn đấy.'},{w:'pip',id:'s1-e1-11',t:"While you were away: Mei's rent doubled, we called the office, and I decided to get a job. Very brave. Very scary.",m:'happy',fx:'peek',vi:'Trong lúc bạn đi vắng: tiền thuê của Mei tăng gấp đôi, tụi mình gọi văn phòng, và mình quyết định đi làm.'},{w:'you',fine:"Thanks, Pip. Let's keep going.",hint:"Try: Let's …",hintVi:'Thử: Mình cùng …'}]};
+const MIRROR=[[22,92,7],[31,104,5],[44,118,2]];
+const LANGS=['Tiếng Việt','Bahasa Indonesia','ไทย','Português','Español','日本語','한국어','Türkçe','Khác…'];
+const ROUTE=[[56,462,1],[100,432],[158,384,1],[186,430],[160,472],[118,480,1],[96,524],[40,522],[24,440],[30,330],[70,270],[150,244],[230,232],[300,200,1],[346,252],[326,346,1],[368,420],[350,520],[280,590],[180,590,1],[206,656],[292,702]];
+function routePaths(cur){ const PINS=[[56,462],[158,384],[128,520],[300,200],[326,346],[180,590]], pts=PINS.concat([[292,702]]);
+  const arc=(p,q,k)=>{ const mx=(p[0]+q[0])/2,my=(p[1]+q[1])/2,dx=q[0]-p[0],dy=q[1]-p[1],L=Math.hypot(dx,dy),o=L*0.22*k; return 'Q'+Math.round(mx-dy/L*o)+' '+Math.round(my+dx/L*o)+' '+q[0]+' '+q[1]; };
+  const seg=(a,b)=>'M'+pts[a][0]+' '+pts[a][1]+' '+Array.from({length:b-a},(_,j)=>arc(pts[a+j],pts[a+j+1],(a+j)%2?1:-1)).join(' ');
+  return {done:seg(0,cur-1),rest:seg(cur-1,5),tail:seg(5,6),pins:PINS}; }
+class Component extends DCLogic {
+  hist=[];
+  state=(()=>{ let q=null; try{ q=new URLSearchParams(location.search).get('step'); }catch(e){}
+    const start=q&&(FLOW.includes(q)||SCRIPT[q]||/^(err|safety)/.test(q))?q:'d1-splash';
+    return {slots:[{sid:start,a:'fIn .4s both',z:2},null],cur:0,lang:'vi',sound:true,outcome:'script',away:false,facIn:false,facDesk:true,name:'Pip',sp:'redpanda',jump:0,hold:false,lang1:0,notif:true,quiet:true,plan:'year',bt:0,toast:null,tk:0,ring:0,phrases:0}; })();
+  componentDidMount(){ this.iv=setInterval(()=>this.step(),90); this.initRun(this.sid());
+    this.kd=e=>{ if(e.key==='F'&&e.shiftKey) this.setState(s=>({facDesk:!s.facDesk})); }; window.addEventListener('keydown',this.kd); }
+  componentWillUnmount(){ clearInterval(this.iv); clearTimeout(this.tmo); clearTimeout(this.tto); window.removeEventListener('keydown',this.kd); window.YapVoice&&window.YapVoice.stop(); }
+  sid(){ const s=this.state.slots[this.state.cur]; return s?s.sid:'d1-splash'; }
+  t(vi,en){ return this.state.lang==='vi'?vi:en; }
+  initRun(sid){ const S=sid==='d8-back'?{beats:D8[this.state.away?'away':'normal']}:SCRIPT[sid]; window.YapVoice&&window.YapVoice.stop();
+    this.R=S?{sid,beats:S.beats.slice(),i:0,ph:'start',wait:0,idle:0,story:[],gl:-1,lgl:{},sgl:{},ex:0,mir:0}:null; }
+  go(to,kind,isBack){ const st=this.state; const from=this.sid(); if(to===from) return; clearTimeout(this.tmo);
+    if(!isBack) this.hist.push(from);
+    const k=kind||KIND[to]||(to.endsWith('lock')?'fade':'push'), an=ANIM[k]||ANIM.fade, ni=1-st.cur, slots=st.slots.slice();
+    slots[st.cur]=Object.assign({},slots[st.cur],{a:an[1],z:an[2]?2:1}); slots[ni]={sid:to,a:an[0],z:an[2]?1:2,k:Date.now()};
+    this.enter=this.enter||{}; this.enter[to]=performance.now();
+    const extra=to==='d2-post'?{ring:Math.max(1,st.ring)}:to==='d5-keep'?{ring:3}:to==='d1-splash'?{ring:0}:{};
+    this.setState(Object.assign({slots,cur:ni,hold:false},extra)); this.initRun(to);
+    this.tmo=setTimeout(()=>{ const s2=this.state.slots.slice(); s2[1-this.state.cur]=null; this.setState({slots:s2}); },700);
+    if(this.sfx&&this.sfx.tone) this.sfx.tone(k==='back'||k==='sink'?820:320,0,.2,'sine',.04,k==='back'||k==='sink'?320:880); }
+  next(){ const i=FLOW.indexOf(this.sid()); if(i>=0&&i<FLOW.length-1) this.go(FLOW[i+1]); else this.go(this.hist.pop()||'d1-splash','back',true); }
+  back(){ const p=this.hist.pop(); if(p) this.go(p,'back',true); else { const i=FLOW.indexOf(this.sid()); if(i>0) this.go(FLOW[i-1],'back',true); } }
+  toast(text,el){ clearTimeout(this.tto); this.setState(s=>({toast:{text,el},tk:s.tk+1})); this.tto=setTimeout(()=>this.setState({toast:null}),2800); }
+  step(){ const R=this.R; if(R&&R.sid===this.sid()&&!this.state.hold&&!this.state.facIn) this.runTick(R); this.setState(s=>({bt:s.bt+1})); }
+  runTick(R){ const V=window.YapVoice, K=this.K; if(!V||!K) return; const B=R.beats[R.i];
+    if(R.fixedT>0) R.fixedT--;
+    if(!B){ R.done=true; return; }
+    if(R.ph==='start'){ R.hint=false; R.idle=0; if(B.round&&B.w!=='sys') R.mir=0; if(B.fx) this.fx(R,B);
+      if(B.w==='sys'){ R.ph='gap'; R.wait=B.gap!=null?B.gap:6; return; }
+      if(B.w==='you'){ R.ph='await'; R.heard=null; R.tleft=B.timer||0; return; }
+      R.speaker=B.w; R.line=B; if(B.wdm) R.wdm=B.wdm; if(B.story) R.story.push(B); R.gl=-1;
+      R.vs=V.play({id:B.id,w:B.w,t:B.t.replace('{name}',this.state.name)},{sound:this.state.sound}); R.ph='talk'; return; }
+    if(R.ph==='talk'){ V.tick(K.mouthFor); if(R.vs&&R.vs.done){ R.ph='gap'; R.wait=B.gap||9; } return; }
+    if(R.ph==='gap'){ if(--R.wait<=0) this.adv(R); return; }
+    if(R.ph==='await'){ if(++R.idle>44) R.hint=true; return; }
+    if(R.ph==='rec'){ if(B.timer){ R.tleft=Math.max(0,B.timer-(performance.now()-R.recT0)/1000); if(R.tleft<=0) this.release(); } return; }
+    if(R.ph==='heard'){ R.heard.n=Math.min(R.heard.text.length,R.heard.n+3); if(R.heard.n>=R.heard.text.length){ R.ph='resolve'; R.wait=9; } return; }
+    if(R.ph==='resolve'){ if(--R.wait<=0) this.resolve(R,B); return; } }
+  fx(R,B){ const s=this.sfx||(()=>{}); const f=B.fx;
+    if(f==='letter'){ R.letter=true; s('pop'); } if(f==='phone'){ R.phone=true; s('ring'); } if(f==='hangup'){ R.phone=false; R.letter=false; s('soft'); }
+    if(f==='ask') R.ask=true; if(f==='mirror'){ R.mir=B.round; s('chime'); } if(f==='vm'){ R.vm=true; window.YapVoice.beep(); } if(f==='vmoff') R.vm=false;
+    if(f==='postcard'){ R.postcard=true; s('pop'); } if(f==='newobj'){ this.toast(this.t('Đồ mới trong hang: lông hải âu','New in the burrow: a seagull feather'),this.K.obj('plant',0,'tn'+Date.now(),34,{})); s('pop'); }
+    if(f==='dusk'){ R.dusk=true; } if(f==='peek'){ R.peek=true; s('chime'); } if(f==='leaf'){ R.leaf=true; s('sparkle'); }
+    if(f==='ring2'){ this.setState({ring:2}); this.toast(this.t('Vòng tuần: 2/3','Weekly ring: 2 of 3'),this.K.fc(this.state.sp,34,'excited','#F9DAFB')); }
+    if(f==='knock'){ if(this.sfx&&this.sfx.tone){ [0,.18,.5].forEach(o=>this.sfx.tone(180,o,.09,'square',.08)); } } }
+  adv(R){ R.i++; R.ph='start'; }
+  outcomeFor(B,said){ const o=this.state.outcome; if(o!=='script'){ this.setState({outcome:'script'}); return o==='silent'?'silent':(o==='error'&&B.ask?'error':'fine'); }
+    return B.defErr&&!B.retry&&!(said&&said.length>3)?'error':'fine'; }
+  press(){ const R=this.R; if(!R||R.ph!=='await'||this.state.hold) return; const B=R.beats[R.i]; R.ph='rec'; R.recT0=performance.now(); R.hint=false; R.lis=window.YapVoice.listen(); this.sfx&&this.sfx('tick'); }
+  release(){ const R=this.R; if(!R||R.ph!=='rec') return; const B=R.beats[R.i]; R.lis&&R.lis.stop(); const said=R.lis&&R.lis.text; const oc=this.outcomeFor(B,said);
+    const text=oc==='silent'?'':(said&&said.length>3&&oc!=='error')?said:(oc==='error'&&B.err?B.err:B.fine);
+    R.oc=oc; R.heard={text,n:0,real:!!(said&&said.length>3&&oc!=='error')}; R.ph=text?'heard':'resolve'; R.wait=4; }
+  resolve(R,B){ const s=this.sfx||(()=>{});
+    if(R.oc==='silent'){ R.beats.splice(R.i+1,0,{w:B.catchW||'pip',t:"Sorry, I didn't catch that. Say it another way?",m:'confused'},Object.assign({},B,{retry:true,defErr:false})); }
+    else if(R.oc==='error'&&B.ask){ R.badges=B.badges; R.beats.splice(R.i+1,0,{w:'pip',t:B.ask,m:'confused',fx:'ask'},{w:'you',fine:B.fix,retry:true,hint:B.hint,hintVi:B.hintVi,after:'fixed',catchW:B.catchW}); }
+    if(B.after==='fixed'){ R.ask=false; R.fixedT=46; s('sparkle'); this.setState({fixes:1}); }
+    if(B.seed&&R.oc!=='silent') this.setState(st=>({phrases:st.phrases+1}));
+    this.adv(R); }
+  faceOf(w){ return w==='pip'?this.state.sp:SPEC[w]; }
+  view(sid,live,K,t,bl){ const st=this.state, sp=st.sp, name=st.name||'Pip', {b1,b2,b3}=bl, nx=()=>this.next();
+    const v={isLock:false,isSplash:false,isInfo:false,isPick:false,isTalk:false,isResid:false,isWeek:false,isPost:false,isKeep:false,isSeason:false};
+    const el=(this.enter&&this.enter[sid])?performance.now()-this.enter[sid]:9e9;
+    if(sid.endsWith('lock')){ const d=sid==='d8-lock'&&st.away?'8a':+sid[1];
+      const N={'d2-lock':['pip','Pip',"Something's going on at the café. Come with me?"],'d3-lock':['pip','Yapling','Pip got lost today. It has a story for you.'],'d4-lock':['pip','Pip','Can you teach me how to introduce myself at work?'],'d5-lock':['bea','Bea','Bus 45 leaves at nine sharp. Bring your best story, love.'],'d6-lock':['pip','Yapling','Pip left you a voicemail.'],'d7-lock':['pip','Yapling',t('Tuần đầu tiên của bạn đã xong. Có một điều nhỏ muốn nói với bạn.','Your first week is done. One small thing to tell you.')],'d8-lock':st.away?['pip','Pip',"You're back? I kept your seat warm."]:['pip','Pip','How was your week?']}[sid];
+      return Object.assign(v,{isLock:true,lk:{wall:K.sc('town',430,884,{}),time:{2:'8:12',3:'12:40',4:'8:05',5:'8:30',6:'19:20',7:'10:02',8:st.away?'8:40':'8:15'}[sid[1]],date:DATE[d][st.lang==='vi'?0:1],from:N[1],body:N[2],icon:K.fc(this.faceOf(N[0]),40,'happy','#EFA3F4'),now:t('bây giờ','now'),tap:t('Nhấn vào thông báo để mở','Tap the notification to open'),onTap:()=>this.go(FLOW[FLOW.indexOf(sid)+1],'zoom'),day:t('Ngày ','Day ')+sid[1]}}); }
+    if(sid==='d1-splash') return Object.assign(v,{isSplash:true,sp:{art:K.sc('harbour',390,844,{t:K.tk(150),pierY:650,horizon:440}),boat:K.h(K.Cv,{key:'sb',fn:'s_fboat',w:220,hh:160,o:{t:K.tk(150)}}),pip:K.cr('redpanda',{size:84,mood:'wave',blink:b1,k:'spp'}),tag:t('Chuyến phà tới Natterwick','Next stop: Natterwick'),title:t('Ngôn ngữ đầu tiên của bạn','Your first language'),sub:t('Ứng dụng dùng ngôn ngữ này. Bài học vẫn bằng tiếng Anh.','The app uses this language. Lessons stay in English.'),
+      langs:LANGS.map((l,i)=>({l,onClick:()=>{ this.setState({lang1:i}); this.sfx('tick'); },bg:i===st.lang1?'#EFA3F4':'rgba(255,255,255,.85)',bd:i===st.lang1?'#17131C':'rgba(23,19,28,.14)'})),cta:t('Tiếp tục','Continue'),onNext:nx}});
+    if(sid==='d1-pick'){ const order=['redpanda','capybara','cat'], LB={redpanda:t('Gấu trúc đỏ','Red panda'),capybara:t('Chuột lang nước','Capybara'),cat:t('Mèo','Cat')}, BOX={redpanda:'#EFA3F4',capybara:'#22BFF2',cat:'#5FD98A'};
+      return Object.assign(v,{isPick:true,pk:{town:K.sc('town',390,844,{t:K.tk(200),vanX:240}),title:t('Ai sẽ là bạn cùng phòng?',"Who's your roommate?"),nameL:t('ĐẶT TÊN','NAME'),name,onName:e=>this.setState({name:e.target.value}),cta:t('Dọn vào','Move in'),onNext:nx,
+        starters:order.map((k,ix)=>{ const sel=k===sp; return {label:LB[k],box:sel?BOX[k]:'#FFFFFF',lift:sel?'-20px':'0px',onClick:()=>{ this.setState(s=>({sp:k,jump:s.jump+1})); this.sfx('pop'); },el:K.cr(k,{size:110,mood:sel?'excited':'happy',blink:ix===1?b2:b1,look:sel?0:(order.indexOf(sp)>ix?5:-5),jumpKey:sel?st.jump:null,still:!sel,k:'st'+k})}; })}}); }
+    if(sid==='d1-card') return Object.assign(v,{isResid:true,rs:{bg:K.sc('burrow2',438,892,{}),pip:K.cr(sp,{size:140,mood:'excited',blink:b1,k:'rp'}),face:K.fc(sp,52,'happy','#FFFFFF'),top:t('THẺ CƯ TRÚ NATTERWICK','NATTERWICK RESIDENCY'),stageN:t('Chặng 1/5','Stage 1 of 5'),welcome:t('Chào mừng đến Natterwick!','Welcome to Natterwick!'),sub:t('Người mới','Newcomer'),
+      goodT:t('BẠN ĐÃ LÀM TỐT','YOU ALREADY DO THESE WELL'),good:[t('Bạn vẫn nói tiếp khi bí từ',"You keep going when you're stuck"),t('Bạn biết hỏi lại','You ask questions back'),t('Bạn nói rõ ràng về công việc','You talk clearly about your work')].map((g,i)=>({g,d:(0.6+i*0.15)+'s'})),
+      aimT:t('MỤC TIÊU ĐẦU TIÊN','AIM FOR THESE FIRST'),aim:[t('Hỏi một người hàng xóm có chuyện gì','Ask a neighbour what is wrong'),t('Giới thiệu bản thân trong 30 giây','Introduce yourself in 30 seconds')],
+      adj:t('Chưa phù hợp?','Not quite right?'),easy:t('Dễ quá','Too easy'),hard:t('Khó quá','Too hard'),onEasy:()=>this.toast(t('Đã chỉnh: Natterwick sẽ nói nhanh hơn một chút','Adjusted: the town will talk a little faster'),K.fc(sp,34,'happy','#F9DAFB')),onHard:()=>this.toast(t('Đã chỉnh: mọi người sẽ nói chậm hơn và gợi ý nhiều hơn','Adjusted: slower speech and more hints'),K.fc(sp,34,'warm','#F9DAFB')),cta:t('Tiếp tục','Continue'),onNext:nx}});
+    if(sid==='d2-week'){ const ring=st.ring, P=[["What's wrong?",'Có chuyện gì vậy?'],['I need a plan','Mình cần một kế hoạch'],['Can I help?','Mình giúp được không?'],['I think you should…','Mình nghĩ bạn nên…']];
+      return Object.assign(v,{isWeek:true,wk:{pip:K.cr(sp,{size:110,mood:'happy',blink:b1,k:'wp'}),title:t('Tuần này','This week'),dates:t('21 – 27 tháng 9','Sep 21 – 27'),ringTxt:ring+'/3',
+        calls:[['#EFA3F4',t('Tập truyện','Episode'),'S1 · E1 · The Letter',t('Hôm nay','Today'),'otter','#FFE9C2','worried'],['#22BFF2',t('Tuần thật','Real week'),t('Dạy Pip giới thiệu bản thân','Teach Pip to introduce itself'),t('Thứ Năm','Thu'),sp,'#F9DAFB','think'],['#5FD98A',t('Luyện tập','Practice'),'Pass it on · Bus 45',t('Thứ Sáu','Fri'),'bulldog','#CFF0FD','happy']].map(([c,tag,ti,when,f,fbg,m],i)=>({c,tag,ti,when,filled:i<ring,dot:i<ring?c:'#FFFFFF',art:K.h('div',{key:'wc'+i,style:{width:84,height:64,background:fbg,display:'flex',justifyContent:'center',alignItems:'flex-end'}},K.fc(f,64,m,fbg))})),
+        phT:t('CỤM TỪ TUẦN NÀY','THIS WEEK\'S PHRASES'),phrases:P.map(([en,vi],i)=>({en,vi,el:K.obj('seed',0,'ws'+i,36)})),seedNote:t('Gói hạt: bạn mới nghe thấy. Nói ra để chúng nảy mầm.','Seed packets: heard, not said yet. Say them to sprout.'),cta:t('Đến quán cà phê với Pip','Go to the café with Pip'),onNext:nx}}); }
+    if(sid==='d2-post'){ const grown=el>1400; const P=["What's wrong?",'I need a plan','Can I help?','I think you should…'];
+      return Object.assign(v,{isPost:true,po:{title:t('Cuộc gọi đầu tiên','Your first call'),big:t('Xong rồi!','Done!'),winT:t('2 ĐIỀU LÀM TỐT','TWO WINS'),wins:[t('Bạn đã hỏi Mei có chuyện gì','You asked Mei what was wrong'),t('Bạn đã tự giới thiệu với văn phòng','You introduced yourself to the office')],fixT:t('1 LỖI ĐÃ SỬA','ONE FIX'),fixA:'I calling',fixB:"I'm calling",
+        phT:t('TỪ GÓI HẠT THÀNH MẦM','SEED TO SPROUT'),phrases:P.map((p,i)=>({p,el:grown&&i!==1?K.h('div',{key:'g'+i,style:{animation:'ypop .6s '+(i*0.15)+'s cubic-bezier(.34,1.56,.64,1) both'}},K.obj('plant',0,'pg'+i,40,{})):K.obj('seed',0,'ps'+i,40),st:grown&&i!==1?t('Mầm','Sprout'):t('Gói hạt','Seed')})),
+        ringT:t('Vòng tuần · 1/3','Weekly ring · 1 of 3'),box:t('Một thùng trong hang đã được dỡ','A box in the burrow got unpacked'),cta:t('Về hang','Back to the burrow'),onNext:nx}}); }
+    if(sid==='d5-keep') return Object.assign(v,{isKeep:true,kp:{bg:K.sc('burrow2',390,844,{t:K.tk(250)}),pip:K.cr(sp,{size:150,mood:'proud',blink:b1,k:'kp'}),linh:K.fc('pangolin',40,'happy','#CFF0FD'),title:t('Vòng tuần đã đầy!','Your ring is full!'),week:t('TUẦN 1','WEEK 1'),can:'Introduced myself in 30 seconds',wit:'witnessed by Linh · Sep 25',pipSays:t('Mình tự vẽ đó. Linh đã ký!','I drew it myself. Linh signed it!'),cta:t('Treo lên tường','Hang it on the wall'),onNext:()=>{ this.sfx('chime'); this.toast(t('Đã treo trên tường hang','Hung on the burrow wall'),K.fc(sp,34,'proud','#F9DAFB')); setTimeout(()=>this.next(),900); }}});
+    if(sid==='d6-season'){ const rp=routePaths(2), TAGS=['Café','Office','Café','Inn','Bus 45','Square'];
+      return Object.assign(v,{isSeason:true,ss:{bg:K.sc('town',390,844,{t:K.tk(250)}),boat:K.h(K.Cv,{key:'sbt',fn:'s_fboat',w:120,hh:88,o:{t:K.tk(150)}}),route:rp,face:K.fc('tarsier',44,'happy','#CFF0FD'),
+        marks:rp.pins.map(([x,y],i)=>({left:(x-18)+'px',top:(y-18)+'px',n:i+1,tag:TAGS[i],bg:i<1?'#5FD98A':i===1?'#EFA3F4':'#FFFFFF',anim:i===1?'yglow 1.6s ease-in-out infinite':'none',bd:i>1?'2.5px dashed #17131C':'2.5px solid #17131C'})),
+        top:t('MÙA 1 · TẬP 2/6','SEASON 1 · EPISODE 2 OF 6'),s2:t('Mùa 2 · sắp ra mắt →','Season 2 · coming soon →'),ep:t('TẬP 2 · VĂN PHÒNG HOLLOWBROOK','EPISODE 2 · HOLLOWBROOK OFFICE'),when:t('Thứ Hai','Monday'),cta:t('Tiếp tục','Continue'),onNext:nx}}); }
+    if(SCRIPT[sid]||sid==='d8-back') return Object.assign(v,{isTalk:true,tk:this.talkView(sid,live,K,t,bl)});
+    return Object.assign(v,{isInfo:true,inf:this.infoView(sid,K,t,bl)}); }
+  infoView(sid,K,t,bl){ const st=this.state, sp=st.sp, nx=()=>this.next(), name=st.name||'Pip';
+    const I={art:K.sc('burrow2',438,892,{}),hasArt:true,calm:false,hero:null,hasHero:false,kicker:'',title:'',body:[],rows:[],hasRows:false,table:[],hasTable:false,plans:[],hasPlans:false,note:'',foot:'',pri:{l:t('Tiếp tục','Continue'),onClick:nx},sec:{l:'',onClick:nx},hasSec:false,equal:false,sheetTop:'300px'};
+    if(sid==='d1-ai') Object.assign(I,{art:K.h(K.Cv,{key:'aib',fn:'s_burrowDay1',w:438,hh:892,o:{}}),hero:K.cr(sp,{size:150,mood:'wave',blink:bl.b1,k:'aih'}),hasHero:true,kicker:t('TRƯỚC KHI BẮT ĐẦU','BEFORE WE START'),title:t(name+' và hàng xóm là AI',name+' and the neighbours are AI'),
+      body:[t('Họ là nhân vật được tạo ra để giúp bạn luyện nói tiếng Anh. Đôi khi họ có thể nói sai.','They are characters made to help you practise English. They can get things wrong.'),t('Giọng nói của bạn chỉ dùng để trả lời bạn và theo dõi tiến bộ. Bạn có thể xoá bất cứ lúc nào.','Your voice is only used to reply to you and track progress. Delete it any time.'),t('Họ không phải bác sĩ, nhà trị liệu hay luật sư. Khi cần, họ sẽ chỉ bạn đến người thật.','They are not doctors, therapists or lawyers. When it matters, they point you to real people.')],pri:{l:t('Mình hiểu rồi','Got it'),onClick:nx}});
+    if(sid==='d1-notif') Object.assign(I,{hero:K.cr(sp,{size:150,mood:'excited',pose:'phone',prop:'phone',blink:bl.b1,k:'nh'}),hasHero:true,kicker:t('THÔNG BÁO','NOTIFICATIONS'),title:t('Bạn muốn '+name+' gọi khi có chuyện trong thị trấn?','Want '+name+' to call when something happens in town?'),body:[t('Tối đa một lần mỗi ngày. Không bao giờ trong giờ yên tĩnh.','At most once a day. Never in quiet hours.')],
+      rows:[{t:t('Giờ yên tĩnh','Quiet hours'),s:'22:00 – 08:00',hasToggle:true,on:st.quiet,knob:st.quiet?'#5FD98A':'#D3CCDC',kx:st.quiet?'18px':'2px',hasBtn:false,onClick:()=>this.setState({quiet:!st.quiet})}],hasRows:true,
+      pri:{l:t('Cho phép thông báo','Allow notifications'),onClick:()=>{ this.setState({notif:true}); this.sfx('chime'); nx(); }},sec:{l:t('Để sau','Not now'),onClick:()=>{ this.setState({notif:false}); nx(); }},hasSec:true});
+    if(sid==='d7-pay') Object.assign(I,{art:K.sc('town',438,892,{balloon:[206,170],balloonSp:sp}),sheetTop:'150px',kicker:t('TUẦN ĐẦU TIÊN LÀ QUÀ CỦA TỤI MÌNH','YOUR FIRST WEEK WAS ON US'),title:'Yapling Plus',body:[t('Từ hôm nay, bản Miễn phí có khoảng 10 phút gọi mỗi tuần, cùng mọi câu chuyện, bưu thiếp và thư thoại.','From today, Free has about 10 live minutes a week, plus every story, postcard and voicemail.')],
+      table:[['',t('Miễn phí','Free'),'Plus',1],[t('Phút gọi trực tiếp','Live call minutes'),t('~10/tuần','~10/week'),t('~150/tháng*','~150/month*')],[t('Truyện, bưu thiếp, thư thoại','Stories, postcards, voicemails'),'✓','✓'],[t('Mang bài tập của bạn','Bring your homework'),'–','✓'],[t('Phản hồi sâu & luyện phát âm','Deep feedback & drills'),'–','✓'],[t('Gọi có camera','Camera calls'),'–','✓']].map(([a,b,c,hd])=>({a,b,c,bg:hd?'#F4F1F7':'#FFFFFF',fw:hd?'800':'700'})),hasTable:true,
+      plans:[['year',t('Năm đầu','First year'),'599.000 VND',t('sau đó 799.000 VND/năm','then 799.000 VND/year'),t('Ưu đãi','Intro')],['month',t('Hằng tháng','Monthly'),'149.000 VND',t('Huỷ bất cứ lúc nào','Cancel any time'),'']].map(([k,l,p,s,b])=>({l,p,s,b,hasB:!!b,bg:st.plan===k?'#EFA3F4':'rgba(255,255,255,.85)',onClick:()=>{ this.setState({plan:k}); this.sfx('tick'); }})),hasPlans:true,
+      note:t('Sinh viên: giá ưu đãi với email trường học. *Sử dụng hợp lý.','Students: special price with a school email. *Fair use.'),foot:t(name+', hang và câu chuyện vẫn ở đây dù bạn chọn gì.',name+', the burrow and the story stay either way.'),
+      pri:{l:t('Dùng thử Plus','Try Plus'),onClick:()=>{ this.toast(t('Đã bắt đầu dùng thử 7 ngày','7-day trial started'),K.fc(sp,34,'excited','#F9DAFB')); nx(); }},sec:{l:t('Không phải bây giờ','Not now'),onClick:nx},hasSec:true,equal:true});
+    if(sid==='err-net') Object.assign(I,{hero:K.h('div',{style:{animation:'ywig .4s linear infinite'}},K.cr(sp,{size:150,mood:'worried',blink:bl.b1,k:'en',still:true})),hasHero:true,kicker:t('MẤT KẾT NỐI','NO CONNECTION'),title:t('Đường dây của '+name+' đang rè. Thử gửi tin nhắn thoại nhé?',name+"'s line is crackly. Try a voice note?"),body:[t('Tin nhắn sẽ tự gửi khi có mạng trở lại.',"It sends when you're back online.")],pri:{l:t('Ghi tin nhắn thoại','Record a voice note'),onClick:()=>this.back()},sec:{l:t('Thử gọi lại','Try the call again'),onClick:()=>this.back()},hasSec:true});
+    if(sid==='err-mic') Object.assign(I,{hero:K.cr(sp,{size:150,mood:'listen',tilt:8,blink:bl.b1,k:'em'}),hasHero:true,kicker:t('MICRO ĐANG TẮT','MICROPHONE OFF'),title:t(name+' chưa nghe được bạn',name+" can't hear you yet"),body:[t('Micro đang tắt cho Yapling. Bật trong Cài đặt, hoặc nhắn chữ cho '+name+'.','The microphone is off for Yapling. Turn it on in Settings, or type to '+name+'.')],pri:{l:t('Mở Cài đặt','Open Settings'),onClick:()=>this.back()},sec:{l:t('Nhắn chữ thay thế','Type instead'),onClick:()=>this.back()},hasSec:true});
+    if(sid==='safety') Object.assign(I,{hasArt:false,calm:true,sheetTop:'70px',kicker:t('Câu chuyện đang tạm dừng','The story is paused'),title:t('Có vẻ mọi thứ đang rất khó khăn với bạn.','It sounds like things are really hard right now.'),body:[t(name+' là AI và không thể giúp việc này, nhưng một người thật thì có thể. Bạn không cần giải thích gì cả.',name+" is an AI and can't help with this, but a person can. You don't have to explain anything.")],
+      rows:[{t:t('Cấp cứu','Emergency'),s:t('Nếu bạn đang gặp nguy hiểm · Việt Nam','If you are in danger now · Vietnam'),hasBtn:true,btn:'115',hasToggle:false},{t:t('Tìm đường dây hỗ trợ','Find a support line'),s:t('Miễn phí, bảo mật, gần bạn','Free and confidential, near you'),hasBtn:false,hasToggle:false},{t:t('Nhắn cho người bạn tin tưởng','Message someone you trust'),s:t('Mở danh bạ','Opens your contacts'),hasBtn:false,hasToggle:false}],hasRows:true,
+      note:t('Số khẩn cấp thay đổi theo quốc gia của người dùng.',"The emergency number follows the user's country."),pri:{l:t('Quay lại Natterwick sau','Back to Natterwick later'),onClick:()=>this.back()}});
+    if(sid==='end') Object.assign(I,{art:K.sc('town',438,892,{}),hero:K.cr(sp,{size:150,mood:'wave',blink:bl.b1,k:'endh'}),hasHero:true,kicker:t('HẾT TUẦN 1','END OF WEEK 1'),title:t('Cảm ơn bạn đã thử Yapling!','Thanks for trying Yapling!'),body:[t('Hẹn gặp lại ở Tập 2.','See you in Episode 2.')],pri:{l:t('Bắt đầu lại','Start again'),onClick:()=>this.reset()}});
+    I.solo=!I.equal; return I; }
+  talkView(sid,live,K,t,bl){ const st=this.state, sp=st.sp, name=st.name||'Pip', {b1,b2,b3}=bl, V=window.YapVoice;
+    const S=sid==='d8-back'?{scene:'burrow',cast:[['pip',230,80,330]],bub:{pip:[220,20,20]},top:['pip','Hang của bạn','Your burrow'],done:['Kết thúc tuần','Finish the week']}:SCRIPT[sid];
+    const R=live&&this.R&&this.R.sid===sid?this.R:null, B=R?R.beats[R.i]:null;
+    const talking=!!(R&&R.ph==='talk'&&R.vs), spk=R?R.speaker:null, mouth=talking?R.vs.mouth:'rest';
+    const youTurn=!!(R&&B&&B.w==='you'&&(R.ph==='await'||R.ph==='rec')), rec=!!(R&&R.ph==='rec');
+    const moodFor=(w)=>{ if(st.hold) return 'patient'; if(R&&R.fixedT>0&&w==='pip') return 'excited'; if(talking&&w===spk) return R.line.m||'happy'; if(R&&R.ask&&w==='pip') return 'confused'; if(youTurn||(R&&(R.ph==='heard'||R.ph==='resolve'))) return 'listen'; return w===spk&&R&&R.line?R.line.m||'happy':'happy'; };
+    const mk=(arr,front)=>(arr||[]).map(([w,size,left,top],i)=>({left:left+'px',top:top+'px',el:K.cr(this.faceOf(w),{size,mood:moodFor(w),blink:[b1,b2,b3][i%3],mouth:w===spk&&talking?mouth:'rest',k:sid+w+(front?'f':'')})}));
+    const scene=S.scene, bg=scene==='day1'?K.h(K.Cv,{key:'d1bg',fn:'s_burrowDay1',w:390,hh:844,o:{t:K.tk(250)}}):scene==='cafe'?K.sc('cafeWarm',390,844,{t:K.tk(250)}):scene==='bus'?K.sc('bus',390,844,{}):scene==='burrow'?K.sc('burrow2',390,844,{t:K.tk(250)}):null;
+    const front=scene==='cafe'?K.sc('cafeFront',390,844,{}):scene==='bus'?K.sc('bus',390,844,{layer:'front'}):null;
+    const L=R&&R.line, an=L&&S.bub&&S.bub[L.w]||[150,20,20], said=L?(talking?R.vs.full.slice(0,R.vs.n):V.strip(L.t)):'', full=L?V.strip(L.t):'';
+    const glOn=!!(R&&L&&R.gl===R.i);
+    const bub={show:!!L&&!S.listen,top:an[0]+'px',left:an[1]+'px',right:an[2]+'px',said,unsaid:full.slice(said.length),name:NAMES[L?L.w:'pip']==='Pip'?name:NAMES[L?L.w:'pip'],bg:L&&L.w==='pip'?'#EFA3F4':L&&L.w==='office'?'#CFF0FD':'#FFFFFF',gloss:L&&L.vi||'',showGloss:glOn&&!!(L&&L.vi),tapHint:t('Chạm để xem nghĩa','Tap for Vietnamese'),showTap:!glOn&&!!(L&&L.vi)&&!talking,
+      onTap:()=>{ if(!R||!L||!L.vi) return; R.gl=glOn?-1:R.i; if(!glOn){ this.sfx('tick'); this.toast(t('Đã thêm vào hang thành gói hạt','Dropped into the burrow as a seed packet'),K.obj('seed',0,'ts'+Date.now(),34)); } }};
+    const heard=R&&R.heard, live2=rec&&R.lis&&R.lis.text;
+    const you={show:!!(heard&&(R.ph==='heard'||R.ph==='resolve'||youTurn===false&&R.ph==='gap'&&B&&B.w==='you'))||!!live2,said:heard?heard.text.slice(0,heard.n):live2||'',unsaid:heard?heard.text.slice(heard.n):'',label:t('BẠN','YOU')+(heard&&heard.real||live2?t(' · nghe được',' · heard'):'')};
+    const hint={show:!!(R&&R.hint&&youTurn&&!rec),en:B&&B.hint||'',vi:B&&B.hintVi||''};
+    const timer={show:!!(youTurn&&B.timer),secs:B&&B.timer?Math.ceil(rec?R.tleft:B.timer)+'s':'',off:B&&B.timer?(276*(1-(rec?R.tleft:B.timer)/B.timer)).toFixed(1):'0',c:rec&&R.tleft<10?'#EFA3F4':'#5FD98A'};
+    const rnd=B&&B.round||(R&&R.mir)||1;
+    const rounds={show:!!S.rounds,items:[['pip','90s',1],['linh','60s',2],['bea','45s',3]].map(([w,tt,n])=>({face:K.fc(this.faceOf(w),34,n<rnd?'happy':'listen',n<rnd?'#D7F7E2':n===rnd?'#F9DAFB':'#FFFFFF'),tt,ring:n<rnd?'#5FD98A':n===rnd?'#EFA3F4':'#D3CCDC',op:n>rnd?'.55':'1'}))};
+    const mir={show:!!(R&&R.mir),title:t('Gương nói','Fluency mirror'),rows:MIRROR.slice(0,R?R.mir:0).map(([f,p,z],i)=>({n:t('Lượt ','Round ')+(i+1),f:f+'s',p:p+' '+t('từ/phút','wpm'),z:z+t('/phút','/min'),fw:(f/44*100)+'%',hi:i===2?'#5FD98A':'#EFA3F4'})),note:R&&R.mir===3?t('Lượt thứ ba trôi chảy hơn hẳn!','Round three is visibly smoother!'):t('Flow = số giây nói liền không dừng.','Flow = seconds without stopping.')};
+    const ex={chip:!!(R&&R.wdm&&R.ex===0&&!S.listen),show:!!(R&&R.ex>0),en:R&&R.wdm?R.wdm.en:'',vi:R&&R.wdm?R.wdm.vi:'',showVi:!!(R&&R.ex===2),btn:t('Xem bản dịch','Show translation'),showBtn:!!(R&&R.ex===1),onChip:()=>{ if(R){ R.ex=1; this.sfx('tick'); } },onVi:()=>{ if(R){ R.ex=2; this.sfx('tick'); } },onClose:()=>{ if(R){ R.ex=-1; R.wdm=null; } }};
+    const LET=[['Dear Lantern Café,','Gửi quán Lantern,'],['From 1 November, your rent will double.','Từ ngày 1 tháng 11, tiền thuê của bạn sẽ tăng gấp đôi.'],['Please reply by Friday. Harbour Lane Office','Vui lòng trả lời trước thứ Sáu. Văn phòng Harbour Lane']];
+    const letter={show:!!(R&&R.letter),lines:LET.map(([en,vi],i)=>({en,vi,showVi:!!(R&&R.lgl[i]),onClick:()=>{ if(!R) return; R.lgl[i]=!R.lgl[i]; if(R.lgl[i]){ this.sfx('tick'); this.toast(t('Đã thêm "'+(i===1?'rent':'by Friday')+'" vào hang','Added "'+(i===1?'rent':'by Friday')+'" to the burrow'),K.obj('seed',0,'tl'+Date.now(),34)); } }}))};
+    const story={show:!!S.listen,items:(R?R.story:[]).map((b,i)=>({t:V.strip(b.t),vi:b.vi,showVi:!!(R&&R.sgl[i]),now:talking&&R.line===b,onClick:()=>{ if(R){ R.sgl[i]=!R.sgl[i]; if(R.sgl[i]) this.sfx('tick'); } }})),face:K.fc(sp,52,talking&&spk==='pip'?R.line.m:'happy','#F9DAFB'),bars:Array.from({length:30},(_,i)=>({h:(6+((i*37)%22))+'px',c:talking&&spk==='pip'&&i/30<(R.vs.n/Math.max(1,R.vs.full.length))?'#17131C':'rgba(23,19,28,.28)'})),note:t('Không tính phút gọi · không có gì để trượt','No live minutes used · nothing to fail')};
+    const postcard={show:!!(R&&R.postcard),face:K.fc('pangolin',70,'happy','#D7F7E2'),from:'Linh',text:"Tip from a neighbour: when you forget a word, describe it. 'The thing you use to cut bread' works fine!",said:R&&talking&&spk==='linh'?R.vs.full.slice(0,R.vs.n):''};
+    const vm={show:!!(R&&R.vm),face:K.fc(sp,76,'excited','#CFF0FD'),title:t('Thư thoại từ ','Voicemail from ')+name,bars:Array.from({length:34},(_,i)=>({h:(6+((i*37)%20))+'px',c:talking&&i/34<(R.vs.n/Math.max(1,R.vs.full.length))?'#17131C':'rgba(23,19,28,.3)'}))};
+    const peek={show:!!(R&&R.peek),title:'Help Wanted',sub:t('Mùa 1 · Tập 2','Season 1 · Episode 2'),note:st.away?t('Đúng chỗ bạn đã dừng','Exactly where you left it'):t('Sẵn sàng khi bạn muốn','Ready when you are'),face:K.fc('tarsier',44,'happy','#CFF0FD')};
+    const dusk={show:!!(R&&R.dusk),art:K.sc('cafeWarm',300,220,{t:K.tk(300)})};
+    const top={face:K.fc(this.faceOf(S.top[0]),30,'happy','#F9DAFB'),name:S.top[0]==='pip'?name:NAMES[S.top[0]],sub:t(S.top[1],S.top[2]),ep:S.ep||'',hasEp:!!S.ep};
+    const doneOn=!!(R&&R.done), micLabel=st.hold?t('Tạm dừng · cứ từ từ','Paused · take your time'):rec?t('Đang nghe… thả ra khi xong','Listening… let go when done'):youTurn?t('Lượt của bạn · giữ để nói','Your turn · hold to talk'):talking?(spk==='pip'?name:NAMES[spk])+t(' đang nói',' is talking'):doneOn?t('Hết cảnh','Scene complete'):'';
+    const mic={bg:youTurn?'#EFA3F4':'#FFFFFF',bd:youTurn?'#17131C':'#D3CCDC',anim:youTurn&&!rec?'yglow 1.6s ease-in-out infinite':'none',bar:youTurn?'#17131C':'#D3CCDC',barA:rec?'ybar .8s ease-in-out infinite':'none',label:micLabel,scale:rec?'scale(1.08)':'none',
+      onDown:e=>{ e&&e.preventDefault&&e.preventDefault(); this.press(); },onUp:()=>this.release()};
+    return {sharp:scene!=='blur',blurred:scene==='blur',bg,blurBg:K.sc('burrow2',438,892,{}),hasFront:!!front,front,cast:mk(S.cast),castFront:mk(S.castFront,true),bub,you,hint,timer,rounds,mir,ex,letter,story,postcard,vm,peek,dusk,top,
+      phone:{show:!!(R&&R.phone),t:t('Đang gọi Văn phòng Harbour Lane','Calling Harbour Lane Office')},
+      ask:{show:!!(R&&R.ask&&R.badges),a:R&&R.badges?R.badges[0]:'',b:R&&R.badges?R.badges[1]:''},fixed:{show:!!(R&&R.fixedT>0),t:t('Bạn tự sửa được rồi','You fixed it yourself')},
+      leaf:{show:!!(R&&R.leaf),el:K.obj('plant',1,'lf',56,{}),t:'Can I help you?',s:t('Đã thành lá','Now a leaf')},
+      controls:!S.listen, listenBar:!!S.listen, mic, hold:{l:st.hold?t('Tiếp tục','Ready'):t('Chờ chút','Hold on'),bg:st.hold?'#17131C':'rgba(255,255,255,.8)',fg:st.hold?'#FFFFFF':'#17131C',onClick:()=>{ this.setState({hold:!st.hold}); this.sfx('soft'); }},
+      done:{l:t(S.done[0],S.done[1]),bg:doneOn?'#EFA3F4':'rgba(255,255,255,.8)',bd:doneOn?'3px solid #17131C':'1px solid rgba(255,255,255,.9)',sh:doneOn?'0 4px 0 #17131C':'none',onClick:()=>this.next(),on:doneOn}}; }
+  reset(){ window.YapVoice&&window.YapVoice.stop(); this.hist=[]; this.setState({sp:'redpanda',name:'Pip',ring:0,phrases:0,outcome:'script',away:false,plan:'year',quiet:true,facIn:false}); this.go('d1-splash','fade',true); }
+  facView(K,t,sid,day){ const st=this.state, chip=(on)=>({bg:on?'#17131C':'#FFFFFF',fg:on?'#FFFFFF':'#17131C'});
+    const jump=to=>()=>{ if(to==='d8-lock'||to==='d8-back'){} this.go(to,'fade'); this.setState({facIn:false}); if(DAYOF(to)>=3&&st.ring<1) this.setState({ring:DAYOF(to)>=6?3:DAYOF(to)>=5?2:1}); };
+    return {inPhone:st.facIn,open:st.facDesk,closed:!st.facDesk,toggle:()=>this.setState({facDesk:!st.facDesk}),close:()=>this.setState({facIn:false}),cur:sid,
+      days:[1,2,3,4,5,6,7,8].map(d=>Object.assign({l:'D'+d,onClick:jump(DAYSTART[d])},chip(day===d))),
+      outs:[['script','Script'],['fine','Fine'],['error','Target error'],['silent','Silent']].map(([k,l])=>Object.assign({l,onClick:()=>this.setState({outcome:k})},chip(st.outcome===k))),
+      away:Object.assign({l:st.away?'Came back after 3 days: ON':'Came back after 3 days: off',onClick:()=>{ this.setState({away:!st.away}); if(this.sid()==='d8-back') setTimeout(()=>this.initRun('d8-back'),0); }},chip(st.away)),
+      langs:[['vi','VI'],['en','EN']].map(([k,l])=>Object.assign({l,onClick:()=>this.setState({lang:k})},chip(st.lang===k))),
+      sound:Object.assign({l:st.sound?'Voices on':'Voices off',onClick:()=>{ this.setState({sound:!st.sound}); window.YapVoice&&window.YapVoice.stop(); }},chip(st.sound)),
+      errs:[['err-net','No connection'],['err-mic','Mic denied'],['err-catch',"Didn't catch that"],['safety','Safety · 115']].map(([k,l])=>Object.assign({l,onClick:jump(k)},chip(sid===k))),
+      steps:FLOW.map(k=>Object.assign({l:k,onClick:jump(k)},chip(sid===k))),
+      reset:()=>this.reset(), map:'Yapling%20Week%201%20Map.dc.html'}; }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K||!window.YapArt||!window.YapArt.s_mini) return {slots:[{on:false},{on:false}],statusC:'#FFFFFF',clock:'9:41',toast:{on:false},backOn:false,fac:{inPhone:false,open:false,closed:true}};
+    this.K=K; const st=this.state, {b1,b2,b3}=K.blinkers(st.bt); if(!this.sfx) this.sfx=K.makeSfx(()=>this.state.sound);
+    const t=(vi,en)=>st.lang==='vi'?vi:en, sid=this.sid(), day=DAYOF(sid);
+    const slots=st.slots.map((sl,ix)=>sl?Object.assign(this.view(sl.sid,ix===st.cur,K,t,{b1,b2,b3}),{on:true,a:sl.a,z:sl.z}):{on:false});
+    const dark=sid.endsWith('lock')||sid==='end'||sid==='d6-season'&&false;
+    return {
+      slots, statusC:sid.endsWith('lock')?'#FFFFFF':'#17131C', clock:sid.endsWith('lock')?'':'9:41',
+      backOn:!sid.endsWith('lock')&&sid!=='d1-splash'&&sid!=='safety'&&!/d2-call|d5-bus|d4-teach/.test(sid),
+      goBack:()=>this.back(),
+      toast:{on:!!st.toast,text:st.toast?st.toast.text:'',el:st.toast?st.toast.el:null},
+      phoneTouch:e=>{ if(e.touches&&e.touches.length>=3) this.setState(s=>({facIn:!s.facIn})); },
+      fac:this.facView(K,t,sid,day)
+    };
+  }
+}
+</script>
+</body>
+</html>

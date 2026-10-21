@@ -1,0 +1,64 @@
+{
+  "_note": "Voice per character for recorded [REC] lines. 'voice_id' set = ready to render. 'design' = brief for ElevenLabs voice design (eleven_ttv_v3); run `yap_voice.py design`, listen, then `yap_voice.py pick <char> <n>`. Briefs come from docs/cast-bible.md. Every accent needs native-speaker review before launch.",
+  "model_id": "eleven_v4",
+  "output_format": "mp3_44100_128",
+  "default_speed": 0.92,
+  "characters": {
+    "pip": {
+      "voice_id": "EloPaUZKG0CW1gv8SwPD",
+      "design": "A bright, friendly young-adult voice, gender-neutral, mid pitch, with an audible smile. Curious, easily delighted, a little breathless when excited, small natural hesitations when thinking. Clear, neutral international English accent. Warm and playful but not childlike or cartoonish.",
+      "_voice_name": "Yapling Pip (designed, preview 3)"
+    },
+    "linh": {
+      "voice_id": "E9HIgK7B4p9tu2BOAMvK",
+      "design": "A Vietnamese woman in her early thirties speaking fluent, confident English with a natural Vietnamese accent. Warm, calm and unhurried, steady and encouraging, like a kind neighbour who has been where you are.",
+      "_voice_name": "Yapling Linh (designed, preview 1)"
+    },
+    "mei": {
+      "voice_id": "RF1ig8kIu1gZiECZiBUP",
+      "design": "A Singaporean woman in her late thirties speaking Singaporean English with a natural Singaporean accent. Energetic, quick, funny and generous, laughs easily, brisk rhythm, a café owner who feeds everyone.",
+      "_voice_name": "Yapling Mei (designed, preview 3)"
+    },
+    "sol": {
+      "voice_id": "2E1S81Z0lGeJ3ZZ7rLCo",
+      "design": "A Filipino professional in their late twenties speaking clear, polite Filipino English with a natural Filipino accent. Bright, precise and upbeat, very friendly, quietly funny, sounds great running a meeting.",
+      "_voice_name": "Yapling Sol (designed, preview 1)"
+    },
+    "hank": {
+      "voice_id": "I3xIPqrO9ZAEmt0VTT5U",
+      "design": "A big, loud American man in his late forties with a fast General American accent. Gravelly but friendly, deal-loving and impatient, talks quickly, secretly soft-hearted. Pushy salesman energy, never menacing.",
+      "_voice_name": "Yapling Hank (designed, preview 2)"
+    },
+    "nell": {
+      "voice_id": "TJxUeyP5tCwnrBMeKFpl",
+      "design": "An Australian woman in her late thirties with a natural Australian accent. Relaxed, warm and practical, mid-low pitch, wry and unflappable, an inn keeper who solves everything with a cup of tea and a list.",
+      "_voice_name": "Yapling Nell (designed, preview 1)"
+    },
+    "bea": {
+      "voice_id": "KpHq9VJJ3wdsnLyzc23i",
+      "design": "A cheerful British woman in her late forties with a warm regional English accent. Brisk, chatty and affectionate, a smile in every line, a bus driver who calls everyone 'love' and always leaves on time.",
+      "_voice_name": "Yapling Bea (designed, preview 3)"
+    },
+    "mags": {
+      "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
+      "_voice_name": "Alice (premade, British). Minor role in E6; swap for a designed voice later if needed."
+    }
+  },
+  "sfx": [
+    {
+      "id": "s1-e6-sfx-crowd-murmur",
+      "prompt": "Friendly small-town crowd murmuring in an outdoor square before a meeting, light harbour gulls",
+      "seconds": 6
+    },
+    {
+      "id": "s1-e6-sfx-crowd-cheer",
+      "prompt": "Small-town crowd erupting into happy cheers and applause outdoors",
+      "seconds": 4
+    },
+    {
+      "id": "s1-sfx-voicemail-beep",
+      "prompt": "Single soft phone voicemail beep",
+      "seconds": 1
+    }
+  ]
+}

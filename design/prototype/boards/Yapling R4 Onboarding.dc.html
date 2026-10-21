@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+input:focus{outline:none}
+@keyframes ybob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-5px) scale(.985,1.02)}}
+@keyframes yjump{0%{transform:translateY(0) scale(1,1)}14%{transform:translateY(0) scale(1.14,.84)}34%{transform:translateY(-38%) scale(.9,1.12)}56%{transform:translateY(-44%) scale(1,1)}78%{transform:translateY(0) scale(1.12,.88)}90%{transform:translateY(0) scale(.97,1.04)}100%{transform:translateY(0) scale(1,1)}}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yping{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-6px) rotate(-3deg)}}
+@keyframes ybar{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+@keyframes yglow{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 8px rgba(239,163,244,.35)}50%{box-shadow:0 4px 0 #17131C,0 0 0 18px rgba(239,163,244,.15)}}
+@keyframes yalert{0%{transform:scale(1.1);opacity:0}100%{transform:scale(1);opacity:1}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;max-width:2300px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#EFA3F4;border:2px solid #17131C"></span>Yapling · Round 4 · 2 of 4</div>
+      <div style="font-size:64px;font-weight:800;letter-spacing:-0.05em;line-height:.95">Onboarding: <span style="background:#EFA3F4;padding:0 10px;border-radius:12px">first chat</span> in a minute</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button onClick="{{ toggleSound }}" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font:800 14px Lexend,sans-serif;cursor:pointer;color:#17131C">{{ soundLabel }}</button>
+      <a href="Yapling%20R4%20Brand.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">1 Brand &amp; system</a>
+      <a href="Yapling%20R4%20Onboarding.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">2 Onboarding</a>
+      <a href="Yapling%20R4%20Home.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">3 Home &amp; calls</a>
+      <a href="Yapling%20R4%20Town.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">4 Town &amp; story</a>
+    </div>
+  </div>
+  <section id="4f" style="display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">4f</span><span style="font-weight:700;font-size:17px">Age check → starter → three choices → mic → first chat → calls</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start;max-width:2560px">
+
+      <div data-screen-label="O1 Welcome" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">O1</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Welcome · arriving by ferry</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#E4F7FE;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ welcomeHarbour }}</div>
+          <div style="position:absolute;top:300px;left:150px;width:220px;height:160px">{{ welcomeBoat }}</div>
+          <div style="position:absolute;top:262px;left:236px">{{ peek2 }}</div>
+          <div style="position:absolute;top:120px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:3">
+            <div style="display:flex;align-items:flex-end;font-size:92px;font-weight:900;letter-spacing:-0.065em;line-height:.78;padding-top:20px;animation:ytype 7s ease-out infinite"><span>yapl</span><span style="position:relative;display:inline-block">ı<span style="position:absolute;left:50%;bottom:.6em;width:.32em;height:.24em;margin-left:-.13em;border-radius:50%;background:#EFA3F4;border:.035em solid #17131C;box-sizing:border-box"></span></span><span>ng</span></div>
+            <span style="font-size:18px;font-weight:700;letter-spacing:-0.02em;text-align:center;max-width:300px;line-height:1.2">Next stop: Natterwick. Your new roommate is already on deck.</span>
+          </div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;height:214px;border-radius:44px;padding:20px 18px 16px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4">
+            <button onClick="{{ toggleAge }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:20px;border:none;background:rgba(255,255,255,.75);cursor:pointer;font-family:inherit;color:#17131C;text-align:left"><span style="width:30px;height:30px;border-radius:9px;border:2.5px solid #17131C;background:{{ ageBg }};display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box;font-size:16px;font-weight:900">{{ ageTick }}</span><span style="display:flex;flex-direction:column"><span style="font-size:16px;font-weight:800">I'm 18 or older</span><span style="font-size:13px;font-weight:600;color:#5D5366">Yapling is made for grown-up learners.</span></span></button>
+            <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:{{ goBg }};color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Step off the ferry</button>
+            <span style="font-size:11.5px;font-weight:600;color:#5D5366;text-align:center">By continuing you agree to the Terms and Privacy Policy.</span>
+          </div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+
+      <div data-screen-label="O2 Starter" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">O2</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Pick your starter</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 18% 12%,rgba(239,163,244,.55),transparent 42%),radial-gradient(circle at 88% 40%,rgba(34,191,242,.32),transparent 40%),radial-gradient(circle at 26% 84%,rgba(95,217,138,.28),transparent 42%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:-40px;left:0">{{ townArrive }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:62px;left:50%;margin-left:-46px;display:flex;gap:6px;padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.55);backdrop-filter:blur(20px)"><span style="width:20px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:6px;height:6px;border-radius:3px;background:#C7BFD0"></span><span style="width:6px;height:6px;border-radius:3px;background:#C7BFD0"></span><span style="width:6px;height:6px;border-radius:3px;background:#C7BFD0"></span><span style="width:6px;height:6px;border-radius:3px;background:#C7BFD0"></span></div>
+          <div style="position:absolute;top:150px;left:196px;padding:8px 14px;border-radius:10px;background:#EFA3F4;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;font-size:20px;font-weight:800;letter-spacing:-0.03em;animation:yping 2.6s ease-in-out infinite">NEW IN TOWN!</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;height:430px;border-radius:44px;background:rgba(255,255,255,.5);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),0 14px 36px rgba(46,20,70,.16)">
+            <div style="position:absolute;top:28px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="font-size:38px;font-weight:800;letter-spacing:-0.05em;line-height:.95">Who's moving in?</div>
+              <span style="font-size:14px;font-weight:600;color:#5D5366">Your roommate learns English from you.</span>
+            </div>
+            <div style="position:absolute;top:110px;left:8px;right:8px;height:184px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+              <sc-for list="{{ starters }}" as="s" hint-placeholder-count="3">
+                <button onClick="{{ s.onClick }}" style="position:relative;height:184px;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;color:#17131C">
+                  <div style="position:absolute;left:50%;bottom:40px;margin-left:-56px;width:112px;height:134px;transform:translateY({{ s.lift }});transition:transform .45s cubic-bezier(.34,1.56,.64,1)">{{ s.el }}</div>
+                  <div style="position:absolute;left:10px;right:10px;bottom:4px;height:56px;border-radius:14px;background:{{ s.box }};border:3px solid #17131C;box-shadow:0 4px 0 #17131C;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;letter-spacing:-0.02em">{{ s.label }}</div>
+                </button>
+              </sc-for>
+            </div>
+            <div style="position:absolute;top:322px;left:16px;right:16px;display:flex;gap:10px">
+              <input value="{{ name }}" onChange="{{ onName }}" maxlength="12" style="flex:1;min-width:0;height:60px;border-radius:30px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.65);box-shadow:inset 0 1px 3px rgba(46,20,70,.12);padding:0 22px;font:800 24px Lexend,sans-serif;letter-spacing:-0.03em;color:#17131C">
+              <button onClick="{{ moveIn }}" style="height:60px;padding:0 24px;border-radius:30px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Move in</button>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="O3 Three choices" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">O3</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Three quick choices</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 10%,rgba(239,163,244,.6),transparent 40%),radial-gradient(circle at 10% 50%,rgba(34,191,242,.3),transparent 40%),radial-gradient(circle at 80% 95%,rgba(95,217,138,.3),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:62px;left:50%;margin-left:-46px;display:flex;gap:6px;padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.55);backdrop-filter:blur(20px)"><span style="width:6px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:20px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:6px;height:6px;border-radius:3px;background:#C7BFD0"></span><span style="width:6px;height:6px;border-radius:3px;background:#C7BFD0"></span><span style="width:6px;height:6px;border-radius:3px;background:#C7BFD0"></span></div>
+          <div style="position:absolute;top:84px;left:14px">{{ choicePip }}</div>
+          <div style="position:absolute;top:104px;left:138px;right:18px;padding:12px 16px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:18px;font-weight:700;line-height:1.15;letter-spacing:-0.02em">Three quick things, so I know where to start.</div>
+          <div style="position:absolute;top:240px;left:10px;right:10px;bottom:10px;border-radius:44px;padding:22px 18px 18px;box-sizing:border-box;display:flex;flex-direction:column;gap:18px;background:rgba(255,255,255,.5);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),0 14px 36px rgba(46,20,70,.16)">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase">1 · What to practise</span>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:4px;border-radius:24px;background:rgba(255,255,255,.55)">
+                <sc-for list="{{ tracks }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="height:44px;border-radius:20px;border:none;background:{{ c.bg }};color:{{ c.fg }};font:800 15px Lexend,sans-serif;cursor:pointer">{{ c.label }}</button></sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase">2 · Your first language</span>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ langs }}" as="c" hint-placeholder-count="7"><button onClick="{{ c.onClick }}" style="height:38px;padding:0 14px;border-radius:19px;border:1.5px solid rgba(255,255,255,.95);background:{{ c.bg }};color:{{ c.fg }};font:800 14px Lexend,sans-serif;cursor:pointer">{{ c.label }}</button></sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase">3 · One goal this month</span>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <sc-for list="{{ goals }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="height:44px;padding:0 16px;border-radius:16px;border:1.5px solid rgba(255,255,255,.95);background:{{ c.bg }};color:{{ c.fg }};font:800 15px Lexend,sans-serif;cursor:pointer;text-align:left">{{ c.label }}</button></sc-for>
+              </div>
+            </div>
+            <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer;margin-top:auto">Continue</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="O4 Mic" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">O4</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">So Pip can hear you</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(34,191,242,.45),transparent 48%),radial-gradient(circle at 10% 10%,rgba(239,163,244,.5),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:62px;left:50%;margin-left:-46px;display:flex;gap:6px;padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.55);backdrop-filter:blur(20px)"><span style="width:6px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:6px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:20px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:6px;height:6px;border-radius:3px;background:#C7BFD0"></span><span style="width:6px;height:6px;border-radius:3px;background:#C7BFD0"></span></div>
+          <div style="position:absolute;top:110px;left:24px;right:24px;display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:42px;font-weight:800;letter-spacing:-0.055em;line-height:.92">So {{ name }} can <span style="background:#22BFF2;border-radius:8px;padding:0 6px">hear you</span></span>
+            <span style="font-size:16px;font-weight:600;color:#5D5366;line-height:1.35">Pip only listens during calls and voice notes, and it stops when you hang up.</span>
+          </div>
+          <div style="position:absolute;top:290px;left:95px">{{ micPip }}</div>
+          <div style="position:absolute;inset:0;background:rgba(23,19,28,.18)"></div>
+          <div style="position:absolute;top:400px;left:50px;width:290px;border-radius:30px;overflow:hidden;background:rgba(255,255,255,.62);backdrop-filter:blur(30px) saturate(1.9);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 24px 50px rgba(46,20,70,.3);animation:yalert .4s ease-out both">
+            <div style="padding:22px 20px 18px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center">
+              <span style="font-size:17px;font-weight:700;line-height:1.2">"Yapling" would like to access the microphone</span>
+              <span style="font-size:13px;font-weight:500;line-height:1.35;color:#3E3646">So Pip can hear you during calls and voice notes. Nothing is recorded outside a conversation.</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px 14px">
+              <button onClick="{{ micDeny }}" style="height:48px;border-radius:24px;border:none;background:rgba(23,19,28,.08);font:700 16px Lexend,sans-serif;color:#17131C;cursor:pointer">Don't allow</button>
+              <button onClick="{{ micAllow }}" style="height:48px;border-radius:24px;border:none;background:#17131C;font:700 16px Lexend,sans-serif;color:#FFFFFF;cursor:pointer">Allow</button>
+            </div>
+          </div>
+          <div style="position:absolute;left:24px;right:24px;bottom:44px;text-align:center;font-size:15px;font-weight:800;color:#17131C">{{ micNote }}</div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="O5 First chat" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">O5</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">One-minute first chat</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(12px)">{{ callBg }}</div><div style="position:absolute;inset:0;background:rgba(251,250,253,.4)"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:60px;left:14px;right:14px;display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:24px;background:rgba(255,255,255,.5);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),0 10px 26px rgba(46,20,70,.16)">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:14px;font-weight:800">{{ levelLabel }}</span><span style="font-size:15px;font-weight:800;letter-spacing:-0.03em">{{ chatTime }}</span></div>
+            <div style="height:12px;border-radius:6px;background:#fff;border:2px solid #17131C;overflow:hidden"><div style="height:100%;width:{{ levelW }};background:#EFA3F4;border-right:2px solid #17131C;transition:width .3s"></div></div>
+          </div>
+          <sc-if value="{{ pipSays }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute;top:168px;left:20px;right:20px;padding:14px 18px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:20px;font-weight:700;line-height:1.2;letter-spacing:-0.02em"><span>{{ said }}</span><span style="color:#B677BE">{{ unsaid }}</span></div>
+          </sc-if>
+          <div style="position:absolute;top:290px;left:85px">{{ chatPip }}</div>
+          <div style="position:absolute;top:566px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px 0 6px;border-radius:15px;background:#fff;border:2.5px solid #17131C;font-size:14px;font-weight:800;white-space:nowrap">{{ name }}<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800;letter-spacing:.04em;white-space:nowrap">AI</span></div>
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;align-items:center">
+            <sc-if value="{{ youSay }}" hint-placeholder-val="{{ false }}">
+              <div style="max-width:320px;padding:12px 16px;border-radius:22px;background:rgba(255,255,255,.65);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.9);font-size:17px;font-weight:700;line-height:1.2;text-align:center"><span>{{ said }}</span><span style="color:#A79FB2">{{ unsaid }}</span></div>
+            </sc-if>
+            <span style="font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase">{{ turnLabel }}</span>
+            <div style="width:80px;height:80px;border-radius:50%;background:{{ micBg }};border:3px solid {{ micBd }};animation:{{ micAnim }};display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box">
+              <div style="width:5px;height:26px;border-radius:3px;background:{{ barC }};animation:ybar .9s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:{{ barC }};animation:ybar .9s .15s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:{{ barC }};animation:ybar .9s .3s ease-in-out infinite"></div>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="O6 Calls" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">O6</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Can Pip call you sometimes?</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 25%,rgba(95,217,138,.45),transparent 45%),radial-gradient(circle at 90% 60%,rgba(239,163,244,.45),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:62px;left:50%;margin-left:-46px;display:flex;gap:6px;padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.55);backdrop-filter:blur(20px)"><span style="width:6px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:6px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:6px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:6px;height:6px;border-radius:3px;background:#17131C"></span><span style="width:20px;height:6px;border-radius:3px;background:#17131C"></span></div>
+          <div style="position:absolute;top:132px;left:100px">{{ callPip }}</div>
+          <div style="position:absolute;top:126px;left:16px;right:16px;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:22px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 10px 26px rgba(46,20,70,.16);transform:translateY(-32px);z-index:3">
+            <div style="width:36px;height:36px;border-radius:9px;overflow:hidden;border:1.5px solid #17131C">{{ appIcon }}</div>
+            <div style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-size:13px;font-weight:800">Yapling · now</span><span style="font-size:13px;font-weight:600">Pip: Can you help me practise for my interview?</span></div>
+          </div>
+          <div style="position:absolute;top:340px;left:10px;right:10px;bottom:10px;border-radius:44px;padding:24px 18px 18px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.5);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),0 14px 36px rgba(46,20,70,.16)">
+            <span style="font-size:32px;font-weight:800;letter-spacing:-0.05em;line-height:.95;padding:0 4px">Can {{ name }} <span style="background:#5FD98A;border-radius:8px;padding:0 6px">call you</span> sometimes?</span>
+            <span style="font-size:14px;font-weight:600;color:#5D5366;padding:0 4px;line-height:1.35">A few times a week at most. You can always say later.</span>
+            <button onClick="{{ tCalls }}" style="display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 14px 0 16px;border-radius:18px;border:none;background:rgba(255,255,255,.72);cursor:pointer;font:800 16px Lexend,sans-serif;color:#17131C">Incoming calls<span style="position:relative;width:50px;height:30px;border-radius:15px;background:{{ calls.bg }};border:2px solid #17131C;box-sizing:border-box"><span style="position:absolute;top:2px;left:{{ calls.x }};width:22px;height:22px;border-radius:11px;background:#fff;border:2px solid #17131C;box-sizing:border-box;transition:left .2s"></span></span></button>
+            <button onClick="{{ tVm }}" style="display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 14px 0 16px;border-radius:18px;border:none;background:rgba(255,255,255,.72);cursor:pointer;font:800 16px Lexend,sans-serif;color:#17131C">Voicemails and episodes<span style="position:relative;width:50px;height:30px;border-radius:15px;background:{{ vm.bg }};border:2px solid #17131C;box-sizing:border-box"><span style="position:absolute;top:2px;left:{{ vm.x }};width:22px;height:22px;border-radius:11px;background:#fff;border:2px solid #17131C;box-sizing:border-box;transition:left .2s"></span></span></button>
+            <button onClick="{{ tQuiet }}" style="display:flex;align-items:center;justify-content:space-between;min-height:62px;padding:8px 14px 8px 16px;border-radius:18px;border:none;background:rgba(255,255,255,.72);cursor:pointer;font-family:inherit;color:#17131C;text-align:left">
+              <span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:800">Quiet hours</span><span style="display:flex;gap:6px"><span style="padding:2px 8px;border-radius:8px;background:#fff;border:2px solid #17131C;font-size:13px;font-weight:800;white-space:nowrap">22:00</span><span style="font-size:13px;font-weight:700">to</span><span style="padding:2px 8px;border-radius:8px;background:#fff;border:2px solid #17131C;font-size:13px;font-weight:800;white-space:nowrap">08:00</span></span></span>
+              <span style="position:relative;width:50px;height:30px;border-radius:15px;background:{{ quiet.bg }};border:2px solid #17131C;box-sizing:border-box;flex:none"><span style="position:absolute;top:2px;left:{{ quiet.x }};width:22px;height:22px;border-radius:11px;background:#fff;border:2px solid #17131C;box-sizing:border-box;transition:left .2s"></span></span>
+            </button>
+            <div style="display:flex;gap:10px;margin-top:auto">
+              <button style="flex:1;height:56px;border-radius:28px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.72);color:#17131C;font:800 17px Lexend,sans-serif;cursor:pointer">Not now</button>
+              <button onClick="{{ yesCalls }}" style="flex:1.4;height:56px;border-radius:28px;border:3px solid #17131C;background:#5FD98A;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Yes, call me</button>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CHAT=[
+  {who:'pip',text:"Hi! I'm Pip. I just moved in. What's your name?"},
+  {who:'you',text:"I'm Lan. Nice to meet you."},
+  {who:'pip',text:"Lan! What do you do all day, Lan?"},
+  {who:'you',text:"I work with data at a logistics company."},
+  {who:'pip',text:"Data! Is it more numbers or more people?"},
+  {who:'you',text:"Both, honestly. Lots of meetings."}
+];
+const LANGS=['Tiếng Việt','Bahasa Indonesia','ไทย','Português','Español','日本語','한국어','Türkçe','More…'];
+const GOALS=['Pass a job interview','Speak up in standups','Small talk with clients','Travel without freezing'];
+class Component extends DCLogic {
+  state={bt:0,starter:'redpanda',name:'Pip',sound:false,jump:0,age:true,track:'Both',lang:'Tiếng Việt',goal:'Pass a job interview',mic:null,calls:true,vm:true,quiet:true};
+  sim={line:0,i:0,wait:0,secs:60};
+  componentDidMount(){ this.iv=setInterval(()=>this.step(),90); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  step(){ const S=this.sim, L=CHAT[S.line];
+    if (S.wait>0){ S.wait--; if(!S.wait){ S.line=(S.line+1)%CHAT.length; S.i=0; } } else { S.i++; if(S.i>L.text.length) S.wait=L.who==='you'?12:16; }
+    if (this.state.bt%11===0) S.secs=S.secs<=1?60:S.secs-1;
+    this.setState(s=>({bt:s.bt+1})); }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {};
+    const st=this.state, S=this.sim, sp=st.starter, {b1,b2,b3}=K.blinkers(st.bt);
+    if(!this.sfx) this.sfx=K.makeSfx(()=>this.state.sound);
+    const sfx=this.sfx, A=window.YapArt||{};
+    const order=['redpanda','capybara','cat'], BOX={redpanda:'#EFA3F4',capybara:'#22BFF2',cat:'#5FD98A'};
+    const starters=order.map((k,ix)=>{ const sel=k===sp, dir=sel?0:(order.indexOf(sp)>ix?5:-5);
+      return {label:A.SPECIES?A.SPECIES[k]:k, box:sel?BOX[k]:'#FFFFFF', onClick:()=>{ this.setState(s=>({starter:k,jump:s.jump+1})); sfx('pop'); }, lift:sel?'-18px':'0px',
+        el:K.cr(k,{size:112,mood:sel?'excited':'happy',blink:ix===1?b2:b1,look:dir,jumpKey:sel?st.jump:null,still:!sel})}; });
+    const L=CHAT[S.line], typed=S.wait>0?L.text.length:Math.min(S.i,L.text.length), talking=L.who==='pip'&&S.wait===0;
+    const chip=(cur,v,set)=>({label:v,bg:cur===v?'#17131C':'rgba(255,255,255,.72)',fg:cur===v?'#FFFFFF':'#17131C',onClick:()=>{ this.setState({[set]:v}); sfx('tick'); }});
+    const tog=on=>({bg:on?'#5FD98A':'#E4DEEA', x:on?'22px':'2px'});
+    const level=Math.min(1,(60-S.secs)/50);
+    return {
+      welcomeHarbour:K.sc('harbour',390,844,{t:K.tk(150),pierY:650,horizon:440}), welcomeBoat:K.h(K.Cv,{key:'wb',fn:'s_fboat',w:220,hh:160,o:{t:K.tk(150)}}),
+      soundLabel:st.sound?'Sound on':'Turn sound on', toggleSound:()=>this.setState({sound:!st.sound},()=>sfx('pop')),
+      peek1:K.cr('capybara',{size:100,mood:'happy',blink:b2,speed:3.1}), peek2:K.cr('redpanda',{size:124,mood:'wave',blink:b1}), peek3:K.cr('cat',{size:100,mood:'happy',blink:b3,speed:2.6}),
+      toggleAge:()=>{ this.setState({age:!st.age}); sfx('tick'); }, ageBg:st.age?'#5FD98A':'#FFFFFF', ageTick:st.age?'✓':'', goBg:st.age?'#EFA3F4':'#E4DEEA',
+      townArrive:K.sc('town',390,844,{t:K.tk(200),vanX:240}), callBg:K.sc('burrow2',438,892,{}), starters, name:st.name||'Pip', onName:e=>this.setState({name:e.target.value}), moveIn:()=>{ sfx('chime'); this.setState(s=>({jump:s.jump+1})); },
+      choicePip:K.cr(sp,{size:120,mood:'think',blink:b1}),
+      tracks:['Life','Work','Both'].map(v=>chip(st.track,v,'track')), langs:LANGS.map(v=>chip(st.lang,v,'lang')), goals:GOALS.map(v=>chip(st.goal,v,'goal')),
+      micPip:K.cr(sp,{size:200,mood:'listen',blink:b2}),
+      micAllow:()=>{ this.setState({mic:'yes'}); sfx('chime'); }, micDeny:()=>{ this.setState({mic:'no'}); sfx('soft'); },
+      micNote:st.mic==='yes'?'Thanks! Pip can hear you now.':st.mic==='no'?'No problem. You can still type to Pip.':'',
+      chatPip:K.cr(sp,{size:220,mood:talking?'happy':'listen',blink:b1,mouth:talking?K.mouthFor(L.text,typed):'rest'}),
+      pipSays:L.who==='pip', youSay:L.who==='you', said:L.text.slice(0,typed), unsaid:L.text.slice(typed),
+      turnLabel:L.who==='you'?'Your turn':(st.name||'Pip')+' is talking', micAnim:L.who==='you'?'yglow 1.6s ease-in-out infinite':'none', micBg:L.who==='you'?'#EFA3F4':'#FFFFFF', micBd:L.who==='you'?'#17131C':'#D3CCDC', barC:L.who==='you'?'#17131C':'#D3CCDC',
+      chatTime:'0:'+String(S.secs).padStart(2,'0'), levelW:Math.round(level*100)+'%', levelLabel:level<0.35?'Listening…':level<0.75?'Finding your pace…':'Starting you at Steady',
+      callPip:K.cr(sp,{size:190,mood:'excited',pose:'phone',prop:'phone',blink:b1}),
+      calls:tog(st.calls), vm:tog(st.vm), quiet:tog(st.quiet),
+      tCalls:()=>{ this.setState({calls:!st.calls}); sfx('tick'); }, tVm:()=>{ this.setState({vm:!st.vm}); sfx('tick'); }, tQuiet:()=>{ this.setState({quiet:!st.quiet}); sfx('tick'); },
+      yesCalls:()=>sfx('ring'),
+      appIcon:K.h(K.Cv,{fn:'s_icon',w:36,hh:36,o:{}})
+    };
+  }
+}
+</script>
+</body>
+</html>

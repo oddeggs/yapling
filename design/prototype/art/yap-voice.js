@@ -1,0 +1,48 @@
+// Yapling voice engine: recorded lines (MP3 + ElevenLabs alignment) drive captions + visemes; others fall back to
+// browser speech synthesis (one voice/pitch per character), then to silent timed playback. Also hold-to-talk recognition.
+(function(){
+const VO={pip:{p:1.55,r:1.04,i:0},mei:{p:1.12,r:.98,i:1},linh:{p:1.3,r:1.02,i:2},bea:{p:.82,r:.95,i:3,pref:/en-GB|UK|British|Daniel|Kate|Serena/i},office:{p:.92,r:1,i:4,pref:/en-GB|UK/i},sol:{p:1.35,r:1.05,i:5}};
+const strip=t=>t.replace(/\[[^\]]*\]\s*/g,'').replace(/\s+/g,' ').trim();
+const cache={}; let cur=null, voices=[];
+function loadVoices(){ try{ voices=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang)); }catch(e){} }
+if(window.speechSynthesis){ loadVoices(); try{ speechSynthesis.onvoiceschanged=loadVoices; }catch(e){} }
+function pickVoice(ch){ if(!voices.length) return null; const o=VO[ch]||{}; const p=o.pref&&voices.find(v=>o.pref.test(v.name+' '+v.lang)); return p||voices[(o.i||0)%voices.length]; }
+function getTiming(id){ if(cache[id]) return cache[id]; cache[id]=fetch('audio/'+id+'.timing.json').then(r=>r.ok?r.json():null).catch(()=>null); return cache[id]; }
+function stop(){ const st=cur; cur=null; if(!st) return; try{ st.a&&st.a.pause(); }catch(e){} try{ if(st.mode==='tts') speechSynthesis.cancel(); }catch(e){} }
+function sim(st){ st.mode='sim'; st.t0=performance.now(); }
+function play(line,opt){ stop(); opt=opt||{}; const full=strip(line.t); const st={w:line.w,full,n:0,mouth:'rest',done:false,t0:performance.now(),mode:'sim',rate:opt.rate||1}; cur=st;
+  if(opt.sound===false){ sim(st); return st; }
+  if(line.id){ st.mode='wait';
+    getTiming(line.id).then(tm=>{ if(cur!==st) return; st.tm=tm; const a=new Audio('audio/'+line.id+'.mp3'); st.a=a; a.playbackRate=st.rate; a.onended=()=>{ st.done=true; };
+      a.play().then(()=>{ if(cur===st){ st.mode='audio'; } }).catch(()=>{ if(cur===st){ st.mode=tm?'align':'sim'; st.t0=performance.now(); } }); });
+    setTimeout(()=>{ if(cur===st&&st.mode==='wait') sim(st); },1800); return st; }
+  if(window.speechSynthesis){ try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(full); const v=pickVoice(line.w); if(v) u.voice=v; const o=VO[line.w]||{}; u.pitch=o.p||1; u.rate=(o.r||1)*st.rate;
+      u.onstart=()=>{ if(cur===st){ st.t0=performance.now(); st.started=true; } };
+      u.onboundary=e=>{ if(cur===st){ st.bi=e.charIndex; st.bt=performance.now(); } };
+      u.onend=()=>{ if(cur===st) st.done=true; }; u.onerror=()=>{ if(cur===st) sim(st); };
+      st.mode='tts'; speechSynthesis.speak(u);
+      setTimeout(()=>{ if(cur===st&&st.mode==='tts'&&!st.started) sim(st); },1400); }catch(e){ sim(st); } }
+  return st; }
+function beep(){ try{ const a=new Audio('audio/s1-sfx-voicemail-beep.mp3'); a.volume=.7; a.play().catch(()=>{}); }catch(e){} }
+function tick(mouthFor){ const st=cur; if(!st) return null; const now=performance.now(), full=st.full;
+  if(st.mode==='audio'||st.mode==='align'){ const tm=st.tm, t=st.mode==='audio'&&st.a?st.a.currentTime:(now-st.t0)/1000*st.rate;
+    const al=tm&&tm.alignment;
+    if(al&&al.characters){ const ch=al.characters, s=al.character_start_times_seconds, e=al.character_end_times_seconds; let k=0; while(k<ch.length&&s[k]<=t) k++;
+      let vis=0,tot=0,inb=false,tagAt=false; const j=Math.max(0,k-1);
+      for(let i=0;i<ch.length;i++){ const c=ch[i]; if(c==='[') inb=true; if(i===j) tagAt=inb; if(!inb){ tot++; if(i<k) vis++; } if(c===']') inb=false; }
+      st.n=Math.round(full.length*vis/Math.max(1,tot)); const raw=ch.join('');
+      st.mouth=(k===0||tagAt||t>e[j]+0.06)?'rest':mouthFor(raw,j);
+      if(st.mode==='align'&&t>s[s.length-1]+0.35) st.done=true; }
+    else if(st.a&&st.a.duration){ st.n=Math.round(full.length*Math.min(1,t/st.a.duration)); st.mouth=mouthFor(full,st.n); }
+    else sim(st); }
+  if(st.mode==='tts'){ if(st.bt){ st.n=Math.min(full.length,(st.bi||0)+Math.floor((now-st.bt)/1000*13*st.rate)); } else if(st.started) st.n=Math.min(full.length,Math.floor((now-st.t0)/1000*12*st.rate)); st.mouth=mouthFor(full,st.n); }
+  if(st.mode==='sim'){ st.n=Math.min(full.length,Math.floor((now-st.t0)/1000*15*st.rate)); st.mouth=mouthFor(full,st.n); if(st.n>=full.length&&now-st.t0>full.length/15*1000*st.rate+300) st.done=true; }
+  if(st.done){ st.n=full.length; st.mouth='rest'; }
+  return st; }
+function listen(){ const R=window.SpeechRecognition||window.webkitSpeechRecognition; const h={text:'',live:false,stop(){}}; if(!R) return h;
+  try{ const r=new R(); r.lang='en-US'; r.interimResults=true; r.continuous=true;
+    r.onresult=e=>{ let s=''; for(let i=0;i<e.results.length;i++) s+=e.results[i][0].transcript; h.text=s.trim(); };
+    r.onerror=()=>{ h.live=false; }; r.start(); h.live=true; h.stop=()=>{ try{ r.stop(); }catch(e){} }; }catch(e){}
+  return h; }
+window.YapVoice={play,stop,tick,listen,beep,strip,get current(){ return cur; }};
+})();

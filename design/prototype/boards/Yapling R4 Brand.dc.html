@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ybob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-5px) scale(.985,1.02)}}
+@keyframes yglow{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 8px rgba(239,163,244,.35)}50%{box-shadow:0 4px 0 #17131C,0 0 0 16px rgba(239,163,244,.18)}}
+@keyframes ybar{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;max-width:2300px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#EFA3F4;border:2px solid #17131C"></span>Yapling · Round 4 · 1 of 4</div>
+      <div style="font-size:64px;font-weight:800;letter-spacing:-0.05em;line-height:.95">Brand, <span style="background:#EFA3F4;padding:0 10px;border-radius:12px">system</span> and cast</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a href="Yapling%20R4%20Brand.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">1 Brand &amp; system</a>
+      <a href="Yapling%20R4%20Onboarding.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">2 Onboarding</a>
+      <a href="Yapling%20R4%20Home.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">3 Home &amp; calls</a>
+      <a href="Yapling%20R4%20Town.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">4 Town &amp; story</a>
+    </div>
+  </div>
+
+  <section id="4b" style="display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">4b</span><span style="font-weight:700;font-size:17px">Brand: the app is Yapling, the town is Natterwick</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:28px;align-items:stretch;max-width:2300px">
+      <div style="width:760px;padding:40px;border-radius:36px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:30px">
+        <span style="font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">Wordmark</span>
+        <div style="display:flex;align-items:flex-end;font-size:150px;font-weight:900;letter-spacing:-0.065em;line-height:.78;padding-top:30px">
+          <span>yapl</span><span style="position:relative;display:inline-block">ı<span style="position:absolute;left:50%;bottom:.6em;width:.32em;height:.24em;margin-left:-.13em;border-radius:50%;background:#EFA3F4;border:.035em solid #17131C;box-sizing:border-box"></span><span style="position:absolute;left:50%;bottom:.57em;margin-left:-.1em;width:.08em;height:.08em;background:#EFA3F4;border-left:.035em solid #17131C;border-bottom:.035em solid #17131C;transform:skewY(-30deg)"></span></span><span>ng</span>
+        </div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+          <div style="padding:16px 22px 22px;border-radius:20px;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;font-size:46px;font-weight:900;letter-spacing:-0.065em;line-height:.8">yapling</div>
+          <div style="padding:16px 22px 22px;border-radius:20px;background:#17131C;color:#FFFFFF;font-size:46px;font-weight:900;letter-spacing:-0.065em;line-height:.8">yapling</div>
+          <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:28px;font-weight:900;letter-spacing:-0.06em;line-height:.85">yapling</span><span style="font-size:13px;font-weight:700;color:#5D5366">Speak English with a critter who's learning it from you.</span></div>
+        </div>
+        <span style="font-size:15px;font-weight:600;color:#5D5366;line-height:1.4;max-width:560px">Lowercase, Lexend Black, tracking −6.5%. The dot of the i is a speech bubble. Natterwick appears inside the app as a place name, never as the product name.</span>
+      </div>
+      <div style="width:620px;padding:40px;border-radius:36px;background:#F9DAFB;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:26px">
+        <span style="font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">App icon</span>
+        <div style="display:flex;align-items:flex-end;gap:26px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:180px;height:180px;border-radius:40px;overflow:hidden;border:3px solid #17131C;box-shadow:0 6px 0 #17131C">{{ icon180 }}</div><span style="font-size:12px;font-weight:800">180</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:120px;height:120px;border-radius:27px;overflow:hidden;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C">{{ icon120 }}</div><span style="font-size:12px;font-weight:800">120</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:60px;height:60px;border-radius:14px;overflow:hidden;border:2px solid #17131C;box-shadow:0 3px 0 #17131C">{{ icon60 }}</div><span style="font-size:12px;font-weight:800">60</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:40px;height:40px;border-radius:9px;overflow:hidden;border:1.5px solid #17131C">{{ icon40 }}</div><span style="font-size:12px;font-weight:800">40</span></div>
+        </div>
+        <span style="font-size:15px;font-weight:600;color:#5D5366;line-height:1.4">Pip's face on lilac. It's just the head, eyes and ears, with no body and no text, so it still reads at 40 px. Tinted and dark versions use the same outline.</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="4c" style="display:flex;flex-direction:column;gap:28px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">4c</span><span style="font-weight:700;font-size:17px">Component sheet</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,640px));gap:28px">
+
+      <div style="padding:32px;border-radius:32px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">Colour tokens</span>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+          <sc-for list="{{ tokens }}" as="t" hint-placeholder-count="12">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="height:64px;border-radius:14px;background:{{ t.c }};border:2.5px solid #17131C"></div>
+              <span style="font-size:13px;font-weight:800;line-height:1.1">{{ t.n }}</span>
+              <span style="font-size:11px;font-weight:600;color:#5D5366">{{ t.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="position:relative;height:96px;border-radius:20px;overflow:hidden;background:radial-gradient(circle at 20% 30%,rgba(239,163,244,.9),transparent 50%),radial-gradient(circle at 80% 70%,rgba(34,191,242,.7),transparent 50%),#FBFAFD">
+          <div style="position:absolute;inset:16px 24px;border-radius:24px;background:rgba(255,255,255,.45);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),0 10px 26px rgba(46,20,70,.16);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">Glass · white 45% · blur 24 · saturate 180% · inner highlight</div>
+        </div>
+      </div>
+
+      <div style="padding:32px;border-radius:32px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">Type scale · Lexend + Kithfield Hand</span>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="width:84px;font-size:11px;font-weight:700;color:#5D5366;flex:none">Display 64</span><span style="font-size:64px;font-weight:800;letter-spacing:-0.055em;line-height:.9">Pip</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="width:84px;font-size:11px;font-weight:700;color:#5D5366;flex:none">Title 38</span><span style="font-size:38px;font-weight:800;letter-spacing:-0.05em;line-height:.95">Who's moving in?</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="width:84px;font-size:11px;font-weight:700;color:#5D5366;flex:none">Headline 30</span><span style="font-size:30px;font-weight:800;letter-spacing:-0.05em;line-height:.95">3 things Pip learned</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="width:84px;font-size:11px;font-weight:700;color:#5D5366;flex:none">Number 46</span><span style="font-size:46px;font-weight:800;letter-spacing:-0.05em;line-height:.9">48<span style="font-size:24px">s</span></span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="width:84px;font-size:11px;font-weight:700;color:#5D5366;flex:none">Bubble 18</span><span style="font-size:18px;font-weight:700;letter-spacing:-0.02em">Kaya toast lah. Damn shiok.</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="width:84px;font-size:11px;font-weight:700;color:#5D5366;flex:none">Body 16</span><span style="font-size:16px;font-weight:600">Change or delete anything. It's yours.</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="width:84px;font-size:11px;font-weight:700;color:#5D5366;flex:none">Label 11</span><span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase">Episode 4 · The café</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="width:84px;font-size:11px;font-weight:700;color:#5D5366;flex:none">Pip writes 24</span><span style="font-family:'Kithfield Hand',cursive;font-size:24px">oat milk = milk made from oats</span></div>
+      </div>
+
+      <div style="padding:32px;border-radius:32px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:18px">
+        <span style="font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">Buttons</span>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+          <button style="height:56px;padding:0 26px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Primary</button>
+          <button style="height:56px;padding:0 26px;border-radius:28px;border:3px solid #17131C;background:#17131C;color:#fff;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #EFA3F4;cursor:pointer">Purchase</button>
+          <button style="height:56px;padding:0 26px;border-radius:28px;border:3px solid #17131C;background:#5FD98A;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Answer</button>
+        </div>
+        <div style="position:relative;padding:18px;border-radius:24px;background:radial-gradient(circle at 20% 30%,rgba(239,163,244,.7),transparent 55%),radial-gradient(circle at 85% 70%,rgba(34,191,242,.5),transparent 55%),#FBFAFD;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <button style="height:52px;padding:0 22px;border-radius:26px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.6);backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 1.5px 0 #fff,0 6px 16px rgba(46,20,70,.12);color:#17131C;font:800 16px Lexend,sans-serif;cursor:pointer">Glass secondary</button>
+          <button style="width:52px;height:52px;border-radius:26px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.6);backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 1.5px 0 #fff,0 6px 16px rgba(46,20,70,.12);cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 3 L11 11 M11 3 L3 11" stroke="#17131C" stroke-width="2.4" stroke-linecap="round"></path></svg></button>
+          <button style="height:52px;padding:0 22px;border-radius:26px;border:3px solid #D3CCDC;background:#F4F1F7;color:#9A90A6;font:800 16px Lexend,sans-serif">Disabled</button>
+        </div>
+        <span style="font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366;margin-top:4px">Chips and tags</span>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <div style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px 0 7px;border-radius:13px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#22BFF2;border:2px solid #17131C"></span>Label chip</div>
+          <span style="height:36px;padding:0 14px;border-radius:18px;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:inline-flex;align-items:center">Selected</span>
+          <span style="height:36px;padding:0 14px;border-radius:18px;background:#F4F1F7;border:1.5px solid #E4DEEA;font-size:13px;font-weight:800;display:inline-flex;align-items:center">Filter</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 10px 0 4px;border-radius:14px;background:#fff;border:2.5px solid #17131C;font-size:13px;font-weight:800">Pip<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800;letter-spacing:.04em;white-space:nowrap">AI</span></span>
+          <span style="padding:6px 12px;border-radius:10px;background:#5FD98A;border:3px solid #17131C;box-shadow:3px 4px 0 #17131C;font-size:16px;font-weight:800;transform:rotate(-5deg);display:inline-block">NEW WORD!</span>
+        </div>
+      </div>
+
+      <div style="padding:32px;border-radius:32px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">Cards and bubbles</span>
+        <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+          <div style="padding:12px 16px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:17px;font-weight:700;letter-spacing:-0.02em">Neighbour says</div>
+          <div style="padding:12px 16px;border-radius:22px 22px 6px 22px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:17px;font-weight:700;letter-spacing:-0.02em">Pip says</div>
+          <div style="padding:12px 16px;border-radius:22px;background:#F4F1F7;border:1.5px solid #E4DEEA;font-size:17px;font-weight:700;letter-spacing:-0.02em">You say (caption)</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:#FFFFFF;border:2.5px solid #17131C"><span style="width:28px;height:28px;border-radius:14px;background:#EFA3F4;border:2px solid #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center">1</span><span style="font-size:16px;font-weight:700">Sticker list card</span></div>
+        <div style="padding:14px 16px;border-radius:10px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;transform:rotate(-1.2deg);font-size:14px;font-weight:600;line-height:1.35">Paper card for pasted homework, postcards and notes.</div>
+      </div>
+
+      <div style="padding:32px;border-radius:32px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">Nav bar and weekly ring</span>
+        <div style="position:relative;padding:20px 14px;border-radius:26px;background:radial-gradient(circle at 20% 30%,rgba(239,163,244,.7),transparent 55%),radial-gradient(circle at 85% 70%,rgba(95,217,138,.5),transparent 55%),#FBFAFD">
+          <div style="height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-radius:35px;background:rgba(255,255,255,.45);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),inset 0 -1px 1px rgba(255,255,255,.4),0 12px 32px rgba(46,20,70,.18)">
+            <div style="width:88px;height:54px;border-radius:27px;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">Burrow</div>
+            <button style="width:124px;height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 18px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Chat</button>
+            <div style="width:88px;text-align:center;font-size:14px;font-weight:700;color:#5D5366">Town</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <sc-for list="{{ rings }}" as="r" hint-placeholder-count="5">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <svg width="56" height="56" viewBox="0 0 56 56"><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="{{ r.i0 }}" stroke-width="10" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="{{ r.i1 }}" stroke-width="10" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="{{ r.i2 }}" stroke-width="10" stroke-linecap="round"></path><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="{{ r.c0 }}" stroke-width="5" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="{{ r.c1 }}" stroke-width="5" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="{{ r.c2 }}" stroke-width="5" stroke-linecap="round"></path></svg>
+              <span style="font-size:12px;font-weight:800">{{ r.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <span style="font-size:13px;font-weight:600;color:#5D5366">Three calls fill the week. A missed week pauses the ring and nothing resets.</span>
+      </div>
+
+      <div style="padding:32px;border-radius:32px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">Call controls · turn states</span>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 0;border-radius:22px;background:#F9DAFB">
+            <div style="width:74px;height:74px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;animation:yglow 1.6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;gap:4px"><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s .15s ease-in-out infinite"></div><div style="width:5px;height:26px;border-radius:3px;background:#17131C;animation:ybar .9s .3s ease-in-out infinite"></div></div>
+            <span style="font-size:13px;font-weight:800">Your turn</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 0;border-radius:22px;background:#F4F1F7">
+            <div style="width:74px;height:74px;border-radius:50%;background:#FFFFFF;border:3px solid #D3CCDC;display:flex;align-items:center;justify-content:center;gap:4px"><div style="width:5px;height:10px;border-radius:3px;background:#D3CCDC"></div><div style="width:5px;height:10px;border-radius:3px;background:#D3CCDC"></div><div style="width:5px;height:10px;border-radius:3px;background:#D3CCDC"></div></div>
+            <span style="font-size:13px;font-weight:800;color:#5D5366">Pip's turn</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 0;border-radius:22px;background:#F4F1F7">
+            <div style="width:74px;height:74px;border-radius:50%;background:#17131C;border:3px solid #17131C;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800">Paused</div>
+            <span style="font-size:13px;font-weight:800;color:#5D5366">Hold on</span>
+          </div>
+        </div>
+        <div style="height:92px;border-radius:46px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:#F4F1F7;border:1.5px solid #E4DEEA">
+          <button style="height:50px;width:100px;border-radius:25px;border:1.5px solid #E4DEEA;background:#fff;font:800 15px Lexend,sans-serif;color:#17131C">Hold on</button>
+          <div style="width:68px;height:68px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 4px 0 #17131C"></div>
+          <button style="height:50px;width:100px;border-radius:25px;border:1.5px solid #E4DEEA;background:#fff;font:800 15px Lexend,sans-serif;color:#17131C">Leave</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="4d" style="display:flex;flex-direction:column;gap:28px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">4d</span><span style="font-weight:700;font-size:17px">Cast: read by shape on the map, not by colour</span></div>
+    <div style="max-width:1980px;padding:36px;border-radius:36px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:20px">
+      <div style="display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:10px;align-items:end;padding:20px 10px 0;border-radius:24px;background:#F9DAFB">
+        <sc-for list="{{ sils }}" as="s" hint-placeholder-count="9">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+            <div style="width:150px;height:180px">{{ s.el }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:10px;align-items:end">
+        <sc-for list="{{ cast }}" as="c" hint-placeholder-count="9">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center">
+            <div style="width:150px;height:180px">{{ c.el }}</div>
+            <span style="font-size:18px;font-weight:800;letter-spacing:-0.03em">{{ c.name }}</span>
+            <span style="font-size:12px;font-weight:700;padding:2px 8px;border-radius:8px;background:{{ c.tagBg }};border:2px solid #17131C;white-space:nowrap">{{ c.shape }}</span>
+            <span style="font-size:12px;font-weight:600;color:#5D5366;line-height:1.25">{{ c.role }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="4e" style="display:flex;flex-direction:column;gap:28px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">4e</span><span style="font-weight:700;font-size:17px">Word-object families: sprout, leaf, bloom</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,560px));gap:28px">
+      <sc-for list="{{ fams }}" as="f" hint-placeholder-count="3">
+        <div style="padding:28px;border-radius:32px;background:{{ f.bg }};border:3px solid #17131C;box-shadow:0 6px 0 #17131C;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:26px;font-weight:800;letter-spacing:-0.04em">{{ f.name }}</span><span style="font-size:14px;font-weight:600;color:#5D5366">{{ f.sub }}</span></div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+            <sc-for list="{{ f.items }}" as="it" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0;border-radius:20px;background:#FFFFFF;border:2.5px solid #17131C">
+                <div style="width:84px;height:112px">{{ it.el }}</div>
+                <span style="font-size:14px;font-weight:800">{{ it.word }}</span>
+                <span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">{{ it.stage }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { bt:0 };
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),110); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const K = window.YapDC ? window.YapDC(React) : null; if (!K) return {};
+    const {h,Cv,cr,obj}=K, {b1,b2,b3}=K.blinkers(this.state.bt);
+    const ic=s=>h(Cv,{key:'i'+s,fn:'s_icon',w:s,hh:s,o:{sp:'redpanda',mood:'happy'}});
+    const INK='#17131C';
+    const ring=(n,paused)=>{ const on=i=>i<n; return {i0:paused?'#D3CCDC':INK,i1:paused?'#D3CCDC':INK,i2:paused?'#D3CCDC':INK,c0:on(0)?'#EFA3F4':'#FFFFFF',c1:on(1)?'#EFA3F4':'#FFFFFF',c2:on(2)?'#EFA3F4':'#FFFFFF'}; };
+    const CAST=[['redpanda','Pip','Yapling','Your roommate','#EFA3F4'],['pangolin','Linh','Home Neighbour','Speaks English with your accent','#5FD98A'],['otter','Mei','Long','Café · Singapore','#FFFFFF'],['tiger','Arjun','Tall','Market · India','#FFFFFF'],['bulldog','Bea','Wide','Bus 45 · Britain','#FFFFFF'],['bison','Dex','Big','Interview room · USA','#FFFFFF'],['tarsier','Sol','Tiny','Office · Philippines','#FFFFFF'],['koala','Nell','Round','Inn · Australia','#FFFFFF'],['capybara','Capybara','Starter','Or a cat','#CFF0FD']];
+    const FAM=[['jar','Pantry jars','Food and café words','#F9DAFB',['kopi','kaya toast','oat milk'],{fill:'#E0B07C'}],['desk','Desk things','Work phrases','#CFF0FD',["I'm on it",'circle back','quick sync'],{fill:'#22BFF2'}],['plant','Houseplants','Feelings','#D7F7E2',['nervous','relieved','proud'],{}]];
+    return {
+      icon180:ic(180), icon120:ic(120), icon60:ic(60), icon40:ic(40),
+      tokens:[['Ink','#17131C','Text, outlines, shadows'],['Paper','#FBFAFD','Backgrounds'],['Lilac','#EFA3F4','Accent, primary'],['Lilac tint','#F9DAFB','Surfaces'],['Cyan','#22BFF2','Secondary'],['Cyan tint','#CFF0FD','Glass, sky'],['Mint','#5FD98A','Success, answer'],['Mint tint','#D7F7E2','Gentle states'],['Night','#241B38','Evening scenes'],['Line','#D3CCDC','Background line art'],['Muted','#5D5366','Secondary text'],['Butter','#FFD66B','Blooms only']].map(([n,c,v])=>({n,c,v:c+' · '+v})),
+      rings:[['0 of 3',ring(0)],['1 of 3',ring(1)],['2 of 3',ring(2)],['Full',ring(3)],['Paused',ring(1,true)]].map(([label,r])=>Object.assign({label},r)),
+      sils:CAST.map(([k],i)=>({el:h(Cv,{key:'s'+k,fn:'s_sil',w:150,hh:180,o:{sp:k,color:INK}})})),
+      cast:CAST.map(([k,n,shape,role,tagBg],i)=>({name:n,shape,role,tagBg,el:cr(k,{size:150,mood:i===0?'wave':i===1?'warm':'happy',blink:[b1,b2,b3][i%3],k:k})})),
+      fams:FAM.map(([fam,name,sub,bg,words,extra])=>({name,sub,bg,items:words.map((w,i)=>({word:w,stage:['Sprout','Leaf','Bloom'][i],el:obj(fam,i,fam+i,84,Object.assign({kind:['mug','notes','headphones'][i]},extra))}))}))
+    };
+  }
+}
+</script>
+</body>
+</html>

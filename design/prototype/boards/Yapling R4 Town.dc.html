@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ybob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-5px) scale(.985,1.02)}}
+@keyframes yjump{0%,100%{transform:translateY(0) scale(1,1)}20%{transform:translateY(0) scale(1.1,.9)}45%{transform:translateY(-26px) scale(.94,1.08)}70%{transform:translateY(0) scale(1.08,.92)}}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yping{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-6px) rotate(-3deg)}}
+@keyframes ybar{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+@keyframes ywave{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;max-width:2300px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#EFA3F4;border:2px solid #17131C"></span>Yapling · Round 4 · 4 of 4</div>
+      <div style="font-size:64px;font-weight:800;letter-spacing:-0.05em;line-height:.95">Town, story and <span style="background:#EFA3F4;padding:0 10px;border-radius:12px">outside the app</span></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button onClick="{{ toggleSound }}" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font:800 14px Lexend,sans-serif;cursor:pointer;color:#17131C">{{ soundLabel }}</button>
+      <a href="Yapling%20R4%20Brand.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">1 Brand &amp; system</a>
+      <a href="Yapling%20R4%20Onboarding.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">2 Onboarding</a>
+      <a href="Yapling%20R4%20Home.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">3 Home &amp; calls</a>
+      <a href="Yapling%20R4%20Town.dc.html" style="height:42px;padding:0 16px;border-radius:21px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;text-decoration:none">4 Town &amp; story</a>
+    </div>
+  </div>
+  <section id="4h" style="display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">4h</span><span style="font-weight:700;font-size:17px">Story moments</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start;max-width:2560px">
+
+      <div data-screen-label="T1 Recap" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">T1</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">While you were away · as a comic page</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFF7EE;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:62px;left:18px;right:18px;display:flex;align-items:flex-end;justify-content:space-between"><span style="font-size:40px;font-weight:900;letter-spacing:-0.06em;line-height:.85">Previously<br>in Natterwick</span><span style="font-size:11px;font-weight:800;padding:3px 8px;border-radius:8px;background:#fff;border:2px solid #17131C;white-space:nowrap">S1 · E2</span></div>
+          <div style="position:absolute;top:160px;left:14px;right:14px;height:468px;display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:1fr 1fr 0.9fr;gap:10px">
+            <div style="position:relative;border:3px solid #17131C;background:#fff;overflow:hidden;--r:-1deg;transform:rotate(-1deg);animation:ypanel 9s 0s ease-out infinite;box-shadow:0 5px 0 #17131C;grid-row:1;grid-column:1 / 3"><div style="position:absolute;inset:0">{{ rp1 }}</div><div style="position:absolute;bottom:-30px;left:150px">{{ rpMei1 }}</div><div style="position:absolute;top:0;left:0;padding:5px 9px;background:#FFE48A;border-right:2.5px solid #17131C;border-bottom:2.5px solid #17131C;font-size:11.5px;font-weight:800;line-height:1.1;max-width:70%">Monday. A letter.</div><div style="position:absolute;bottom:8px;right:8px;max-width:60%;padding:6px 9px;border-radius:14px 14px 4px 14px;background:#fff;border:2.5px solid #17131C;font-size:12.5px;font-weight:800;line-height:1.1">"Rent is… double?!"</div></div>
+            <div style="position:relative;border:3px solid #17131C;background:#fff;overflow:hidden;--r:1deg;transform:rotate(1deg);animation:ypanel 9s 0.6s ease-out infinite;box-shadow:0 5px 0 #17131C;grid-row:2;grid-column:1"><div style="position:absolute;inset:0">{{ rp2 }}</div><div style="position:absolute;bottom:-6px;left:50px">{{ rpSil }}</div><div style="position:absolute;bottom:22px;left:24px;width:120px;height:8px;background:#FFE48A;border:2px solid #17131C;border-radius:2px;transform:rotate(-8deg)"></div><div style="position:absolute;top:0;left:0;padding:5px 9px;background:#FFE48A;border-right:2.5px solid #17131C;border-bottom:2.5px solid #17131C;font-size:11.5px;font-weight:800;line-height:1.1;max-width:70%">Tuesday. A stranger with a tape measure.</div></div>
+            <div style="position:relative;border:3px solid #17131C;background:#fff;overflow:hidden;--r:-1.5deg;transform:rotate(-1.5deg);animation:ypanel 9s 1.2s ease-out infinite;box-shadow:0 5px 0 #17131C;grid-row:2;grid-column:2"><div style="position:absolute;inset:0">{{ rp3 }}</div><div style="position:absolute;bottom:-26px;left:20px">{{ rpArjun }}</div><div style="position:absolute;top:0;left:0;padding:5px 9px;background:#FFE48A;border-right:2.5px solid #17131C;border-bottom:2.5px solid #17131C;font-size:11.5px;font-weight:800;line-height:1.1;max-width:70%">Arjun heard a number.</div><div style="position:absolute;bottom:8px;right:8px;max-width:60%;padding:6px 9px;border-radius:14px 14px 4px 14px;background:#fff;border:2.5px solid #17131C;font-size:12.5px;font-weight:800;line-height:1.1">"A big one."</div></div>
+            <div style="position:relative;border:3px solid #17131C;background:#fff;overflow:hidden;--r:0.5deg;transform:rotate(0.5deg);animation:ypanel 9s 1.8s ease-out infinite;box-shadow:0 5px 0 #17131C;grid-row:3;grid-column:1 / 3"><div style="position:absolute;inset:0">{{ rp4 }}</div><div style="position:absolute;bottom:-40px;left:30px">{{ rpMei4 }}</div><div style="position:absolute;bottom:-34px;left:150px">{{ rpPip4 }}</div><div style="position:absolute;top:0;left:0;padding:5px 9px;background:#FFE48A;border-right:2.5px solid #17131C;border-bottom:2.5px solid #17131C;font-size:11.5px;font-weight:800;line-height:1.1;max-width:70%">Today. Mei needs you.</div><div style="position:absolute;bottom:8px;right:8px;max-width:60%;padding:6px 9px;border-radius:14px 14px 4px 14px;background:#fff;border:2.5px solid #17131C;font-size:12.5px;font-weight:800;line-height:1.1">"Help Wanted"</div></div>
+          </div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:12px;border-radius:38px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4">
+            <div style="width:62px;height:74px;flex:none;margin-top:-30px">{{ recapPipS }}</div>
+            <span style="font-size:14px;font-weight:700;flex:1;line-height:1.2">Pip reads it to you, with voices.</span>
+            <button style="height:50px;padding:0 18px;border-radius:25px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 15px Lexend,sans-serif;color:#17131C">To the café</button>
+          </div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+
+      <div data-screen-label="T2 Episode end" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">T2</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">End of episode · a title card</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#17131C;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ endCafe }}</div>
+          <div style="position:absolute;inset:0;background:rgba(23,19,28,.55)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:96px;background:#17131C"></div><div style="position:absolute;bottom:0;left:0;right:0;height:300px;background:#17131C"></div>
+          <div style="position:absolute;top:286px;left:60px">{{ endMei }}</div><div style="position:absolute;top:310px;left:200px">{{ endPip }}</div>
+          <div style="position:absolute;top:118px;left:20px;right:20px;display:flex;flex-direction:column;gap:4px;z-index:3">
+            <span style="font-size:12px;font-weight:800;letter-spacing:.12em;color:#EFA3F4">SEASON 1 · END OF EPISODE 2</span>
+            <span style="font-size:76px;font-weight:900;letter-spacing:-0.07em;line-height:.8;color:#fff;text-shadow:3px 0 0 #17131C,-3px 0 0 #17131C,0 3px 0 #17131C,0 -3px 0 #17131C,2px 2px 0 #17131C,-2px -2px 0 #17131C,2px -2px 0 #17131C,-2px 2px 0 #17131C,0 8px 0 #EFA3F4;animation:ytype 6s ease-out infinite;transform-origin:0 50%">HELP<br>WANTED</span>
+          </div>
+          <div style="position:absolute;left:16px;right:16px;bottom:24px;display:flex;flex-direction:column;gap:14px;color:#fff;z-index:3">
+            <div style="display:flex;gap:6px;height:96px">
+              <div style="flex:1;border:2px solid #5D5366;border-radius:6px;overflow:hidden;position:relative;background:#2E2740;display:flex;align-items:flex-end;justify-content:center">{{ hankSil }}<span style="position:absolute;top:4px;right:8px;font-size:22px;font-weight:900;color:#EFA3F4">?</span></div>
+              <div style="flex:2.2;display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:8px"><span style="font-size:11px;font-weight:800;letter-spacing:.1em;color:#EFA3F4">NEXT WEEK · EPISODE 3</span><span style="font-size:24px;font-weight:800;letter-spacing:-0.04em;line-height:1">Hank wants it cheaper…</span><span style="font-size:12.5px;font-weight:600;color:#C7BFD0">Out Monday · missed weeks wait</span></div>
+            </div>
+            <div style="display:flex;gap:10px"><button style="flex:1;height:52px;border-radius:26px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font:800 15px Lexend,sans-serif">Back to town</button><button style="flex:1.3;height:52px;border-radius:26px;border:3px solid #fff;background:#EFA3F4;color:#17131C;font:800 15px Lexend,sans-serif">Remind me</button></div>
+          </div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#fff;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #fff;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#fff;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#fff;z-index:9"></div></div>
+      </div>
+
+      <div data-screen-label="T3 Move-in" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">T3</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Linh moves in · street level</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F4FCFF;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ streetScene }}</div>
+          <div style="position:absolute;top:212px;left:114px;width:44px;height:52px;border-radius:5px;overflow:hidden;border:2.5px solid #17131C">{{ peek1 }}</div>
+          <div style="position:absolute;top:250px;left:318px;width:44px;height:50px;border-radius:5px;overflow:hidden;border:2.5px solid #17131C">{{ peek2 }}</div>
+          <div style="position:absolute;top:330px;left:30px;width:44px;height:50px;border-radius:5px;overflow:hidden;border:2.5px solid #17131C">{{ peek3 }}</div>
+          <div style="position:absolute;top:426px;left:144px;z-index:2">{{ linhDoor }}</div>
+          <div style="position:absolute;top:390px;left:150px;width:68px;height:130px;border-radius:34px 34px 0 0;background:#5B4A8C;border:3px solid #17131C;transform-origin:0 50%;animation:ydoor 6s ease-in-out infinite;box-sizing:border-box;z-index:3"></div>
+          <div style="position:absolute;top:342px;left:214px;padding:7px 11px;border-radius:12px 12px 12px 4px;background:#fff;border:2.5px solid #17131C;box-shadow:2px 4px 0 #17131C;font-size:15px;font-weight:800;z-index:4">Xin chào!</div>
+          <div style="position:absolute;top:66px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center;z-index:4"><span style="font-size:34px;font-weight:900;letter-spacing:-0.06em;line-height:.9">New face<br>on Harbour Row</span><span style="padding:5px 10px;border-radius:10px;background:#5FD98A;border:3px solid #17131C;box-shadow:2px 4px 0 #17131C;font-size:13px;font-weight:800;transform:rotate(6deg);white-space:nowrap">+1 on the map</span></div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:36px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4">
+            <div style="display:flex;align-items:center;gap:10px"><div style="width:44px;height:44px;border-radius:22px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box">{{ linhPinFace }}</div><div style="display:flex;flex-direction:column;flex:1"><span style="font-size:16px;font-weight:800">Hello voicemail from Linh</span><span style="font-size:12px;font-weight:600;color:#5D5366">Your Home Neighbour · speaks with your accent</span></div><button onClick="{{ vmPlay }}" style="width:44px;height:44px;border-radius:22px;border:2.5px solid #17131C;background:#5FD98A;font:800 13px Lexend,sans-serif;color:#17131C">{{ vmIcon }}</button></div>
+            <button onClick="{{ callLinh }}" style="height:52px;border-radius:26px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 16px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Go say hi</button>
+          </div><div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#17131C;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div><div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div><div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div></div>
+      </div>
+
+      <div data-screen-label="T4 Job party" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">T4</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">"I got the job!" · the square throws a party</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 15%,rgba(239,163,244,.7),transparent 45%),radial-gradient(circle at 90% 50%,rgba(34,191,242,.35),transparent 40%),radial-gradient(circle at 10% 45%,rgba(95,217,138,.35),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0">{{ squareScene }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:66px;left:30px;right:30px;height:76px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:#FFFFFF;border:3.5px solid #17131C;box-shadow:0 6px 0 #17131C;animation:ywave 3s ease-in-out infinite;z-index:3">
+            <div style="position:absolute;left:-26px;top:16px;width:30px;height:44px;background:#EFA3F4;border:3px solid #17131C;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,40% 50%);z-index:-1"></div>
+            <div style="position:absolute;right:-26px;top:16px;width:30px;height:44px;background:#EFA3F4;border:3px solid #17131C;clip-path:polygon(0 0,100% 0,60% 50%,100% 100%,0 100%);z-index:-1"></div>
+            <span style="font-size:36px;font-weight:900;letter-spacing:-0.055em">Well done, <span style="background:#EFA3F4;padding:0 8px;border-radius:8px">Lan!</span></span>
+          </div>
+          <sc-for list="{{ partyCast }}" as="c" hint-placeholder-count="7"><div style="position:absolute;left:{{ c.left }};top:{{ c.top }}">{{ c.el }}</div></sc-for>
+          <button onClick="{{ cheer }}" style="position:absolute;top:470px;left:120px;padding:0;border:none;background:none;cursor:pointer;z-index:2">{{ partyPip }}</button>
+          <div style="position:absolute;inset:0;pointer-events:none">{{ partyConf }}</div>
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:18px 16px 16px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.55);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16);z-index:4">
+            <div style="display:inline-flex;align-self:flex-start;align-items:center;gap:6px;height:26px;padding:0 11px 0 7px;border-radius:13px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#5FD98A;border:2px solid #17131C"></span>Real-life win</div>
+            <span style="font-size:24px;font-weight:800;letter-spacing:-0.04em;line-height:1">You got the job at Harbour Logistics.</span>
+            <span style="font-size:14px;font-weight:600;color:#5D5366">Dex wants the whole story. So does everyone else.</span>
+            <button style="height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C">Tell the town how it went</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="T5 Time capsule" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">T5</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Time capsule · every number has a unit</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#241B38;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 75% 18%,rgba(120,90,190,.55),transparent 45%),radial-gradient(circle at 15% 60%,rgba(239,163,244,.18),transparent 40%),#241B38"></div>
+          <div style="position:absolute;inset:0">{{ nightScene }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;color:#fff;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #fff;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#fff;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:70px;left:22px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;color:#FFFFFF">
+            <div style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px 0 7px;border-radius:13px;background:#fff;color:#17131C;border:2.5px solid #17131C;box-shadow:0 3px 0 #0E0A14;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#EFA3F4;border:2px solid #17131C"></span>Time capsule · October</div>
+            <span style="font-size:42px;font-weight:800;letter-spacing:-0.05em;line-height:.92">Day 1 <span style="color:#EFA3F4">vs</span> today</span>
+          </div>
+          <div style="position:absolute;top:184px;left:14px;right:14px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px 12px 12px;border-radius:26px;background:rgba(255,255,255,.1);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.28);color:#fff">
+              <span style="width:46px;height:46px;border-radius:23px;background:#22BFF2;border:2.5px solid #17131C;color:#17131C;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box">▶</span>
+              <span style="display:flex;flex-direction:column;width:60px;flex:none"><span style="font-size:16px;font-weight:800">Day 1</span><span style="font-size:12px;font-weight:600;opacity:.75">Sep 21</span></span>
+              <span style="display:flex;align-items:center;gap:3px;flex:1;height:34px"><sc-for list="{{ capBars1 }}" as="b" hint-placeholder-count="26"><span style="width:4px;height:{{ b.h }};border-radius:2px;background:rgba(255,255,255,.5)"></span></sc-for></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px 12px 12px;border-radius:26px;background:rgba(255,255,255,.1);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.28);color:#fff">
+              <span style="width:46px;height:46px;border-radius:23px;background:#EFA3F4;border:2.5px solid #17131C;color:#17131C;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box">▶</span>
+              <span style="display:flex;flex-direction:column;width:60px;flex:none"><span style="font-size:16px;font-weight:800">Today</span><span style="font-size:12px;font-weight:600;opacity:.75">Oct 21</span></span>
+              <span style="display:flex;align-items:center;gap:3px;flex:1;height:34px"><sc-for list="{{ capBars2 }}" as="b" hint-placeholder-count="26"><span style="width:4px;height:{{ b.h }};border-radius:2px;background:rgba(255,255,255,.75)"></span></sc-for></span>
+            </div>
+          </div>
+          <div style="position:absolute;top:493px;left:34px">{{ capPip }}</div>
+          <div style="position:absolute;left:14px;right:14px;bottom:26px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:20px;background:rgba(255,255,255,.12);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.22);color:#fff"><span style="display:flex;flex-direction:column"><span style="font-size:14px;font-weight:800">Flow</span><span style="font-size:11.5px;font-weight:600;opacity:.75">seconds without stopping</span></span><span style="font-size:22px;font-weight:800;letter-spacing:-0.04em">20s → 48s</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div style="display:flex;flex-direction:column;padding:10px 14px;border-radius:20px;background:rgba(255,255,255,.12);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.22);color:#fff"><span style="font-size:12px;font-weight:700;opacity:.75">Pace · words / min</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.04em">96 → 112</span></div>
+              <div style="display:flex;flex-direction:column;padding:10px 14px;border-radius:20px;background:rgba(255,255,255,.12);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.22);color:#fff"><span style="font-size:12px;font-weight:700;opacity:.75">Pauses · per min</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.04em">9 → 3</span></div>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#FFFFFF"></div>
+        </div>
+      </div>
+
+      <div id="more"></div>
+    </div>
+  </section>
+
+  <section id="4i" style="display:flex;flex-direction:column;gap:22px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">4i</span><span style="font-weight:700;font-size:17px">Time of day · no two opens look the same</span></div>
+    <div style="display:flex;flex-direction:column;gap:22px;padding:32px;border-radius:36px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 6px 0 #17131C;max-width:1240px">
+      <div style="display:flex;gap:28px;flex-wrap:wrap">
+        <sc-for list="{{ tods }}" as="d" hint-placeholder-count="5">
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+            <div style="width:195px;height:422px;border-radius:30px;overflow:hidden;box-shadow:0 0 0 6px #17131C;background:#F9DAFB">{{ d.burrow }}</div>
+            <div style="width:195px;height:422px;border-radius:30px;overflow:hidden;box-shadow:0 0 0 6px #17131C;background:{{ d.bgB }}">{{ d.town }}</div>
+            <span style="font-size:16px;font-weight:800">{{ d.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="4j" style="display:flex;flex-direction:column;gap:22px;margin-top:64px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="background:#17131C;color:#fff;font-weight:800;font-size:14px;padding:5px 11px;border-radius:10px">4j</span><span style="font-weight:700;font-size:17px">Yapling Plus sells capacity, never care · Vietnam pricing</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start;max-width:2560px">
+      <div data-screen-label="T6 Plus EN" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">T6</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Yapling Plus · English UI, VND</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 12%,rgba(239,163,244,.6),transparent 38%),radial-gradient(circle at 10% 20%,rgba(34,191,242,.35),transparent 35%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:-70px;left:0">{{ townPlus }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <button style="position:absolute;top:60px;left:16px;width:40px;height:40px;border-radius:20px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.55);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;z-index:4"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 3 L11 11 M11 3 L3 11" stroke="#17131C" stroke-width="2.4" stroke-linecap="round"></path></svg></button>
+          <div style="position:absolute;left:8px;right:8px;top:148px;bottom:8px;border-radius:42px;padding:20px 16px 14px;box-sizing:border-box;display:flex;flex-direction:column;gap:9px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <div style="display:flex;flex-direction:column;gap:2px;padding:0 4px"><span style="font-size:32px;font-weight:800;letter-spacing:-0.055em;line-height:.95">Yapling <span style="background:#EFA3F4;border-radius:8px;padding:0 6px">Plus</span></span><span style="font-size:14px;font-weight:600;color:#5D5366">More time to talk and more ways to practise.</span></div>
+            <div style="display:flex;flex-direction:column;flex-shrink:0;border-radius:18px;background:#FFFFFF;border:2.5px solid #17131C;overflow:hidden">
+              <div style="display:grid;grid-template-columns:1fr 66px 84px;align-items:center;padding:6px 10px;background:#F9DAFB;border-bottom:2px solid #17131C;font-size:12px;font-weight:800"><span></span><span style="text-align:center">Free</span><span style="text-align:center">Plus</span></div>
+              <sc-for list="{{ tableEn }}" as="r" hint-placeholder-count="7">
+                <div style="display:grid;grid-template-columns:1fr 66px 84px;align-items:center;min-height:32px;padding:3px 10px;border-bottom:1px solid #EFEAF3;font-size:12.5px;font-weight:700;line-height:1.15">
+                  <span>{{ r.l }}</span>
+                  <span style="justify-self:center;min-width:{{ r.fw }};height:22px;padding:0 3px;border-radius:11px;background:{{ r.fc }};border:{{ r.fb }};display:flex;align-items:center;justify-content:center;font-size:{{ r.fs }};font-weight:800;box-sizing:border-box;text-align:center;line-height:1">{{ r.f }}</span>
+                  <span style="justify-self:center;min-width:{{ r.pw }};height:22px;padding:0 3px;border-radius:11px;background:{{ r.pc }};border:{{ r.pb }};display:flex;align-items:center;justify-content:center;font-size:{{ r.ps }};font-weight:800;box-sizing:border-box;text-align:center;line-height:1">{{ r.p }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <span style="font-size:11px;font-weight:600;color:#5D5366;padding:0 4px">†After a generous free first week. *Plus minutes are fair use.</span>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <button onClick="{{ planYear }}" style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:14px 12px 10px;border-radius:18px;border:2.5px solid {{ yearBd }};background:{{ yearBg }};box-shadow:{{ yearSh }};cursor:pointer;font-family:inherit;color:#17131C;text-align:left">
+                <span style="position:absolute;top:-11px;left:10px;padding:1px 7px;border-radius:7px;background:#5FD98A;border:2px solid #17131C;font-size:10.5px;font-weight:800;white-space:nowrap">First year 599.000 VND</span>
+                <span style="font-size:13px;font-weight:700">Yearly</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.04em">799.000 VND</span><span style="font-size:11px;font-weight:600">per year after</span>
+              </button>
+              <button onClick="{{ planMonth }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:14px 12px 10px;border-radius:18px;border:2.5px solid {{ monthBd }};background:{{ monthBg }};box-shadow:{{ monthSh }};cursor:pointer;font-family:inherit;color:#17131C;text-align:left">
+                <span style="font-size:13px;font-weight:700">Monthly</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.04em">149.000 VND</span><span style="font-size:11px;font-weight:600">per month</span>
+              </button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;background:#CFF0FD;border:2px solid #17131C;font-size:12.5px;font-weight:700"><span style="padding:1px 6px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800;white-space:nowrap">STUDENT</span>Verify your school email for student pricing.</div>
+            <button style="height:54px;border-radius:27px;border:3px solid #17131C;background:#17131C;color:#FFFFFF;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #EFA3F4;margin-top:auto">{{ ctaEn }}</button>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1px"><span style="font-size:13px;font-weight:800">Pip stays in the burrow either way.</span><span style="font-size:11px;font-weight:600;color:#5D5366">Cancel any time in Settings.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div data-screen-label="T7 Plus VN" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">T7</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Same paywall, Vietnamese UI</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 12%,rgba(239,163,244,.6),transparent 38%),radial-gradient(circle at 10% 20%,rgba(34,191,242,.35),transparent 35%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:-70px;left:0">{{ townPlus }}</div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <button style="position:absolute;top:60px;left:16px;width:40px;height:40px;border-radius:20px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.55);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;z-index:4"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 3 L11 11 M11 3 L3 11" stroke="#17131C" stroke-width="2.4" stroke-linecap="round"></path></svg></button>
+          <div style="position:absolute;left:8px;right:8px;top:148px;bottom:8px;border-radius:42px;padding:20px 16px 14px;box-sizing:border-box;display:flex;flex-direction:column;gap:9px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 14px 36px rgba(46,20,70,.16)">
+            <div style="display:flex;flex-direction:column;gap:2px;padding:0 4px"><span style="font-size:32px;font-weight:800;letter-spacing:-0.055em;line-height:.95">Yapling <span style="background:#EFA3F4;border-radius:8px;padding:0 6px">Plus</span></span><span style="font-size:14px;font-weight:600;color:#5D5366">Thêm thời gian trò chuyện, thêm cách luyện tập.</span></div>
+            <div style="display:flex;flex-direction:column;flex-shrink:0;border-radius:18px;background:#FFFFFF;border:2.5px solid #17131C;overflow:hidden">
+              <div style="display:grid;grid-template-columns:1fr 66px 84px;align-items:center;padding:6px 10px;background:#F9DAFB;border-bottom:2px solid #17131C;font-size:12px;font-weight:800"><span></span><span style="text-align:center">Miễn phí</span><span style="text-align:center">Plus</span></div>
+              <sc-for list="{{ tableVn }}" as="r" hint-placeholder-count="7">
+                <div style="display:grid;grid-template-columns:1fr 66px 84px;align-items:center;min-height:32px;padding:3px 10px;border-bottom:1px solid #EFEAF3;font-size:12.5px;font-weight:700;line-height:1.15">
+                  <span>{{ r.l }}</span>
+                  <span style="justify-self:center;min-width:{{ r.fw }};height:22px;padding:0 3px;border-radius:11px;background:{{ r.fc }};border:{{ r.fb }};display:flex;align-items:center;justify-content:center;font-size:{{ r.fs }};font-weight:800;box-sizing:border-box;text-align:center;line-height:1">{{ r.f }}</span>
+                  <span style="justify-self:center;min-width:{{ r.pw }};height:22px;padding:0 3px;border-radius:11px;background:{{ r.pc }};border:{{ r.pb }};display:flex;align-items:center;justify-content:center;font-size:{{ r.ps }};font-weight:800;box-sizing:border-box;text-align:center;line-height:1">{{ r.p }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <span style="font-size:11px;font-weight:600;color:#5D5366;padding:0 4px">†Sau tuần đầu miễn phí rộng rãi. *Áp dụng sử dụng hợp lý.</span>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <button onClick="{{ planYear2 }}" style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:14px 12px 10px;border-radius:18px;border:2.5px solid {{ yearBd2 }};background:{{ yearBg2 }};box-shadow:{{ yearSh2 }};cursor:pointer;font-family:inherit;color:#17131C;text-align:left">
+                <span style="position:absolute;top:-11px;left:10px;padding:1px 7px;border-radius:7px;background:#5FD98A;border:2px solid #17131C;font-size:10.5px;font-weight:800;white-space:nowrap">Năm đầu 599.000 VND</span>
+                <span style="font-size:13px;font-weight:700">Theo năm</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.04em">799.000 VND</span><span style="font-size:11px;font-weight:600">mỗi năm sau đó</span>
+              </button>
+              <button onClick="{{ planMonth2 }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:14px 12px 10px;border-radius:18px;border:2.5px solid {{ monthBd2 }};background:{{ monthBg2 }};box-shadow:{{ monthSh2 }};cursor:pointer;font-family:inherit;color:#17131C;text-align:left">
+                <span style="font-size:13px;font-weight:700">Theo tháng</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.04em">149.000 VND</span><span style="font-size:11px;font-weight:600">mỗi tháng</span>
+              </button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;background:#CFF0FD;border:2px solid #17131C;font-size:12.5px;font-weight:700"><span style="padding:1px 6px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800;white-space:nowrap">SINH VIÊN</span>Xác minh email trường để nhận giá ưu đãi.</div>
+            <button style="height:54px;border-radius:27px;border:3px solid #17131C;background:#17131C;color:#FFFFFF;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #EFA3F4;margin-top:auto">{{ ctaVn }}</button>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1px"><span style="font-size:13px;font-weight:800">Pip vẫn ở trong hang dù bạn chọn gói nào.</span><span style="font-size:11px;font-weight:600;color:#5D5366">Huỷ bất cứ lúc nào trong Cài đặt.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div data-screen-label="T8 Lock screen" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">T8</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Lock screen · voicemail and Live Activity</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 70%,rgba(239,163,244,.85),transparent 50%),radial-gradient(circle at 10% 15%,rgba(34,191,242,.5),transparent 40%),radial-gradient(circle at 95% 30%,rgba(95,217,138,.45),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.13) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>Viettel</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:76px;left:0;right:0;display:flex;flex-direction:column;align-items:center">
+            <span style="font-size:19px;font-weight:700">Wednesday 21 October</span>
+            <span style="font-size:104px;font-weight:800;letter-spacing:-0.06em;line-height:.9">9:41</span>
+          </div>
+          <div style="position:absolute;top:372px;left:65px">{{ lockPip }}</div>
+          <div style="position:absolute;top:226px;left:12px;right:12px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;gap:10px;padding:12px;border-radius:24px;background:rgba(255,255,255,.55);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 10px 26px rgba(46,20,70,.14)">
+              <div style="width:38px;height:38px;border-radius:9px;overflow:hidden;border:1.5px solid #17131C;flex:none">{{ appIcon }}</div>
+              <div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0">
+                <div style="display:flex;justify-content:space-between"><span style="font-size:14px;font-weight:800">Voicemail from Mei</span><span style="font-size:12px;font-weight:600;color:#5D5366">2m ago</span></div>
+                <span style="font-size:14px;font-weight:600;line-height:1.25">"Someone wants to buy the café, and you'll never guess who…" · 0:24</span>
+              </div>
+            </div>
+          </div>
+          <div style="position:absolute;left:12px;right:12px;bottom:96px;padding:14px;border-radius:30px;background:rgba(23,19,28,.82);backdrop-filter:blur(26px);color:#FFFFFF;display:flex;flex-direction:column;gap:10px;box-shadow:0 12px 30px rgba(23,19,28,.3)">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:40px;height:40px;border-radius:20px;overflow:hidden;border:2px solid #FFFFFF;box-sizing:border-box">{{ liveFace }}</div>
+              <div style="display:flex;flex-direction:column;flex:1"><span style="font-size:15px;font-weight:800">On a call with Mei</span><span style="font-size:12px;font-weight:600;color:#C7BFD0">Lantern Café · your turn</span></div>
+              <span style="font-size:20px;font-weight:800;letter-spacing:-0.03em;color:#EFA3F4">04:12</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="display:flex;align-items:center;gap:3px;flex:1;height:26px"><sc-for list="{{ liveBars }}" as="b" hint-placeholder-count="18"><span style="width:4px;height:{{ b.h }};border-radius:2px;background:#EFA3F4;animation:ybar 1s ease-in-out infinite"></span></sc-for></div>
+              <span style="height:36px;padding:0 14px;border-radius:18px;background:rgba(255,255,255,.16);font-size:13px;font-weight:800;display:flex;align-items:center">Hold on</span>
+              <span style="height:36px;padding:0 14px;border-radius:18px;background:#EFA3F4;color:#17131C;font-size:13px;font-weight:800;display:flex;align-items:center">Leave</span>
+            </div>
+          </div>
+          <div style="position:absolute;left:44px;right:44px;bottom:34px;display:flex;justify-content:space-between">
+            <div style="width:50px;height:50px;border-radius:25px;background:rgba(255,255,255,.45);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.85)"></div>
+            <div style="width:50px;height:50px;border-radius:25px;background:rgba(255,255,255,.45);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.85)"></div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+
+      <div data-screen-label="T9 Home screen" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">T9</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">Home screen · incoming call and widgets</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(239,163,244,.7),transparent 45%),radial-gradient(circle at 15% 70%,rgba(34,191,242,.5),transparent 45%),radial-gradient(circle at 80% 90%,rgba(95,217,138,.4),transparent 40%),#FBFAFD"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+          <div style="position:absolute;top:58px;left:10px;right:10px;display:flex;align-items:center;gap:10px;padding:10px 10px 10px 12px;border-radius:30px;background:rgba(255,255,255,.62);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.95);box-shadow:inset 0 1.5px 0 #fff,0 14px 30px rgba(46,20,70,.22);z-index:4">
+            <div style="width:44px;height:44px;border-radius:22px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box">{{ callFace }}</div>
+            <div style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-size:15px;font-weight:800">Pip</span><span style="font-size:12.5px;font-weight:600;color:#5D5366">Yapling audio · "help me practise?"</span></div>
+            <span style="width:44px;height:44px;border-radius:22px;background:rgba(23,19,28,.08);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 30 30"><circle cx="15" cy="15" r="10" fill="none" stroke="#17131C" stroke-width="3"></circle><path d="M15 9 V15 L19 18" fill="none" stroke="#17131C" stroke-width="3" stroke-linecap="round"></path></svg></span>
+            <span style="width:44px;height:44px;border-radius:22px;background:#5FD98A;border:2.5px solid #17131C;box-sizing:border-box;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 32 32"><path d="M9 5 C7 5 5 7 5 9 C5 19 13 27 23 27 C25 27 27 25 27 23 L27 20 L21 18 L19 21 C15 19 13 17 11 13 L14 11 L12 5 Z" fill="#17131C"></path></svg></span>
+          </div>
+          <div style="position:absolute;top:148px;left:24px;right:24px;height:158px;border-radius:26px;overflow:hidden;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;background:#F9DAFB;display:flex">
+            <div style="width:150px;height:158px;overflow:hidden;position:relative;flex:none"><div style="position:absolute;top:-150px;left:0">{{ widgetBurrow }}</div></div>
+            <div style="flex:1;padding:12px 12px 10px;display:flex;flex-direction:column;gap:4px;background:#FFFFFF;border-left:3px solid #17131C">
+              <span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#5D5366">Pip's burrow</span>
+              <span style="font-size:18px;font-weight:800;letter-spacing:-0.03em;line-height:1">Cheerful</span>
+              <div style="display:flex;align-items:flex-end;gap:6px;margin-top:auto"><div style="width:48px;height:64px">{{ widgetObj }}</div><span style="display:flex;flex-direction:column;padding-bottom:6px"><span style="font-size:11px;font-weight:700;color:#5D5366">Newest word</span><span style="font-size:15px;font-weight:800">oat milk</span></span></div>
+            </div>
+          </div>
+          <div style="position:absolute;top:330px;left:24px;right:24px;display:grid;grid-template-columns:repeat(4,1fr);row-gap:20px;justify-items:center">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:60px;height:60px;border-radius:14px;overflow:hidden;border:2px solid #17131C;box-shadow:0 3px 0 #17131C">{{ appIcon60 }}</div><span style="font-size:11.5px;font-weight:700">Yapling</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.9)"></div><span style="font-size:11.5px;font-weight:700">Calendar</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.9)"></div><span style="font-size:11.5px;font-weight:700">Notes</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.9)"></div><span style="font-size:11.5px;font-weight:700">Photos</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.9)"></div><span style="font-size:11.5px;font-weight:700">Mail</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.9)"></div><span style="font-size:11.5px;font-weight:700">Maps</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.9)"></div><span style="font-size:11.5px;font-weight:700">Weather</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.9)"></div><span style="font-size:11.5px;font-weight:700">Music</span></div>
+          </div>
+          <div style="position:absolute;top:530px;left:24px;width:158px;height:158px;border-radius:26px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-sizing:border-box">
+            <svg width="72" height="72" viewBox="0 0 56 56"><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="#17131C" stroke-width="10" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="#17131C" stroke-width="10" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="#17131C" stroke-width="10" stroke-linecap="round"></path><path d="M30.3 6.12 A22 22 0 0 1 48.1 36.95" fill="none" stroke="#EFA3F4" stroke-width="5" stroke-linecap="round"></path><path d="M45.8 40.93 A22 22 0 0 1 10.2 40.93" fill="none" stroke="#EFA3F4" stroke-width="5" stroke-linecap="round"></path><path d="M7.9 36.95 A22 22 0 0 1 25.7 6.12" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path></svg>
+            <span style="font-size:15px;font-weight:800">2 of 3 calls</span><span style="font-size:11px;font-weight:600;color:#5D5366">This week</span>
+          </div>
+          <div style="position:absolute;top:530px;right:24px;width:158px;height:158px;border-radius:26px;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;display:flex;flex-direction:column;justify-content:space-between;padding:14px;box-sizing:border-box">
+            <span style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase">Episode 3</span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-0.04em;line-height:1">Hank wants it cheaper…</span>
+            <span style="font-size:12px;font-weight:700">Out Monday</span>
+          </div>
+          <div style="position:absolute;left:12px;right:12px;bottom:14px;height:86px;border-radius:34px;background:rgba(255,255,255,.4);backdrop-filter:blur(26px) saturate(1.8);border:1px solid rgba(255,255,255,.85);display:flex;align-items:center;justify-content:space-around">
+            <div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.7)"></div><div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.7)"></div><div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.7)"></div><div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.7)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const RECAP=["While you were away, Mei got a strange letter.","Then a stranger measured the café door. Twice!","Arjun says he heard a price. A big one."];
+const TABLE_EN=[['Town, episodes, Pip and the burrow','✓','✓'],['Monthly time capsule','✓','✓'],['Voice notes and text chat','✓','✓'],['Live call minutes','10 min / week†','150 min / month*'],['Bring your homework','–','✓'],['Deep feedback and pronunciation drills','–','✓'],['Camera calls','–','✓']];
+const TABLE_VN=[['Thị trấn, tập truyện, Pip và hang','✓','✓'],['Hộp thời gian hằng tháng','✓','✓'],['Tin nhắn thoại và chat','✓','✓'],['Phút gọi trực tiếp','10 phút / tuần†','150 phút / tháng*'],['Luyện với tài liệu của bạn','–','✓'],['Nhận xét chi tiết và luyện phát âm','–','✓'],['Gọi có camera','–','✓']];
+const TODS=[['morning','Morning','#FFF4EE','rgba(255,190,160,.7)','rgba(239,163,244,.45)','#FFE3D3','wave'],['afternoon','Afternoon','#FBFAFD','rgba(34,191,242,.4)','rgba(239,163,244,.5)','#CFF0FD','happy'],['evening','Evening','#FCEFF4','rgba(255,160,140,.6)','rgba(239,163,244,.6)','#FFC9B5','warm'],['night','Night','#241B38','rgba(120,90,190,.6)','rgba(239,163,244,.2)','#2E2552','sleepy'],['rain','Rainy day','#EEF1F6','rgba(170,185,215,.7)','rgba(34,191,242,.25)','#D9DFEA','think']];
+class Component extends DCLogic {
+  state={bt:0,sound:false,playing:false,plan:'year',plan2:'year'};
+  sim={ri:0,rc:0,rw:0,vm:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.step(),90); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  step(){ const S=this.sim, L=RECAP[S.ri]; if(S.rw>0){ S.rw--; if(!S.rw){ S.ri=(S.ri+1)%RECAP.length; S.rc=0; } } else { S.rc++; if(S.rc>L.length) S.rw=20; }
+    if (this.state.playing){ S.vm+=0.014; if(S.vm>=1){ S.vm=0; this.setState({playing:false}); } }
+    this.setState(s=>({bt:s.bt+1})); }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {};
+    const st=this.state, S=this.sim, {b1,b2,b3}=K.blinkers(st.bt); if(!this.sfx) this.sfx=K.makeSfx(()=>this.state.sound); const sfx=this.sfx;
+    const sp='redpanda', A=window.YapArt||{};
+    const L=RECAP[S.ri], rt=S.rw>0?L.length:Math.min(S.rc,L.length), rTalk=S.rw===0;
+    const beats=[['otter','Mei got a letter','#CFF0FD'],[null,'A stranger measured','#2E2740'],['tiger','Arjun heard a price','#D7F7E2']].map(([k,label,bg],i)=>({label,bg,op:i<=S.ri?1:.45,rot:['-3deg','2deg','-2deg'][i],y:i===S.ri?'-6px':'0px',sh:i===S.ri?'0 6px 0 #17131C':'0 3px 0 #17131C',
+      el:k?K.fc(k,80,i===2?'surprised':'worried',bg):K.h(K.Cv,{key:'hs',fn:'s_sil',w:80,hh:96,o:{sp:'bison',color:'#17131C'}})}));
+    const bars=(seed,nb,prog,on)=>{ let s=seed; const r=()=>((s=(s*16807)%2147483647)/2147483647); return Array.from({length:nb},(_,i)=>({h:(r()<0.12?4:8+r()*18)+'px',c:prog!=null&&i/nb<prog?on:'rgba(23,19,28,.25)'})); };
+    const P=A.S_PLACES||{};
+    const pins=Object.keys(P).filter(k=>P[k][3]).map(k=>{ const [x,y,label,who]=P[k], pw=label.length*7+48; return {label, left:Math.max(8,Math.min(390-pw-8,x-18))+'px', top:(y-44)+'px', face:K.fc(who,24)}; });
+    const party=[['bulldog',120,22,370,'laugh'],['bison',150,230,346,'happy'],['koala',120,130,380,'excited'],['tiger',126,-8,450,'wave'],['otter',118,282,452,'laugh'],['tarsier',120,96,478,'excited'],['pangolin',112,200,486,'warm']];
+    const tbl=(T,plan)=>T.map(([l,f,p])=>({l,f,p,fc:f==='✓'?'#5FD98A':'transparent',pc:p==='✓'?'#5FD98A':'transparent',fw:f.length>2?'auto':'26px',pw:p.length>2?'auto':'26px',fs:f.length>2?'11.5px':'14px',ps:p.length>2?'11.5px':'14px',fb:f==='✓'?'2px solid #17131C':'none',pb:p==='✓'?'2px solid #17131C':'none'}));
+    const pick=(k,v)=>()=>{ this.setState({[k]:v}); sfx('tick'); };
+    const pbg=(cur,v)=>cur===v?'#EFA3F4':'rgba(255,255,255,.72)', psh=(cur,v)=>cur===v?'0 4px 0 #17131C':'0 0 0 transparent', pbd=(cur,v)=>cur===v?'#17131C':'rgba(23,19,28,.15)';
+    return {
+      rp1:K.h(K.Cv,{key:'rp1',fn:'s_crop',w:362,hh:170,o:{fn:'cafeWarm',x:0,y:230,s:.95,t:0}}), rp2:K.h(K.Cv,{key:'rp2',fn:'s_crop',w:190,hh:150,o:{fn:'street',x:60,y:140,s:.62,vanX:-400}}), rp3:K.h(K.Cv,{key:'rp3',fn:'s_crop',w:160,hh:150,o:{fn:'town',x:250,y:520,s:1.2}}), rp4:K.h(K.Cv,{key:'rp4',fn:'s_crop',w:362,hh:130,o:{fn:'cafeWarm',x:0,y:330,s:.95,t:0}}),
+      rpMei1:K.cr('otter',{size:120,mood:'surprised',blink:b2,k:'rm1'}), rpSil:K.h(K.Cv,{key:'rsl',fn:'s_sil',w:100,hh:120,o:{sp:'raccoon',color:'#17131C'}}), rpArjun:K.cr('tiger',{size:110,mood:'surprised',blink:b3,k:'ra'}), rpMei4:K.cr('otter',{size:110,mood:'worried',blink:b1,k:'rm4'}), rpPip4:K.cr(sp,{size:100,mood:'excited',blink:b2,k:'rp4'}),
+      recapPipS:K.cr(sp,{size:62,mood:'happy',blink:b1,k:'rps'}),
+      endCafe:K.sc('cafeWarm',390,844,{t:K.tk(300)}), endMei:K.cr('otter',{size:150,mood:'worried',blink:b2,k:'em'}), endPip:K.cr(sp,{size:130,mood:'confused',blink:b1,k:'ep2'}),
+      streetScene:K.sc('street',390,844,{t:K.tk(100)}), peek1:K.fc('koala',44,'surprised','#CFF0FD'), peek2:K.fc('tiger',44,'happy','#CFF0FD'), peek3:K.fc('bulldog',44,'laugh','#CFF0FD'), linhDoor:K.cr('pangolin',{size:80,mood:'wave',blink:b3,k:'ld'}),
+      soundLabel:st.sound?'Sound on':'Turn sound on', toggleSound:()=>this.setState({sound:!st.sound},()=>sfx('pop')),
+      beats, rSaid:L.slice(0,rt), rUnsaid:L.slice(rt), recapPip:K.cr(sp,{size:200,mood:rTalk?(S.ri===1?'surprised':'happy'):'think',blink:b1,mouth:rTalk?K.mouthFor(L,rt):'rest'}),
+      epCafe:K.sc('cafe',390,844,{t:K.tk(200)}), epMei:K.cr('otter',{size:150,mood:'worried',blink:b2}), epPip:K.cr(sp,{size:140,mood:'confused',blink:b1,k:'ep'}),
+      hankSil:K.h(K.Cv,{key:'hank',fn:'s_sil',w:96,hh:115,o:{sp:'bison',color:'#5B4A8C'}}),
+      moveTown:K.sc('town',390,844,{t:K.tk(200),vanX:120}), pins, linhPinFace:K.fc('pangolin',32,'happy','#D7F7E2'), linhEl:K.cr('pangolin',{size:70,mood:'wave',blink:b3}),
+      vmBars:bars(13,30,st.playing?S.vm:null,'#17131C'), vmIcon:st.playing?'❚❚':'▶', vmPlay:()=>{ this.sim.vm=0; this.setState({playing:!st.playing}); sfx('soft'); }, callLinh:()=>sfx('chime'),
+      squareScene:K.sc('square',390,844,{t:K.tk(150)}), partyConf:K.sc('confetti',390,844,{t:K.tk(100)}),
+      partyCast:party.map(([k,s,x,y,m],i)=>({left:x+'px',top:y+'px',el:K.cr(k,{size:s,mood:m,blink:[b1,b2,b3][i%3],speed:2+i*0.3,k:'pc'+k})})),
+      partyPip:K.h('div',{style:{animation:'yjump .8s ease-in-out infinite',transformOrigin:'50% 100%'}},K.cr(sp,{size:150,mood:'excited',blink:b1,still:true,k:'ppj'})),
+      cheer:()=>sfx('fanfare'),
+      tods:TODS.map(([tod,label,base,c1,c2,sky,mood])=>({label,
+        bgB:`radial-gradient(circle at 20% 15%,${c1},transparent 45%),radial-gradient(circle at 85% 70%,${c2},transparent 45%),${base}`,
+        burrow:K.h(K.Cv,{key:'mb'+tod,fn:'s_mini',w:195,hh:422,o:{fn:'burrow2',tod,sky,t:tod==='rain'?K.tk(150):0,pip:sp,mood}}),
+        town:K.h(K.Cv,{key:'mt'+tod,fn:'s_mini',w:195,hh:422,o:{fn:'town',tod,t:tod==='rain'?K.tk(150):0}})})),
+      nightScene:K.sc('night',390,844,{t:K.tk(150),jarX:250}), capPip:K.cr(sp,{size:150,mood:'warm',blink:b1,k:'cap'}),
+      capBars1:bars(9,26,null), capBars2:bars(4,26,null),
+      townPlus:K.sc('town',390,844,{t:K.tk(200),balloon:[206,150],balloonSp:sp}),
+      tableEn:tbl(TABLE_EN), tableVn:tbl(TABLE_VN),
+      yearBg:pbg(st.plan,'year'), monthBg:pbg(st.plan,'month'), yearSh:psh(st.plan,'year'), monthSh:psh(st.plan,'month'), yearBd:pbd(st.plan,'year'), monthBd:pbd(st.plan,'month'),
+      planYear:pick('plan','year'), planMonth:pick('plan','month'), ctaEn:st.plan==='year'?'Start Plus for 599.000 VND':'Start Plus · 149.000 VND a month',
+      yearBg2:pbg(st.plan2,'year'), monthBg2:pbg(st.plan2,'month'), yearSh2:psh(st.plan2,'year'), monthSh2:psh(st.plan2,'month'), yearBd2:pbd(st.plan2,'year'), monthBd2:pbd(st.plan2,'month'),
+      planYear2:pick('plan2','year'), planMonth2:pick('plan2','month'), ctaVn:st.plan2==='year'?'Bắt đầu Plus với 599.000 VND':'Bắt đầu Plus · 149.000 VND mỗi tháng',
+      lockPip:K.cr(sp,{size:260,mood:'sleepy',blink:b1,speed:4,k:'lk'}), appIcon:K.h(K.Cv,{key:'ai',fn:'s_icon',w:38,hh:38,o:{}}), appIcon60:K.h(K.Cv,{key:'ai60',fn:'s_icon',w:60,hh:60,o:{}}),
+      liveFace:K.fc('otter',40,'happy','#CFF0FD'), liveBars:bars(21,18,null),
+      widgetBurrow:K.h(K.Cv,{key:'wb',fn:'s_mini',w:150,hh:325,o:{fn:'burrow2',pip:sp,mood:'happy'}}), widgetObj:K.obj('jar',0,'wo',48,{fill:'#F3E7D3'}),
+      callFace:K.fc(sp,40,'excited')
+    };
+  }
+}
+</script>
+</body>
+</html>
