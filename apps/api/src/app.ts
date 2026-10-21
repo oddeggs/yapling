@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 
+import { accountRoutes } from './account';
 import type { AppEnv } from './env';
 
 /** The API, served at `<host>/api/*`. */
@@ -9,6 +10,9 @@ export function createApp(): Hono<AppEnv> {
   app.get('/health', (c) =>
     c.json({ status: 'ok', environment: c.env.ENVIRONMENT, commit: c.env.COMMIT_SHA }),
   );
+
+  // Sessions, the session guard for every `/me` and `/calls` route, and the learner's own data.
+  app.route('/', accountRoutes());
 
   app.notFound((c) => c.json({ error: { code: 'not_found' } }, 404));
 

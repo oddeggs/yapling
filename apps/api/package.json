@@ -10,7 +10,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "hono": "catalog:"
+    "@yapling/contracts": "workspace:*",
+    "better-auth": "catalog:",
+    "hono": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "catalog:",
