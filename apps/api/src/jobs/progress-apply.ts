@@ -1,0 +1,188 @@
+import {
+  CHARACTER_IDS,
+  RING_SLOT_KINDS,
+  type CallCanDoEvidence,
+  type CallKind,
+  type CharacterId,
+  type Keepsake,
+  type PhraseEvent,
+  type Progress,
+} from '@yapling/contracts';
+import {
+  canDoById,
+  fillRingSlot,
+  meetPhrase,
+  newCanDo,
+  noteRecurringError,
+  recordPhraseUse,
+  recordSelfCorrection,
+  ringWeeks,
+  tickCanDo,
+  toErrorTargetProgress,
+  toPhraseProgress,
+  weekKeepsakeToWire,
+  type ErrorTargetRecord,
+} from '@yapling/domain';
+import { findPhrase } from '@yapling/story';
+
+import { phraseRecordOf } from '../call/learner';
+import { ERROR_TARGETS } from '../call/targets';
+import type { LearnerLine } from '../call/transcript';
+import type { Draft } from './summary';
+
+/*
+ * What a finished call changes in the learner's progress, by the learning model's rules: the
+ * scene's phrases met and the ones used growing, self-corrections on active error targets (and
+ * recurring errors queued), can-dos ticked with their witness and keepsake, and the week's ring
+ * slot filled.
+ */
+
+export interface CallFacts {
+  readonly callId: string;
+  readonly sceneId: string;
+  readonly kind: CallKind;
+  readonly endedAt: number;
+  readonly timezone: string;
+  readonly scenePhrases: readonly string[];
+  readonly sceneCast: readonly CharacterId[];
+  readonly learnerLines: readonly LearnerLine[];
+  readonly draft: Draft | null;
+}
+
+type Lists = Pick<Progress, 'phrases' | 'errorTargets' | 'canDos' | 'keepsakes' | 'weeks'>;
+
+export interface ProgressChange {
+  readonly lists: Lists;
+  readonly phraseEvents: PhraseEvent[];
+  readonly canDoEvidence: CallCanDoEvidence[];
+}
+
+/**
+ * A target as the learning model keeps it. Progress stores only how many days had a
+ * self-correction, so earlier days come back as stand-ins that never match a real day.
+ */
+function targetRecordOf(t: Progress['errorTargets'][number]): ErrorTargetRecord {
+  return {
+    id: t.id,
+    status: t.status,
+    selfCorrections: t.selfCorrections,
+    correctionDays: Array.from(
+      { length: t.correctionDays },
+      (_, i) => `0000-01-${String(i + 1).padStart(2, '0')}`,
+    ),
+    activatedAt: t.activatedAt,
+    graduatedAt: t.graduatedAt,
+  };
+}
+
+const isCharacter = (id: string): id is CharacterId =>
+  (CHARACTER_IDS as readonly string[]).includes(id);
+
+export function applyCall(current: Progress, facts: CallFacts): ProgressChange {
+  const { timezone, endedAt } = facts;
+  const events: PhraseEvent[] = [];
+
+  // Phrases: the scene's phrases are met; each correct use grows its phrase one step.
+  let phrases = current.phrases.map((p) => phraseRecordOf(p, timezone));
+  for (const id of facts.scenePhrases) {
+    const phrase = findPhrase(id);
+    if (!phrase) continue;
+    const met = meetPhrase(phrases, { id, text: phrase.en, at: endedAt });
+    phrases = [...met.phrases];
+    if (met.met) events.push({ phraseId: id, text: phrase.en, event: 'met' });
+  }
+  const uses = new Map<string, number>();
+  for (const line of facts.learnerLines) {
+    for (const id of line.phrasesUsed) if (!uses.has(id)) uses.set(id, line.at);
+  }
+  for (const id of facts.draft?.phrasesUsed ?? []) if (!uses.has(id)) uses.set(id, endedAt);
+  for (const [id, at] of uses) {
+    const phrase = findPhrase(id);
+    if (!phrase) continue;
+    const used = recordPhraseUse(
+      phrases,
+      { id, text: phrase.en },
+      { at, correct: true, prompted: false, contextId: facts.sceneId },
+      timezone,
+    );
+    phrases = [...used.phrases];
+    for (const event of used.events)
+      if (event !== 'met') events.push({ phraseId: id, text: phrase.en, event });
+  }
+
+  // Error targets: second tries that fixed an active target count; recurring errors queue up.
+  let targets: readonly ErrorTargetRecord[] = current.errorTargets.map(targetRecordOf);
+  for (const line of facts.learnerLines) {
+    if (line.correctionFixed === true) {
+      const prompted = [...facts.learnerLines]
+        .reverse()
+        .find((l) => l.turn < line.turn && l.targetId !== null);
+      if (prompted?.targetId)
+        targets = recordSelfCorrection(targets, prompted.targetId, line.at, timezone).targets;
+    }
+  }
+  for (const id of facts.draft?.recurringErrors ?? []) {
+    if (ERROR_TARGETS[id] !== undefined) targets = noteRecurringError(targets, id, endedAt).targets;
+  }
+
+  // Can-dos: evidence ticks them, signed by the neighbour who heard it.
+  const canDos = [...current.canDos];
+  const keepsakes: Keepsake[] = [...current.keepsakes];
+  const evidence: CallCanDoEvidence[] = [];
+  const addKeepsake = (k: Keepsake) => {
+    if (!keepsakes.some((existing) => existing.id === k.id)) keepsakes.push(k);
+  };
+  for (const item of facts.draft?.canDoEvidence ?? []) {
+    const definition = canDoById(item.canDoId);
+    const witness =
+      isCharacter(item.witness) && facts.sceneCast.includes(item.witness)
+        ? item.witness
+        : facts.sceneCast[0];
+    if (!definition || !witness) continue;
+    const index = canDos.findIndex((c) => c.id === definition.id);
+    const before = index >= 0 ? canDos[index] : newCanDo(definition);
+    if (!before) continue;
+    const ticked = tickCanDo(
+      before,
+      {
+        canDoId: definition.id,
+        callRecordId: facts.callId,
+        quote: item.quote,
+        witness,
+        at: endedAt,
+      },
+      timezone,
+    );
+    if (index >= 0) canDos[index] = ticked.canDo;
+    else canDos.push(ticked.canDo);
+    if (ticked.keepsake) addKeepsake(ticked.keepsake);
+    evidence.push({ canDoId: definition.id, quote: item.quote, witness });
+  }
+
+  // The ring: an episode, real-week or practice call fills its week's slot.
+  let weeks = ringWeeks(current.weeks, current.dayIndex);
+  const kind = (RING_SLOT_KINDS as readonly string[]).includes(facts.kind)
+    ? (facts.kind as (typeof RING_SLOT_KINDS)[number])
+    : null;
+  if (kind !== null) {
+    const filled = fillRingSlot(
+      weeks,
+      { kind, callRecordId: facts.callId, doneAt: endedAt },
+      timezone,
+    );
+    weeks = filled.weeks;
+    if (filled.ringFull) addKeepsake(weekKeepsakeToWire(filled.ringFull));
+  }
+
+  return {
+    lists: {
+      phrases: phrases.map(toPhraseProgress),
+      errorTargets: targets.map(toErrorTargetProgress),
+      canDos,
+      keepsakes,
+      weeks: [...weeks],
+    },
+    phraseEvents: events.slice(0, 50),
+    canDoEvidence: evidence.slice(0, 20),
+  };
+}
