@@ -306,6 +306,7 @@ describeSchemas('progress', progress, {
       { ...progressBody, weeks: [week1, week1] },
     ],
   ],
+  ProgressPut: [[progressBody], [{ ...progressBody, dayIndex: 0 }]],
 });
 
 const memoryItem = {

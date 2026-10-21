@@ -12,6 +12,10 @@ export const secretNames = [
   'ELEVENLABS_API_KEY',
   // Signs sessions and socket tokens.
   'BETTER_AUTH_SECRET',
+  // Sign in with Apple key (team, key id, .p8 as PEM): revokes Apple tokens on account deletion.
+  'APPLE_TEAM_ID',
+  'APPLE_KEY_ID',
+  'APPLE_PRIVATE_KEY',
 ] as const;
 export type SecretName = (typeof secretNames)[number];
 

@@ -7,3 +7,7 @@ ANTHROPIC_API_KEY=
 ELEVENLABS_API_KEY=
 # Signs sessions and socket tokens; at least 32 random characters (`openssl rand -base64 32`).
 BETTER_AUTH_SECRET=
+# Sign in with Apple key: revokes Apple tokens when an account is deleted (App Review requires it).
+APPLE_TEAM_ID=
+APPLE_KEY_ID=
+APPLE_PRIVATE_KEY=

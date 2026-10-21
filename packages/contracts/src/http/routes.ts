@@ -8,6 +8,7 @@
  *   PUT    /api/me/profile           ProfileInput → Profile (onboarding)
  *   PATCH  /api/me/profile           ProfileUpdate → Profile
  *   GET    /api/me/progress          → Progress
+ *   PUT    /api/me/progress          ProgressPut → Progress (409 stale_revision when based on an old revision)
  *   GET    /api/me/memory            → MemoryList
  *   POST   /api/me/memory            MemoryCreate → MemoryItem
  *   PATCH  /api/me/memory/:id        MemoryUpdate → MemoryItem

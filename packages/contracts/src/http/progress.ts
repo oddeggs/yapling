@@ -184,3 +184,11 @@ export const Progress = z
     message: 'Weeks run 1, 2, 3… with none missing',
   });
 export type Progress = z.infer<typeof Progress>;
+
+/**
+ * `PUT /api/me/progress`: the phone's whole progress, with `revision` the server revision it was
+ * based on. An older revision is refused with 409 `stale_revision` and the server's copy wins.
+ * `installedOn` and `dayIndex` belong to the server and are ignored.
+ */
+export const ProgressPut = Progress;
+export type ProgressPut = Progress;
