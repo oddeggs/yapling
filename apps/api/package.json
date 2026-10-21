@@ -1,0 +1,23 @@
+{
+  "name": "@yapling/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The Yapling API: Hono on Cloudflare Workers with the call and user Durable Objects, D1, R2 and Queues, served at <host>/api",
+  "scripts": {
+    "dev": "wrangler dev --env dev",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "hono": "catalog:"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "catalog:",
+    "@cloudflare/workers-types": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:workers",
+    "wrangler": "catalog:"
+  }
+}

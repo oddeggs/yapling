@@ -1,0 +1,70 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Two environments only: `--env dev` (Worker `yapling-api-dev`) and `--env prd` (`yapling-api`).
+  // Bindings are not inherited, so each environment declares its own. Local runs and the tests use
+  // `dev` with simulated bindings, which need no Cloudflare account.
+  // The dev Worker is served on workers.dev; the store host comes with the launch.
+  "name": "yapling-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-01",
+  // Node built-ins (crypto, buffer, async_hooks) for Better Auth and Sentry.
+  "compatibility_flags": ["nodejs_compat"],
+  // One CallDO per live call, one UserDO per learner; both keep their state in SQLite.
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallDO", "UserDO"] }],
+  "env": {
+    "dev": {
+      "name": "yapling-api-dev",
+      "workers_dev": true,
+      // COMMIT_SHA is overridden at deploy time (`--var COMMIT_SHA:<sha>`).
+      "vars": { "ENVIRONMENT": "dev", "COMMIT_SHA": "local" },
+      "durable_objects": {
+        "bindings": [
+          { "name": "CALL", "class_name": "CallDO" },
+          { "name": "USER", "class_name": "UserDO" },
+        ],
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "yapling-dev",
+          // Placeholder until the database exists (`wrangler d1 create yapling-dev`). Local runs
+          // and the tests simulate D1 and never read it.
+          "database_id": "00000000-0000-0000-0000-000000000000",
+          "migrations_dir": "migrations",
+        },
+      ],
+      "r2_buckets": [{ "binding": "BLOBS", "bucket_name": "yapling-blobs-dev" }],
+      "queues": {
+        "producers": [{ "binding": "JOBS", "queue": "yapling-jobs-dev" }],
+        // A batch that keeps failing (3 retries by default) moves to its dead-letter queue.
+        "consumers": [{ "queue": "yapling-jobs-dev", "dead_letter_queue": "yapling-jobs-dlq-dev" }],
+      },
+    },
+    "prd": {
+      "name": "yapling-api",
+      // COMMIT_SHA is overridden at deploy time (`--var COMMIT_SHA:<sha>`).
+      "vars": { "ENVIRONMENT": "prd", "COMMIT_SHA": "local" },
+      "durable_objects": {
+        "bindings": [
+          { "name": "CALL", "class_name": "CallDO" },
+          { "name": "USER", "class_name": "UserDO" },
+        ],
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "yapling",
+          // Placeholder until the database exists (`wrangler d1 create yapling`).
+          "database_id": "00000000-0000-0000-0000-000000000000",
+          "migrations_dir": "migrations",
+        },
+      ],
+      "r2_buckets": [{ "binding": "BLOBS", "bucket_name": "yapling-blobs" }],
+      "queues": {
+        "producers": [{ "binding": "JOBS", "queue": "yapling-jobs" }],
+        // A batch that keeps failing (3 retries by default) moves to its dead-letter queue.
+        "consumers": [{ "queue": "yapling-jobs", "dead_letter_queue": "yapling-jobs-dlq" }],
+      },
+    },
+  },
+}
