@@ -17,6 +17,20 @@ const IOS_DEPLOYMENT_TARGET = '17.0';
 export const BACKGROUND = '#FBFAFD';
 
 /**
+ * The fonts embedded natively, so the first frame already has them: `@yapling/theme`'s font faces,
+ * each registered under its PostScript name (the file name). `tools/fonts` copies them here and
+ * checks this list.
+ */
+export const FONT_FILES = [
+  'Lexend-Medium.ttf',
+  'Lexend-SemiBold.ttf',
+  'Lexend-Bold.ttf',
+  'Lexend-ExtraBold.ttf',
+  'Lexend-Black.ttf',
+  'KithfieldHand-Bold.ttf',
+] as const;
+
+/**
  * Usage strings iOS shows when the app first asks. Calls are spoken: the microphone carries the
  * learner's voice, and speech recognition turns it into the words the critter answers.
  */
@@ -96,7 +110,11 @@ export function buildConfig(
         NSSpeechRecognitionUsageDescription: USAGE.speechRecognition,
       },
     },
-    plugins: ['expo-router', ['expo-splash-screen', { backgroundColor: BACKGROUND }]],
+    plugins: [
+      'expo-router',
+      ['expo-splash-screen', { backgroundColor: BACKGROUND }],
+      ['expo-font', { fonts: FONT_FILES.map((file) => `./assets/fonts/${file}`) }],
+    ],
     experiments: {
       typedRoutes: true,
     },

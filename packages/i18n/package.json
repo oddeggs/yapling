@@ -1,0 +1,22 @@
+{
+  "name": "@yapling/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The app's chrome in Vietnamese and English: typed per-feature catalogues, lookup with plurals and placeholders, and the completeness test",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "gen": "tsx scripts/generate-catalogues.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
