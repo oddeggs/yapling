@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 
 import { BackButton, Press, StickerButton, Txt } from '../../ui';
-import type { MeCopy } from './copy';
+import type { Translate } from '@yapling/i18n';
 import { RowsCard } from './me-frame';
 import type { MemoryGroup } from './me-model';
 
@@ -22,7 +22,7 @@ export interface MemoryPageProps {
   readonly title: string;
   readonly groups: readonly MemoryGroup[];
   readonly roommateName: string;
-  readonly copy: MeCopy;
+  readonly copy: Translate;
   readonly onBack: () => void;
   /** Resolves when saved; rejects when it didn't. */
   readonly onUpdate: (id: string, text: string) => Promise<void>;
@@ -86,7 +86,7 @@ interface NoteProps {
   readonly item: MemoryItem;
   readonly first: boolean;
   readonly editing: boolean;
-  readonly copy: MeCopy;
+  readonly copy: Translate;
   readonly onEdit: () => void;
   readonly onDone: () => void;
   readonly onUpdate: (id: string, text: string) => Promise<void>;

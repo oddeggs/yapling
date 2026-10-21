@@ -10,9 +10,7 @@ import type {
 } from '@yapling/contracts';
 import { MEMORY_CATEGORIES, STAGES } from '@yapling/contracts';
 import { SEASON_1_CAN_DOS, type CanDoTrack } from '@yapling/domain';
-import type { StringKey } from '@yapling/i18n';
-
-import type { MeCopy, MePendingKey } from './copy';
+import type { StringKey, Translate } from '@yapling/i18n';
 
 /*
  * The Me sheet as data, from what the app knows about the learner: their stage, the can-dos they
@@ -80,24 +78,24 @@ export interface MeView {
   readonly deleteData: string;
 }
 
-const STAGE_KEYS: Readonly<Record<Stage, StringKey>> = {
+const STAGE_KEYS = {
   newcomer: 'me.stage.newcomer',
   neighbour: 'me.stage.neighbour',
   regular: 'me.stage.regular',
   local: 'me.stage.local',
   voice: 'me.stage.voiceOfNatterwick',
-};
+} as const satisfies Record<Stage, StringKey>;
 
-const GROUP_KEYS: Readonly<Record<CanDoTrack, StringKey>> = {
+const GROUP_KEYS = {
   life: 'me.group.life',
   work: 'me.group.work',
-};
+} as const satisfies Record<CanDoTrack, StringKey>;
 
-const MEMORY_KEYS: Readonly<Record<MemoryCategory, MePendingKey>> = {
+const MEMORY_KEYS = {
   about_you: 'me.memory.about_you',
   coming_up: 'me.memory.coming_up',
   about_us: 'me.memory.about_us',
-};
+} as const satisfies Record<MemoryCategory, StringKey>;
 
 const tracksOf = (track: Track): readonly CanDoTrack[] =>
   track === 'both' ? ['life', 'work'] : [track];
@@ -109,7 +107,7 @@ const tracksOf = (track: Track): readonly CanDoTrack[] =>
 export function canDoGroups(
   track: Track,
   progress: readonly CanDoProgress[],
-  copy: MeCopy,
+  copy: Translate,
 ): CanDoGroup[] {
   const ticked = new Set(progress.filter((p) => p.status === 'ticked').map((p) => p.id));
   return tracksOf(track).map((t) => {
@@ -123,7 +121,7 @@ export function canDoGroups(
       items: shown.map((d) => ({
         id: d.id,
         // `@yapling/i18n`'s completeness test keeps a title for every season can-do.
-        title: copy(d.titleKey as StringKey),
+        title: copy(d.titleKey as Extract<StringKey, `cando.${string}`>),
         ticked: ticked.has(d.id),
       })),
     };
@@ -131,7 +129,7 @@ export function canDoGroups(
 }
 
 /** Seconds on the wire, whole minutes on screen; never more left than there is. */
-export function minutesRow(minutes: MinutesSummary | null, copy: MeCopy): MinutesRow {
+export function minutesRow(minutes: MinutesSummary | null, copy: Translate): MinutesRow {
   const monthly = minutes?.plan === 'plus';
   return {
     title: copy(monthly ? 'me.liveMinutesMonth' : 'me.liveMinutes'),
@@ -147,7 +145,7 @@ export function minutesRow(minutes: MinutesSummary | null, copy: MeCopy): Minute
 }
 
 /** Whole numbers only: flow in seconds, pace in words a minute, pauses a minute. */
-export function progressNote(fluency: CallMetrics | null, copy: MeCopy): string {
+export function progressNote(fluency: CallMetrics | null, copy: Translate): string {
   if (fluency === null) return copy('me.progressEmpty');
   return copy('me.progressStats', {
     flow: Math.round(fluency.flowSeconds),
@@ -157,7 +155,7 @@ export function progressNote(fluency: CallMetrics | null, copy: MeCopy): string 
 }
 
 /** What the roommate remembers, by section, newest first; empty sections left out. */
-export function memoryGroups(items: readonly MemoryItem[], copy: MeCopy): MemoryGroup[] {
+export function memoryGroups(items: readonly MemoryItem[], copy: Translate): MemoryGroup[] {
   return MEMORY_CATEGORIES.map((category) => ({
     category,
     name: copy(MEMORY_KEYS[category]),
@@ -165,7 +163,7 @@ export function memoryGroups(items: readonly MemoryItem[], copy: MeCopy): Memory
   })).filter((g) => g.items.length > 0);
 }
 
-export function meView(inputs: MeInputs, copy: MeCopy): MeView {
+export function meView(inputs: MeInputs, copy: Translate): MeView {
   const step = STAGES.indexOf(inputs.stage) + 1;
   const name = { name: inputs.roommateName };
   return {

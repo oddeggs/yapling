@@ -1,4 +1,5 @@
-import type { SafetyCopy } from './copy';
+import type { Translate } from '@yapling/i18n';
+
 import type { EmergencyContact } from './emergency';
 
 export interface SafetyView {
@@ -24,7 +25,7 @@ export interface SafetyView {
 export function safetyView(
   contact: EmergencyContact | null,
   roommateName: string,
-  copy: SafetyCopy,
+  copy: Translate,
 ): SafetyView {
   return {
     kicker: copy('safety.kicker'),

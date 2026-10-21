@@ -2,11 +2,11 @@ import { colours } from '@yapling/theme';
 import { View } from 'react-native';
 
 import { StickerButton, Txt } from '../../ui';
-import type { MeCopy } from './copy';
+import type { Translate } from '@yapling/i18n';
 
 export interface DeleteConfirmProps {
   readonly roommateName: string;
-  readonly copy: MeCopy;
+  readonly copy: Translate;
   readonly busy: boolean;
   readonly failed: boolean;
 }
@@ -37,7 +37,7 @@ export function DeleteButtons({
   onKeep,
   onDelete,
 }: {
-  copy: MeCopy;
+  copy: Translate;
   busy: boolean;
   onKeep: () => void;
   onDelete: () => void;

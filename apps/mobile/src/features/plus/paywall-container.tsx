@@ -1,10 +1,9 @@
 import { FREE_WEEKLY_SECONDS, PLUS_MONTHLY_SECONDS } from '@yapling/domain';
 import { useRouter } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Linking } from 'react-native';
 
 import { useLocale, useToast } from '../../ui';
-import { plusCopy } from './copy';
 import { LINKS } from './links';
 import {
   initialOffers,
@@ -37,8 +36,8 @@ export function PaywallContainer({
 }: PaywallContainerProps) {
   const router = useRouter();
   const toast = useToast();
-  const { language, t } = useLocale();
-  const copy = useMemo(() => plusCopy(language), [language]);
+  const { t } = useLocale();
+  const copy = t;
   const store = plusStore();
   const [state, setState] = useState<PaywallState>(() => ({
     offers: initialOffers(store.available, devFallbackAllowed()),

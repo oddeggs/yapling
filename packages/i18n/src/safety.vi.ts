@@ -15,4 +15,6 @@ export const safetyVi = {
   'safety.trusted': 'Nhắn cho người bạn tin tưởng',
   'safety.trustedSub': 'Mở danh bạ',
   'safety.later': 'Quay lại Natterwick sau',
+  'safety.emergencyLocal': 'Nếu bạn đang gặp nguy hiểm, hãy gọi số khẩn cấp ở nơi bạn sống.',
+  'safety.call': 'Gọi {number}',
 } as const satisfies Translation<typeof safetyEn>;

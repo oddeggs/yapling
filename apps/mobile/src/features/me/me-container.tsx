@@ -1,9 +1,8 @@
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator, Linking, View } from 'react-native';
 
 import { useLocale } from '../../ui';
-import { meCopy } from './copy';
 import { DeleteButtons, DeleteConfirm } from './delete-confirm';
 import { MeFrame } from './me-frame';
 import { memoryGroups, meView, type MeInputs } from './me-model';
@@ -35,8 +34,8 @@ type Page = 'main' | 'memory' | 'delete';
 /** The Me sheet, its memory page and the delete confirmation, with navigation to the rest. */
 export function MeContainer({ inputs, actions }: MeContainerProps) {
   const router = useRouter();
-  const { language, t } = useLocale();
-  const copy = useMemo(() => meCopy(language), [language]);
+  const { t } = useLocale();
+  const copy = t;
   const [page, setPage] = useState<Page>('main');
   const [deleting, setDeleting] = useState(false);
   const [deleteFailed, setDeleteFailed] = useState(false);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { plusCopy } from '../../src/features/plus/copy';
+import { translator } from '@yapling/i18n';
 import {
   DEV_SAMPLE_OFFERS,
   initialOffers,
@@ -13,8 +13,8 @@ import {
 import type { PlanOffer } from '../../src/features/plus/store';
 
 const inputs = { roommateName: 'Pip', freeMinutesPerWeek: 10, plusMinutesPerMonth: 150 };
-const en = plusCopy('en');
-const vi = plusCopy('vi');
+const en = translator('en');
+const vi = translator('vi');
 
 const storeOffers: readonly PlanOffer[] = [
   {

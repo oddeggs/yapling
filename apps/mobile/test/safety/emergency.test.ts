@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { safetyCopy } from '../../src/features/safety/copy';
+import { translator } from '@yapling/i18n';
 import { countryOf, emergencyFor } from '../../src/features/safety/emergency';
 import { safetyView } from '../../src/features/safety/safety-model';
 
@@ -30,7 +30,7 @@ describe('the emergency number', () => {
 
 describe('the safety sheet', () => {
   it('offers the country’s number to call, in the chrome’s language', () => {
-    const vi = safetyView(emergencyFor('VN'), 'Pip', safetyCopy('vi'));
+    const vi = safetyView(emergencyFor('VN'), 'Pip', translator('vi'));
     expect(vi.emergency).toEqual({
       title: 'Cấp cứu',
       sub: 'Nếu bạn đang gặp nguy hiểm · Việt Nam',
@@ -40,7 +40,7 @@ describe('the safety sheet', () => {
   });
 
   it('asks for the local emergency number where it has none to offer', () => {
-    const en = safetyView(emergencyFor('US'), 'Mochi', safetyCopy('en'));
+    const en = safetyView(emergencyFor('US'), 'Mochi', translator('en'));
     expect(en.emergency.call).toBeNull();
     expect(en.emergency.sub).toBe('If you are in danger now, call your local emergency number.');
     expect(en.body).toContain('Mochi is an AI');

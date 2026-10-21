@@ -10,7 +10,7 @@ export interface EmergencyContact {
   /** ISO 3166-1 alpha-2. */
   readonly country: string;
   /** The country's name in the chrome's language. */
-  readonly countryKey: StringKey;
+  readonly countryKey: Extract<StringKey, `safety.country.${string}`>;
   /** The number to call for an ambulance. */
   readonly number: string;
 }

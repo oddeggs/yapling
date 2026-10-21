@@ -1,5 +1,6 @@
 import type { ButtonSize, ButtonTone } from '../../ui';
-import type { PlusCopy, PlusPendingKey } from './copy';
+import type { StringKey, Translate } from '@yapling/i18n';
+
 import { PLUS_PLANS, type PlusPlan } from './products';
 import type { PlanOffer, PurchaseOutcome, RestoreOutcome } from './store';
 
@@ -110,7 +111,7 @@ function card(
   plan: PlusPlan,
   offer: PlanOffer | undefined,
   selected: boolean,
-  copy: PlusCopy,
+  copy: Translate,
 ): PlanCard {
   const loading = copy('plus.priceLoading');
   let label: string;
@@ -148,13 +149,13 @@ function card(
 export function paywallView(
   state: PaywallState,
   inputs: PaywallInputs,
-  copy: PlusCopy,
+  copy: Translate,
 ): PaywallView {
   const offers = offersOf(state.offers);
   const chosen = offers?.find((o) => o.plan === state.selected);
   const busy = state.busy !== null;
   const trialDays = chosen?.intro?.freeTrialDays ?? null;
-  const notice: PlusPendingKey | null =
+  const notice: Extract<StringKey, 'plus.devOnly' | 'plus.storeUnavailable'> | null =
     state.offers.kind === 'dev'
       ? 'plus.devOnly'
       : state.offers.kind === 'unavailable'
@@ -208,9 +209,21 @@ export function paywallView(
   };
 }
 
+/** What the learner is told after buying or restoring. */
+type OutcomeKey = Extract<
+  StringKey,
+  | 'plus.welcome'
+  | 'plus.pending'
+  | 'plus.failed'
+  | 'plus.unavailable'
+  | 'plus.restored'
+  | 'plus.nothingToRestore'
+  | 'plus.storeUnavailable'
+>;
+
 /** What a purchase's outcome tells the learner, and whether the paywall closes. */
 export function purchaseMessage(outcome: PurchaseOutcome): {
-  readonly key: PlusPendingKey | null;
+  readonly key: OutcomeKey | null;
   readonly close: boolean;
 } {
   switch (outcome) {
@@ -229,7 +242,7 @@ export function purchaseMessage(outcome: PurchaseOutcome): {
 
 /** What a restore's outcome tells the learner, and whether the paywall closes. */
 export function restoreMessage(outcome: RestoreOutcome): {
-  readonly key: PlusPendingKey;
+  readonly key: OutcomeKey;
   readonly close: boolean;
 } {
   switch (outcome) {

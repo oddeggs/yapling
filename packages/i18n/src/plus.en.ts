@@ -38,4 +38,22 @@ export const plusEn = {
   'plus.privacy': 'Privacy',
   'plus.autoRenew':
     'Renews automatically unless cancelled at least 24 hours before the end of the current period. Manage or cancel in your Apple ID settings.',
+  /** The yearly card when App Store Connect offers no paid first-year price. */
+  'plus.plan.yearly': 'Yearly',
+  /** Over the plan cards in a development build with no RevenueCat key: the design's prices. */
+  'plus.devOnly': 'Dev only: sample prices, no App Store. Purchases are off.',
+  /** The store couldn't load the products (offline, or the products aren't set up). */
+  'plus.storeUnavailable': 'The App Store isn’t answering right now. Try again in a little while.',
+  /** A price that hasn't loaded yet. */
+  'plus.priceLoading': '…',
+  /** After a purchase the server will confirm. Nothing about care, only minutes and depth. */
+  'plus.welcome': 'Plus is on. More live minutes start now.',
+  /** Ask to Buy, or a payment that clears later. */
+  'plus.pending': 'Waiting for the App Store to confirm your payment.',
+  'plus.failed': 'That didn’t go through. You haven’t been charged.',
+  'plus.restored': 'Plus is back on this phone.',
+  'plus.nothingToRestore': 'No Plus purchase to restore on this Apple ID.',
+  'plus.unavailable': 'Purchases aren’t available in this build.',
+  /** Read for the plan cards. */
+  'plus.a11y.plan': '{plan}, {price}. {detail}',
 } as const satisfies EnCatalogue;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 import type { CanDoProgress, MemoryItem, MinutesSummary } from '@yapling/contracts';
 
-import { meCopy } from '../../src/features/me/copy';
+import { translator } from '@yapling/i18n';
 import {
   canDoGroups,
   memoryGroups,
@@ -11,8 +11,8 @@ import {
   type MeInputs,
 } from '../../src/features/me/me-model';
 
-const en = meCopy('en');
-const vi = meCopy('vi');
+const en = translator('en');
+const vi = translator('vi');
 
 const minutes = (over: Partial<MinutesSummary> = {}): MinutesSummary => ({
   plan: 'free',

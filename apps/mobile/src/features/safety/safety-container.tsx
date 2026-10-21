@@ -3,7 +3,6 @@ import { useMemo } from 'react';
 import { Linking } from 'react-native';
 
 import { useLocale } from '../../ui';
-import { safetyCopy } from './copy';
 import { deviceCountry, emergencyFor, SUPPORT_LINES_URL } from './emergency';
 import { safetyView } from './safety-model';
 import { SafetyScreen } from './safety-screen';
@@ -17,8 +16,7 @@ export interface SafetyContainerProps {
 /** The safety sheet wired to the phone: dialling, the helpline directory, Messages, the burrow. */
 export function SafetyContainer({ roommateName, country }: SafetyContainerProps) {
   const router = useRouter();
-  const { language } = useLocale();
-  const copy = useMemo(() => safetyCopy(language), [language]);
+  const { t: copy } = useLocale();
   const view = useMemo(
     () => safetyView(emergencyFor(country ?? deviceCountry()), roommateName, copy),
     [country, roommateName, copy],
