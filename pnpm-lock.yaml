@@ -417,6 +417,9 @@ importers:
       '@shopify/react-native-skia':
         specifier: 'catalog:'
         version: 2.13.1(3437d375848eabd3343a32c2c440aa1b)
+      '@yapling/art':
+        specifier: workspace:*
+        version: link:../../packages/art
       '@yapling/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
