@@ -1,4 +1,4 @@
-import type { HeardWord, TurnMode } from '@yapling/contracts';
+import type { EndTurnFrame, HeardWord, HoldFrame, SpeechFrame, TurnMode } from '@yapling/contracts';
 
 import { Endpointer, holdFor, joinSegments, ENDPOINTING } from './endpointing';
 import type { SpokenLine } from './line';
@@ -10,7 +10,20 @@ import { SttSession } from './stt';
  * on a hold-to-talk release), dropped when the learner speaks again before it reaches the phone.
  * "Chờ chút" pauses all of it until the learner speaks or the hold runs out. While the scene is
  * listening and nobody speaks, the silence is measured for the stage's hint pause.
+ *
+ * When the phone sends its own speech start and end (`speech` frames, from its echo-cancelled
+ * mic), they decide when speech starts and ends; the energy gate stays as the fallback for a
+ * phone that doesn't send them. Silence is still counted on the mic clock, from the phone's end.
  */
+
+/** The phone's speech flags, once it has sent any. */
+interface PhoneVad {
+  speaking: boolean;
+  /** Where the last speech ended, on the mic clock. */
+  endMs: number;
+  /** The segment that ended there was committed. */
+  committed: boolean;
+}
 
 /** Scribe's final text normally follows a commit within about 300 ms. */
 const FINAL_TIMEOUT_MS = 2_500;
@@ -45,6 +58,7 @@ export class LearnerTurn {
   private silenceMs = Number.POSITIVE_INFINITY;
   private tick: ReturnType<typeof setInterval> | null = null;
   private lastSpeechMs = 0;
+  private phone: PhoneVad | null = null;
 
   constructor(
     key: string,
@@ -100,21 +114,37 @@ export class LearnerTurn {
 
   mic(chunk: Uint8Array): void {
     this.stt.audio(chunk);
-    for (const event of this.endpointer.feed(chunk)) {
-      if (event.type === 'speech_start') {
-        this.holdUntil = 0;
-        this.restartQuiet();
-        // Speech resumed before the reply reached the phone: drop it, keep the learner's words.
-        if (this.reply && !this.reply.committed && this.mode === 'hands_free') this.dropReply();
-      } else if (this.mode === 'hands_free') {
-        this.speechEndAt = Date.now() - (this.endpointer.audioMs - event.speechEndMs);
-        this.commit();
-      }
+    const events = this.endpointer.feed(chunk);
+    // The phone's flags, when it sends them, decide; the energy gate is the fallback.
+    for (const event of this.phone === null ? events : []) {
+      if (event.type === 'speech_start') this.speechStarted();
+      else if (this.mode === 'hands_free') this.segmentEnded(event.speechEndMs);
     }
     const talked = this.endpointer.speechMs - this.lastSpeechMs;
     if (talked > 0) {
       this.lastSpeechMs = this.endpointer.speechMs;
       this.host.talked(talked);
+    }
+    this.check();
+  }
+
+  /** The phone's turn frames: a hold-to-talk release, "Chờ chút", its speech flags. */
+  frame(frame: EndTurnFrame | HoldFrame | SpeechFrame): void {
+    if (frame.type === 'end_turn') this.endTurn();
+    else if (frame.type === 'hold') this.hold(frame.seconds);
+    else this.speech(frame.state, frame.atMs);
+  }
+
+  /** The phone's voice activity: speech started or ended at `atMs` on the mic clock. */
+  speech(state: 'start' | 'end', atMs: number): void {
+    this.phone ??= { speaking: false, endMs: 0, committed: true };
+    if (state === 'start') {
+      if (!this.phone.speaking) this.speechStarted();
+      this.phone.speaking = true;
+      this.phone.committed = false;
+    } else {
+      this.phone.speaking = false;
+      this.phone.endMs = atMs;
     }
     this.check();
   }
@@ -135,6 +165,30 @@ export class LearnerTurn {
     this.stt.close();
   }
 
+  private speechStarted(): void {
+    this.holdUntil = 0;
+    this.restartQuiet();
+    // Speech resumed before the reply reached the phone: drop it, keep the learner's words.
+    if (this.reply && !this.reply.committed && this.mode === 'hands_free') this.dropReply();
+  }
+
+  /** A segment ended at `speechEndMs` on the mic clock: commit it and start the reply. */
+  private segmentEnded(speechEndMs: number): void {
+    this.speechEndAt = Date.now() - Math.max(0, this.endpointer.audioMs - speechEndMs);
+    this.commit();
+  }
+
+  /** Whether the learner is speaking: by the phone's flags when it sends them, else the gate. */
+  private inSpeech(): boolean {
+    return this.phone === null ? this.endpointer.inSpeech : this.phone.speaking;
+  }
+
+  /** Silence since the learner's speech ended, in mic ms. */
+  private silence(): number {
+    if (this.phone === null) return this.endpointer.silenceMs;
+    return this.phone.speaking ? 0 : Math.max(0, this.endpointer.audioMs - this.phone.endMs);
+  }
+
   private commit(): void {
     this.awaitingFinal = Date.now();
     this.stt.commit();
@@ -143,7 +197,7 @@ export class LearnerTurn {
   private onFinal(text: string): void {
     this.awaitingFinal = 0;
     if (this.reply === null && !this.host.accepting()) return; // an aside while a line plays
-    if (this.mode === 'hands_free' && this.endpointer.inSpeech) {
+    if (this.mode === 'hands_free' && this.inSpeech()) {
       // The learner started again before this segment's text came back: wait for the rest.
       if (this.reply && !this.reply.committed) this.dropReply();
       if (text) this.pending = joinSegments(this.pending, text);
@@ -176,21 +230,29 @@ export class LearnerTurn {
     if (this.awaitingFinal !== 0 && Date.now() - this.awaitingFinal > FINAL_TIMEOUT_MS) {
       this.onFinal('');
     }
+    // The phone said speech ended: commit once the speculative silence has passed.
+    const phone = this.phone;
+    if (phone && !phone.speaking && !phone.committed && this.mode === 'hands_free') {
+      if (this.endpointer.audioMs - phone.endMs >= ENDPOINTING.specMs) {
+        phone.committed = true;
+        this.segmentEnded(phone.endMs);
+      }
+    }
     const reply = this.reply;
     if (reply?.isGated && !reply.isAborted) {
-      const quiet = !this.endpointer.inSpeech && !this.holding();
-      if (quiet && this.endpointer.silenceMs >= holdFor(this.pending, ENDPOINTING)) {
+      const quiet = !this.inSpeech() && !this.holding();
+      if (quiet && this.silence() >= holdFor(this.pending, ENDPOINTING)) {
         reply.release();
         this.host.released(reply);
       }
       return;
     }
     if (!this.windowOpen || reply !== null || this.awaitingFinal !== 0) return;
-    if (this.endpointer.inSpeech || this.holding() || this.pending !== '') return;
+    if (this.inSpeech() || this.holding() || this.pending !== '') return;
     if (!this.host.accepting()) return;
     const quietMs = Math.max(
       this.endpointer.audioMs -
-        Math.max(this.quietSince.audioMs, this.endpointer.audioMs - this.endpointer.silenceMs),
+        Math.max(this.quietSince.audioMs, this.endpointer.audioMs - this.silence()),
       Date.now() - this.quietSince.wall,
     );
     if (quietMs >= this.silenceMs) {

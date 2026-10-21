@@ -8,6 +8,8 @@ saveExact: true
 # One pinned version per shared dependency; workspace packages reference them as `catalog:`.
 # Pins are Bricked Party's (same Expo / React Native release as Kithfield) so native fixes carry across.
 catalog:
+  # 0.134.0: the newest release pnpm's minimum release age allows.
+  '@anthropic-ai/sdk': 0.134.0
   '@astrojs/check': 0.9.10
   '@babel/core': 7.29.7
   '@bacons/apple-targets': 5.0.0

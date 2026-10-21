@@ -15,9 +15,16 @@ import {
   Stage,
 } from '../primitives';
 
+/** Distinct local days, oldest first. */
+const isAscendingDays = (days: readonly string[]): boolean =>
+  days.every((d, i) => i === 0 || (days[i - 1] ?? '') < d);
+
 /**
  * A phrase (chunk) on its way from seed to bloom, with when it reached each state. A state not yet
  * reached has a null time. Phrases never wilt: a phrase not used for a while stays where it is.
+ * `usedOn` (the learner's local days with a correct use, oldest first, the most recent 30) and
+ * `contexts` (the scenes it was used in correctly, the most recent 20) let the leaf rule (another
+ * day) and the bloom rule (a new context) be checked exactly.
  */
 export const PhraseProgress = z
   .object({
@@ -29,6 +36,17 @@ export const PhraseProgress = z
     leafAt: EpochMs.nullable(),
     bloomAt: EpochMs.nullable(),
     lastUsedAt: EpochMs.nullable(),
+    usedOn: z.array(LocalDate).max(LIMITS.usedDaysMax),
+    contexts: z.array(Id).max(LIMITS.phraseContextsMax),
+  })
+  .refine((p) => isAscendingDays(p.usedOn), {
+    message: 'Use days are distinct, oldest first',
+  })
+  .refine((p) => new Set(p.contexts).size === p.contexts.length, {
+    message: 'Each context once',
+  })
+  .refine((p) => (p.lastUsedAt === null) === (p.usedOn.length === 0), {
+    message: 'A used phrase has use days; an unused one has none',
   })
   .refine(
     (p) => {
@@ -54,10 +72,13 @@ export const ErrorTargetProgress = z
     id: Id,
     status: ErrorTargetStatus,
     selfCorrections: z.int().min(0),
-    /** Different days with a self-correction. */
-    correctionDays: z.int().min(0),
+    /** The learner's local days with a self-correction, distinct, oldest first. */
+    selfCorrectionDays: z.array(LocalDate).max(LIMITS.usedDaysMax),
     activatedAt: EpochMs.nullable(),
     graduatedAt: EpochMs.nullable(),
+  })
+  .refine((t) => isAscendingDays(t.selfCorrectionDays), {
+    message: 'Self-correction days are distinct, oldest first',
   })
   .refine((t) => (t.status === 'graduated') === (t.graduatedAt !== null), {
     message: 'Only a graduated target has a graduation time',
@@ -65,7 +86,7 @@ export const ErrorTargetProgress = z
   .refine((t) => t.status === 'waiting' || t.activatedAt !== null, {
     message: 'An active or graduated target was activated',
   })
-  .refine((t) => t.correctionDays <= t.selfCorrections, {
+  .refine((t) => t.selfCorrectionDays.length <= t.selfCorrections, {
     message: 'No more correction days than corrections',
   });
 export type ErrorTargetProgress = z.infer<typeof ErrorTargetProgress>;

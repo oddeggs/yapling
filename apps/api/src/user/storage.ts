@@ -13,7 +13,9 @@ CREATE TABLE IF NOT EXISTS ledger (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   started_at INTEGER NOT NULL,
   plan TEXT NOT NULL,
-  plan_period_start INTEGER NOT NULL
+  plan_period_start INTEGER NOT NULL,
+  timezone TEXT,
+  installed_on TEXT
 );
 CREATE TABLE IF NOT EXISTS usage (
   period_start INTEGER NOT NULL,
@@ -38,7 +40,10 @@ const KEEP_USAGE_MS = 400 * 24 * 60 * 60_000;
 export interface StoredLedger {
   readonly startedAt: number;
   readonly plan: Plan;
+  /** When the purchase's period started, as the purchases report it. */
   readonly planPeriodStart: number;
+  /** The learner's timezone and install day, pinned from their profile; null until then. */
+  readonly zone: { readonly timezone: string; readonly installedOn: string } | null;
 }
 
 export interface ScheduledPush {
@@ -56,12 +61,28 @@ export class UserStorage {
 
   migrate(): void {
     this.sql.exec(SCHEMA);
+    // Objects made before the ledger pinned its timezone gain the columns.
+    const columns = this.sql
+      .exec<{ name: string }>("SELECT name FROM pragma_table_info('ledger')")
+      .toArray()
+      .map((c) => c.name);
+    if (!columns.includes('timezone')) {
+      this.sql.exec('ALTER TABLE ledger ADD COLUMN timezone TEXT');
+      this.sql.exec('ALTER TABLE ledger ADD COLUMN installed_on TEXT');
+    }
   }
 
   ledger(): StoredLedger | null {
     const row = this.sql
-      .exec<{ started_at: number; plan: string; plan_period_start: number }>(
-        'SELECT started_at, plan, plan_period_start FROM ledger WHERE id = 1',
+      .exec<{
+        started_at: number;
+        plan: string;
+        plan_period_start: number;
+        timezone: string | null;
+        installed_on: string | null;
+      }>(
+        `SELECT started_at, plan, plan_period_start, timezone, installed_on FROM ledger
+         WHERE id = 1`,
       )
       .toArray()[0];
     if (row === undefined) return null;
@@ -69,7 +90,20 @@ export class UserStorage {
       startedAt: row.started_at,
       plan: row.plan === 'plus' ? 'plus' : 'free',
       planPeriodStart: row.plan_period_start,
+      zone:
+        row.timezone !== null && row.installed_on !== null
+          ? { timezone: row.timezone, installedOn: row.installed_on }
+          : null,
     };
+  }
+
+  /** Pins the ledger's timezone and install day; once pinned they don't move. */
+  pinZone(timezone: string, installedOn: string): void {
+    this.sql.exec(
+      'UPDATE ledger SET timezone = ?, installed_on = ? WHERE id = 1 AND timezone IS NULL',
+      timezone,
+      installedOn,
+    );
   }
 
   startLedger(startedAt: number): StoredLedger {

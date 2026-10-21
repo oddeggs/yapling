@@ -208,7 +208,8 @@ export type ThinkingFrame = z.infer<typeof ThinkingFrame>;
 
 /**
  * Something failed. `no_connection` is raised by the phone itself when the socket is gone.
- * `update_required`: the app's protocol is too old. `fatal`: the call ends (an `ended` follows
+ * `update_required`: the app's protocol is too old. `unknown_scene`: the call asked for a scene
+ * this server doesn't have (or can't call). `fatal`: the call ends (an `ended` follows
  * when a call was running).
  */
 export const CALL_ERROR_CODES = [
@@ -219,6 +220,7 @@ export const CALL_ERROR_CODES = [
   'minutes_exhausted',
   'unauthorized',
   'update_required',
+  'unknown_scene',
 ] as const;
 export const CallErrorCode = z.enum(CALL_ERROR_CODES);
 export type CallErrorCode = z.infer<typeof CallErrorCode>;

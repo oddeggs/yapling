@@ -18,6 +18,8 @@ import {
   recordSelfCorrection,
   ringWeeks,
   tickCanDo,
+  fromErrorTargetProgress,
+  fromPhraseProgress,
   toErrorTargetProgress,
   toPhraseProgress,
   weekKeepsakeToWire,
@@ -25,7 +27,6 @@ import {
 } from '@yapling/domain';
 import { findPhrase } from '@yapling/story';
 
-import { phraseRecordOf } from '../call/learner';
 import { ERROR_TARGETS } from '../call/targets';
 import type { LearnerLine } from '../call/transcript';
 import type { Draft } from './summary';
@@ -57,24 +58,6 @@ export interface ProgressChange {
   readonly canDoEvidence: CallCanDoEvidence[];
 }
 
-/**
- * A target as the learning model keeps it. Progress stores only how many days had a
- * self-correction, so earlier days come back as stand-ins that never match a real day.
- */
-function targetRecordOf(t: Progress['errorTargets'][number]): ErrorTargetRecord {
-  return {
-    id: t.id,
-    status: t.status,
-    selfCorrections: t.selfCorrections,
-    correctionDays: Array.from(
-      { length: t.correctionDays },
-      (_, i) => `0000-01-${String(i + 1).padStart(2, '0')}`,
-    ),
-    activatedAt: t.activatedAt,
-    graduatedAt: t.graduatedAt,
-  };
-}
-
 const isCharacter = (id: string): id is CharacterId =>
   (CHARACTER_IDS as readonly string[]).includes(id);
 
@@ -83,7 +66,7 @@ export function applyCall(current: Progress, facts: CallFacts): ProgressChange {
   const events: PhraseEvent[] = [];
 
   // Phrases: the scene's phrases are met; each correct use grows its phrase one step.
-  let phrases = current.phrases.map((p) => phraseRecordOf(p, timezone));
+  let phrases = current.phrases.map(fromPhraseProgress);
   for (const id of facts.scenePhrases) {
     const phrase = findPhrase(id);
     if (!phrase) continue;
@@ -111,7 +94,7 @@ export function applyCall(current: Progress, facts: CallFacts): ProgressChange {
   }
 
   // Error targets: second tries that fixed an active target count; recurring errors queue up.
-  let targets: readonly ErrorTargetRecord[] = current.errorTargets.map(targetRecordOf);
+  let targets: readonly ErrorTargetRecord[] = current.errorTargets.map(fromErrorTargetProgress);
   for (const line of facts.learnerLines) {
     if (line.correctionFixed === true) {
       const prompted = [...facts.learnerLines]

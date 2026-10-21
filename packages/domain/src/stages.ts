@@ -58,6 +58,12 @@ export interface SpeechSettings {
   readonly ttsSpeed: { readonly min: number; readonly max: number };
   /** Character turns stay under ~25 words at every stage: the learner talks most. */
   readonly maxWordsPerTurn: number;
+  /**
+   * Seconds of pause the live voice puts between phrases (after , . ? !), or null for none. The
+   * cast voices run too fast for the slow stages even at their TTS speed, so a short break slows
+   * the delivery without stretching the words.
+   */
+  readonly phraseBreakSeconds: number | null;
 }
 
 const MAX_WORDS_PER_TURN = 25;
@@ -73,6 +79,7 @@ export const SPEECH_SETTINGS: Readonly<Record<Stage, SpeechSettings>> = {
     hint: { kind: 'after_pause', pauseMs: 4_000 },
     ttsSpeed: { min: 0.8, max: 0.8 },
     maxWordsPerTurn: MAX_WORDS_PER_TURN,
+    phraseBreakSeconds: 0.35,
   },
   neighbour: {
     stage: 'neighbour',
@@ -83,6 +90,7 @@ export const SPEECH_SETTINGS: Readonly<Record<Stage, SpeechSettings>> = {
     hint: { kind: 'after_pause', pauseMs: 6_000 },
     ttsSpeed: { min: 0.9, max: 0.9 },
     maxWordsPerTurn: MAX_WORDS_PER_TURN,
+    phraseBreakSeconds: 0.2,
   },
   regular: {
     stage: 'regular',
@@ -93,6 +101,7 @@ export const SPEECH_SETTINGS: Readonly<Record<Stage, SpeechSettings>> = {
     hint: { kind: 'on_request' },
     ttsSpeed: { min: 1.0, max: 1.0 },
     maxWordsPerTurn: MAX_WORDS_PER_TURN,
+    phraseBreakSeconds: null,
   },
   local: {
     stage: 'local',
@@ -103,6 +112,7 @@ export const SPEECH_SETTINGS: Readonly<Record<Stage, SpeechSettings>> = {
     hint: { kind: 'on_request' },
     ttsSpeed: { min: 1.0, max: 1.1 },
     maxWordsPerTurn: MAX_WORDS_PER_TURN,
+    phraseBreakSeconds: null,
   },
   // "Natural (~170+)": the voices at a natural conversational pace. ElevenLabs tops out at 1.2.
   voice: {
@@ -114,6 +124,7 @@ export const SPEECH_SETTINGS: Readonly<Record<Stage, SpeechSettings>> = {
     hint: { kind: 'on_request' },
     ttsSpeed: { min: 1.1, max: 1.2 },
     maxWordsPerTurn: MAX_WORDS_PER_TURN,
+    phraseBreakSeconds: null,
   },
 };
 

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { ClientVersion, EpochMs, OpaqueId, Token } from '../primitives';
+import { ClientVersion, EpochMs, OpaqueId, TimeZone, Token } from '../primitives';
 
 /** `POST /api/session/guest`: a guest account for this install. The learner confirmed 18+. */
 export const GuestSessionRequest = z.object({
@@ -8,6 +8,11 @@ export const GuestSessionRequest = z.object({
   installId: z.uuid(),
   clientVersion: ClientVersion,
   ageConfirmed: z.literal(true),
+  /**
+   * The phone's IANA timezone: the install day and the day count follow it until onboarding saves
+   * the profile's.
+   */
+  timezone: TimeZone.optional(),
 });
 export type GuestSessionRequest = z.infer<typeof GuestSessionRequest>;
 

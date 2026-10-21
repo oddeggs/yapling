@@ -15,8 +15,9 @@ import { z } from 'zod';
  *   12      ...   payload   mic_pcm16 and tts_pcm16: signed 16-bit LE mono samples (even length);
  *                           tts_mp3: MP3 bytes
  *
- * Mic audio is always PCM16, 16 kHz, mono, sent in chunks of about 100 ms (3,200 bytes). TTS audio
- * uses the codec and sample rate `say_start` announced for its stream.
+ * Mic audio is always PCM16, 16 kHz, mono, sent in chunks of about 20 ms (640 bytes; the measured
+ * default, which the app sends). TTS audio uses the codec and sample rate `say_start` announced for
+ * its stream.
  */
 
 export const AUDIO_FRAME_VERSION = 1;
@@ -27,8 +28,8 @@ export const AUDIO = {
   micSampleRateHz: 16_000,
   micChannels: 1,
   bytesPerSample: 2,
-  /** The recommended mic chunk: 100 ms. */
-  micChunkMs: 100,
+  /** The recommended mic chunk: 20 ms. */
+  micChunkMs: 20,
   /** A mic payload never exceeds one second of audio. */
   micPayloadMaxBytes: 32_000,
   /** A TTS payload never exceeds 64 KiB. */

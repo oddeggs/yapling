@@ -8,12 +8,33 @@ import { base64, closeQuietly, openSocket, scribeUrl, UpstreamError } from './up
  * the session acts on the first and takes the words from the second.
  *
  * Word times are Scribe's session clock, which is the socket's mic clock plus the 10 ms of
- * silence each commit sends; they are mapped back to the mic clock for `heard`.
+ * silence each commit or keepalive sends (and, for a session reopened mid-call, minus the mic
+ * audio sent before it); they are mapped back to the mic clock for `heard`.
+ *
+ * In hold-to-talk no audio flows between presses, and Scribe closes a session that hears nothing
+ * for a while. So an idle session gets 10 ms of silence every few seconds, and a session that
+ * closed anyway is reopened by the next audio, which waits in a queue meanwhile (a press is longer
+ * than the handshake, so the release isn't held up).
  */
 
-/** The audio a commit sends with it: 10 ms of silence. */
-const COMMIT_PAD = new Uint8Array(320);
-const COMMIT_PAD_MS = 10;
+/** The audio a commit or a keepalive sends: 10 ms of silence. */
+const PAD = new Uint8Array(320);
+const PAD_MS = 10;
+
+/** Keepalive timing; tests shorten it. */
+export const sttTiming = {
+  /** Send a keepalive after this long without sending anything. */
+  idleMs: 5_000,
+  /** How often to look. */
+  checkMs: 1_000,
+  /** Don't reopen sooner than this after a failed open. */
+  retryMs: 2_000,
+};
+
+interface Queued {
+  readonly bytes: Uint8Array;
+  readonly commit: boolean;
+}
 
 export interface SttHandlers {
   partial(text: string): void;
@@ -40,11 +61,23 @@ interface ScribeMessage {
 
 export class SttSession {
   private ws: WebSocket | null = null;
-  private queue: Uint8Array[] = [];
+  private opening: Promise<void> | null = null;
+  private closed = false;
+  private failedAt = 0;
+  private queue: Queued[] = [];
+  /** Silence sent to this Scribe session (commits and keepalives). */
   private padMs = 0;
+  /** Mic audio received before this Scribe session started. */
+  private micBaseMs = 0;
+  /** Mic audio received on the phone socket so far. */
+  private micMs = 0;
+  private lastSentAt = Date.now();
+  private keepalive: ReturnType<typeof setInterval> | null = null;
   private commitsSent = 0;
   private commitsAnswered = 0;
   private commitsWithWords = 0;
+  /** Scribe sessions opened, the first included. */
+  sessions = 0;
   /** Seconds of audio sent, for cost logging. */
   audioSeconds = 0;
 
@@ -54,8 +87,18 @@ export class SttSession {
   ) {}
 
   /** Opens the session; resolves once Scribe confirms it. */
-  async open(): Promise<void> {
-    const ws = await openSocket(scribeUrl(), this.key);
+  open(): Promise<void> {
+    this.opening ??= this.connect().finally(() => {
+      this.opening = null;
+    });
+    return this.opening;
+  }
+
+  private async connect(): Promise<void> {
+    const ws = await openSocket(scribeUrl(), this.key).catch((error: unknown) => {
+      this.failedAt = Date.now();
+      throw error;
+    });
     await new Promise<void>((resolve, reject) => {
       const timer = setTimeout(() => reject(new UpstreamError('no session_started')), 5_000);
       const first = (event: MessageEvent) => {
@@ -67,9 +110,22 @@ export class SttSession {
       };
       ws.addEventListener('message', first);
     }).catch((error: unknown) => {
+      this.failedAt = Date.now();
       closeQuietly(ws, 'failed');
       throw error;
     });
+    if (this.closed) {
+      closeQuietly(ws, 'call ended');
+      return;
+    }
+    // A new Scribe clock: it starts at the mic audio not yet sent (what waits in the queue).
+    const queuedMs = this.queue.reduce((ms, q) => ms + (q.commit ? 0 : q.bytes.byteLength / 32), 0);
+    this.micBaseMs = this.micMs - queuedMs;
+    this.padMs = 0;
+    this.commitsSent = this.queue.filter((q) => q.commit).length;
+    this.commitsAnswered = 0;
+    this.commitsWithWords = 0;
+    this.sessions += 1;
     this.ws = ws;
     ws.addEventListener('message', (event) => this.onMessage(event.data));
     ws.addEventListener('close', (event) => {
@@ -78,8 +134,12 @@ export class SttSession {
         if (event.code !== 1000) this.handlers.failed(`closed ${event.code}`);
       }
     });
-    for (const chunk of this.queue) this.send(chunk, false);
+    for (const q of this.queue) {
+      if (q.commit) this.padMs += PAD_MS;
+      this.send(q.bytes, q.commit);
+    }
     this.queue = [];
+    this.keepalive ??= setInterval(() => this.keepAlive(), sttTiming.checkMs);
   }
 
   get isOpen(): boolean {
@@ -88,24 +148,49 @@ export class SttSession {
 
   audio(chunk: Uint8Array): void {
     this.audioSeconds += chunk.byteLength / 32_000;
-    if (this.ws === null) this.queue.push(chunk.slice());
-    else this.send(chunk, false);
+    this.micMs += chunk.byteLength / 32;
+    if (this.ws === null) {
+      this.queue.push({ bytes: chunk.slice(), commit: false });
+      this.reopen();
+    } else this.send(chunk, false);
   }
 
   commit(): void {
-    this.padMs += COMMIT_PAD_MS;
+    if (this.ws === null) {
+      this.queue.push({ bytes: PAD, commit: true });
+      this.reopen();
+      return;
+    }
+    this.padMs += PAD_MS;
     this.commitsSent += 1;
-    if (this.ws === null) this.queue.push(COMMIT_PAD);
-    else this.send(COMMIT_PAD, true);
+    this.send(PAD, true);
   }
 
   close(): void {
+    this.closed = true;
+    if (this.keepalive !== null) clearInterval(this.keepalive);
+    this.keepalive = null;
     const ws = this.ws;
     this.ws = null;
     closeQuietly(ws, 'call ended');
   }
 
+  /** A session that closed (or never opened) comes back for the audio waiting for it. */
+  private reopen(): void {
+    if (this.closed || this.opening !== null) return;
+    if (Date.now() - this.failedAt < sttTiming.retryMs) return;
+    this.open().catch((error: unknown) => this.handlers.failed(`reopen: ${String(error)}`));
+  }
+
+  /** An idle session hears 10 ms of silence now and then, so Scribe keeps it open. */
+  private keepAlive(): void {
+    if (this.ws === null || Date.now() - this.lastSentAt < sttTiming.idleMs) return;
+    this.padMs += PAD_MS;
+    this.send(PAD, false);
+  }
+
   private send(bytes: Uint8Array, commit: boolean): void {
+    this.lastSentAt = Date.now();
     try {
       this.ws?.send(
         JSON.stringify({
@@ -138,8 +223,9 @@ export class SttSession {
           this.commitsWithWords < this.commitsSent
         ) {
           this.commitsWithWords += 1;
-          // Words in this segment came before this commit's own pad.
-          const offset = Math.max(0, this.padMs - COMMIT_PAD_MS);
+          // Words in this segment came before this commit's own pad; the session started at
+          // `micBaseMs` on the mic clock.
+          const offset = Math.max(0, this.padMs - PAD_MS) - this.micBaseMs;
           this.handlers.words(toHeardWords(msg.words ?? [], offset));
         }
         if (this.commitsAnswered >= this.commitsSent) return;

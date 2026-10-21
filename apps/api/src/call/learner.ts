@@ -1,9 +1,9 @@
-import type { FirstLanguage, HelloFrame, Progress, Stage } from '@yapling/contracts';
-import { duePhrases, localDateOf, type PhraseRecord } from '@yapling/domain';
+import type { FirstLanguage, HelloFrame, Stage } from '@yapling/contracts';
+import { duePhrases, fromPhraseProgress } from '@yapling/domain';
 import { findPhrase, type ErrorTargetBrief, type Scene } from '@yapling/story';
 
 import type { Bindings } from '../env';
-import { readProgress } from '../progress';
+import { learnerTimeZone, readProgress } from '../progress';
 import { targetBrief } from './targets';
 
 /*
@@ -23,18 +23,6 @@ export interface LearnerContext {
   readonly duePhrases: readonly { readonly id: string; readonly text: string }[];
 }
 
-const DEFAULT_TIMEZONE = 'Asia/Ho_Chi_Minh';
-
-/** A progress phrase as the learning model's record (the days it was used are not kept there). */
-export function phraseRecordOf(p: Progress['phrases'][number], timezone: string): PhraseRecord {
-  return {
-    ...p,
-    useDays: p.lastUsedAt === null ? [] : [localDateOf(p.lastUsedAt, timezone)],
-    contexts: [],
-    pipReusedAt: null,
-  };
-}
-
 export async function loadLearner(
   env: Bindings,
   userId: string,
@@ -42,18 +30,16 @@ export async function loadLearner(
   scene: Scene,
   now: number,
 ): Promise<LearnerContext> {
-  const profile = await env.DB.prepare(
-    'SELECT display_name, timezone FROM profiles WHERE user_id = ?',
-  )
+  const profile = await env.DB.prepare('SELECT display_name FROM profiles WHERE user_id = ?')
     .bind(userId)
-    .first<{ display_name: string; timezone: string }>();
-  const timezone = profile?.timezone ?? DEFAULT_TIMEZONE;
+    .first<{ display_name: string }>();
+  const timezone = await learnerTimeZone(env.DB, userId);
   const progress = await readProgress(env.DB, userId, now);
   const targets = progress.errorTargets
     .filter((t) => t.status === 'active')
     .slice(0, 2)
     .map((t) => targetBrief(t.id));
-  const records = progress.phrases.map((p) => phraseRecordOf(p, timezone));
+  const records = progress.phrases.map(fromPhraseProgress);
   const due = duePhrases(records, now, timezone, { always: [...scene.phrases] }).map((p) => ({
     id: p.id,
     text: p.text,

@@ -39,6 +39,8 @@ const meaningPhrase = {
 const played = { type: 'played', seq: 46, streamId: 3, interrupted: false, lagMs: 1_240 };
 const playedRec = { type: 'played', seq: 47, streamId: 4, interrupted: true, lagMs: null };
 const hangup = { type: 'hangup', seq: 48 };
+const speechStart = { type: 'speech', seq: 49, state: 'start', atMs: 1_200 };
+const speechEnd = { type: 'speech', seq: 50, state: 'end', atMs: 2_840 };
 
 const clientFrames = [
   hello,
@@ -52,6 +54,8 @@ const clientFrames = [
   meaningPhrase,
   played,
   playedRec,
+  speechStart,
+  speechEnd,
   hangup,
 ];
 
@@ -202,6 +206,16 @@ describeSchemas('call client frames', client, {
       { ...played, streamId: 0 },
       { ...played, lagMs: -5 },
       { ...played, interrupted: undefined },
+    ],
+  ],
+  SpeechFrame: [
+    [speechStart, speechEnd, { ...speechStart, atMs: 0 }],
+    [
+      { ...speechStart, state: 'pause' },
+      { ...speechEnd, atMs: -20 },
+      { ...speechEnd, atMs: 12.5 },
+      { ...speechEnd, atMs: undefined },
+      { ...speechStart, seq: 0 },
     ],
   ],
   HangupFrame: [[hangup], [{ type: 'hang_up', seq: 1 }]],

@@ -16,6 +16,8 @@ const seeded = (progress: Progress): Progress => ({
       leafAt: null,
       bloomAt: null,
       lastUsedAt: null,
+      usedOn: [],
+      contexts: [],
     },
   ],
 });

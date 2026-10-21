@@ -75,7 +75,12 @@ export interface CallSocketOptions {
   readonly random?: () => number;
 }
 
-const ENDING_ERRORS = new Set(['unauthorized', 'update_required', 'minutes_exhausted']);
+const ENDING_ERRORS = new Set([
+  'unauthorized',
+  'update_required',
+  'unknown_scene',
+  'minutes_exhausted',
+]);
 
 export class CallSocket {
   private socket: SocketLike | null = null;

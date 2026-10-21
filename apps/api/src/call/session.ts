@@ -214,10 +214,9 @@ export class CallSession {
     if (this.ended) return;
     switch (frame.type) {
       case 'end_turn':
-        this.learner?.endTurn();
-        return;
       case 'hold':
-        this.learner?.hold(frame.seconds);
+      case 'speech':
+        this.learner?.frame(frame);
         return;
       case 'hint_request':
         this.run(this.director.dispatch({ type: 'hint_request' }));

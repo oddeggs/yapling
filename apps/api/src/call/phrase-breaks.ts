@@ -1,9 +1,8 @@
-import type { Stage } from '@yapling/contracts';
-
 /*
- * Phrase breaks for slow stages. The cast voices run too fast on Flash for Newcomer pace even at
- * the stage's speed, so a short SSML break goes between phrases (after , . ? !): about 115–126
- * words a minute for Pip at Newcomer. The TTS socket parses SSML only with
+ * Phrase breaks for slow stages, as long as the stage's `phraseBreakSeconds` in `@yapling/domain`.
+ * The cast voices run too fast on Flash for Newcomer pace even at the stage's speed, so a short
+ * SSML break goes between phrases (after , . ? !): about 115–126 words a minute for Pip at
+ * Newcomer. The TTS socket parses SSML only with
  * `enable_ssml_parsing=true`; without it the voice reads the tag out.
  *
  * Breaks go *before* the word that follows the punctuation, never after the last word, so a turn
@@ -12,15 +11,6 @@ import type { Stage } from '@yapling/contracts';
  * Flash returns the tag's characters (and sometimes an extra ". ") in its alignment, so
  * `AlignmentMapper` maps the provider's characters back onto the plain caption the phone shows.
  */
-
-/** Seconds of pause between phrases by stage; none from Regular. */
-export const PHRASE_BREAK_SECONDS: Readonly<Record<Stage, number | null>> = {
-  newcomer: 0.35,
-  neighbour: 0.2,
-  regular: null,
-  local: null,
-  voice: null,
-};
 
 const PHRASE_END = /[,.?!…]["'”’)]*$/;
 

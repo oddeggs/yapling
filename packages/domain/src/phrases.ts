@@ -1,11 +1,12 @@
-import type {
-  EpochMs,
-  Id,
-  LocalDate,
-  PhraseEventKind,
-  PhraseProgress,
-  PhraseState,
-  TimeZone,
+import {
+  LIMITS,
+  type EpochMs,
+  type Id,
+  type LocalDate,
+  type PhraseEventKind,
+  type PhraseProgress,
+  type PhraseState,
+  type TimeZone,
 } from '@yapling/contracts';
 
 import { pick, type Rng } from './rng';
@@ -231,7 +232,10 @@ export const markPipReuse = (phrase: PhraseRecord, at: EpochMs): PhraseRecord =>
   pipReusedAt: at,
 });
 
-/** The phrase as the progress body carries it. */
+/**
+ * The phrase as the progress body carries it: the most recent use days and contexts, as many as
+ * the body keeps. Uses come in order, so the days dropped are always older than any new use.
+ */
 export const toPhraseProgress = (phrase: PhraseRecord): PhraseProgress => ({
   id: phrase.id,
   text: phrase.text,
@@ -241,4 +245,21 @@ export const toPhraseProgress = (phrase: PhraseRecord): PhraseProgress => ({
   leafAt: phrase.leafAt,
   bloomAt: phrase.bloomAt,
   lastUsedAt: phrase.lastUsedAt,
+  usedOn: phrase.useDays.slice(-LIMITS.usedDaysMax),
+  contexts: phrase.contexts.slice(-LIMITS.phraseContextsMax),
+});
+
+/** The phrase from the progress body. When Pip last reused it is not kept there. */
+export const fromPhraseProgress = (phrase: PhraseProgress): PhraseRecord => ({
+  id: phrase.id,
+  text: phrase.text,
+  state: phrase.state,
+  seedAt: phrase.seedAt,
+  sproutAt: phrase.sproutAt,
+  leafAt: phrase.leafAt,
+  bloomAt: phrase.bloomAt,
+  lastUsedAt: phrase.lastUsedAt,
+  useDays: phrase.usedOn,
+  contexts: phrase.contexts,
+  pipReusedAt: null,
 });

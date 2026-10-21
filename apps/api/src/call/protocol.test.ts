@@ -71,7 +71,7 @@ describe('the call socket', () => {
     const old = await Phone.call(token, { protocol: 99 });
     expect(await old.next('error')).toMatchObject({ code: 'update_required' });
     const unknown = await Phone.call(token, { sceneId: 's9-e9' });
-    expect(await unknown.next('error')).toMatchObject({ code: 'update_required' });
+    expect(await unknown.next('error')).toMatchObject({ code: 'unknown_scene', fatal: true });
   });
 
   it('refuses a call when no live minutes are left', async () => {
@@ -142,7 +142,11 @@ describe('an Episode 1 call', () => {
       'pip-job',
       'close',
     ]);
-    expect(phone.of('play_rec').map((p) => p.lineId)).toEqual([
+    // Recorded beats in order; the recorded reactions ("Ooh," "Mm,") lead generated replies.
+    const recorded = phone.of('play_rec').map((p) => p.lineId);
+    const reactions = recorded.filter((id) => id.startsWith('s1-react-'));
+    expect(reactions.length).toBeGreaterThan(0);
+    expect(recorded.filter((id) => !id.startsWith('s1-react-'))).toEqual([
       's1-e1-02',
       's1-e1-03',
       's1-e1-04',
@@ -211,7 +215,7 @@ describe('an Episode 1 call', () => {
             id: 'past_ed',
             status: 'active',
             selfCorrections: 0,
-            correctionDays: 0,
+            selfCorrectionDays: [],
             activatedAt: 1,
             graduatedAt: null,
           },

@@ -24,6 +24,11 @@ export class Providers {
   readonly ttsVoices: { voice: string; speed: number }[] = [];
   readonly claudeRequests: ClaudeRequest[] = [];
   readonly scribeCommits: number[] = [];
+  /** Scribe sessions opened, and the keepalives (10 ms of digital silence, uncommitted) they got. */
+  scribeSessions = 0;
+  scribeKeepalives = 0;
+  /** Scribe closes a session that hears nothing for this long (off when null). */
+  scribeIdleCloseMs: number | null = null;
   /** Decides each streamed reply: the spoken text and the control line. */
   reply: (request: ClaudeRequest) => string = defaultReply;
   /** Answers non-streamed structured requests (meaning, summary). */
@@ -72,13 +77,24 @@ export class Providers {
     const pair = new WebSocketPair();
     const [client, server] = [pair[0], pair[1]];
     server.accept();
+    this.scribeSessions += 1;
+    let idle: ReturnType<typeof setTimeout> | null = null;
+    const heardSomething = () => {
+      if (idle !== null) clearTimeout(idle);
+      const after = this.scribeIdleCloseMs;
+      if (after !== null) idle = setTimeout(() => server.close(1000, 'session timed out'), after);
+    };
+    heardSomething();
     let audioMs = 0;
     let segmentStart = 0;
     server.send(JSON.stringify({ message_type: 'session_started', session_id: 'fake' }));
     server.addEventListener('message', (event) => {
+      heardSomething();
       const msg = JSON.parse(String(event.data)) as { audio_base_64: string; commit: boolean };
-      const ms = (atob(msg.audio_base_64).length / 32) | 0;
+      const raw = atob(msg.audio_base_64);
+      const ms = (raw.length / 32) | 0;
       audioMs += ms;
+      if (!msg.commit && raw.length === 320 && /^\0+$/.test(raw)) this.scribeKeepalives += 1;
       if (!msg.commit) return;
       this.scribeCommits.push(audioMs);
       const text = this.speech.shift() ?? '';

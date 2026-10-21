@@ -1,4 +1,4 @@
-import type { MemoryItem, Profile, Progress } from '@yapling/contracts';
+import type { MemoryItem, Profile, Progress, TimeZone } from '@yapling/contracts';
 
 import type { Schedule } from '../../src/data/connectivity';
 import { Data } from '../../src/data/data';
@@ -249,7 +249,12 @@ export const newPhone = (): Phone => ({
 });
 
 /** A launch of the app on `phone`: a fresh `Data` over the phone's storage. */
-export function launch(api: FakeApi, phone: Phone, schedule?: Schedule): Data {
+export function launch(
+  api: FakeApi,
+  phone: Phone,
+  schedule?: Schedule,
+  timeZone: () => TimeZone | null = () => 'Asia/Ho_Chi_Minh',
+): Data {
   return new Data({
     base: BASE,
     fetch: api.fetch,
@@ -257,6 +262,7 @@ export function launch(api: FakeApi, phone: Phone, schedule?: Schedule): Data {
     cache: phone.cache,
     clientVersion: '0.1.0',
     newInstallId,
+    timeZone,
     now: () => api.now,
     // Probes never fire by themselves in tests unless the test drives them.
     schedule: schedule ?? (() => () => undefined),

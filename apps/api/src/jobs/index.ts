@@ -12,6 +12,9 @@ export const jobsClock = { now: (): number => Date.now() };
 registerDeletionStep('push_sends', (db, userId) => [
   db.prepare('DELETE FROM push_sends WHERE user_id = ?').bind(userId),
 ]);
+registerDeletionStep('progress_changes', (db, userId) => [
+  db.prepare('DELETE FROM progress_changes WHERE user_id = ?').bind(userId),
+]);
 
 /**
  * The `jobs` queue's consumer: post-call summaries and scheduled pushes. A message that isn't a

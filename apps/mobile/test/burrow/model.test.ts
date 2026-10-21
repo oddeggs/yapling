@@ -95,6 +95,8 @@ describe('the burrow changes day by day', () => {
       leafAt: null,
       bloomAt: null,
       lastUsedAt: null,
+      usedOn: [],
+      contexts: [],
     }));
     const shelves = shelvesFor(phrases, new Set());
     expect([...shelves.left, ...shelves.right].map((o) => o.id)).toEqual([

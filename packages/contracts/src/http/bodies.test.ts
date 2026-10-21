@@ -36,8 +36,10 @@ const sessionBody = { userId, token, expiresAt: at + 30 * day, kind: 'guest' };
 
 describeSchemas('session', session, {
   GuestSessionRequest: [
-    [guest],
+    [guest, { ...guest, timezone: 'Asia/Ho_Chi_Minh' }],
     [
+      { ...guest, timezone: 'Ho Chi Minh City' },
+      { ...guest, timezone: null },
       { ...guest, ageConfirmed: false },
       { ...guest, installId: 'install-1' },
       { ...guest, clientVersion: undefined },
@@ -123,6 +125,8 @@ const seedPhrase = {
   leafAt: null,
   bloomAt: null,
   lastUsedAt: null,
+  usedOn: [],
+  contexts: [],
 };
 const bloomPhrase = {
   ...seedPhrase,
@@ -133,12 +137,14 @@ const bloomPhrase = {
   leafAt: at + 4 * day,
   bloomAt: at + 20 * day,
   lastUsedAt: at + 20 * day,
+  usedOn: ['2026-10-23', '2026-10-26', '2026-11-11'],
+  contexts: ['s1-e1', 's1-e3'],
 };
 const activeTarget = {
   id: 'past_ed',
   status: 'active',
   selfCorrections: 3,
-  correctionDays: 2,
+  selfCorrectionDays: ['2026-10-23', '2026-10-24'],
   activatedAt: at,
   graduatedAt: null,
 };
@@ -147,14 +153,14 @@ const graduatedTarget = {
   id: 'articles',
   status: 'graduated',
   selfCorrections: 5,
-  correctionDays: 3,
+  selfCorrectionDays: ['2026-10-23', '2026-10-24', '2026-10-27'],
   graduatedAt: at + 9 * day,
 };
 const waitingTarget = {
   id: 'final_s',
   status: 'waiting',
   selfCorrections: 0,
-  correctionDays: 0,
+  selfCorrectionDays: [],
   activatedAt: null,
   graduatedAt: null,
 };
@@ -239,9 +245,25 @@ describeSchemas('progress', progress, {
     [
       seedPhrase,
       bloomPhrase,
-      { ...seedPhrase, state: 'sprout', sproutAt: at + day, lastUsedAt: at + day },
+      {
+        ...seedPhrase,
+        state: 'sprout',
+        sproutAt: at + day,
+        lastUsedAt: at + day,
+        usedOn: ['2026-10-23'],
+        contexts: ['s1-e1'],
+      },
     ],
     [
+      { ...bloomPhrase, usedOn: ['2026-10-26', '2026-10-23'] },
+      { ...bloomPhrase, usedOn: ['2026-10-23', '2026-10-23'] },
+      { ...bloomPhrase, usedOn: [] },
+      { ...seedPhrase, usedOn: ['2026-10-23'] },
+      { ...bloomPhrase, usedOn: ['23 Oct'] },
+      { ...bloomPhrase, contexts: ['s1-e1', 's1-e1'] },
+      { ...bloomPhrase, contexts: ['Scene One'] },
+      { ...bloomPhrase, contexts: Array.from({ length: 21 }, (_, i) => `s1-e${i}`) },
+      { ...seedPhrase, contexts: undefined },
       { ...seedPhrase, state: 'sprout' },
       { ...seedPhrase, leafAt: at },
       { ...bloomPhrase, bloomAt: null },
@@ -255,7 +277,13 @@ describeSchemas('progress', progress, {
       { ...activeTarget, graduatedAt: at },
       { ...graduatedTarget, graduatedAt: null },
       { ...activeTarget, activatedAt: null },
-      { ...activeTarget, correctionDays: 4 },
+      {
+        ...activeTarget,
+        selfCorrectionDays: ['2026-10-23', '2026-10-24', '2026-10-25', '2026-10-26'],
+      },
+      { ...activeTarget, selfCorrectionDays: ['2026-10-24', '2026-10-23'] },
+      { ...activeTarget, selfCorrectionDays: ['2026-10-23', '2026-10-23'] },
+      { ...activeTarget, selfCorrectionDays: undefined, correctionDays: 2 },
       { ...activeTarget, selfCorrections: -1 },
     ],
   ],

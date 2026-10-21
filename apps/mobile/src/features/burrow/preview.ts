@@ -6,6 +6,7 @@ import {
   recapFor,
   ringWeeks,
   seedPhrase,
+  toPhraseProgress,
   usePhrase,
   weekKeepsakeToWire,
   type PhraseRecord,
@@ -109,7 +110,7 @@ export function previewModel(
       ]
     : [];
 
-  const progress = { phrases, keepsakes, weeks, canDos };
+  const progress = { phrases: phrases.map(toPhraseProgress), keepsakes, weeks, canDos };
   const hour = options.hour ?? 12;
   return {
     installedOn: localDateOf(installedAt, PREVIEW_TIMEZONE),

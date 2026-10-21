@@ -142,7 +142,17 @@ export const toErrorTargetProgress = (target: ErrorTargetRecord): ErrorTargetPro
   id: target.id,
   status: target.status,
   selfCorrections: target.selfCorrections,
-  correctionDays: target.correctionDays.length,
+  selfCorrectionDays: target.correctionDays.slice(-LIMITS.usedDaysMax),
+  activatedAt: target.activatedAt,
+  graduatedAt: target.graduatedAt,
+});
+
+/** The target from the progress body. */
+export const fromErrorTargetProgress = (target: ErrorTargetProgress): ErrorTargetRecord => ({
+  id: target.id,
+  status: target.status,
+  selfCorrections: target.selfCorrections,
+  correctionDays: target.selfCorrectionDays,
   activatedAt: target.activatedAt,
   graduatedAt: target.graduatedAt,
 });

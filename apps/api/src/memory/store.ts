@@ -47,32 +47,32 @@ export interface NewMemory extends MemoryCreate {
 
 /**
  * Adds an item: the learner's own (`POST`), or one the post-call summary found. Null when the
- * learner already keeps the most items allowed.
+ * learner already keeps the most items allowed. With an `id`, adding it again answers the item
+ * already there (a retried job adds nothing twice).
  */
 export async function addMemory(
   db: D1Database,
   userId: string,
   input: NewMemory,
   now: number,
+  id: string = `m_${crypto.randomUUID()}`,
 ): Promise<MemoryItem | null> {
   const row = await db
     .prepare(
       `INSERT INTO memory_items (id, user_id, text, category, source_call_id, created_at, updated_at)
        SELECT ?1, ?2, ?3, ?4, ?5, ?6, ?6
        WHERE (SELECT COUNT(*) FROM memory_items WHERE user_id = ?2) < ?7
+       ON CONFLICT (id) DO NOTHING
        RETURNING ${COLUMNS}`,
     )
-    .bind(
-      `m_${crypto.randomUUID()}`,
-      userId,
-      input.text,
-      input.category,
-      input.sourceCallId,
-      now,
-      LIMITS.memoryItemsMax,
-    )
+    .bind(id, userId, input.text, input.category, input.sourceCallId, now, LIMITS.memoryItemsMax)
     .first<MemoryRow>();
-  return row === null ? null : fromRow(row);
+  if (row !== null) return fromRow(row);
+  const existing = await db
+    .prepare(`SELECT ${COLUMNS} FROM memory_items WHERE id = ? AND user_id = ?`)
+    .bind(id, userId)
+    .first<MemoryRow>();
+  return existing === null ? null : fromRow(existing);
 }
 
 /** Changes the text, the category or both; null when the learner has no such item. */

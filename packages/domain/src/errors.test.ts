@@ -9,6 +9,7 @@ import {
   noteRecurringError,
   recordSelfCorrection,
   toErrorTargetProgress,
+  fromErrorTargetProgress,
   type ErrorTargets,
 } from './errors';
 import { DAY_MS, HOUR_MS, instantOf } from './time';
@@ -112,7 +113,9 @@ describe('two error targets at a time', () => {
             expect(targets.some((t) => t.status === 'waiting')).toBe(false);
           }
           for (const t of targets) {
-            expect(ErrorTargetProgress.safeParse(toErrorTargetProgress(t)).success).toBe(true);
+            const wire = toErrorTargetProgress(t);
+            expect(ErrorTargetProgress.safeParse(wire).success).toBe(true);
+            expect(fromErrorTargetProgress(wire)).toEqual(t);
           }
         }
         expect(graduatedTargets(targets)).toHaveLength(graduations);
