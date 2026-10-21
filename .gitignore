@@ -17,6 +17,7 @@ apps/mobile/android/
 *.tsbuildinfo
 design/_local/
 audio/auditions/
+audio/auditions-slow/
 audio/season-1/reels/
 __pycache__/
 
