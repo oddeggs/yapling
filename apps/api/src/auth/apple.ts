@@ -1,6 +1,7 @@
 import type { AppleLinkRequest, Session } from '@yapling/contracts';
 import { APIError } from 'better-auth/api';
 
+import { deleteAccount } from '../account/delete';
 import type { Bindings } from '../env';
 import { appleKeyOf, exchangeAuthorizationCode } from './apple-tokens';
 import { identityConfig } from './config';
@@ -29,14 +30,13 @@ export type AppleOutcome =
   | { readonly ok: true; readonly session: Session }
   | { readonly ok: false; readonly status: 401 | 409 | 503; readonly code: string };
 
-/** What becomes of a guest replaced by a returning Apple account. Deletion swaps in the erase. */
-export const guestReplacement: {
-  replace: (env: Bindings, guestId: string) => Promise<void>;
-} = {
-  replace: async (env, guestId) => {
-    await env.DB.prepare('DELETE FROM users WHERE id = ? AND is_anonymous = 1').bind(guestId).run();
-  },
-};
+/** A guest a returning Apple account replaced is erased like a deleted account, if still a guest. */
+async function replaceGuest(env: Bindings, guestId: string, now: number): Promise<void> {
+  const row = await env.DB.prepare('SELECT is_anonymous FROM users WHERE id = ?')
+    .bind(guestId)
+    .first<{ is_anonymous: number | null }>();
+  if (row?.is_anonymous === 1) await deleteAccount(env, guestId, now);
+}
 
 /**
  * The guest takes the new learner's Apple identity, keeping their id: their guest sessions end, the
@@ -150,7 +150,7 @@ export async function appleSession(
       }
       userId = guest.userId;
     } else {
-      await guestReplacement.replace(env, guest.userId);
+      await replaceGuest(env, guest.userId, now);
     }
   }
 
