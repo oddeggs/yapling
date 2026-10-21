@@ -142,7 +142,11 @@ describe('an Episode 1 call', () => {
       'pip-job',
       'close',
     ]);
-    expect(phone.of('play_rec').map((p) => p.lineId)).toEqual([
+    // Recorded beats in order; the recorded reactions ("Ooh," "Mm,") lead generated replies.
+    const recorded = phone.of('play_rec').map((p) => p.lineId);
+    const reactions = recorded.filter((id) => id.startsWith('s1-react-'));
+    expect(reactions.length).toBeGreaterThan(0);
+    expect(recorded.filter((id) => !id.startsWith('s1-react-'))).toEqual([
       's1-e1-02',
       's1-e1-03',
       's1-e1-04',
