@@ -5,6 +5,7 @@ import { Data } from '../../src/data/data';
 import {
   memoryCacheStorage,
   memorySecretStorage,
+  SECRET_KEYS,
   type CacheStorage,
   type SecretStorage,
 } from '../../src/data/storage';
@@ -243,8 +244,13 @@ export interface Phone {
   readonly cache: CacheStorage & { values: Map<string, string> };
 }
 
-export const newPhone = (): Phone => ({
-  secrets: memorySecretStorage(),
+/**
+ * A phone. By default its learner already confirmed they are 18+ in onboarding (the install id
+ * is there), so a launch makes or reads their guest session; `firstLaunch` is a fresh install,
+ * where nothing is asked until `startGuest`.
+ */
+export const newPhone = ({ firstLaunch = false }: { firstLaunch?: boolean } = {}): Phone => ({
+  secrets: memorySecretStorage(firstLaunch ? {} : { [SECRET_KEYS.installId]: newInstallId() }),
   cache: memoryCacheStorage(),
 });
 

@@ -6,9 +6,11 @@ import { SECRET_KEYS, type SecretStorage } from './storage';
 import { createStore, type Store } from './store';
 
 /*
- * The learner's session. On first launch the app makes an install id (kept in the Keychain, which
- * outlives a reinstall) and asks for a guest with it; the bearer token is kept in the Keychain too
- * and goes on every request. A refused guest token is replaced by a new session for the same guest
+ * The learner's session. Nothing is asked for until the learner confirms they are 18 or older in
+ * onboarding (`startGuest`): then the app makes an install id (kept in the Keychain, which outlives
+ * a reinstall) and asks for a guest with it; the bearer token is kept in the Keychain too and goes
+ * on every request. An install id without a session (the guest request failed offline) means the
+ * learner already confirmed, so later launches finish making the guest by themselves. A refused guest token is replaced by a new session for the same guest
  * (the server answers the same install id with the same guest). Sign in with Apple links the guest
  * and keeps its progress; an Apple session that ends needs the Apple sheet again.
  */
@@ -16,6 +18,8 @@ import { createStore, type Store } from './store';
 export type SessionStatus =
   /** Nothing asked yet. */
   | 'idle'
+  /** First launch: no session until the learner confirms they are 18+ (`startGuest`). */
+  | 'awaiting_age'
   /** Reading the Keychain or asking for a guest. */
   | 'starting'
   | 'ready'
@@ -59,9 +63,27 @@ export class SessionManager implements TokenSource {
     return this.store.get();
   }
 
-  /** Makes sure there is a session, without throwing: the outcome is in `store`. */
+  /**
+   * Makes sure there is a session, without throwing: the outcome is in `store`. On first launch it
+   * asks for nothing and leaves the status `awaiting_age`.
+   */
   async start(): Promise<void> {
     await this.ensure().catch(() => undefined);
+  }
+
+  /**
+   * The learner confirmed they are 18 or older (onboarding): makes the guest session, or returns
+   * the one there is. Throws when the API can't make it (the outcome is in `store` too).
+   */
+  async startGuest(): Promise<Session> {
+    const current = this.state.session;
+    if (current !== null) return current;
+    if (this.pending) {
+      const session = await this.pending.catch(() => null);
+      if (session !== null) return session;
+    }
+    await this.installId();
+    return this.ensure();
   }
 
   /** The current session, made first when there is none (deduplicated). */
@@ -124,6 +146,13 @@ export class SessionManager implements TokenSource {
         this.store.set({ status: 'ready', session: stored, error: null });
         return stored;
       }
+    }
+    // A guest is made only for a learner who confirmed their age: `startGuest` made the install
+    // id for it (and account deletion forgets it, so the next learner confirms again).
+    const confirmed = await this.opts.secrets.get(SECRET_KEYS.installId).catch(() => null);
+    if (confirmed === null) {
+      this.store.set({ status: 'awaiting_age', session: null, error: null });
+      throw new DataError('unauthorized');
     }
     return this.createGuest();
   }

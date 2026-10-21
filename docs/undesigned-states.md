@@ -52,3 +52,16 @@ States built from existing components because the design does not show them.
 | Keepsake | Several keepsakes from one call | Each is drawn and hung in turn; the ring header shows on the first only |
 | Keepsake | A can-do ticked mid-week (ring not full) | The can-do board's bar: track tag, "Thêm một điều bạn làm được", the count in that track; the frame hangs higher with no ring header |
 | Keepsake | Hanging it | "Treo lên tường" shows the "Đã treo trên tường hang" toast with the roommate's face and returns to the burrow, whose wall lists every earned keepsake |
+| Ferry (first run) | The age check | The week prototype goes from the language sheet straight on; the hub's ferry arrival has the "I'm 18 or older" row and "Step off the ferry". Both are kept: the language sheet, then a second sheet on the same harbour with the age row and that button |
+| Ferry (first run) | The learner's name | The profile needs a display name (the keepsakes are signed to it) and the placement scene doesn't ask for one. A "Your name" field, the roommate picker's frosted field at 56 tall, sits above the age row; "Step off the ferry" opens once the name is typed and the box ticked |
+| Ferry (first run) | Wordmark | Design review fix 1: no glass backing (its edge clipped the left cloud); the wordmark is set at 62 under the status bar and the top cloud, ending before the moon, its line under it |
+| Ferry (first run) | The guest session can't be made | A muted line above the button: no connection, or Natterwick not answering; the button tries again |
+| Roommate picker | Status bar | Design review fix 5: the town is drawn from the top of its map frame, starting under the status bar, so its two top clouds don't show |
+| Roommate picker | The profile can't be saved | A muted line under the name row ("Couldn't move in yet…"); "Move in" tries again |
+| Unpacking chat (before the call) | Microphone not asked yet | The hub's first chat: the day-one burrow with Pip waving, the "First chat · about a minute" pill, and the white "So Pip can hear you" card with "Allow microphone" before the system sheet. When iOS has already asked, the call opens at once |
+| Residency card | Back button | Left out: the placement call can't be taken back, and "Continue" is the only way on |
+| Residency card | Summary still being written | One frosted row with a spinner and "Pip is writing it down…" in place of the strengths; after a minute without a summary, the three general strengths show |
+| Residency card | Strengths from the call | The summary's wins are written in simple English, so they show in English under the chrome's title; the general strengths that fill the three are Pip's own line after unpacking, in the chrome's language |
+| Residency card | First aims | The can-do catalogue's titles ("Ask someone what's wrong and offer help"), not the prototype's shorter wording |
+| Notifications | Changing the quiet hours | A small "Change" chip under the quiet hours row opens two rows of choice chips: from 21:00, 22:00 or 23:00, until 07:00, 08:00 or 09:00 |
+| Notifications | Pip's phone | The art's critter has no phone pose yet: Pip is drawn excited, without the phone |

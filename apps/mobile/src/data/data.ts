@@ -87,7 +87,10 @@ export class Data {
     this.connectivity.setProbe(() => this.resume());
   }
 
-  /** First launch and every launch: the cache at once, then the session, the queue and a refresh. */
+  /**
+   * First launch and every launch: the cache at once, then the session, the queue and a refresh.
+   * Before the learner confirms their age there is no session, and nothing is asked of the API.
+   */
   async start(): Promise<void> {
     this.stopSession ??= this.session.store.subscribe(() => {
       const userId = this.session.state.session?.userId;
@@ -127,6 +130,17 @@ export class Data {
     this.stopBackOnline?.();
     this.stopBackOnline = null;
     this.connectivity.stop();
+  }
+
+  /**
+   * The learner confirmed they are 18 or older: makes the guest session (with the phone's
+   * timezone), then reads everything for it. Throws when the API can't make one.
+   */
+  async startGuest(): Promise<Session> {
+    const session = await this.session.startGuest();
+    await this.checkOwner(session.userId);
+    void this.resume();
+    return session;
   }
 
   /** The bearer for the call socket's `hello`. */

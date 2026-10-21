@@ -39,6 +39,8 @@ function useResource<T>(resource: Resource<T>, refreshOnMount = false): Loaded<T
 
 export function useSession(): SessionState & {
   readonly getSessionToken: () => Promise<string>;
+  /** Onboarding, once the learner confirms they are 18+: makes the guest session. */
+  readonly startGuest: () => Promise<Session>;
   readonly linkApple: (body: AppleLinkRequest) => Promise<Session>;
 } {
   const data = useData();
@@ -47,6 +49,7 @@ export function useSession(): SessionState & {
     () => ({
       ...state,
       getSessionToken: () => data.getSessionToken(),
+      startGuest: () => data.startGuest(),
       linkApple: (body: AppleLinkRequest) => data.linkApple(body),
     }),
     [state, data],

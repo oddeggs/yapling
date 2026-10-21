@@ -9,8 +9,9 @@ import { sqliteCache } from './sqlite-cache';
 
 /*
  * One `Data` for the app, on the Keychain, SQLite and fetch. Mounting starts it: the cache shows at
- * once, a guest session is made on first launch, and everything refreshes. Coming back to the
- * foreground sends what waited offline and refreshes again.
+ * once, the stored session is read (a first launch waits for onboarding's age check to make a
+ * guest), and everything refreshes. Coming back to the foreground sends what waited offline and
+ * refreshes again.
  */
 
 let shared: Data | null = null;
@@ -27,7 +28,7 @@ export function appData(): Data {
   return shared;
 }
 
-/** The session token for the call socket's `hello`, making a guest session first if needed. */
+/** The session token for the call socket's `hello` (there is none before onboarding's age check). */
 export function getSessionToken(): Promise<string> {
   return appData().getSessionToken();
 }
