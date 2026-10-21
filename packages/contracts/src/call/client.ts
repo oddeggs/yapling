@@ -92,6 +92,20 @@ export const PlayedFrame = z.object({
 });
 export type PlayedFrame = z.infer<typeof PlayedFrame>;
 
+/**
+ * The phone's own voice activity detection (on the echo-cancelled mic): the learner started or
+ * stopped speaking at `atMs` on the call's mic clock (milliseconds of mic audio sent on this
+ * socket). When the phone sends these, the call times its turns by them; without them it falls
+ * back to its own energy gate.
+ */
+export const SpeechFrame = z.object({
+  type: z.literal('speech'),
+  seq: Seq,
+  state: z.enum(['start', 'end']),
+  atMs: Ms,
+});
+export type SpeechFrame = z.infer<typeof SpeechFrame>;
+
 /** The learner ended the call. The call answers `ended` and closes. */
 export const HangupFrame = z.object({ type: z.literal('hangup'), seq: Seq });
 export type HangupFrame = z.infer<typeof HangupFrame>;
@@ -103,6 +117,7 @@ export const CALL_CLIENT_FRAME_TYPES = [
   'hint_request',
   'meaning_request',
   'played',
+  'speech',
   'hangup',
 ] as const;
 export type CallClientFrameType = (typeof CALL_CLIENT_FRAME_TYPES)[number];
@@ -114,6 +129,7 @@ const callClientFrames = z.discriminatedUnion('type', [
   HintRequestFrame,
   MeaningRequestFrame,
   PlayedFrame,
+  SpeechFrame,
   HangupFrame,
 ]);
 

@@ -36,6 +36,8 @@ export class Phone {
   /** Hold `played` back for these streams. */
   readonly withhold = new Set<number>();
   closed = false;
+  /** Mic audio sent so far, in ms: the call's mic clock. */
+  micMs = 0;
   private seq = 0;
   private waiters: (() => void)[] = [];
 
@@ -84,6 +86,7 @@ export class Phone {
 
   /** Mic audio in 100 ms chunks. */
   mic(audio: Uint8Array): void {
+    this.micMs += audio.byteLength / 32;
     for (let i = 0; i < audio.byteLength; i += 3_200) {
       this.seq += 1;
       const payload = audio.subarray(i, Math.min(audio.byteLength, i + 3_200));

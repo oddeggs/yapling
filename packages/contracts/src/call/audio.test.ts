@@ -127,7 +127,7 @@ describe('audio helpers', () => {
   });
 
   it('measure PCM16 duration', () => {
-    expect(pcm16DurationMs(3_200, AUDIO.micSampleRateHz)).toBe(AUDIO.micChunkMs);
+    expect(pcm16DurationMs(640, AUDIO.micSampleRateHz)).toBe(AUDIO.micChunkMs);
     expect(pcm16DurationMs(48_000, 24_000)).toBe(1_000);
   });
 });
