@@ -1,4 +1,5 @@
 import type { Bindings } from './env';
+import { consumeJobs } from './jobs';
 
 /** The queues in `wrangler.jsonc`, by their name without the `yapling-` prefix and `-dev` suffix. */
 export const queueNames = ['jobs'] as const;
@@ -17,7 +18,9 @@ export function queueNameOf(queue: string): QueueName | undefined {
 }
 
 /** Each queue's consumer, registered here as it is built. */
-const handlers: Partial<Record<QueueName, QueueHandler>> = {};
+const handlers: Partial<Record<QueueName, QueueHandler>> = {
+  jobs: (batch, env) => consumeJobs(batch, env),
+};
 
 /** Hands a batch to its queue's consumer. Without one, the batch is retried rather than acked. */
 export async function consumeQueue(

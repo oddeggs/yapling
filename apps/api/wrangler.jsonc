@@ -18,6 +18,8 @@
       // COMMIT_SHA is overridden at deploy time (`--var COMMIT_SHA:<sha>`).
       "vars": { "ENVIRONMENT": "dev", "COMMIT_SHA": "local" },
       "durable_objects": {
+        // Call objects are created with `locationHint: 'wnam'` (src/call/socket-route.ts): the
+        // Anthropic API refuses Cloudflare's Hong Kong colo, where calls from Vietnam land.
         "bindings": [
           { "name": "CALL", "class_name": "CallDO" },
           { "name": "USER", "class_name": "UserDO" },

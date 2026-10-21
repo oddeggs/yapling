@@ -1,0 +1,168 @@
+import type { CallEndReason, CallKind, Id, TurnMode } from '@yapling/contracts';
+import type { RunnerState, Scene } from '@yapling/story';
+
+import { userBlobPrefix } from '../account';
+import { insertCall } from '../calls/store';
+import type { Bindings } from '../env';
+import { PostCallJob } from '../jobs/messages';
+import { callCost, medians, noSamples, type Samples } from './costs';
+import type { LearnerContext } from './learner';
+import { noUsage, type Usage } from './llm';
+import type { MeterState } from './meter';
+import {
+  isLearnerLine,
+  transcriptKey,
+  type TranscriptFile,
+  type TranscriptLine,
+} from './transcript';
+
+/*
+ * A call's plain data, kept in the call object's storage so a dropped call resumes on its beat,
+ * and turned into the call record, the R2 transcript and the post-call job when it ends.
+ */
+
+export interface CallMeta {
+  readonly callId: string;
+  readonly userId: string;
+  readonly kind: CallKind;
+  readonly sceneId: Id;
+  readonly startedAt: number;
+  /** The secret half of the resume token. */
+  readonly resumeSecret: string;
+  /** Two-letter country of the phone's connection, for crisis resources. */
+  readonly country: string;
+  readonly turnMode: TurnMode;
+}
+
+export interface CallData {
+  readonly version: 1;
+  readonly meta: CallMeta;
+  readonly learner: LearnerContext;
+  runner: RunnerState;
+  transcript: TranscriptLine[];
+  turns: number;
+  streamSeq: number;
+  meter: MeterState;
+  usage: Usage;
+  sttSeconds: number;
+  ttsChars: number;
+  samples: Samples;
+  awaitingLag: boolean;
+  secondsLeft: number;
+  wrapping: boolean;
+  wrapStarted: boolean;
+  crisis: boolean;
+  priorCallSeconds: number;
+  continuousSince: number;
+  disclosedAtMs: number;
+  breakSent: boolean;
+  detachedAt: number | null;
+  endReason: CallEndReason | null;
+}
+
+export function newCallData(
+  meta: CallMeta,
+  learner: LearnerContext,
+  runner: RunnerState,
+  facts: {
+    secondsLeft: number;
+    wrapping: boolean;
+    priorCallSeconds: number;
+    continuousSince: number;
+  },
+): CallData {
+  return {
+    version: 1,
+    meta,
+    learner,
+    runner,
+    transcript: [],
+    turns: 0,
+    streamSeq: 0,
+    meter: { learnerMs: 0, characterMs: 0, billedLearner: 0, billedCharacter: 0 },
+    usage: noUsage(),
+    sttSeconds: 0,
+    ttsChars: 0,
+    samples: noSamples(),
+    awaitingLag: false,
+    secondsLeft: facts.secondsLeft,
+    wrapping: facts.wrapping,
+    wrapStarted: false,
+    crisis: false,
+    priorCallSeconds: facts.priorCallSeconds,
+    continuousSince: facts.continuousSince,
+    disclosedAtMs: 0,
+    breakSent: false,
+    detachedAt: null,
+    endReason: null,
+  };
+}
+
+/** The character who led the call: the scene's first cast member. */
+export const leadOf = (scene: Scene) => scene.cast[0] ?? 'pip';
+
+/**
+ * Writes the record, the transcript and the post-call job. Returns whether a summary is coming
+ * (a call with at least one learner turn gets one).
+ */
+export async function finalizeCall(
+  env: Bindings,
+  data: CallData,
+  scene: Scene,
+  runner: RunnerState,
+): Promise<boolean> {
+  const { meta } = data;
+  const endedAt = Date.now();
+  const key = transcriptKey(userBlobPrefix(meta.userId), meta.callId);
+  const file: TranscriptFile = {
+    version: 1,
+    callId: meta.callId,
+    sceneId: meta.sceneId,
+    kind: meta.kind,
+    stage: data.learner.stage,
+    firstLanguage: data.learner.firstLanguage,
+    timezone: data.learner.timezone,
+    startedAt: meta.startedAt,
+    endedAt,
+    lines: data.transcript,
+  };
+  await env.BLOBS.put(key, JSON.stringify(file), {
+    httpMetadata: { contentType: 'application/json' },
+  });
+  const summaryPending = data.transcript.some((l) => isLearnerLine(l) && l.text !== '');
+  const reason = data.endReason ?? 'hangup';
+  // The scene keeps its place only when minutes ran out before it finished.
+  const sceneState = reason === 'minutes_exhausted' && runner.phase !== 'ended' ? runner : null;
+  const cost = callCost(data.sttSeconds, data.ttsChars, data.usage);
+  await insertCall(env.DB, {
+    id: meta.callId,
+    userId: meta.userId,
+    kind: meta.kind,
+    sceneId: meta.sceneId,
+    character: leadOf(scene),
+    stage: data.learner.stage,
+    startedAt: meta.startedAt,
+    endedAt: Math.max(endedAt, meta.startedAt),
+    learnerSeconds: Math.round(data.meter.learnerMs / 1_000),
+    characterSeconds: Math.round(data.meter.characterMs / 1_000),
+    endReason: reason,
+    summaryPending,
+    sceneState,
+    safetyFlag: data.crisis ? 'crisis' : null,
+    cost,
+    timings: medians(data.samples),
+    transcriptKey: key,
+  });
+  console.log('call ended', {
+    callId: meta.callId,
+    reason,
+    seconds: Math.round((endedAt - meta.startedAt) / 1_000),
+    usd: cost.usd,
+    timings: medians(data.samples),
+  });
+  if (summaryPending) {
+    const job: PostCallJob = { type: 'post_call', callId: meta.callId, userId: meta.userId };
+    await env.JOBS.send(PostCallJob.parse(job));
+  }
+  return summaryPending;
+}

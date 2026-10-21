@@ -3,7 +3,7 @@ import type { Bindings } from './env';
 import { consumeQueue } from './queues';
 
 // Durable Object classes are exported from the entry, as `wrangler.jsonc` names them.
-export { CallDO } from './call/call-object';
+export { CallDO } from './call';
 export { UserDO } from './user/user-object';
 
 const app = createApp();

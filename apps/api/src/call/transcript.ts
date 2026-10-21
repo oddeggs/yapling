@@ -1,0 +1,54 @@
+import type { CharacterId, HeardWord } from '@yapling/contracts';
+
+/*
+ * The call's transcript: every line in order, the learner's with their word timings. Kept in the
+ * call object while the call runs, then written to R2 (`<user prefix>calls/<id>/transcript.json`)
+ * for the post-call summary.
+ */
+
+export interface LearnerLine {
+  readonly speaker: 'learner';
+  readonly text: string;
+  readonly at: number;
+  readonly turn: number;
+  readonly words: readonly HeardWord[];
+  /** The beat the turn answered. */
+  readonly beatId: string | null;
+  /** How the character judged it (from the control line). */
+  readonly outcome: string | null;
+  readonly phrasesUsed: readonly string[];
+  readonly canDo: string | null;
+  readonly targetId: string | null;
+  /** A second try after a correction prompt: fixed or not. */
+  readonly correctionFixed: boolean | null;
+}
+
+export interface CharacterLine {
+  readonly speaker: CharacterId;
+  readonly text: string;
+  readonly at: number;
+  /** The recorded line it played, if it was one. */
+  readonly lineId: string | null;
+  readonly beatId: string | null;
+}
+
+export type TranscriptLine = LearnerLine | CharacterLine;
+
+export const isLearnerLine = (line: TranscriptLine): line is LearnerLine =>
+  line.speaker === 'learner';
+
+export interface TranscriptFile {
+  readonly version: 1;
+  readonly callId: string;
+  readonly sceneId: string;
+  readonly kind: string;
+  readonly stage: string;
+  readonly firstLanguage: string;
+  readonly timezone: string;
+  readonly startedAt: number;
+  readonly endedAt: number;
+  readonly lines: readonly TranscriptLine[];
+}
+
+export const transcriptKey = (prefix: string, callId: string): string =>
+  `${prefix}calls/${callId}/transcript.json`;

@@ -1,11 +1,13 @@
 import type { MinutesSummary, Plan } from '@yapling/contracts';
+import { ledgerPeriod, localDateOf } from '@yapling/domain';
 
 /*
  * The live-minute ledger's rules, kept apart from storage and the object so they can be swapped
- * whole. `@yapling/domain` will own the canonical ledger math; when it lands, an adapter that
- * implements `LedgerRules` with it replaces `localLedgerRules` in `user-object.ts`, and nothing
- * else changes. Until then these follow `tech-decisions.md` §3: free has a generous first week,
- * then 10 minutes a week; Plus has 150 minutes a month, fair use.
+ * whole. `domainLedgerRules` is `@yapling/domain`'s canonical ledger behind this seam;
+ * `localLedgerRules` (anchored on the account's creation and the purchase instant, 30-day Plus
+ * periods) stays in force in `user-object.ts` until that file switches and its tests follow the
+ * domain's local-midnight periods and calendar months. Both follow `tech-decisions.md` §3: free has
+ * a generous first week, then 10 minutes a week; Plus has 150 minutes a month, fair use.
  */
 
 const DAY_MS = 24 * 60 * 60_000;
@@ -66,6 +68,35 @@ export const localLedgerRules: LedgerRules = {
     }
     const { start, end } = repeating(firstWeekEnd, WEEK_MS, now);
     return { plan: 'free', start, end, allowanceSeconds: FREE_WEEK_SECONDS, firstWeek: false };
+  },
+};
+
+/**
+ * The ledger's timezone until the learner object reads the profile's: Vietnam, where the app
+ * launches. Periods start at local midnight.
+ */
+export const LEDGER_TIMEZONE = 'Asia/Ho_Chi_Minh';
+
+/**
+ * `@yapling/domain`'s ledger behind the seam: free has a generous first week from the install day,
+ * then weekly allowances on the same weekday; Plus has calendar months. Periods follow the
+ * learner's local days.
+ */
+export const domainLedgerRules: LedgerRules = {
+  period: (state, now) => {
+    const p = ledgerPeriod({
+      plan: state.plan,
+      installedOn: localDateOf(state.startedAt, LEDGER_TIMEZONE),
+      timezone: LEDGER_TIMEZONE,
+      now,
+    });
+    return {
+      plan: p.plan,
+      start: p.periodStart,
+      end: p.periodEnd,
+      allowanceSeconds: p.allowanceSeconds,
+      firstWeek: p.firstWeek,
+    };
   },
 };
 
