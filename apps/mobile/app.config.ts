@@ -114,6 +114,12 @@ export function buildConfig(
       'expo-router',
       ['expo-splash-screen', { backgroundColor: BACKGROUND }],
       ['expo-font', { fonts: FONT_FILES.map((file) => `./assets/fonts/${file}`) }],
+      // The call's audio graph. Background audio keeps a live call going when the screen locks; the
+      // microphone string is set above, so the plugin leaves it alone.
+      [
+        'react-native-audio-api',
+        { iosBackgroundMode: true, androidForegroundService: false, androidPermissions: [] },
+      ],
     ],
     experiments: {
       typedRoutes: true,

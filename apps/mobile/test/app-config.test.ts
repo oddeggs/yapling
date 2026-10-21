@@ -66,3 +66,15 @@ describe('app variants', () => {
     expect(buildConfig({}, 'prd', unset).extra?.['apiBase']).toBeUndefined();
   });
 });
+
+describe('the call audio', () => {
+  it('keeps a live call running in the background and leaves the mic string to the app', () => {
+    for (const variant of ['dev', 'prd'] as const) {
+      const config = buildConfig({}, variant, unset);
+      expect(config.plugins).toContainEqual([
+        'react-native-audio-api',
+        { iosBackgroundMode: true, androidForegroundService: false, androidPermissions: [] },
+      ]);
+    }
+  });
+});
