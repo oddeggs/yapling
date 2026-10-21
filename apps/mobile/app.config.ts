@@ -114,6 +114,8 @@ export function buildConfig(
       'expo-router',
       ['expo-splash-screen', { backgroundColor: BACKGROUND }],
       ['expo-font', { fonts: FONT_FILES.map((file) => `./assets/fonts/${file}`) }],
+      // Day knocks are local notifications; remote pushes (voicemails, calls) turn APNs on later.
+      ['expo-notifications', { enableRemoteNotifications: false }],
     ],
     experiments: {
       typedRoutes: true,
