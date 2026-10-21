@@ -39,3 +39,16 @@ States built from existing components because the design does not show them.
 | Me sheet | Fixes you now own | Left out of the first-week sheet: no fix can graduate in the first week (five self-corrections over three days) |
 | Safety sheet | A country with no verified number | No call button; the emergency row asks the learner to call their local emergency number |
 | "Pip is an AI" sheet | Opened from the Me sheet | The C2 board's sheet, with the onboarding catalogue's lines (the voice line reads "Delete it any time") |
+| Ferry (first run) | The age check | The week prototype goes from the language sheet straight on; the hub's ferry arrival has the "I'm 18 or older" row and "Step off the ferry". Both are kept: the language sheet, then a second sheet on the same harbour with the age row and that button |
+| Ferry (first run) | The learner's name | The profile needs a display name (the keepsakes are signed to it) and the placement scene doesn't ask for one. A "Your name" field, the roommate picker's frosted field at 56 tall, sits above the age row; "Step off the ferry" opens once the name is typed and the box ticked |
+| Ferry (first run) | Wordmark | Design review fix 1: no glass backing (its edge clipped the left cloud); the wordmark is set at 62 under the status bar and the top cloud, ending before the moon, its line under it |
+| Ferry (first run) | The guest session can't be made | A muted line above the button: no connection, or Natterwick not answering; the button tries again |
+| Roommate picker | Status bar | Design review fix 5: the town is drawn from the top of its map frame, starting under the status bar, so its two top clouds don't show |
+| Roommate picker | The profile can't be saved | A muted line under the name row ("Couldn't move in yet…"); "Move in" tries again |
+| Unpacking chat (before the call) | Microphone not asked yet | The hub's first chat: the day-one burrow with Pip waving, the "First chat · about a minute" pill, and the white "So Pip can hear you" card with "Allow microphone" before the system sheet. When iOS has already asked, the call opens at once |
+| Residency card | Back button | Left out: the placement call can't be taken back, and "Continue" is the only way on |
+| Residency card | Summary still being written | One frosted row with a spinner and "Pip is writing it down…" in place of the strengths; after a minute without a summary, the three general strengths show |
+| Residency card | Strengths from the call | The summary's wins are written in simple English, so they show in English under the chrome's title; the general strengths that fill the three are Pip's own line after unpacking, in the chrome's language |
+| Residency card | First aims | The can-do catalogue's titles ("Ask someone what's wrong and offer help"), not the prototype's shorter wording |
+| Notifications | Changing the quiet hours | A small "Change" chip under the quiet hours row opens two rows of choice chips: from 21:00, 22:00 or 23:00, until 07:00, 08:00 or 09:00 |
+| Notifications | Pip's phone | The art's critter has no phone pose yet: Pip is drawn excited, without the phone |
