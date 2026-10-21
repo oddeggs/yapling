@@ -4,6 +4,7 @@ import { accountRoutes } from './account';
 import { callSocketRoutes } from './call';
 import { callRecordRoutes } from './calls';
 import type { AppEnv } from './env';
+import { purchaseRoutes } from './purchases';
 
 /** The API, served at `<host>/api/*`. */
 export function createApp(): Hono<AppEnv> {
@@ -18,6 +19,8 @@ export function createApp(): Hono<AppEnv> {
   // The call socket (its token comes in `hello`), then the call records.
   app.route('/', callSocketRoutes());
   app.route('/', callRecordRoutes());
+  // RevenueCat's webhook: its own secret, no session.
+  app.route('/', purchaseRoutes());
 
   app.notFound((c) => c.json({ error: { code: 'not_found' } }, 404));
 
