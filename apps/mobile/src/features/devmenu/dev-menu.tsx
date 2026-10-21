@@ -14,7 +14,7 @@ import { Txt } from '../../ui/text';
 import { ToggleRow } from '../../ui/toggle';
 import { useKnockInputs } from '../knocks/knocks-provider';
 import { hasKnockPermission, requestKnockPermission } from '../knocks/permission';
-import { knockOfDay } from '../knocks/plan';
+import { knockHref, knockOfDay } from '../knocks/plan';
 import { cancelKnocks, fireTestKnock, scheduledKnocks } from '../knocks/scheduler';
 import {
   jumpToDay,
@@ -28,6 +28,7 @@ import {
 } from './debug-clock';
 import { useResetLocalData } from './dev-menu-host';
 import { devStorage } from './dev-storage';
+import { KnockPreview } from './knock-preview';
 import { dayOf, testLearnerOf } from './test-learner';
 
 const DAYS = WEEK_ONE_PLAN.map((d) => d.day);
@@ -60,7 +61,7 @@ const ringsAt = (request: NotificationRequest): number | null => {
 
 export function DevMenu() {
   const insets = useSafeAreaInsets();
-  const { language } = useLocale();
+  const { language, t } = useLocale();
   const setLanguage = useLanguageOverride();
   const clock = useDebugClock();
   const resetLocalData = useResetLocalData();
@@ -185,6 +186,23 @@ export function DevMenu() {
               />
             ))}
           </Row>
+          {preview === null ? null : (
+            <KnockPreview
+              day={previewDay}
+              date={preview.date}
+              time={preview.time}
+              title={preview.title}
+              body={preview.body}
+              language={language}
+              t={t}
+              onPress={() => {
+                // As on the lock screens between days: tapping the knock opens the app on its day.
+                jumpToDay(previewDay, learner.installedOn, learner.timezone);
+                router.dismissAll();
+                router.navigate(knockHref(previewDay));
+              }}
+            />
+          )}
           <StickerButton
             label={`Day ${previewDay}, a minute before its knock`}
             tone="primary"
