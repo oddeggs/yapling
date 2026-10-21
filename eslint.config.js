@@ -53,6 +53,8 @@ export default defineConfig([
     'audio/',
     // Throwaway spikes and the Python voice pipeline are outside the workspace's checks.
     'spikes/',
+    // The render tool runs under Node's own type stripping (explicit .ts imports) and in Chrome.
+    'tools/design/',
     'tools/voice/',
     '.claude/',
     '**/*.generated.*',

@@ -1,6 +1,6 @@
 # Yapling design index
 
-Source of truth: `design/prototype/` (Claude Design export, 22 Oct 2026). Open a file with a local server from this folder (`python3 -m http.server`), not from disk. Renders land in `design/renders/<id>.png` (tool: `tools/design`). Fixes in `docs/design-review.md` override the visuals.
+Source of truth: `design/prototype/` (Claude Design export, 22 Oct 2026). Open a file with a local server from this folder (`python3 -m http.server`), not from disk. Renders land in `design/renders/` (`week1/<id>.png`, `hub/<id>.png`, `boards/<board>/<frame>.png`, `art/`), built by `node tools/design/src/render.ts`; the PNGs are rebuilt locally, not committed. Fixes in `docs/design-review.md` override the visuals.
 
 | File | What it is |
 |---|---|

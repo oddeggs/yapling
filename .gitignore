@@ -19,3 +19,7 @@ design/_local/
 audio/auditions/
 audio/season-1/reels/
 __pycache__/
+
+# Design renders are rebuilt by tools/design (deterministic on this Mac); only manifests are committed.
+design/renders/**/*.png
+tools/design/.cache/

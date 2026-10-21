@@ -1,0 +1,2033 @@
+{
+  "chrome": "Chrome/155.0.8059.86",
+  "screens": [
+    {
+      "file": "week1/d1-splash.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-splash",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "0535346cc26bca577df0e2a42de9645151488bc79331453fda6ff4e4e275066d"
+    },
+    {
+      "file": "week1/d1-splash.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-splash",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "8e93bb9afe42929c13d77fc1775f9dd818426c769ca509acf7407d0301703ac2"
+    },
+    {
+      "file": "week1/d1-ai.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-ai",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "3245539d0e29a977f2c6649657b9cafd5f56ad7673d9c77d3872dd69a0b0318b"
+    },
+    {
+      "file": "week1/d1-ai.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-ai",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "21d16fa44f8764fe12a0f6430db4a4c9a1a3ae91dd33e1e238e47307a1713da7"
+    },
+    {
+      "file": "week1/d1-pick.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-pick",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "f93afa410930d4bb47abcfc386cb638fa7b7f6f51e9a1c64462f62baee08d8c0"
+    },
+    {
+      "file": "week1/d1-pick.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-pick",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "8b8e4bce52130299b73658bfd1ded4333a65e10c0ae093df3482de361845b16a"
+    },
+    {
+      "file": "week1/d1-unpack.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-unpack",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 10710,
+      "sha256": "7437fcf4648c2d1c2d588c5cf3a3e1dacbb8bb5d7a6f6e10dbad3ff401a16c37"
+    },
+    {
+      "file": "week1/d1-unpack.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-unpack",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 10710,
+      "sha256": "2abb7f1132fb5890fb90079202798259ca99eeaa4f112a003cb9d08e5edb9ab6"
+    },
+    {
+      "file": "week1/d1-card.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-card",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "c94ed509a4738bac4a1bc3d63e8e963f695ed070baa268d85da639ff768b146b"
+    },
+    {
+      "file": "week1/d1-card.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-card",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "022e003d88a0b26b833a3593d2f39fd6fea46af90f90735452ae78e26bfae90a"
+    },
+    {
+      "file": "week1/d1-notif.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-notif",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "017900d9cbb5c4d53f0cd1a5c8f641e225f6b5491a41b2eb7dc4006e143f7804"
+    },
+    {
+      "file": "week1/d1-notif.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-notif",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "0357b0c0d3eed2b5d4032eea88ee50239f222f6efbf9ab7c6595a527c79a06e2"
+    },
+    {
+      "file": "week1/d1-linh.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-linh",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 11610,
+      "sha256": "08fc9b22e7161efd8cc41b4cf2e7e49bf46224e75c6c48bcddcc2155192c39bb"
+    },
+    {
+      "file": "week1/d1-linh.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d1-linh",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 11610,
+      "sha256": "2a858fdc502375799c2857063e6f52077e7d8f46bd8e6eae0a501686d4673230"
+    },
+    {
+      "file": "week1/d2-lock.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d2-lock",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "e76bee23da7590c9a67a276c1a91478863f43c6d5176cbb7a90d8ffd2e41b17c"
+    },
+    {
+      "file": "week1/d2-lock.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d2-lock",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "2f53b6e9b88b3db81cfd35fde94d14ed1c6926694a21dab6e8d2b0a2f97bc141"
+    },
+    {
+      "file": "week1/d2-week.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d2-week",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "e486368fe31c575ff15863c0e429a3479e412fc014bc46e9641c0f9f636ff7f6"
+    },
+    {
+      "file": "week1/d2-week.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d2-week",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "2cb6548e8a79004f427c9a6bac8901171369a71202449d07d94e3f5b587a575e"
+    },
+    {
+      "file": "week1/d2-call.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d2-call",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 9180,
+      "sha256": "104c3da01860c3f52d3053ec9d714d47fd8536962b31daf97456003384ed567f"
+    },
+    {
+      "file": "week1/d2-call.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d2-call",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 9180,
+      "sha256": "f05060bc1151217057ea6617cc841c7f4a6e72c627c2a66dee1592d45feed4be"
+    },
+    {
+      "file": "week1/d2-post.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d2-post",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "5ae57baf882f55d7286be654afe0f0ec9b06def0fbd95b79081cb4e18d2d0d6d"
+    },
+    {
+      "file": "week1/d2-post.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d2-post",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "c42fb455267639b467ea5bd7c34eb6aeb080346099f810210c8b85dd15f784ef"
+    },
+    {
+      "file": "week1/d3-lock.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d3-lock",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "258b05b471803f13ffefa5c17922cef6fbc6ae40394ea55113b791d08a977e6c"
+    },
+    {
+      "file": "week1/d3-lock.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d3-lock",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "fb5766102b76ef6423352eb74d7bab63012f92d0a60fd6ef8ec4e0c77e3ba820"
+    },
+    {
+      "file": "week1/d3-story.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d3-story",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 33840,
+      "sha256": "d7206b03035cf7d8b28ef714224aab8960b3977a0f8a343e71cf1e3a5ea982ac"
+    },
+    {
+      "file": "week1/d3-story.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d3-story",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 33840,
+      "sha256": "8c0cfb179057c9608e881ebba2125f993fd9c4f8bcebecf794858edf457292f7"
+    },
+    {
+      "file": "week1/d4-lock.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d4-lock",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "50d20352d42ec0cf761ab24307432e85197d01bde8634229a50763b5de51656c"
+    },
+    {
+      "file": "week1/d4-lock.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d4-lock",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "1487fc3bd27433e45bdf110e0abf1ee4f445f32317e8e6a95686e244421b1811"
+    },
+    {
+      "file": "week1/d4-teach.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d4-teach",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 6930,
+      "sha256": "cea69538033c4ef0ce2a28db281dda50b9e9ae1dc333c6c953db51e2c50c51cd"
+    },
+    {
+      "file": "week1/d4-teach.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d4-teach",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 6930,
+      "sha256": "be3fca28d27458831c3be4f40da8e4cd034b63c668142cb10c7b33a973dc462f"
+    },
+    {
+      "file": "week1/d5-lock.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d5-lock",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "8eb2df5350a7e5443f994e682967771d61f0e292f4819383ee8a33246f9f01bb"
+    },
+    {
+      "file": "week1/d5-lock.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d5-lock",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "e7359f82e78f607312a0c7092efd0a9f2eba90c927c4ecebe531e65f22188ae0"
+    },
+    {
+      "file": "week1/d5-bus.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d5-bus",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 5940,
+      "sha256": "155f067db511b28f383a70c94dd6f31d6ce7225f9f75a55c1f250ca522f940f9"
+    },
+    {
+      "file": "week1/d5-bus.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d5-bus",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 5940,
+      "sha256": "506f44aaae5e861c97e0d219b10c82abd5ca93b99a9b794d6cd73119e452f181"
+    },
+    {
+      "file": "week1/d5-keep.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d5-keep",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "2e6db38087d149dd0fe96a65f3c6ec5370881f4d76fab6520611b5da67c72b72"
+    },
+    {
+      "file": "week1/d5-keep.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d5-keep",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "076d0e09faba6f7b4bd78cfba088ea3802ae2057ac079d9eb83f1b7c5d6940d2"
+    },
+    {
+      "file": "week1/d6-lock.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d6-lock",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "166ae9daded7ded14bbb3e10c6b818b99f5c9115a4a2267417bea2f3f9e78d81"
+    },
+    {
+      "file": "week1/d6-lock.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d6-lock",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "bdab29d33369a71ad5e55f34d8a8a18e0309d1a8c3b22462fbe7cfc1ccc629b8"
+    },
+    {
+      "file": "week1/d6-vm.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d6-vm",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 15750,
+      "sha256": "c4d0fd6724ca1205650377601818438eaa56c7639d24db0adaacd219661fb0af"
+    },
+    {
+      "file": "week1/d6-vm.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d6-vm",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 15750,
+      "sha256": "c6b961050015fddbd617cd3b92e5d2b1749cf637b6dde9a50e69c1587b416326"
+    },
+    {
+      "file": "week1/d6-season.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d6-season",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "b4a3da115080f9e24badc3c11e2788a0357997f0183d53c4d57a3a6535e4ab89"
+    },
+    {
+      "file": "week1/d6-season.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d6-season",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "9ecadf6e58b5d5ac930db5d2dcb10e258fd7fd2361d7ebeb49c6128fee24b2a4"
+    },
+    {
+      "file": "week1/d7-lock.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d7-lock",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "58b31076a6b1e7f8d48137de30535525a701b5c813f73d5a58412c8ff8422b79"
+    },
+    {
+      "file": "week1/d7-lock.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d7-lock",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "36d4ef2cf4635e078777f26123df7cd58a66ab50a8d676df8e372c0df4dd686f"
+    },
+    {
+      "file": "week1/d7-pay.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d7-pay",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "25ddb33e3b4ce8535fcd781cc96686b72d1f2a530d71e6d3f7ee394404ce14c6"
+    },
+    {
+      "file": "week1/d7-pay.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d7-pay",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "c68076a910bc5239d5255b8679ada3e7619d46e53b73ab323c5b8e455ae3ba76"
+    },
+    {
+      "file": "week1/d8-lock.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d8-lock",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "8b572a281448d8a7c65ec88b2bca26851edab492a329a237e2b4dbdfb0135497"
+    },
+    {
+      "file": "week1/d8-lock.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d8-lock",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "cd0963d9f91b348cf0e3d7481f2f863647be5b582b2e5aab47d48741f8411f03"
+    },
+    {
+      "file": "week1/d8-lock.away.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d8-lock",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false,
+        "away": true
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "f90f18e66db5ea990a5c47cffca419f9b2ddbb704506cb8ad43f737bf850391f"
+    },
+    {
+      "file": "week1/d8-lock.away.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d8-lock",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false,
+        "away": true
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "9a27beac00366fd367a1ee1f3d9832de2112d90a8fc6b3d36589b229bc278fbf"
+    },
+    {
+      "file": "week1/d8-back.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d8-back",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 2790,
+      "sha256": "2fc25dd7dc6ea5024c1695cd91ff5a1649557458683f7b2016e4ac7344364775"
+    },
+    {
+      "file": "week1/d8-back.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d8-back",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 2790,
+      "sha256": "7781e05d48c500bc70312e2b1474a3a66304b40cdd764108f37bff56351a8067"
+    },
+    {
+      "file": "week1/d8-back.away.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d8-back",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false,
+        "away": true
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 12510,
+      "sha256": "2e0c3af370861a1337e3d1d820513efd3ea0f83227aed725df4e263a894ee309"
+    },
+    {
+      "file": "week1/d8-back.away.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=d8-back",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false,
+        "away": true
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 12510,
+      "sha256": "4a1fa95639fefccac8c960bb235c111362dea4a07b54cbdcbad8babaad1a2e02"
+    },
+    {
+      "file": "week1/end.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=end",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "7321b9b85ba2d216447cb4d91bde0d512c3c9843c3c58766d8e02650efa8d8bb"
+    },
+    {
+      "file": "week1/end.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=end",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "4c624b067fb25370954461da7d56157071a0150019694eb3cceafd71621697a7"
+    },
+    {
+      "file": "week1/err-net.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=err-net",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "7a968f72cf7afb31df609f08439d4f9fccc69eb82d53bcb26dd331ec1457f489"
+    },
+    {
+      "file": "week1/err-net.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=err-net",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "80814428054e2f7093cfce298ae332f912512a59e8515a4a8a2a24ba30c6dedb"
+    },
+    {
+      "file": "week1/err-mic.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=err-mic",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "7734f76ee784decf423cd50161c5fb2f95bcbc90e41dfecfc06f77806c469eb2"
+    },
+    {
+      "file": "week1/err-mic.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=err-mic",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "edb4c574c62380f1fb52550594c49786e1b9540a2372211b6bd9cec5ecb08398"
+    },
+    {
+      "file": "week1/err-catch.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=err-catch",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 4500,
+      "sha256": "e5728e38b1b6102f40c4c2fdf486bf5462f133aead522461f1d1654033cb4a46"
+    },
+    {
+      "file": "week1/err-catch.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=err-catch",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 4500,
+      "sha256": "6bfc686f6745f627d89dd3cd9e8adcea23247eee07e47e9bb2c1b1aa46027c20"
+    },
+    {
+      "file": "week1/safety.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=safety",
+      "state": {
+        "lang": "vi",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "243ea0b8ac4f0f765a6ab43272a32224460fef9d03f57eab082a446faca37be5"
+    },
+    {
+      "file": "week1/safety.en.png",
+      "source": "Yapling Week 1.dc.html",
+      "query": "?step=safety",
+      "state": {
+        "lang": "en",
+        "sound": false,
+        "facDesk": false,
+        "facIn": false
+      },
+      "target": "[data-screen-label=\"Week 1 prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "52f55507cf8da42715f6751a4c1c91776c5c025b21d71c2dfa5fd72da1a47ace"
+    },
+    {
+      "file": "hub/welcome.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "welcome",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "d95a560085122840552d905faf91ec87ec9d1af246862c691080ea0bc57ffe93"
+    },
+    {
+      "file": "hub/pick.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "pick",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "c0d367d9825005c93656f9f7f6df886b8affff66918d5e775cfca6d0eb5af9a3"
+    },
+    {
+      "file": "hub/chat1.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "chat1",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "699aa4f6a59a0f0ae3b0431cad7ad0ea13a1aac08a8292d6ceee8588db4881da"
+    },
+    {
+      "file": "hub/place.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "place",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "f00f1dafa43e5881b34c6433d3e65da9bb7aeaa71459b0f3bd8424c74be94c00"
+    },
+    {
+      "file": "hub/burrow.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "burrow",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "4b77089aa5738eead4e4e31eaa471fc16df18bba097556b426e950bfe1ab4fb6"
+    },
+    {
+      "file": "hub/ring.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "ring",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "bf3b528369e81f38e556f71327cfa331417c8c1902c36e46bc774fcfc3dda46b"
+    },
+    {
+      "file": "hub/call.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "call",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 6300,
+      "sha256": "f68653189eeeb8694e03bb4115ab88a6a36705732ccbc9f14ec5f78f7a7e9497"
+    },
+    {
+      "file": "hub/post.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "post",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "7bedcb4ab7667b67712bef9584c4b4a2ed92df81ffd75deacffe0000688943a5"
+    },
+    {
+      "file": "hub/town.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "town",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "df6f0c7789cbcc7b10ef9601bec7c96554b7ee79dde4ddcb31a09572080718ad"
+    },
+    {
+      "file": "hub/season.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "season",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "f9a656877b2dd7d8cc1b615844b874608c94705314c73f2d31f8071afa5f2a71"
+    },
+    {
+      "file": "hub/mail.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "mail",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "8c8e74a5439ed3e61714c00712b561bd2bab354627bb7f202c089a33c07ccf35"
+    },
+    {
+      "file": "hub/cafe.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "cafe",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 4770,
+      "sha256": "edd1b801e3786819122056468970bb31fe194e98460a0d5392f52eb37d61734c"
+    },
+    {
+      "file": "hub/epend.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "epend",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "0b1c93149c1c2822ae163818d469d21908650da25f24fc688a15d11cb07f8b2b"
+    },
+    {
+      "file": "hub/me.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "me",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "3da4a39b90c287aa85ae0b04348f7e1fd9084210646215a13e3c0d50022937b2"
+    },
+    {
+      "file": "hub/plus.png",
+      "source": "Yapling Prototype.dc.html",
+      "query": "",
+      "state": {
+        "scr": "plus",
+        "prev": null,
+        "sound": false
+      },
+      "target": "[data-screen-label=\"Prototype\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1530,
+      "sha256": "ff94af2e44ba7f164b45b6b1bcf3b6ef8fcb9bf1fcc4d7d06de2464b6670e8c1"
+    },
+    {
+      "file": "boards/r4-home/h1-burrow.png",
+      "source": "boards/Yapling R4 Home.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"H1 Burrow\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "f0554f4fe70e70bbd9b567005f36a72dc7a04926b8a851f5603a5caa77b51152"
+    },
+    {
+      "file": "boards/r4-home/h2-burrow-vn.png",
+      "source": "boards/Yapling R4 Home.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"H2 Burrow VN\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "549f79c09db12a793f0ed48075d2dfe5f84e9989793b3bb7cb9973cba054c7af"
+    },
+    {
+      "file": "boards/r4-home/h3-live-call.png",
+      "source": "boards/Yapling R4 Home.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"H3 Live call\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "7f4229896560d348b211628d8413eb5257ecdbb2dfb46bfb873ae1b198278371"
+    },
+    {
+      "file": "boards/r4-home/h4-correction.png",
+      "source": "boards/Yapling R4 Home.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"H4 Correction\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "5f1ad1713bf12472f302f1637fe3901ef5f2a13a0c1abf1bd238478f59da4666"
+    },
+    {
+      "file": "boards/r4-home/h5-teach.png",
+      "source": "boards/Yapling R4 Home.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"H5 Teach\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "198ac501dc6ba9c903bb13db6b6dd0748bd9eac3e6dd57fa720dac894e850f2e"
+    },
+    {
+      "file": "boards/r4-home/h6-voicemail.png",
+      "source": "boards/Yapling R4 Home.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"H6 Voicemail\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "3cf0260966811aaa854e41ade2efc0359a02a5f1c695bbb1b65bde9d8d166a55"
+    },
+    {
+      "file": "boards/r4-home/h7-voice-notes.png",
+      "source": "boards/Yapling R4 Home.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"H7 Voice notes\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "a362e91c5532ea4bec2a7470bab32dcae1db6e4f55b6763466d194a05d8586f9"
+    },
+    {
+      "file": "boards/r4-home/h8-post-call.png",
+      "source": "boards/Yapling R4 Home.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"H8 Post-call\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "3130d8630d82949a533193ed741dedc8060cc5c4cb293755a8a7610bc73b2971"
+    },
+    {
+      "file": "boards/r4-home/h9-minutes-resting.png",
+      "source": "boards/Yapling R4 Home.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"H9 Minutes resting\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "69106d911ad28fb27551f441b2d627667e90150ad56759f7cf65311d8a5cbaae"
+    },
+    {
+      "file": "boards/r4-home/h10-break.png",
+      "source": "boards/Yapling R4 Home.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"H10 Break\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "bfac6f53ad19439551c95326c4fa4502a3ef48d30f1fffd1a3cc6bb84dcfd8f3"
+    },
+    {
+      "file": "boards/r4-onboarding/o1-welcome.png",
+      "source": "boards/Yapling R4 Onboarding.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"O1 Welcome\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "9c3cdd04157504278cacee3ef050109e48c45f7a461224cb8cea66e77df1c33a"
+    },
+    {
+      "file": "boards/r4-onboarding/o2-starter.png",
+      "source": "boards/Yapling R4 Onboarding.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"O2 Starter\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "1b981195acd60c9c8fe7e6a264ea75db0a32f3f7a9316a2ab21c18c8d6f8f5db"
+    },
+    {
+      "file": "boards/r4-onboarding/o3-three-choices.png",
+      "source": "boards/Yapling R4 Onboarding.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"O3 Three choices\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "8620e29279ecbfe3ebb0568b8874b2fc6dc0e3a5a98b04de1bcc1246fb4f2548"
+    },
+    {
+      "file": "boards/r4-onboarding/o4-mic.png",
+      "source": "boards/Yapling R4 Onboarding.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"O4 Mic\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "0661b9fa6c05b97bd1731107bf5644d0535bb6054d2254944b14a1fa5b925b79"
+    },
+    {
+      "file": "boards/r4-onboarding/o5-first-chat.png",
+      "source": "boards/Yapling R4 Onboarding.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"O5 First chat\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "6d746f4dca60c1cbfb422c2d0f7ac2870879953445213e8e114fb676c8a064b5"
+    },
+    {
+      "file": "boards/r4-onboarding/o6-calls.png",
+      "source": "boards/Yapling R4 Onboarding.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"O6 Calls\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "ae0f4f9daca609fbef36089ce165d0fc96fcc1ea35973d0fa1eb908b3f7ecef0"
+    },
+    {
+      "file": "boards/r4-town/t1-recap.png",
+      "source": "boards/Yapling R4 Town.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"T1 Recap\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "86c57fe61fcf12bf5c8883573876e68190b3c1560d9fe42cc2e64c982ab40b7f"
+    },
+    {
+      "file": "boards/r4-town/t2-episode-end.png",
+      "source": "boards/Yapling R4 Town.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"T2 Episode end\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "cff14e0f6bf840a9959a15f9b5131ff104450949f34f7034e59e42b7c51df41b"
+    },
+    {
+      "file": "boards/r4-town/t3-move-in.png",
+      "source": "boards/Yapling R4 Town.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"T3 Move-in\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "a0fc4f61a87a7a843f7a39c24cb15081f7e3e2f687d94c5007eee5778ad06db8"
+    },
+    {
+      "file": "boards/r4-town/t4-job-party.png",
+      "source": "boards/Yapling R4 Town.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"T4 Job party\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "14f7bc143cfd1944f6864eafe0a765c43ac79f7fbc67705c9bff14185f812eec"
+    },
+    {
+      "file": "boards/r4-town/t5-time-capsule.png",
+      "source": "boards/Yapling R4 Town.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"T5 Time capsule\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "e111a4ad78f58621e45eca7b3be0fbe7262bffb01a77b381bddf34247828dac4"
+    },
+    {
+      "file": "boards/r4-town/t6-plus-en.png",
+      "source": "boards/Yapling R4 Town.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"T6 Plus EN\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "e315590a76f56e50b3a64be17401120b46a1fc33c1ea0f2567c9bea3867a0edf"
+    },
+    {
+      "file": "boards/r4-town/t7-plus-vn.png",
+      "source": "boards/Yapling R4 Town.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"T7 Plus VN\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "7cbebbb38920c91367124abf8dd3698145d8c98d32f1ba36d5139825fb9def5e"
+    },
+    {
+      "file": "boards/r4-town/t8-lock-screen.png",
+      "source": "boards/Yapling R4 Town.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"T8 Lock screen\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "a5a2690666afe82dad2372bcffca041640338c1bdaecf3c403a179c6a1fed689"
+    },
+    {
+      "file": "boards/r4-town/t9-home-screen.png",
+      "source": "boards/Yapling R4 Town.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"T9 Home screen\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "779cd6f23abf376c61675097524dfcc3dc7bd24d0760058dfcded877a6f7fb44"
+    },
+    {
+      "file": "boards/r5-journey/j1-week.png",
+      "source": "boards/Yapling R5 Journey.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"J1 Week\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "89e5546d9f47e3d23d34533e23e657dbb7175b4ae783d77d73422157691c51b7"
+    },
+    {
+      "file": "boards/r5-journey/j2-season-map.png",
+      "source": "boards/Yapling R5 Journey.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"J2 Season map\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "bbe1a65aab12f99434bcd35221ce62ff7c7c8caf3d731048e151c908c19f5fdd"
+    },
+    {
+      "file": "boards/r5-journey/j3-stage-up.png",
+      "source": "boards/Yapling R5 Journey.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"J3 Stage-up\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "a16cbe9b384396c58c48f664db5cceaa20ea1e5bfcf2dab0c9ee1481966ec566"
+    },
+    {
+      "file": "boards/r5-journey/j4-hank-newcomer.png",
+      "source": "boards/Yapling R5 Journey.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"J4 Hank Newcomer\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "d17afb77ba8f5394da9fbacd5bbb8481c75840725639e8b422c8555c35130816"
+    },
+    {
+      "file": "boards/r5-journey/j5-hank-local.png",
+      "source": "boards/Yapling R5 Journey.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"J5 Hank Local\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "5e1f6c02b63dc1a3ea62ad6a7d6e1a39a223b50d4bae8e6ff8d3bd90f6c39841"
+    },
+    {
+      "file": "boards/r5-learning/l1-placement.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"Placement\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "add4aebfd54890ae6f486f9dade16c03c8458ada0278ce164790304a5a1048fb"
+    },
+    {
+      "file": "boards/r5-learning/l2-placement.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"Placement\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "3cf7d0ab4b474016395a99f731f8b4ca799a0175bd6c938b401746ba1dea690c"
+    },
+    {
+      "file": "boards/r5-learning/l3-me-sheet.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"Me sheet\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "09a31347db3be7c2d1ed567b7a76001b7a1ae96940bc2938e174de1d8e812648"
+    },
+    {
+      "file": "boards/r5-learning/l4-me-sheet.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"Me sheet\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "1a893c99c6f338dc3eb3556d7e00d684721f96b4213a02e04f58c729c6d7b3b3"
+    },
+    {
+      "file": "boards/r5-learning/l5-keepsake.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L5 Keepsake\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "70cdf3192c04fe40bac12ad3324dff3aea246666b7130e150ec5ca32b2dd4478"
+    },
+    {
+      "file": "boards/r5-learning/l6-phrase-lifecycle.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L6 Phrase lifecycle\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "1d97bdecb3501d9057844ed287ec454095ae802c3392b1b42536b42cea5e8850"
+    },
+    {
+      "file": "boards/r5-learning/l7-correction-beat-1.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L7 Correction beat 1\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "95dd799dca9f84d0eb871e78ef8a20d2c111bec86a6156cb14143ecfe48a11c9"
+    },
+    {
+      "file": "boards/r5-learning/l8-correction-beat-2.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L8 Correction beat 2\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "0a2fdb0780e88534fc80ad2020fd52ef355b34cfe838deaaea662a534477399f"
+    },
+    {
+      "file": "boards/r5-learning/l9-fix-graduation.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L9 Fix graduation\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "ec3225aa2dfe241bde70c24e33d1de6f1ef2f121f05eb11c3caa50dfed7fbc38"
+    },
+    {
+      "file": "boards/r5-learning/l10-gloss-on-story-text.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L10 Gloss on story text\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "b99f26430f2b21855cd46b7273bd6a11c912e044ea40322b45e38e2ba5602ba9"
+    },
+    {
+      "file": "boards/r5-learning/l11-what-does-that-mean.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L11 What does that mean\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "f96d036b021160f4874588b715b99e619a4e19592e7960eb35931b68778cd811"
+    },
+    {
+      "file": "boards/r5-learning/l11b-translation-revealed.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L11b Translation revealed\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "a942492e12f5345a12009b7b17c27bbb14d2184976ef64131e6b27bbb53b5f13"
+    },
+    {
+      "file": "boards/r5-learning/l12-listening-checkpoint.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L12 Listening checkpoint\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "5017d02c1b43de0ac50784ebad4c16e1eace6cf17c4dc2c342ebb3e18d05eb0b"
+    },
+    {
+      "file": "boards/r5-learning/l13-checkpoint-miss.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L13 Checkpoint miss\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "9c90857784d0f4c08ccf8fa73a72f62a91d70345f24266033471643059d0531c"
+    },
+    {
+      "file": "boards/r5-learning/l13b-words-on.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L13b Words on\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "d5fb614125dce67adb1ca239bf50fbb0d66d2b5505a073279447dbbdf54580a0"
+    },
+    {
+      "file": "boards/r5-learning/l14-checkpoint-success.png",
+      "source": "boards/Yapling R5 Learning.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"L14 Checkpoint success\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "50ff9dc73ab15fa6aa44c518130e6ee47d68a71b324bdf9ba7c25ec41acf3e6c"
+    },
+    {
+      "file": "boards/r5-real-week/r1-homework.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"R1 Homework\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "f9516c0e97ed3d4996953504ad7bd1739c5cf82f2b250b07fdadb3bc1da42388"
+    },
+    {
+      "file": "boards/r5-real-week/r2-rehearsal.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"R2 Rehearsal\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "fd1c059ec340fb2d303433abb97fc686c296ef9e9ab685419c71f1fab880d024"
+    },
+    {
+      "file": "boards/r5-real-week/r3-good-luck.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"R3 Good luck\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "0efa3beb6cbb9d5d8946a4ff6b2b3ed8f35dfd767e42bcaa3315f8b0167ad70d"
+    },
+    {
+      "file": "boards/r5-real-week/r4-how-did-it-go.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"R4 How did it go\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "2ee18f69f19eca8027eb8212de06d1a828eb66cb958c4ef17e391223bfb9deb1"
+    },
+    {
+      "file": "boards/r5-real-week/r5-it-went-badly.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"R5 It went badly\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "45c22b468d1842e9380df25d3dcb488d2a574a52d254660c020654681c5b682c"
+    },
+    {
+      "file": "boards/r5-real-week/c1-day-one.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"C1 Day one\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "24159cab4634991bd1949eed825f21da4cfce1ae2c4ac59a86ef83caac3e686a"
+    },
+    {
+      "file": "boards/r5-real-week/c2-pip-is-an-ai.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"C2 Pip is an AI\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "945b94a5a700aa5257c38640fe17e284cd4889d07ce6e595fd552f16ab433f11"
+    },
+    {
+      "file": "boards/r5-real-week/c3-safety.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"C3 Safety\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "940f0f7f194a1bcd6eee05e459f64ecaf7486b16b514603c0466a22ae46c1d70"
+    },
+    {
+      "file": "boards/r5-real-week/e1-no-connection.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"E1 No connection\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "bed52be775c63d533b9a41bf2401c0fcadedb6d0f6b7269799261f3bb655a808"
+    },
+    {
+      "file": "boards/r5-real-week/e2-mic-denied.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"E2 Mic denied\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "5623180a844bc21051a48cc29b77d58e88ff30e4144f0322ca922a56b69e9e80"
+    },
+    {
+      "file": "boards/r5-real-week/e3-didnt-catch-that.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"E3 Didn't catch that\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "29c3bf82e42248499e3ccb7aed089a05e0a0f1812fb9780698e19971bb92131a"
+    },
+    {
+      "file": "boards/r5-real-week/e4-slow-reply.png",
+      "source": "boards/Yapling R5 Real week.dc.html",
+      "query": "",
+      "state": {},
+      "target": "phone of [data-screen-label=\"E4 Slow reply\"]",
+      "width": 390,
+      "height": 844,
+      "scale": 3,
+      "settledMs": 1500,
+      "sha256": "0a8e701420fb63dc7d1bb94c926e9c2929697083dfb7a6a23dee94d91fa0128a"
+    }
+  ]
+}

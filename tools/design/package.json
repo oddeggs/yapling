@@ -1,0 +1,14 @@
+{
+  "name": "@yapling/design-tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Renders the design export in design/prototype to PNG references in design/renders",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "render": "node src/render.ts",
+    "render:check": "node src/render.ts --check"
+  }
+}

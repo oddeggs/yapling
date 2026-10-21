@@ -7,7 +7,7 @@ Binding for every coding agent working on Yapling (`oddeggs/yapling`, branch `ma
 1. Your lane in [plans/261022-0200-yapling-releases/plan.md](plans/261022-0200-yapling-releases/plan.md): its owns list, screens and done-when.
 2. [docs/tech-decisions.md](docs/tech-decisions.md). For learning behaviour: [docs/journey-and-story.md](docs/journey-and-story.md) §1. For story and characters: [docs/season-1-script.md](docs/season-1-script.md) and [docs/cast-bible.md](docs/cast-bible.md). For product rules: [docs/concept.md](docs/concept.md) §10–14.
 3. [docs/design-review.md](docs/design-review.md): fixes that override the visuals.
-4. The design for your screens: `design/prototype/Yapling Week 1.dc.html` (steps by id, `?step=<id>`), `design/prototype/Yapling Prototype.dc.html` and `design/prototype/boards/*.dc.html`, the index in `design/README.md`, and `design/renders/<id>.png` once the render tool exists.
+4. The design for your screens: `design/prototype/Yapling Week 1.dc.html` (steps by id, `?step=<id>`), `design/prototype/Yapling Prototype.dc.html` and `design/prototype/boards/*.dc.html`, the index in `design/README.md`, and the renders in `design/renders/` (`week1/<id>.png`, `hub/`, `boards/`, `art/`; rebuild with `node tools/design/src/render.ts`, about 4 minutes; PNGs are not committed).
 
 Precedence: docs > design-review > design visuals > prototype logic.
 
