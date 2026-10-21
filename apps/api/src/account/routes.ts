@@ -3,6 +3,7 @@ import { createMiddleware } from 'hono/factory';
 
 import { requireSession, sessionRoutes, type SessionEnv } from '../auth';
 import { profileRoutes } from '../profile';
+import { progressRoutes } from '../progress';
 
 /** The call socket takes its session token in `hello`, so its upgrade request carries none. */
 const CALL_SOCKET_PATH = '/api/calls/socket';
@@ -29,6 +30,7 @@ export function accountRoutes(): Hono<SessionEnv> {
   routes.use('/calls/*', requireSessionForCalls);
 
   routes.route('/', profileRoutes());
+  routes.route('/', progressRoutes());
 
   return routes;
 }
