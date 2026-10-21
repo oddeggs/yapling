@@ -1,4 +1,5 @@
-import { MinutesSummary, Plan, QuietHours } from '@yapling/contracts';
+import { LocalDate, MinutesSummary, Plan, QuietHours, TimeZone } from '@yapling/contracts';
+import { localDateOf } from '@yapling/domain';
 import { DurableObject } from 'cloudflare:workers';
 import { z } from 'zod';
 
@@ -6,10 +7,12 @@ import type { Bindings } from '../env';
 import { ScheduledPushJob, ScheduledPushKind, PushPayload } from './jobs';
 import {
   chargeResult,
-  localLedgerRules,
+  DEFAULT_LEDGER_TIMEZONE,
+  domainLedgerRules,
   minutesSummary,
   type ChargeResult,
   type LedgerRules,
+  type LedgerState,
   type TalkKind,
 } from './ledger';
 import { isQuiet, quietEnds } from './quiet';
@@ -18,8 +21,8 @@ import { UserStorage, type ScheduledPush } from './storage';
 /** The learner object's clock; tests move it. */
 export const userClock = { now: (): number => Date.now() };
 
-/** The ledger rules in force: `@yapling/domain`'s adapter replaces this (see `ledger.ts`). */
-const rules: LedgerRules = localLedgerRules;
+/** The ledger rules in force: `@yapling/domain`'s canonical ledger. */
+const rules: LedgerRules = domainLedgerRules;
 
 /** One charge is at most an hour: a call meters in small steps. */
 const ChargeSeconds = z.int().min(0).max(3_600);
@@ -41,7 +44,8 @@ interface QuietFacts {
  *
  * - `charge(seconds, kind)`: the call object meters learner and character talk into the period.
  * - `balance()`: the period's `MinutesSummary`.
- * - `setPlan(plan, periodStart)`: purchases move the learner between free and Plus.
+ * - `setPlan(plan, periodStart)`: purchases move the learner between free and Plus (Plus periods
+ *   are calendar months in the learner's timezone; `periodStart` is kept for support).
  * - `schedule(kind, at, payload)` / `cancel(id)`: a voicemail or incoming call for later. The
  *   alarm hands each due one to the `jobs` queue, unless it falls in the learner's quiet hours,
  *   when it waits for them to end.
@@ -70,15 +74,47 @@ export class UserDO extends DurableObject<Bindings> {
     return name;
   }
 
-  /** The ledger, started from the account's creation the first time it is needed. */
-  private async ledger() {
-    const stored = this.store.ledger();
-    if (stored !== null) return stored;
-    const row = await this.env.DB.prepare('SELECT created_at FROM users WHERE id = ?')
-      .bind(this.userId())
-      .first<{ created_at: string | number }>();
-    const created = row === null ? NaN : new Date(row.created_at).getTime();
-    return this.store.startLedger(Number.isFinite(created) ? created : userClock.now());
+  /**
+   * The ledger's state. The first time it is needed it starts from the account's creation; its
+   * timezone and install day come from the learner's profile and progress, and are pinned once
+   * the profile exists, so editing the timezone can't open a fresh allowance. Until then the
+   * launch timezone stands in.
+   */
+  private async ledger(): Promise<LedgerState> {
+    let stored = this.store.ledger();
+    if (stored === null || stored.zone === null) {
+      const row = await this.env.DB.prepare(
+        `SELECT u.created_at, p.timezone, g.installed_on FROM users u
+         LEFT JOIN profiles p ON p.user_id = u.id
+         LEFT JOIN progress g ON g.user_id = u.id
+         WHERE u.id = ?`,
+      )
+        .bind(this.userId())
+        .first<{
+          created_at: string | number;
+          timezone: string | null;
+          installed_on: string | null;
+        }>();
+      if (stored === null) {
+        const created = row === null ? NaN : new Date(row.created_at).getTime();
+        stored = this.store.startLedger(Number.isFinite(created) ? created : userClock.now());
+      }
+      const timezone = TimeZone.safeParse(row?.timezone);
+      if (timezone.success) {
+        const installed = LocalDate.safeParse(row?.installed_on);
+        this.store.pinZone(
+          timezone.data,
+          installed.success ? installed.data : localDateOf(stored.startedAt, timezone.data),
+        );
+        stored = this.store.ledger() ?? stored;
+      }
+    }
+    const timezone = stored.zone?.timezone ?? DEFAULT_LEDGER_TIMEZONE;
+    return {
+      plan: stored.plan,
+      timezone,
+      installedOn: stored.zone?.installedOn ?? localDateOf(stored.startedAt, timezone),
+    };
   }
 
   async charge(seconds: number, kind: TalkKind): Promise<ChargeResult> {

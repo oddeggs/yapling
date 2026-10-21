@@ -2,12 +2,32 @@ import { runDurableObjectAlarm, runInDurableObject } from 'cloudflare:test';
 import { env } from 'cloudflare:workers';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { localDateOf, startOfLocalDay } from '@yapling/domain';
+
 import { call, newGuest } from '../auth/testing/client';
 import { userObject } from './object';
 import { ScheduledPushJob } from './jobs';
 import { userClock } from './user-object';
 
 const DAY = 24 * 60 * 60_000;
+const HCM = 'Asia/Ho_Chi_Minh';
+
+async function putProfile(token: string, timezone: string) {
+  const response = await call('/api/me/profile', {
+    method: 'PUT',
+    token,
+    body: {
+      displayName: 'Lan',
+      firstLanguage: 'vi',
+      roommate: { species: 'cat', name: 'Pip' },
+      track: 'life',
+      quietHours: null,
+      timezone,
+      notificationsAllowed: true,
+    },
+  });
+  expect(response.status).toBe(200);
+}
 
 /** What an RPC call rejected with, or null; awaited at once so no rejection goes unhandled. */
 async function rejection(call: Promise<unknown>): Promise<unknown> {
@@ -34,7 +54,7 @@ afterEach(() => {
 });
 
 describe('the live-minute ledger', () => {
-  it('starts the first week at the account creation and charges both talkers', async () => {
+  it("starts the first week at the install day's local midnight and charges both talkers", async () => {
     const { userId } = await newGuest();
     const user = userObject(env, userId);
     const before = await user.balance();
@@ -45,7 +65,10 @@ describe('the live-minute ledger', () => {
       leftSeconds: 3_600,
       firstWeek: true,
     });
-    expect(Math.abs(before.periodStart - Date.now())).toBeLessThan(60_000);
+    // No profile yet: the launch timezone stands in.
+    const today = localDateOf(Date.now(), HCM);
+    expect(before.periodStart).toBe(startOfLocalDay(today, HCM));
+    expect(before.periodEnd - before.periodStart).toBe(7 * DAY);
 
     expect(await user.charge(3_000, 'learner')).toEqual({
       secondsLeft: 600,
@@ -79,20 +102,45 @@ describe('the live-minute ledger', () => {
     });
   });
 
-  it('switches to Plus and back', async () => {
+  it('switches to Plus for the calendar month, and back', async () => {
     const { userId } = await newGuest();
     const user = userObject(env, userId);
     await user.charge(3_600, 'learner');
-    const paidAt = Date.now();
+    const paidAt = Date.UTC(2026, 9, 22, 9);
+    setClock(paidAt);
     expect(await user.setPlan('plus', paidAt)).toMatchObject({
       plan: 'plus',
-      periodStart: paidAt,
-      periodEnd: paidAt + 30 * DAY,
+      periodStart: startOfLocalDay('2026-10-01', HCM),
+      periodEnd: startOfLocalDay('2026-11-01', HCM),
       allowanceSeconds: 9_000,
       leftSeconds: 9_000,
       firstWeek: false,
     });
+    await user.charge(600, 'character');
+    // The next calendar month is a fresh allowance.
+    setClock(startOfLocalDay('2026-11-01', HCM));
+    expect(await user.balance()).toMatchObject({ usedSeconds: 0, leftSeconds: 9_000 });
+    vi.restoreAllMocks();
     expect(await user.setPlan('free', paidAt)).toMatchObject({ plan: 'free', leftSeconds: 0 });
+  });
+
+  it("pins the periods to the learner's profile timezone and install day", async () => {
+    const { userId, token } = await newGuest();
+    await putProfile(token, 'America/Los_Angeles');
+    const user = userObject(env, userId);
+    const la = 'America/Los_Angeles';
+    const today = localDateOf(Date.now(), la);
+    expect(await user.balance()).toMatchObject({
+      periodStart: startOfLocalDay(today, la),
+      firstWeek: true,
+    });
+    await user.charge(100, 'learner');
+    // Moving the profile's timezone can't open a fresh allowance.
+    await putProfile(token, 'Pacific/Kiritimati');
+    expect(await user.balance()).toMatchObject({
+      periodStart: startOfLocalDay(today, la),
+      usedSeconds: 100,
+    });
   });
 
   it('refuses a charge that is not whole seconds', async () => {
