@@ -59,6 +59,13 @@ describe('the weekly ring', () => {
     expect(results.slice(0, 2).every((r) => r.ringFull === null)).toBe(true);
     expect(results[2]?.ringFull).toEqual({ id: 'week-1', week: 1, earnedOn: '2026-09-25' });
     expect(Keepsake.safeParse(weekKeepsakeToWire(results[2]!.ringFull!)).success).toBe(true);
+    expect(weekKeepsakeToWire(results[2]!.ringFull!)).toEqual({
+      id: 'week-1',
+      kind: 'week',
+      canDoId: null,
+      signedBy: 'pip',
+      earnedOn: '2026-09-25',
+    });
     expect(fullRingCount(weeks)).toBe(1);
   });
 

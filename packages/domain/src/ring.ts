@@ -156,12 +156,11 @@ export const fullRingCount = (weeks: readonly WeekRing[]): number =>
   weeks.filter(isRingFull).length;
 
 /**
- * The week keepsake as the progress body carries it. The contract has no `week` keepsake kind yet,
- * so it travels as a `story` keepsake drawn and signed by Pip, recognisable by its `week-N` id.
+ * The week keepsake as the progress body carries it: a `week` keepsake, drawn and signed by Pip.
  */
 export const weekKeepsakeToWire = (keepsake: WeekKeepsake): Keepsake => ({
   id: keepsake.id,
-  kind: 'story',
+  kind: 'week',
   canDoId: null,
   signedBy: 'pip',
   earnedOn: keepsake.earnedOn,
