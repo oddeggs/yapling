@@ -8,7 +8,6 @@ import type { Bindings } from '../env';
  */
 
 export const appleSecretNames = ['APPLE_TEAM_ID', 'APPLE_KEY_ID', 'APPLE_PRIVATE_KEY'] as const;
-type AppleSecretName = (typeof appleSecretNames)[number];
 
 export interface AppleKey {
   readonly teamId: string;
@@ -23,10 +22,9 @@ const APPLE = 'https://appleid.apple.com';
 
 /** The key when all three secrets are set for the environment, else null. */
 export function appleKeyOf(env: Bindings, clientId: string | null): AppleKey | null {
-  const secrets = env as Bindings & Partial<Record<AppleSecretName, string>>;
-  const teamId = secrets.APPLE_TEAM_ID;
-  const keyId = secrets.APPLE_KEY_ID;
-  const privateKey = secrets.APPLE_PRIVATE_KEY;
+  const teamId = env.APPLE_TEAM_ID;
+  const keyId = env.APPLE_KEY_ID;
+  const privateKey = env.APPLE_PRIVATE_KEY;
   if (!teamId || !keyId || !privateKey || clientId === null) return null;
   return { teamId, keyId, privateKey, clientId };
 }
