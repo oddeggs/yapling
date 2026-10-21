@@ -34,8 +34,8 @@ export function voiceFor(character: CharacterId): string {
 
 /**
  * Recorded reactions ("Ooh," "Mm," "Oh!", "Hmm,") per character, played from the app bundle the
- * moment the learner's turn ends while the generated reply streams in. None are recorded yet, so
- * the call skips the reaction; each entry is a story line id once `tools/voice` renders it.
+ * moment the learner's turn ends while the generated reply streams in. A character with none
+ * recorded skips the reaction; each entry is a story line id rendered by `tools/voice`.
  */
 export interface Reaction {
   readonly lineId: string;
@@ -46,7 +46,32 @@ export interface Reaction {
   readonly durationMs: number;
 }
 
-export const REACTIONS: Readonly<Partial<Record<CharacterId, readonly Reaction[]>>> = {};
+export const REACTIONS: Readonly<Partial<Record<CharacterId, readonly Reaction[]>>> = {
+  pip: [
+    { lineId: 's1-react-pip-ooh', text: 'Ooh,', forQuestion: false, durationMs: 607 },
+    { lineId: 's1-react-pip-oh', text: 'Oh!', forQuestion: false, durationMs: 618 },
+    { lineId: 's1-react-pip-mm', text: 'Mm,', forQuestion: false, durationMs: 606 },
+    { lineId: 's1-react-pip-hmm', text: 'Hmm,', forQuestion: true, durationMs: 614 },
+  ],
+  mei: [
+    { lineId: 's1-react-mei-ooh', text: 'Ooh,', forQuestion: false, durationMs: 656 },
+    { lineId: 's1-react-mei-oh', text: 'Oh!', forQuestion: false, durationMs: 617 },
+    { lineId: 's1-react-mei-mm', text: 'Mm,', forQuestion: false, durationMs: 616 },
+    { lineId: 's1-react-mei-hmm', text: 'Hmm,', forQuestion: true, durationMs: 651 },
+  ],
+  linh: [
+    { lineId: 's1-react-linh-ooh', text: 'Ooh,', forQuestion: false, durationMs: 688 },
+    { lineId: 's1-react-linh-oh', text: 'Oh!', forQuestion: false, durationMs: 619 },
+    { lineId: 's1-react-linh-mm', text: 'Mm,', forQuestion: false, durationMs: 604 },
+    { lineId: 's1-react-linh-hmm', text: 'Hmm,', forQuestion: true, durationMs: 611 },
+  ],
+  office: [
+    { lineId: 's1-react-office-ooh', text: 'Ooh,', forQuestion: false, durationMs: 604 },
+    { lineId: 's1-react-office-oh', text: 'Oh!', forQuestion: false, durationMs: 619 },
+    { lineId: 's1-react-office-mm', text: 'Mm,', forQuestion: false, durationMs: 608 },
+    { lineId: 's1-react-office-hmm', text: 'Hmm,', forQuestion: true, durationMs: 610 },
+  ],
+};
 
 /** The reaction to play before a reply, or null when the character has none recorded. */
 export function pickReaction(

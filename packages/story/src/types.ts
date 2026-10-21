@@ -59,7 +59,7 @@ export const PLACES = [
 export type Place = (typeof PLACES)[number];
 
 /** Kinds of written line, as in `audio/season-1/lines.json`. */
-export const LINE_KINDS = ['scene', 'postcard', 'voicemail', 'recap', 'story'] as const;
+export const LINE_KINDS = ['scene', 'postcard', 'voicemail', 'recap', 'story', 'reaction'] as const;
 export type LineKind = (typeof LINE_KINDS)[number];
 
 /** Where a written line's audio lives, relative to `audio/season-1/lines/`. */

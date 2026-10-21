@@ -283,6 +283,102 @@
       "char": "pip",
       "text": "[excited] Can I help you? Can I help you! Thank you. It's growing a leaf!",
       "kind": "voicemail"
+    },
+    {
+      "id": "s1-react-pip-ooh",
+      "char": "pip",
+      "text": "[delighted] Ooh,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-pip-oh",
+      "char": "pip",
+      "text": "[surprised] Oh!",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-pip-mm",
+      "char": "pip",
+      "text": "[warmly] Mm,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-pip-hmm",
+      "char": "pip",
+      "text": "[thoughtful] Hmm,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-mei-ooh",
+      "char": "mei",
+      "text": "[delighted] Ooh,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-mei-oh",
+      "char": "mei",
+      "text": "[surprised] Oh!",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-mei-mm",
+      "char": "mei",
+      "text": "[warmly] Mm,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-mei-hmm",
+      "char": "mei",
+      "text": "[thoughtful] Hmm,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-linh-ooh",
+      "char": "linh",
+      "text": "[delighted] Ooh,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-linh-oh",
+      "char": "linh",
+      "text": "[surprised] Oh!",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-linh-mm",
+      "char": "linh",
+      "text": "[warmly] Mm,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-linh-hmm",
+      "char": "linh",
+      "text": "[thoughtful] Hmm,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-office-ooh",
+      "char": "office",
+      "text": "[delighted] Ooh,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-office-oh",
+      "char": "office",
+      "text": "[surprised] Oh!",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-office-mm",
+      "char": "office",
+      "text": "[warmly] Mm,",
+      "kind": "reaction"
+    },
+    {
+      "id": "s1-react-office-hmm",
+      "char": "office",
+      "text": "[thoughtful] Hmm,",
+      "kind": "reaction"
     }
   ]
 }

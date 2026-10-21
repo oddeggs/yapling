@@ -218,6 +218,70 @@ export const RECORDED_LINE_ASSETS: Readonly<Record<RecordedLineId, RecordedLineA
     audio: () => require("../../../audio/season-1/lines/s1-e1-vm-thanks-pip.mp3") as number,
     timing: () => require("../../../audio/season-1/lines/s1-e1-vm-thanks-pip.timing.json") as LineTiming,
   },
+  "s1-react-pip-ooh": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-pip-ooh-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-pip-ooh-pip.timing.json") as LineTiming,
+  },
+  "s1-react-pip-oh": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-pip-oh-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-pip-oh-pip.timing.json") as LineTiming,
+  },
+  "s1-react-pip-mm": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-pip-mm-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-pip-mm-pip.timing.json") as LineTiming,
+  },
+  "s1-react-pip-hmm": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-pip-hmm-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-pip-hmm-pip.timing.json") as LineTiming,
+  },
+  "s1-react-mei-ooh": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-mei-ooh-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-mei-ooh-mei.timing.json") as LineTiming,
+  },
+  "s1-react-mei-oh": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-mei-oh-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-mei-oh-mei.timing.json") as LineTiming,
+  },
+  "s1-react-mei-mm": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-mei-mm-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-mei-mm-mei.timing.json") as LineTiming,
+  },
+  "s1-react-mei-hmm": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-mei-hmm-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-mei-hmm-mei.timing.json") as LineTiming,
+  },
+  "s1-react-linh-ooh": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-linh-ooh-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-linh-ooh-linh.timing.json") as LineTiming,
+  },
+  "s1-react-linh-oh": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-linh-oh-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-linh-oh-linh.timing.json") as LineTiming,
+  },
+  "s1-react-linh-mm": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-linh-mm-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-linh-mm-linh.timing.json") as LineTiming,
+  },
+  "s1-react-linh-hmm": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-linh-hmm-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-linh-hmm-linh.timing.json") as LineTiming,
+  },
+  "s1-react-office-ooh": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-office-ooh-office.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-office-ooh-office.timing.json") as LineTiming,
+  },
+  "s1-react-office-oh": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-office-oh-office.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-office-oh-office.timing.json") as LineTiming,
+  },
+  "s1-react-office-mm": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-office-mm-office.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-office-mm-office.timing.json") as LineTiming,
+  },
+  "s1-react-office-hmm": {
+    audio: () => require("../../../audio/season-1/lines/s1-react-office-hmm-office.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-react-office-hmm-office.timing.json") as LineTiming,
+  },
 };
 
 /** Sound effects (Metro asset ids). */

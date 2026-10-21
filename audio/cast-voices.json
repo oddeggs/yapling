@@ -42,6 +42,10 @@
     "mags": {
       "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
       "_voice_name": "Alice (premade, British). Minor role in E6; swap for a designed voice later if needed."
+    },
+    "office": {
+      "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
+      "_voice_name": "Alice (premade, British), stand-in for the property office receptionist"
     }
   },
   "sfx": [
