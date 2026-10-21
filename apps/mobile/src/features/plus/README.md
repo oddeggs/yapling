@@ -43,5 +43,5 @@ Links the paywall opens (placeholders until yapling.app is live, `links.ts`): te
 ## What the server does with an event
 
 Purchases, renewals, plan changes and un-cancels turn Plus on for the reported period (150 live
-minutes a month, fair use, counted from the period start). A cancellation keeps Plus to the end of
-the period; a refund or an expiry turns it off. Events apply once by id and never out of order.
+minutes a calendar month in the learner's timezone, fair use, as the learning model counts them). A
+cancellation keeps Plus to the end of the period; a refund or an expiry turns it off. Events apply once by id and never out of order.

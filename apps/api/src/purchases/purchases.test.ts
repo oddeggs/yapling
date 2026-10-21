@@ -80,10 +80,9 @@ describe('the RevenueCat webhook', () => {
     const { userId } = await newGuest();
     const event = plusEvent(userId);
     expect(await outcomeOf(event)).toBe('applied');
-    const summary = await balance(userId);
-    expect(summary).toMatchObject({
+    // The learning model counts Plus minutes by calendar month in the learner's timezone.
+    expect(await balance(userId)).toMatchObject({
       plan: 'plus',
-      periodStart: event.purchased_at_ms,
       allowanceSeconds: 150 * 60,
       firstWeek: false,
     });
@@ -104,7 +103,7 @@ describe('the RevenueCat webhook', () => {
     expect(await balance(userId)).toMatchObject({ plan: 'plus', usedSeconds: 600 });
   });
 
-  it('starts a new month of minutes on renewal', async () => {
+  it('keeps Plus on through a renewal', async () => {
     const { userId } = await newGuest();
     const now = Date.now();
     await outcomeOf(
@@ -112,7 +111,11 @@ describe('the RevenueCat webhook', () => {
     );
     const renewal = plusEvent(userId, { type: 'RENEWAL', purchased_at_ms: now - DAY });
     expect(await outcomeOf(renewal)).toBe('applied');
-    expect(await balance(userId)).toMatchObject({ plan: 'plus', periodStart: now - DAY });
+    expect((await balance(userId)).plan).toBe('plus');
+    expect(await readEntitlement(env.DB, userId)).toMatchObject({
+      state: 'active',
+      periodStart: now - DAY,
+    });
   });
 
   it('keeps Plus to the end of the period after a cancellation, then expires to free', async () => {

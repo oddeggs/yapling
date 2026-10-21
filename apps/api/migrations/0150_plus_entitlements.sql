@@ -11,7 +11,7 @@ CREATE TABLE plus_entitlements (
   store TEXT,
   environment TEXT,
   period_type TEXT,
-  -- When the current paid period started: the ledger's Plus months count from here.
+  -- When the current paid period started (the store's billing period).
   period_start INTEGER NOT NULL,
   -- When the current period ends; null when RevenueCat didn't say.
   expires_at INTEGER,
