@@ -20,4 +20,8 @@ export const safetyEn = {
   'safety.trusted': 'Message someone you trust',
   'safety.trustedSub': 'Opens your contacts',
   'safety.later': 'Back to Natterwick later',
+  /** The emergency row where no number is listed for the learner's country yet. */
+  'safety.emergencyLocal': 'If you are in danger now, call your local emergency number.',
+  /** The call button's label: the number itself, ready to dial. */
+  'safety.call': 'Call {number}',
 } as const satisfies EnCatalogue;

@@ -28,3 +28,14 @@ States built from existing components because the design does not show them.
 | Week view | Week across two months | "28 tháng 9 – 4 tháng 10" / "Sep 28 – Oct 4" |
 | Week view | Every call done | No primary button under the phrases |
 | Week view | Calls not open yet | Their rows are not buttons; VoiceOver reads "Sắp tới" |
+| Paywall | Restore purchases, terms, privacy, auto-renew wording | Required by the App Store, not drawn. A row of small underlined links and the auto-renew note under the students line, inside the sheet's scroll, above the equal button pair |
+| Paywall | Store prices loading, or the store not answering | Plan cards show "…" for the price, the upgrade is disabled, and a one-line note says the App Store isn't answering |
+| Paywall | Development build without a RevenueCat key | The design's prices with a dev-only note above the cards; the upgrade is disabled. Never in a store build |
+| Paywall | A free trial configured in App Store Connect | The upgrade reads "Try N days free" and the yearly card carries it as its green tag instead of "Intro" |
+| Me sheet | AI explainer and delete my data | A second rows card under the settings rows, same row style; the delete row is plain ink, not red |
+| Me sheet | Loading | The sheet with a spinner until the profile and progress arrive |
+| Me sheet | Delete my data confirmation | The sheet's content becomes a title, what is deleted and when, and an equal pair: "Keep my data" (white) and "Delete everything" (ink) |
+| Me sheet | The memory page ("What Pip remembers") | The R5 board names it but doesn't draw it. In the sheet: a back button and the title, a line on what it is, then one rows card per section (about you, coming up, about us) with each note's text and Edit / Delete links; editing turns the note into a text field with Cancel and Save |
+| Me sheet | Fixes you now own | Left out of the first-week sheet: no fix can graduate in the first week (five self-corrections over three days) |
+| Safety sheet | A country with no verified number | No call button; the emergency row asks the learner to call their local emergency number |
+| "Pip is an AI" sheet | Opened from the Me sheet | The C2 board's sheet, with the onboarding catalogue's lines (the voice line reads "Delete it any time") |

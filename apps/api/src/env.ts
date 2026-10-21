@@ -16,6 +16,8 @@ export const secretNames = [
   'APPLE_TEAM_ID',
   'APPLE_KEY_ID',
   'APPLE_PRIVATE_KEY',
+  // RevenueCat's webhook: the whole Authorization header it sends (src/purchases).
+  'REVENUECAT_WEBHOOK_AUTH',
 ] as const;
 export type SecretName = (typeof secretNames)[number];
 

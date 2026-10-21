@@ -32,4 +32,15 @@ export const plusVi = {
   'plus.privacy': 'Quyền riêng tư',
   'plus.autoRenew':
     'Gói tự động gia hạn trừ khi bạn huỷ ít nhất 24 giờ trước khi kỳ hiện tại kết thúc. Quản lý hoặc huỷ trong cài đặt Apple ID.',
+  'plus.plan.yearly': 'Hằng năm',
+  'plus.devOnly': 'Chỉ bản dev: giá mẫu, không có App Store. Đã tắt mua.',
+  'plus.storeUnavailable': 'App Store chưa phản hồi. Bạn thử lại sau một lúc nhé.',
+  'plus.priceLoading': '…',
+  'plus.welcome': 'Đã bật Plus. Thêm phút gọi bắt đầu từ bây giờ.',
+  'plus.pending': 'Đang chờ App Store xác nhận thanh toán.',
+  'plus.failed': 'Giao dịch chưa thành công. Bạn chưa bị trừ tiền.',
+  'plus.restored': 'Plus đã được khôi phục trên điện thoại này.',
+  'plus.nothingToRestore': 'Không có giao dịch Plus nào để khôi phục với Apple ID này.',
+  'plus.unavailable': 'Bản này không hỗ trợ mua hàng.',
+  'plus.a11y.plan': '{plan}, {price}. {detail}',
 } as const satisfies Translation<typeof plusEn>;

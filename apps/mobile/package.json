@@ -39,6 +39,7 @@
     "react-native": "catalog:",
     "react-native-audio-api": "catalog:",
     "react-native-gesture-handler": "catalog:",
+    "react-native-purchases": "catalog:",
     "react-native-reanimated": "catalog:",
     "react-native-safe-area-context": "catalog:",
     "react-native-screens": "catalog:",
