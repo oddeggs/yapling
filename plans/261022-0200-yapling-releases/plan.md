@@ -68,6 +68,8 @@ Gate 0 progress (22 Oct 2026): 0a, 0b, 0c, 0d merged. **Voice spike passed narro
 Merge order: 1a, 1b, 1d, 1c, 1e, 1f, 1g.
 Gate 1: on the simulator, a full Episode 1 call with Mei and Pip runs against the dev Worker with recorded and live lines, captions and lipsync, and a post-call summary arrives.
 
+**Dev deploy** (22 Oct 2026): the dev API runs at `https://yapling-api-dev.bkdev98.workers.dev` (Worker `yapling-api-dev`, workers.dev). Resources in the founder's Cloudflare account: D1 `yapling-dev` (id in `apps/api/wrangler.jsonc`), R2 `yapling-blobs-dev`, Queues `yapling-jobs-dev` and its dead-letter queue `yapling-jobs-dlq-dev`; secrets `ANTHROPIC_API_KEY`, `ELEVENLABS_API_KEY`, `BETTER_AUTH_SECRET`. Deploy order: migrations (`wrangler d1 migrations apply yapling-dev --env dev --remote`), then the Worker (`wrangler deploy --env dev --var COMMIT_SHA:<sha>`), then any new secrets (`wrangler secret put <NAME> --env dev`). Smoke: health, guest session, profile, progress and minutes answer; a live Episode 1 call from this Mac (edge HKG, call object in US West) measured end of speech → recorded reaction 0.90 s and → first reply audio P50 1.47 s, P90 1.53 s over 6 answered turns, with the reply audio ready before the reaction ends in 5 of 6; the post-call summary was written.
+
 ## Wave 2: The first week · critical path 2 runs · ends in TestFlight build 1
 
 | Lane | Owns | Screens | Runs |

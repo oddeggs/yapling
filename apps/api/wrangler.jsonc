@@ -29,9 +29,8 @@
         {
           "binding": "DB",
           "database_name": "yapling-dev",
-          // Placeholder until the database exists (`wrangler d1 create yapling-dev`). Local runs
-          // and the tests simulate D1 and never read it.
-          "database_id": "00000000-0000-0000-0000-000000000000",
+          // Local runs and the tests simulate D1 and never read the id.
+          "database_id": "5820b66f-7537-4066-bf4d-5c6581c0ce9e",
           "migrations_dir": "migrations",
         },
       ],
