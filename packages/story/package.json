@@ -1,0 +1,27 @@
+{
+  "name": "@yapling/story",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Season content as typed data (scenes, beats, recorded and generated lines, glosses), persona prompts and the scene runner",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./assets": "./src/assets.generated.ts"
+  },
+  "scripts": {
+    "gen": "tsx scripts/gen.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@yapling/contracts": "workspace:*",
+    "@yapling/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
