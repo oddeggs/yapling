@@ -129,3 +129,66 @@ export async function updateProgress(
   }
   throw new Error('the progress kept changing under the update');
 }
+
+/** What a change applied once left (`updateProgressOnce`), or null when it hasn't been applied. */
+export async function progressChange<T>(
+  db: D1Database,
+  userId: string,
+  changeId: string,
+): Promise<T | null> {
+  const row = await db
+    .prepare('SELECT data FROM progress_changes WHERE id = ? AND user_id = ?')
+    .bind(changeId, userId)
+    .first<{ data: string }>();
+  return row === null ? null : (JSON.parse(row.data) as T);
+}
+
+/** What `updateProgressOnce` answers: whether this run applied the change, and what it left. */
+export interface OnceOutcome<T> {
+  readonly applied: boolean;
+  readonly data: T;
+}
+
+/**
+ * A server-side change applied at most once per `changeId` (a call id). The change's record and the
+ * progress update land in one batch: the record is inserted only over the revision the change was
+ * computed from, and the update only lands when that record now names the next revision. A later
+ * run with the same id applies nothing and answers the data the first run left.
+ */
+export async function updateProgressOnce<T>(
+  db: D1Database,
+  userId: string,
+  changeId: string,
+  change: (current: Progress) => { readonly lists: Lists; readonly data: T },
+  now: number,
+): Promise<OnceOutcome<T>> {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const done = await progressChange<T>(db, userId, changeId);
+    if (done !== null) return { applied: false, data: done };
+    const current = await readProgress(db, userId, now);
+    const result = change(current);
+    const next = Progress.parse({ ...current, ...result.lists });
+    const base = current.revision;
+    const [, update] = await db.batch([
+      db
+        .prepare(
+          `INSERT INTO progress_changes (id, user_id, revision, data, created_at)
+           SELECT ?1, ?2, ?3 + 1, ?4, ?5
+           WHERE (SELECT revision FROM progress WHERE user_id = ?2) = ?3
+           ON CONFLICT (id) DO NOTHING`,
+        )
+        .bind(changeId, userId, base, JSON.stringify(result.data), now),
+      db
+        .prepare(
+          `UPDATE progress SET revision = revision + 1, phrases = ?3, error_targets = ?4,
+             can_dos = ?5, keepsakes = ?6, weeks = ?7, updated_at = ?8
+           WHERE user_id = ?1 AND revision = ?2
+             AND EXISTS (SELECT 1 FROM progress_changes
+                         WHERE id = ?9 AND user_id = ?1 AND revision = ?2 + 1)`,
+        )
+        .bind(userId, base, ...listValues(next), now, changeId),
+    ]);
+    if ((update?.meta.changes ?? 0) === 1) return { applied: true, data: result.data };
+  }
+  throw new Error('the progress kept changing under the update');
+}

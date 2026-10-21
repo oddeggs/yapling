@@ -112,7 +112,7 @@ async function finishedCall(
 }
 
 /** Runs the consumer on a batch; answers which messages it acked and retried. */
-async function runJobs(bodies: unknown[]) {
+async function runJobs(bodies: unknown[], jobsEnv: typeof env = env) {
   const explicitAcks: string[] = [];
   const retries: string[] = [];
   const messages = bodies.map((body, i) => ({
@@ -129,7 +129,7 @@ async function runJobs(bodies: unknown[]) {
     ackAll: () => undefined,
     retryAll: () => undefined,
   } as unknown as MessageBatch;
-  await consumeJobs(batch, env);
+  await consumeJobs(batch, jobsEnv);
   return { explicitAcks, retries };
 }
 
@@ -231,6 +231,85 @@ describe('the post-call job', () => {
       usedOn: ['2026-10-23', '2026-10-24'],
       contexts: ['s1-e1'],
     });
+  });
+
+  it('finishes a job that failed after progress without applying anything twice', async () => {
+    const { userId, token } = await newGuest();
+    await readProgress(env.DB, userId, ENDED);
+    await env.DB.prepare('UPDATE progress SET error_targets = ? WHERE user_id = ?')
+      .bind(
+        JSON.stringify([
+          {
+            id: 'past_ed',
+            status: 'active',
+            selfCorrections: 0,
+            selfCorrectionDays: [],
+            activatedAt: 1,
+            graduatedAt: null,
+          },
+        ]),
+        userId,
+      )
+      .run();
+    const { callId, key } = await finishedCall(userId);
+    // The learner fixed the active target on a second try.
+    const file = await env.BLOBS.get(key).then((o) => o!.json<TranscriptFile>());
+    const lines = file.lines.map((l) =>
+      'turn' in l && l.turn === 1
+        ? { ...l, targetId: 'past_ed' }
+        : 'turn' in l && l.turn === 2
+          ? { ...l, correctionFixed: true }
+          : l,
+    );
+    await env.BLOBS.put(key, JSON.stringify({ ...file, lines }));
+    let sonnetCalls = 0;
+    providers.structured = () => {
+      sonnetCalls += 1;
+      return {
+        wins: [`Win ${sonnetCalls}.`],
+        fix: null,
+        phrasesUsed: [],
+        recurringErrors: [],
+        canDoEvidence: [{ canDoId: 'ask-whats-wrong', quote: "What's wrong?", witness: 'mei' }],
+        memories: [{ text: `You work in marketing (${sonnetCalls}).`, category: 'about_you' }],
+      };
+    };
+
+    // The database fails as the summary is stored: progress and memory are already written.
+    const failing = {
+      ...env,
+      DB: new Proxy(env.DB, {
+        get(target, prop, receiver) {
+          if (prop !== 'prepare') return Reflect.get(target, prop, receiver) as unknown;
+          return (sql: string) => {
+            if (sql.includes('UPDATE calls SET summary')) throw new Error('D1 went away');
+            return target.prepare(sql);
+          };
+        },
+      }),
+    } as typeof env;
+    const first = await runJobs([{ type: 'post_call', callId, userId }], failing);
+    expect(first.retries).toEqual(['m0']);
+    const once = await readProgress(env.DB, userId, ENDED);
+
+    const retry = await runJobs([{ type: 'post_call', callId, userId }]);
+    expect(retry.explicitAcks).toEqual(['m0']);
+    const after = await readProgress(env.DB, userId, ENDED);
+    expect(after.revision).toBe(once.revision);
+    expect(after.errorTargets.find((t) => t.id === 'past_ed')).toMatchObject({
+      selfCorrections: 1,
+      selfCorrectionDays: ['2026-10-23'],
+    });
+    expect(after.canDos.find((c) => c.id === 'ask-whats-wrong')?.evidence).toHaveLength(1);
+    expect(sonnetCalls).toBe(1);
+    expect((await listMemory(env.DB, userId)).map((m) => m.text)).toEqual([
+      'You work in marketing (1).',
+    ]);
+    const record = await expectJson<{ summary: { wins: string[]; memoryItemIds: string[] } }>(
+      await call(`/api/calls/${callId}`, { token }),
+    );
+    expect(record.summary.wins).toEqual(['Win 1.']);
+    expect(record.summary.memoryItemIds).toHaveLength(1);
   });
 
   it('records a scheduled push as sent once', async () => {

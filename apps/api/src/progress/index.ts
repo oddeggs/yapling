@@ -1,3 +1,9 @@
 export { progressRoutes } from './routes';
-export { readProgress, updateProgress } from './store';
+export {
+  progressChange,
+  readProgress,
+  updateProgress,
+  updateProgressOnce,
+  type OnceOutcome,
+} from './store';
 export { ProgressPut, STALE_REVISION } from './schema';
