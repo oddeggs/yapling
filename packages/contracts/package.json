@@ -1,0 +1,22 @@
+{
+  "name": "@yapling/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The frozen wire contracts: the live-call socket frames (JSON and binary audio) and the HTTP bodies",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
