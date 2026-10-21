@@ -1,0 +1,23 @@
+{
+  "name": "@yapling/fonts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The embedded Lexend cuts and Kithfield Hand: fetches and verifies them, and copies them into the app",
+  "sideEffects": false,
+  "scripts": {
+    "download": "tsx src/fetch.ts",
+    "verify": "tsx src/fetch.ts --check",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@yapling/theme": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
