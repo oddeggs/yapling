@@ -78,13 +78,14 @@ export class UserDO extends DurableObject<Bindings> {
    * The ledger's state. The first time it is needed it starts from the account's creation; its
    * timezone and install day come from the learner's profile and progress, and are pinned once
    * the profile exists, so editing the timezone can't open a fresh allowance. Until then the
-   * launch timezone stands in.
+   * phone's timezone from the guest session (or the launch timezone) stands in.
    */
   private async ledger(): Promise<LedgerState> {
     let stored = this.store.ledger();
+    let standIn: string = DEFAULT_LEDGER_TIMEZONE;
     if (stored === null || stored.zone === null) {
       const row = await this.env.DB.prepare(
-        `SELECT u.created_at, p.timezone, g.installed_on FROM users u
+        `SELECT u.created_at, u.timezone AS phone_timezone, p.timezone, g.installed_on FROM users u
          LEFT JOIN profiles p ON p.user_id = u.id
          LEFT JOIN progress g ON g.user_id = u.id
          WHERE u.id = ?`,
@@ -92,6 +93,7 @@ export class UserDO extends DurableObject<Bindings> {
         .bind(this.userId())
         .first<{
           created_at: string | number;
+          phone_timezone: string | null;
           timezone: string | null;
           installed_on: string | null;
         }>();
@@ -108,8 +110,10 @@ export class UserDO extends DurableObject<Bindings> {
         );
         stored = this.store.ledger() ?? stored;
       }
+      const phone = TimeZone.safeParse(row?.phone_timezone);
+      if (phone.success) standIn = phone.data;
     }
-    const timezone = stored.zone?.timezone ?? DEFAULT_LEDGER_TIMEZONE;
+    const timezone = stored.zone?.timezone ?? standIn;
     return {
       plan: stored.plan,
       timezone,

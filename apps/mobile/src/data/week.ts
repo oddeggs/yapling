@@ -43,10 +43,15 @@ export function currentWeek(progress: Progress, now: EpochMs, timezone: TimeZone
   };
 }
 
-/** The phone's own timezone, when the profile has none yet. */
-export function deviceTimeZone(): TimeZone {
+/** The phone's IANA timezone, or null when the runtime doesn't give a usable one. */
+export function phoneTimeZone(): TimeZone | null {
   const parsed = TimeZone.safeParse(Intl.DateTimeFormat().resolvedOptions().timeZone);
-  return parsed.success ? parsed.data : 'UTC';
+  return parsed.success ? parsed.data : null;
+}
+
+/** The phone's own timezone, when the profile has none yet; Vietnam's (the launch) if unknown. */
+export function deviceTimeZone(): TimeZone {
+  return phoneTimeZone() ?? 'Asia/Ho_Chi_Minh';
 }
 
 /** Milliseconds until the next local midnight, when the day index moves on. */

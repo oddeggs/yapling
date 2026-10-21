@@ -36,8 +36,10 @@ const sessionBody = { userId, token, expiresAt: at + 30 * day, kind: 'guest' };
 
 describeSchemas('session', session, {
   GuestSessionRequest: [
-    [guest],
+    [guest, { ...guest, timezone: 'Asia/Ho_Chi_Minh' }],
     [
+      { ...guest, timezone: 'Ho Chi Minh City' },
+      { ...guest, timezone: null },
       { ...guest, ageConfirmed: false },
       { ...guest, installId: 'install-1' },
       { ...guest, clientVersion: undefined },

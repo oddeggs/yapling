@@ -3,6 +3,7 @@ import type {
   MinutesSummary,
   PushTokenRegistration,
   Session,
+  TimeZone,
 } from '@yapling/contracts';
 
 import { createApiClient, createSessionApi, type ApiClient } from './client';
@@ -16,6 +17,7 @@ import { CallsRepo, minutesResource } from './records';
 import type { Resource } from './resource';
 import { SessionManager } from './session';
 import { CACHE_KEYS, type CacheStorage, type SecretStorage } from './storage';
+import { phoneTimeZone } from './week';
 
 /*
  * The app's data, put together once: the session, the typed client, the cached stores, the offline
@@ -31,6 +33,8 @@ export interface DataOptions {
   readonly cache: CacheStorage;
   readonly clientVersion: string;
   readonly newInstallId: () => string;
+  /** The phone's timezone for the guest request; the runtime's by default. */
+  readonly timeZone?: () => TimeZone | null;
   readonly now?: () => number;
   readonly schedule?: Schedule;
   readonly timeoutMs?: number;
@@ -67,6 +71,7 @@ export class Data {
       secrets: opts.secrets,
       clientVersion: opts.clientVersion,
       newInstallId: opts.newInstallId,
+      timeZone: opts.timeZone ?? phoneTimeZone,
     });
     this.api = createApiClient(http, this.session);
     this.outbox = new Outbox(

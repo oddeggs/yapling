@@ -1,6 +1,6 @@
 import { Progress } from '@yapling/contracts';
 
-import { dayIndex, localDate } from './days';
+import { dayIndex, LAUNCH_TIMEZONE, localDate } from './days';
 
 /** Reads and writes on `progress`. */
 
@@ -18,13 +18,20 @@ interface ProgressRow {
 
 const EMPTY: Lists = { phrases: [], errorTargets: [], canDos: [], keepsakes: [], weeks: [] };
 
-/** The learner's timezone from the profile; UTC before onboarding. */
-async function timeZoneOf(db: D1Database, userId: string): Promise<string> {
+/**
+ * The learner's timezone: the profile's; before onboarding, the phone's from the guest session;
+ * else the launch timezone.
+ */
+export async function learnerTimeZone(db: D1Database, userId: string): Promise<string> {
   const row = await db
-    .prepare('SELECT timezone FROM profiles WHERE user_id = ?')
+    .prepare(
+      `SELECT COALESCE(p.timezone, u.timezone) AS timezone FROM users u
+       LEFT JOIN profiles p ON p.user_id = u.id
+       WHERE u.id = ?`,
+    )
     .bind(userId)
-    .first<{ timezone: string }>();
-  return row?.timezone ?? 'UTC';
+    .first<{ timezone: string | null }>();
+  return row?.timezone ?? LAUNCH_TIMEZONE;
 }
 
 /** A stored list, still unchecked: `Progress.parse` checks it. */
@@ -57,7 +64,7 @@ function listValues(lists: Lists) {
 
 /** The learner's progress; a first read starts it empty at revision 1, installed today. */
 export async function readProgress(db: D1Database, userId: string, now: number): Promise<Progress> {
-  const today = localDate(now, await timeZoneOf(db, userId));
+  const today = localDate(now, await learnerTimeZone(db, userId));
   await db
     .prepare(
       `INSERT INTO progress (user_id, revision, installed_on, phrases, error_targets, can_dos,
@@ -91,7 +98,7 @@ export async function writeProgress(
 ): Promise<WriteOutcome> {
   const current = await readProgress(db, userId, now);
   if (current.revision !== input.baseRevision) return { ok: false, current };
-  const today = localDate(now, await timeZoneOf(db, userId));
+  const today = localDate(now, await learnerTimeZone(db, userId));
   const row = await db
     .prepare(
       `UPDATE progress SET revision = revision + 1, phrases = ?3, error_targets = ?4,

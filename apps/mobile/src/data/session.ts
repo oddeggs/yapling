@@ -1,4 +1,4 @@
-import { Session, type AppleLinkRequest } from '@yapling/contracts';
+import { Session, type AppleLinkRequest, type TimeZone } from '@yapling/contracts';
 
 import type { SessionApi, TokenSource } from './client';
 import { DataError, isDataError, type DataErrorKind } from './errors';
@@ -39,6 +39,11 @@ export interface SessionOptions {
   readonly clientVersion: string;
   /** A random UUID for a new install. */
   readonly newInstallId: () => string;
+  /**
+   * The phone's timezone, sent with the guest request so the server counts the install day in it
+   * before onboarding saves the profile's; null when unknown.
+   */
+  readonly timeZone: () => TimeZone | null;
 }
 
 const INITIAL: SessionState = { status: 'idle', session: null, error: null };
@@ -126,10 +131,12 @@ export class SessionManager implements TokenSource {
   private async createGuest(): Promise<Session> {
     try {
       const installId = await this.installId();
+      const timezone = this.opts.timeZone();
       const session = await this.opts.api.guestSession({
         installId,
         clientVersion: this.opts.clientVersion,
         ageConfirmed: true,
+        ...(timezone !== null ? { timezone } : {}),
       });
       await this.save(session);
       return session;

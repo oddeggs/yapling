@@ -10,9 +10,10 @@ import { env } from 'cloudflare:workers';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
-import { call, expectError, expectJson, newGuest } from '../auth/testing/client';
+import { call, expectError, expectJson, guestBody, newGuest } from '../auth/testing/client';
+import type { Session } from '@yapling/contracts';
 import { dayIndex, localDate } from './days';
-import { updateProgress } from './store';
+import { readProgress, updateProgress } from './store';
 
 const at = 1_792_000_000_000;
 const callRecordId = 'call_01';
@@ -95,7 +96,8 @@ describe('progress sync', () => {
     const progress = await read(token);
     expect(progress).toEqual({
       revision: 1,
-      installedOn: localDate(Date.now(), 'UTC'),
+      // No timezone yet: the launch timezone's day.
+      installedOn: localDate(Date.now(), 'Asia/Ho_Chi_Minh'),
       dayIndex: 1,
       phrases: [],
       errorTargets: [],
@@ -126,7 +128,7 @@ describe('progress sync', () => {
     const { token, userId } = await newGuest();
     await read(token);
     await env.DB.prepare('UPDATE progress SET installed_on = ? WHERE user_id = ?')
-      .bind(localDate(Date.now() - 7 * 86_400_000, 'UTC'), userId)
+      .bind(localDate(Date.now() - 7 * 86_400_000, 'Asia/Ho_Chi_Minh'), userId)
       .run();
     const progress = await read(token);
     expect(progress.dayIndex).toBe(8);
@@ -190,9 +192,57 @@ describe('days', () => {
     const instant = Date.UTC(2026, 9, 22, 18);
     expect(localDate(instant, 'UTC')).toBe('2026-10-22');
     expect(localDate(instant, 'Asia/Ho_Chi_Minh')).toBe('2026-10-23');
-    expect(localDate(instant, 'Not/AZone')).toBe('2026-10-22');
+    // An unknown name falls back to the launch timezone, never UTC.
+    expect(localDate(instant, 'Not/AZone')).toBe('2026-10-23');
     expect(dayIndex('2026-10-22', '2026-10-22')).toBe(1);
     expect(dayIndex('2026-10-22', '2026-10-29')).toBe(8);
     expect(dayIndex('2026-10-22', '2026-10-21')).toBe(1);
+  });
+});
+
+describe('the install day before onboarding', () => {
+  // 2026-10-21 20:00 UTC is 03:00 on the 22nd in Ho Chi Minh City.
+  const night = Date.UTC(2026, 9, 21, 20);
+
+  async function guestIn(timezone?: string): Promise<Session> {
+    const body = timezone === undefined ? guestBody() : { ...guestBody(), timezone };
+    return expectJson<Session>(await call('/api/session/guest', { body }));
+  }
+
+  it("follows the phone's timezone from the guest session", async () => {
+    const vietnam = await guestIn('Asia/Ho_Chi_Minh');
+    expect(await readProgress(env.DB, vietnam.userId, night)).toMatchObject({
+      installedOn: '2026-10-22',
+      dayIndex: 1,
+    });
+    const la = await guestIn('America/Los_Angeles');
+    expect(await readProgress(env.DB, la.userId, night)).toMatchObject({
+      installedOn: '2026-10-21',
+      dayIndex: 1,
+    });
+  });
+
+  it('falls back to the launch timezone, never UTC', async () => {
+    const { userId } = await guestIn();
+    expect((await readProgress(env.DB, userId, night)).installedOn).toBe('2026-10-22');
+  });
+
+  it('keeps the timezone the install first sent, and ignores one the runtime does not know', async () => {
+    const installId = crypto.randomUUID();
+    const first = await call('/api/session/guest', {
+      body: { ...guestBody(installId), timezone: 'Not/AZone' },
+    });
+    const { userId } = await expectJson<Session>(first);
+    await call('/api/session/guest', {
+      body: { ...guestBody(installId), timezone: 'America/Los_Angeles' },
+    });
+    const again = await call('/api/session/guest', {
+      body: { ...guestBody(installId), timezone: 'Europe/London' },
+    });
+    expect((await expectJson<Session>(again)).userId).toBe(userId);
+    const row = await env.DB.prepare('SELECT timezone FROM users WHERE id = ?')
+      .bind(userId)
+      .first<{ timezone: string | null }>();
+    expect(row?.timezone).toBe('America/Los_Angeles');
   });
 });

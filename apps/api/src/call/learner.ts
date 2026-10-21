@@ -3,7 +3,7 @@ import { duePhrases, fromPhraseProgress } from '@yapling/domain';
 import { findPhrase, type ErrorTargetBrief, type Scene } from '@yapling/story';
 
 import type { Bindings } from '../env';
-import { readProgress } from '../progress';
+import { learnerTimeZone, readProgress } from '../progress';
 import { targetBrief } from './targets';
 
 /*
@@ -23,8 +23,6 @@ export interface LearnerContext {
   readonly duePhrases: readonly { readonly id: string; readonly text: string }[];
 }
 
-const DEFAULT_TIMEZONE = 'Asia/Ho_Chi_Minh';
-
 export async function loadLearner(
   env: Bindings,
   userId: string,
@@ -32,12 +30,10 @@ export async function loadLearner(
   scene: Scene,
   now: number,
 ): Promise<LearnerContext> {
-  const profile = await env.DB.prepare(
-    'SELECT display_name, timezone FROM profiles WHERE user_id = ?',
-  )
+  const profile = await env.DB.prepare('SELECT display_name FROM profiles WHERE user_id = ?')
     .bind(userId)
-    .first<{ display_name: string; timezone: string }>();
-  const timezone = profile?.timezone ?? DEFAULT_TIMEZONE;
+    .first<{ display_name: string }>();
+  const timezone = await learnerTimeZone(env.DB, userId);
   const progress = await readProgress(env.DB, userId, now);
   const targets = progress.errorTargets
     .filter((t) => t.status === 'active')

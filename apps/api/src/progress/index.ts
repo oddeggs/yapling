@@ -1,5 +1,6 @@
 export { progressRoutes } from './routes';
 export {
+  learnerTimeZone,
   progressChange,
   readProgress,
   updateProgress,

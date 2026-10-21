@@ -24,13 +24,26 @@ describe('the session', () => {
     const guest = api.requests('POST', '/api/session/guest');
     expect(guest).toHaveLength(1);
     const installId = phone.secrets.values.get(SECRET_KEYS.installId);
-    expect(guest[0]?.body).toEqual({ installId, clientVersion: '0.1.0', ageConfirmed: true });
+    expect(guest[0]?.body).toEqual({
+      installId,
+      clientVersion: '0.1.0',
+      ageConfirmed: true,
+      timezone: 'Asia/Ho_Chi_Minh',
+    });
     expect(JSON.parse(phone.secrets.values.get(SECRET_KEYS.session) ?? '{}')).toEqual(
       state.session,
     );
     // Every request after it carries the token.
     expect(api.requests('GET', '/api/me/progress')[0]?.token).toBe(state.session?.token);
     await expect(data.getSessionToken()).resolves.toBe(state.session?.token);
+  });
+
+  it('leaves the timezone out of the guest request when the phone has none to give', async () => {
+    const api = new FakeApi();
+    const data = launch(api, newPhone(), undefined, () => null);
+    await data.start();
+    const body = api.requests('POST', '/api/session/guest')[0]?.body as Record<string, unknown>;
+    expect(body).not.toHaveProperty('timezone');
   });
 
   it('reuses the stored session on the next launch without asking again', async () => {
