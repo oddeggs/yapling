@@ -13,7 +13,14 @@ export const weekEn = {
   'week.slot.realWeek': 'Real week',
   'week.slot.practice': 'Practice',
   'week.slot.teach': 'Teach {name} to introduce itself',
+  /** An episode's row: "S1 · E1 · The Letter" (the title stays in English). */
+  'week.slot.episodeTitle': 'S{season} · E{episode} · {title}',
+  /** The first week's practice call, at the Bus 45 stop. */
+  'week.slot.passItOn': 'Pass it on · Bus 45',
   'week.slot.today': 'Today',
+  'week.slot.a11y.done': 'Done',
+  'week.slot.a11y.open': 'Ready',
+  'week.slot.a11y.upcoming': 'Coming up',
   'week.phrasesTitle': 'THIS WEEK’S PHRASES',
   'week.seedNote': 'Seed packets: heard, not said yet. Say them to sprout.',
   'week.cta': 'Go to the café with {name}',
