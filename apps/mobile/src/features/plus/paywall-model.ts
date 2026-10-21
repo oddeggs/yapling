@@ -38,6 +38,11 @@ export interface PaywallState {
   readonly selected: PlusPlan;
   /** A purchase or a restore in flight: every button waits. */
   readonly busy: 'purchase' | 'restore' | null;
+  /**
+   * The store knows who is buying (RevenueCat logged in as the Yapling user). Until then nothing
+   * is bought or restored, so a purchase never lands on an anonymous customer the server can't name.
+   */
+  readonly signedIn: boolean;
 }
 
 export interface PaywallInputs {
@@ -194,8 +199,7 @@ export function paywallView(
     autoRenew: copy('plus.autoRenew'),
     restore: {
       label: copy('plus.restore'),
-      // A dev build without a store can still try: it answers that purchases are off.
-      disabled: busy,
+      disabled: busy || !state.signedIn,
     },
     terms: copy('plus.terms'),
     privacy: copy('plus.privacy'),
@@ -203,7 +207,7 @@ export function paywallView(
     upgrade: pair(
       trialDays ? copy('plus.ctaTrial', { count: trialDays }) : copy('plus.cta'),
       'primary',
-      busy || state.offers.kind !== 'ready' || chosen === undefined,
+      busy || !state.signedIn || state.offers.kind !== 'ready' || chosen === undefined,
     ),
     stayEitherWay: copy('plus.stayEitherWay', { name: inputs.roommateName }),
   };

@@ -10,3 +10,5 @@ export {
   type MeInputs,
   type MeView,
 } from './me-model';
+export { useMeData } from './use-me-data';
+export { useRoommate } from './use-roommate';

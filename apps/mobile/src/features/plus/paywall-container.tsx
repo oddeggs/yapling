@@ -19,6 +19,8 @@ import { devFallbackAllowed, plusStore } from './setup';
 export interface PaywallContainerProps {
   /** The roommate's name from the profile. */
   readonly roommateName: string;
+  /** The signed-in learner (the session's user id); null until there is a session. */
+  readonly userId: string | null;
   /** Leaves the paywall (back to the burrow). */
   readonly onClose?: () => void;
   /**
@@ -31,6 +33,7 @@ export interface PaywallContainerProps {
 /** The paywall wired to the store: offers, purchase, restore, and the links. */
 export function PaywallContainer({
   roommateName,
+  userId,
   onClose,
   onPlanMayHaveChanged,
 }: PaywallContainerProps) {
@@ -43,22 +46,27 @@ export function PaywallContainer({
     offers: initialOffers(store.available, devFallbackAllowed()),
     selected: 'yearly',
     busy: null,
+    signedIn: false,
   }));
 
+  // RevenueCat logs in as the learner first, so prices, purchases and restores are theirs.
   useEffect(() => {
-    if (!store.available) return;
     let live = true;
-    void store.offers().then((offers) => {
+    void (async () => {
+      if (userId !== null) await store.identify(userId);
+      if (live) setState((s) => ({ ...s, signedIn: userId !== null }));
+      if (!store.available) return;
+      const offers = await store.offers();
       if (!live) return;
       setState((s) => ({
         ...s,
         offers: offers === null ? { kind: 'unavailable' } : { kind: 'ready', offers },
       }));
-    });
+    })();
     return () => {
       live = false;
     };
-  }, [store]);
+  }, [store, userId]);
 
   const close = useCallback(() => {
     if (onClose) onClose();

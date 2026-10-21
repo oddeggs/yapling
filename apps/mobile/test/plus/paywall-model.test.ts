@@ -26,7 +26,7 @@ const storeOffers: readonly PlanOffer[] = [
 ];
 
 const view = (offers: OffersState, over: Partial<PaywallState> = {}, copy = en) =>
-  paywallView({ offers, selected: 'yearly', busy: null, ...over }, inputs, copy);
+  paywallView({ offers, selected: 'yearly', busy: null, signedIn: true, ...over }, inputs, copy);
 
 describe('the paywall', () => {
   it('without a RevenueCat key shows the design’s prices marked dev-only, and cannot buy', () => {
@@ -131,6 +131,13 @@ describe('the paywall', () => {
     });
     expect(v.restore.label).toBe('Khôi phục giao dịch');
     expect(v.autoRenew).toContain('tự động gia hạn');
+  });
+
+  it('buys and restores nothing until the store knows who the learner is', () => {
+    const v = view({ kind: 'ready', offers: storeOffers }, { signedIn: false });
+    expect(v.upgrade.disabled).toBe(true);
+    expect(v.restore.disabled).toBe(true);
+    expect(v.notNow.disabled).toBe(false);
   });
 
   it('closes after a purchase or a restore, and stays for anything else', () => {

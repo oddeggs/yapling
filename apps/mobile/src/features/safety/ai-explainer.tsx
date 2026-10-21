@@ -1,3 +1,4 @@
+import type { Roommate } from '@yapling/contracts';
 import {
   colours,
   glass,
@@ -32,7 +33,8 @@ const sheetGlass: Glass = { ...glass.panel, fill: 'rgba(251,250,253,0.9)', blur:
 const SHEET_TOP = 300;
 
 export interface AiExplainerProps {
-  readonly roommateName: string;
+  /** The learner's roommate: named in the title, drawn above the sheet once `@yapling/art` lands. */
+  readonly roommate: Roommate;
   readonly onDone: () => void;
   /**
    * - `onboarding`: before the first call, with its kicker and a back button (an info sheet).
@@ -44,7 +46,8 @@ export interface AiExplainerProps {
 }
 
 /** "Pip and the neighbours are AI": what they are, what the voice is for, and what they aren't. */
-export function AiExplainer({ roommateName, onDone, look, onBack }: AiExplainerProps) {
+export function AiExplainer({ roommate, onDone, look, onBack }: AiExplainerProps) {
+  const roommateName = roommate.name;
   const { t } = useLocale();
   const hero = useKeyframes(motion.screens.infoHero);
   const rise = useKeyframes(motion.screens.infoSheet);
