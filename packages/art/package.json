@@ -1,0 +1,48 @@
+{
+  "name": "@yapling/art",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The prototype's critter, scene and burrow-object generators (synced from design/prototype/art), a Canvas 2D adapter onto Skia, the picture cache, lipsync visemes, the app components and the CanvasKit renderer for Node",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./native": "./src/native/index.ts",
+    "./node": "./src/node/index.ts",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "golden:report": "tsx src/golden/report.ts"
+  },
+  "dependencies": {
+    "@shopify/react-native-skia": "catalog:",
+    "@yapling/theme": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "catalog:",
+    "react-native": "catalog:",
+    "react-native-reanimated": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "react-native": {
+      "optional": true
+    },
+    "react-native-reanimated": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "canvaskit-wasm": "catalog:",
+    "react": "catalog:",
+    "react-native": "catalog:",
+    "react-native-reanimated": "catalog:",
+    "react-native-worklets": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
