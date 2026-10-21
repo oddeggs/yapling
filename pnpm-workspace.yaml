@@ -104,6 +104,9 @@ overrides:
   expo-constants: 'catalog:'
   expo-file-system: 'catalog:'
   expo-font: 'catalog:'
+  # Expo ships ExpoFileSystem and ExpoFont precompiled against this core; a newer patch of the core
+  # links but crashes at launch (missing Swift symbols). The version Bricked Party's lockfile holds.
+  expo-modules-core: 58.0.18
 
 # pnpm refuses dependency install scripts unless they are listed here.
 allowBuilds:
