@@ -106,7 +106,7 @@ export const CanDoProgress = z
 export type CanDoProgress = z.infer<typeof CanDoProgress>;
 
 /** Burrow keepsakes: a can-do certificate signed by its witness, a season keepsake, a story gift. */
-export const KEEPSAKE_KINDS = ['can_do', 'season', 'story'] as const;
+export const KEEPSAKE_KINDS = ['can_do', 'season', 'story', 'week'] as const;
 export const KeepsakeKind = z.enum(KEEPSAKE_KINDS);
 export type KeepsakeKind = z.infer<typeof KeepsakeKind>;
 
