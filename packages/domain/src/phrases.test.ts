@@ -11,6 +11,7 @@ import {
   recordPhraseUse,
   seedPhrase,
   toPhraseProgress,
+  fromPhraseProgress,
   usePhrase,
   type PhraseRecord,
   type PhraseUse,
@@ -102,6 +103,39 @@ describe('the phrase lifecycle', () => {
         }
       }),
     );
+  });
+
+  it('grows the same through the progress body as in memory, use after use', () => {
+    const use = fc.record({
+      day: fc.integer({ min: 0, max: 60 }),
+      correct: fc.boolean(),
+      prompted: fc.boolean(),
+      contextId: fc.constantFrom('s1-e1', 's1-e2', 'real-week-1', 'practice-1'),
+    });
+    fc.assert(
+      fc.property(fc.array(use, { maxLength: 30 }), (uses) => {
+        let memory = seedPhrase('can-i-help', 'Can I help?', on(0));
+        let wire = toPhraseProgress(memory);
+        for (const u of [...uses].sort((a, b) => a.day - b.day)) {
+          const at = on(u.day);
+          memory = usePhrase(memory, { ...u, at }, HCM).phrase;
+          wire = toPhraseProgress(usePhrase(fromPhraseProgress(wire), { ...u, at }, HCM).phrase);
+          expect(wire).toEqual(toPhraseProgress(memory));
+        }
+      }),
+    );
+  });
+
+  it('keeps a seen context from blooming again after the round trip', () => {
+    const leaf = run([correct(1), correct(2, { contextId: 's1-e2' })]);
+    const back = fromPhraseProgress(toPhraseProgress(leaf));
+    expect(back.contexts).toEqual(leaf.contexts);
+    expect(
+      usePhrase(back, correct(20, { prompted: false, contextId: 's1-e2' }), HCM).phrase.state,
+    ).toBe('leaf');
+    expect(
+      usePhrase(back, correct(20, { prompted: false, contextId: 'new' }), HCM).phrase.state,
+    ).toBe('bloom');
   });
 
   it('meets an unknown phrase when the learner uses it first', () => {

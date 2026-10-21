@@ -36,6 +36,8 @@ const lists = z
         leafAt: null,
         bloomAt: null,
         lastUsedAt: at + 1,
+        usedOn: ['2026-10-22'],
+        contexts: ['s1-e1'],
       },
     ],
     errorTargets: [
@@ -43,7 +45,7 @@ const lists = z
         id: 'past_ed',
         status: 'active',
         selfCorrections: 1,
-        correctionDays: 1,
+        selfCorrectionDays: ['2026-10-22'],
         activatedAt: at,
         graduatedAt: null,
       },

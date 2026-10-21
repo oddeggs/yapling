@@ -17,12 +17,15 @@ beforeEach(() => {
 });
 afterEach(() => providers.uninstall());
 
-const ENDED = Date.UTC(2026, 9, 23, 3);
+const ENDED_AT = Date.UTC(2026, 9, 23, 3);
+const ENDED = ENDED_AT;
+const DAY = 24 * 60 * 60_000;
 
 /** A finished Episode 1 call: its record and transcript, as the call object leaves them. */
 async function finishedCall(
   userId: string,
   callId = `call_${crypto.randomUUID().replaceAll('-', '')}`,
+  ENDED = ENDED_AT,
 ) {
   const key = transcriptKey(userBlobPrefix(userId), callId);
   const file: TranscriptFile = {
@@ -174,7 +177,11 @@ describe('the post-call job', () => {
     expect(summary.memoryItemIds).toHaveLength(1);
 
     const progress = await readProgress(env.DB, userId, ENDED);
-    expect(progress.phrases.find((p) => p.id === 'whats-wrong')?.state).toBe('sprout');
+    expect(progress.phrases.find((p) => p.id === 'whats-wrong')).toMatchObject({
+      state: 'sprout',
+      usedOn: ['2026-10-23'],
+      contexts: ['s1-e1'],
+    });
     expect(progress.canDos.find((c) => c.id === 'ask-whats-wrong')).toMatchObject({
       status: 'ticked',
       witness: 'mei',
@@ -196,6 +203,34 @@ describe('the post-call job', () => {
     // A redelivered job changes nothing.
     await runJobs([{ type: 'post_call', callId, userId }]);
     expect(await listMemory(env.DB, userId)).toHaveLength(1);
+  });
+
+  it('leafs a phrase used again on another local day, not the same day', async () => {
+    const { userId } = await newGuest();
+    providers.structured = () => ({
+      wins: [],
+      fix: null,
+      phrasesUsed: [],
+      recurringErrors: [],
+      canDoEvidence: [],
+      memories: [],
+    });
+    const state = async () =>
+      (await readProgress(env.DB, userId, ENDED + 2 * DAY)).phrases.find(
+        (p) => p.id === 'whats-wrong',
+      );
+    const first = await finishedCall(userId);
+    await runJobs([{ type: 'post_call', callId: first.callId, userId }]);
+    const again = await finishedCall(userId, undefined, ENDED + 60 * 60_000);
+    await runJobs([{ type: 'post_call', callId: again.callId, userId }]);
+    expect(await state()).toMatchObject({ state: 'sprout', usedOn: ['2026-10-23'] });
+    const tomorrow = await finishedCall(userId, undefined, ENDED + DAY);
+    await runJobs([{ type: 'post_call', callId: tomorrow.callId, userId }]);
+    expect(await state()).toMatchObject({
+      state: 'leaf',
+      usedOn: ['2026-10-23', '2026-10-24'],
+      contexts: ['s1-e1'],
+    });
   });
 
   it('records a scheduled push as sent once', async () => {

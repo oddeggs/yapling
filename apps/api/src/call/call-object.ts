@@ -125,7 +125,9 @@ export class CallDO extends DurableObject<Bindings> {
     raw: string | ArrayBuffer,
     country: string,
   ): Promise<void> {
-    const reject = (code: 'unauthorized' | 'update_required' | 'minutes_exhausted') => {
+    const reject = (
+      code: 'unauthorized' | 'update_required' | 'unknown_scene' | 'minutes_exhausted',
+    ) => {
       new FrameSender(socket).send({ type: 'error', code, fatal: true });
       socket.close(1008, code);
     };
@@ -156,7 +158,7 @@ export class CallDO extends DurableObject<Bindings> {
     }
 
     const scene = findScene(SCENE_ALIASES[frame.sceneId] ?? frame.sceneId);
-    if (!scene || callKindOf(scene.kind) === null) return reject('update_required');
+    if (!scene || callKindOf(scene.kind) === null) return reject('unknown_scene');
     const now = Date.now();
     const balance = await userObject(this.env, userId).balance();
     if (balance.leftSeconds <= 0) return reject('minutes_exhausted');

@@ -35,6 +35,10 @@ export const LIMITS = {
   tokenMax: 2_048,
   /** "Chờ chút" pauses turn detection for 10 s by default, never longer than this. */
   holdSecondsMax: 30,
+  /** Days kept per phrase (its most recent uses) and per error target (self-corrections). */
+  usedDaysMax: 30,
+  /** Contexts (scene ids) kept per phrase, the most recent. */
+  phraseContextsMax: 20,
   /** Memory items one learner keeps; call records one list answers. */
   memoryItemsMax: 1_000,
   callsListMax: 100,

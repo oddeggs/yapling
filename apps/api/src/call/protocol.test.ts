@@ -71,7 +71,7 @@ describe('the call socket', () => {
     const old = await Phone.call(token, { protocol: 99 });
     expect(await old.next('error')).toMatchObject({ code: 'update_required' });
     const unknown = await Phone.call(token, { sceneId: 's9-e9' });
-    expect(await unknown.next('error')).toMatchObject({ code: 'update_required' });
+    expect(await unknown.next('error')).toMatchObject({ code: 'unknown_scene', fatal: true });
   });
 
   it('refuses a call when no live minutes are left', async () => {
@@ -215,7 +215,7 @@ describe('an Episode 1 call', () => {
             id: 'past_ed',
             status: 'active',
             selfCorrections: 0,
-            correctionDays: 0,
+            selfCorrectionDays: [],
             activatedAt: 1,
             graduatedAt: null,
           },
