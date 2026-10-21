@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { createMiddleware } from 'hono/factory';
 
 import { requireSession, sessionRoutes, type SessionEnv } from '../auth';
+import { memoryRoutes } from '../memory';
 import { profileRoutes } from '../profile';
 import { progressRoutes } from '../progress';
 
@@ -31,6 +32,7 @@ export function accountRoutes(): Hono<SessionEnv> {
 
   routes.route('/', profileRoutes());
   routes.route('/', progressRoutes());
+  routes.route('/', memoryRoutes());
 
   return routes;
 }
