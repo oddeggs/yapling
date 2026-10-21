@@ -1,60 +1,288 @@
 {
   "_note": "Every [REC] line in docs/season-1-script.md, converted for Eleven v4: stage directions become audio tags in [brackets]; italics are dropped. Lines with {name} are recorded without the name (the name is spliced in at runtime). 'speed' overrides default_speed in cast-voices.json.",
   "lines": [
-    {"id": "s1-pro-01", "char": "pip", "text": "[excited] This is it. Our burrow! It's… mostly boxes. One box left! Help me unpack?"},
-    {"id": "s1-pro-02", "char": "pip", "text": "Okay. I know three things about you already. You keep going when you're stuck. You ask questions. And you're very good at unpacking."},
-    {"id": "s1-pro-03", "char": "linh", "text": "Hi! I'm Linh, from next door. I heard someone new moved in. When you're settled, come by the café. Mei makes the best kaya toast in town."},
-
-    {"id": "s1-e1-01", "char": "linh", "text": "Tip from a neighbour: when you forget a word, describe it. 'The thing you use to cut bread' works fine!", "kind": "postcard"},
-    {"id": "s1-e1-02", "char": "mei", "text": "Oh! Hi, you two. Sorry, I'm a bit… [sighs] Sit, sit. Kaya toast?"},
-    {"id": "s1-e1-03", "char": "pip", "text": "[whispers] She looks sad. Can you ask her what's wrong?"},
-    {"id": "s1-e1-04", "char": "mei", "text": "[upset] Double! I can't pay double. I need a plan by Friday."},
-    {"id": "s1-e1-05", "char": "pip", "text": "[curious] What does rent mean? Is it a kind of bread?"},
-    {"id": "s1-e1-06", "char": "mei", "text": "Can you call them for me? My English goes funny when I'm angry."},
-    {"id": "s1-e1-07", "char": "mei", "text": "[tired] Okay. So… what do I do?"},
-    {"id": "s1-e1-08", "char": "pip", "text": "[excited] I have an idea too! I'll get a job! I'll help pay!"},
-    {"id": "s1-e1-09", "char": "mei", "text": "You? A job? [laughs] Okay, okay. Thank you, both of you."},
-    {"id": "s1-e1-10", "char": "pip", "text": "Big news! Hollowbrook is hiring. I have an interview on Thursday. [gulps] Can you help me practise?", "kind": "voicemail"},
-    {"id": "s1-e1-11", "char": "pip", "text": "While you were away: Mei's rent doubled, we called the office, and I decided to get a job. Very brave. Very scary.", "kind": "recap"},
-
-    {"id": "s1-e2-01", "char": "sol", "text": "Hi! Sol from Hollowbrook. See you and Pip on Thursday. Quick tip: interviewers love examples!", "kind": "postcard"},
-    {"id": "s1-e2-02", "char": "pip", "text": "[nervous] Can you be Sol? Ask me something hard."},
-    {"id": "s1-e2-03", "char": "sol", "text": "Hi, Pip! Thanks for coming. Let's start easy: tell me about yourself."},
-    {"id": "s1-e2-04", "char": "sol", "text": "And you came with Pip! Do you mind if I ask you the same question? Good practice for both of us."},
-    {"id": "s1-e2-05", "char": "sol", "text": "Last thing. The job starts on the fourteenth, part-time, mornings."},
-    {"id": "s1-e2-06", "char": "sol", "text": "Thanks, both. Pip, we'll be in touch soon."},
-    {"id": "s1-e2-07", "char": "pip", "text": "[shouting with joy] I GOT THE JOB! [happy squeal] Oh, and Mei says a big, loud man wants to talk to her about the price of coffee beans. [worried] She looked worried.", "kind": "voicemail"},
-    {"id": "s1-e2-08", "char": "pip", "text": "While you were away, I had my interview. Sol asked about me, then about you! And I got the job. Mostly thanks to you.", "kind": "recap"},
-
-    {"id": "s1-e3-01", "char": "hank", "text": "Hi. I want cheaper beans, please. Can you do ten percent?", "speed": 0.85, "take": "newcomer"},
-    {"id": "s1-e3-02", "char": "hank", "text": "[fast, impatient] Look, I buy fifty kilos a month, the place across the harbour does it for less, so unless you can match—", "speed": 1.2, "take": "local"},
-    {"id": "s1-e3-03", "char": "mei", "text": "[whispering, panicked] If I say yes, I can't pay the rent. If I say no, he goes. Help!"},
-    {"id": "s1-e3-04", "char": "pip", "text": "[whispers] Maybe… something else? Not money?"},
-    {"id": "s1-e3-05", "char": "hank", "text": "[surprised] Huh. Ok. [chuckles] I like you. Fine. Deal."},
-    {"id": "s1-e3-06", "char": "hank", "text": "[lowers voice] But between us, this town's gotta show it actually wants this place. Saw the landlord's guy measuring the door. Just saying."},
-    {"id": "s1-e3-07", "char": "mei", "text": "Sit down. Someone wants to buy the café building, and you'll never guess who…", "kind": "voicemail", "name_splice": "before", "_full": "{name}, sit down. … (beep SFX after)"},
-    {"id": "s1-e3-08", "char": "pip", "text": "While you were away, a raccoon called Hank tried to get cheaper beans. We said no, nicely, and he said 'deal'! Then he said something worrying about the landlord.", "kind": "recap"},
-
-    {"id": "s1-e4-01", "char": "nell", "text": "Right, everyone's here. Tea's on. Who wants to run this?"},
-    {"id": "s1-e4-02", "char": "pip", "text": "[excited] You! You're good at this."},
-    {"id": "s1-e4-03", "char": "linh", "text": "In my old town, people signed a petition. A hundred names, and the office had to listen."},
-    {"id": "s1-e4-04", "char": "mei", "text": "[moved] Thank you. Really. [quietly] Okay. Let's save my café."},
-    {"id": "s1-e4-05", "char": "nell", "text": "We need a hundred signatures by Friday. Pip's very excited. Pip's also never spoken to strangers. [amused] Good luck, love.", "kind": "voicemail"},
-    {"id": "s1-e4-06", "char": "pip", "text": "While you were away, the whole town met at Nell's inn, and you ran the meeting! The plan: a petition. A hundred names. I'm in charge. [nervous] Help.", "kind": "recap"},
-
-    {"id": "s1-e5-01", "char": "bea", "text": "Bus 45 leaves at nine sharp. Bring your best story, love.", "kind": "postcard"},
-    {"id": "s1-e5-02", "char": "bea", "text": "Morning! Petition, is it? Go on then, love. You've got till the next stop."},
-    {"id": "s1-e5-03", "char": "pip", "text": "Ninety-seven… ninety-eight… ninety-nine. [dramatic] We need ONE more."},
-    {"id": "s1-e5-04", "char": "bea", "text": "Well, I haven't signed yet, have I? [warmly] Cheers, love. Lovely story, that."},
-    {"id": "s1-e5-05", "char": "pip", "text": "[overjoyed] One hundred! You were amazing. Each time, shorter and better!"},
-    {"id": "s1-e5-06", "char": "mei", "text": "A hundred names! The office says the town can vote on Saturday. In the square. In front of everyone. Will you speak for the café?", "kind": "voicemail"},
-    {"id": "s1-e5-07", "char": "pip", "text": "While you were away, we rode Bus 45 and got one hundred signatures. Bea signed last! Now there's a vote, and Mei wants you to speak.", "kind": "recap"},
-
-    {"id": "s1-e6-01", "char": "mags", "text": "[formal] The office proposes selling 12 Harbour Lane. Does anyone wish to speak?"},
-    {"id": "s1-e6-02", "char": "pip", "text": "[whispers] You can do it. First, second, thank you. Like we practised."},
-    {"id": "s1-e6-03", "char": "mags", "text": "[formal] The town has voted. The café stays."},
-    {"id": "s1-e6-04", "char": "mei", "text": "[crying and laughing] Shiok lah! Thank you, everyone. [softly] Especially you."},
-    {"id": "s1-e6-05", "char": "pip", "text": "[gasps] Look! In the harbour. A boat. [curious] Who's on it?"},
-    {"id": "s1-e6-06", "char": "pip", "text": "While you were away… actually, no. I waited. The town meeting is today, and you're speaking. Ready?", "kind": "recap"}
+    {
+      "id": "s1-pro-01",
+      "char": "pip",
+      "text": "[excited] This is it. Our burrow! It's… mostly boxes. One box left! Help me unpack?"
+    },
+    {
+      "id": "s1-pro-02",
+      "char": "pip",
+      "text": "Okay. I know three things about you already. You keep going when you're stuck. You ask questions. And you're very good at unpacking."
+    },
+    {
+      "id": "s1-pro-03",
+      "char": "linh",
+      "text": "Hi! I'm Linh, from next door. I heard someone new moved in. When you're settled, come by the café. Mei makes the best kaya toast in town."
+    },
+    {
+      "id": "s1-e1-01",
+      "char": "linh",
+      "text": "Tip from a neighbour: when you forget a word, describe it. 'The thing you use to cut bread' works fine!",
+      "kind": "postcard"
+    },
+    {
+      "id": "s1-e1-02",
+      "char": "mei",
+      "text": "Oh! Hi, you two. Sorry, I'm a bit… [sighs] Sit, sit. Kaya toast?"
+    },
+    {
+      "id": "s1-e1-03",
+      "char": "pip",
+      "text": "[whispers] She looks sad. Can you ask her what's wrong?"
+    },
+    {
+      "id": "s1-e1-04",
+      "char": "mei",
+      "text": "[upset] Double! I can't pay double. I need a plan by Friday."
+    },
+    {
+      "id": "s1-e1-05",
+      "char": "pip",
+      "text": "[curious] What does rent mean? Is it a kind of bread?"
+    },
+    {
+      "id": "s1-e1-06",
+      "char": "mei",
+      "text": "Can you call them for me? My English goes funny when I'm angry."
+    },
+    {
+      "id": "s1-e1-07",
+      "char": "mei",
+      "text": "[tired] Okay. So… what do I do?"
+    },
+    {
+      "id": "s1-e1-08",
+      "char": "pip",
+      "text": "[excited] I have an idea too! I'll get a job! I'll help pay!"
+    },
+    {
+      "id": "s1-e1-09",
+      "char": "mei",
+      "text": "You? A job? [laughs] Okay, okay. Thank you, both of you."
+    },
+    {
+      "id": "s1-e1-10",
+      "char": "pip",
+      "text": "Big news! Hollowbrook is hiring. I have an interview on Thursday. [gulps] Can you help me practise?",
+      "kind": "voicemail"
+    },
+    {
+      "id": "s1-e1-11",
+      "char": "pip",
+      "text": "While you were away: Mei's rent doubled, we called the office, and I decided to get a job. Very brave. Very scary.",
+      "kind": "recap"
+    },
+    {
+      "id": "s1-e2-01",
+      "char": "sol",
+      "text": "Hi! Sol from Hollowbrook. See you and Pip on Thursday. Quick tip: interviewers love examples!",
+      "kind": "postcard"
+    },
+    {
+      "id": "s1-e2-02",
+      "char": "pip",
+      "text": "[nervous] Can you be Sol? Ask me something hard."
+    },
+    {
+      "id": "s1-e2-03",
+      "char": "sol",
+      "text": "Hi, Pip! Thanks for coming. Let's start easy: tell me about yourself."
+    },
+    {
+      "id": "s1-e2-04",
+      "char": "sol",
+      "text": "And you came with Pip! Do you mind if I ask you the same question? Good practice for both of us."
+    },
+    {
+      "id": "s1-e2-05",
+      "char": "sol",
+      "text": "Last thing. The job starts on the fourteenth, part-time, mornings."
+    },
+    {
+      "id": "s1-e2-06",
+      "char": "sol",
+      "text": "Thanks, both. Pip, we'll be in touch soon."
+    },
+    {
+      "id": "s1-e2-07",
+      "char": "pip",
+      "text": "[shouting with joy] I GOT THE JOB! [happy squeal] Oh, and Mei says a big, loud man wants to talk to her about the price of coffee beans. [worried] She looked worried.",
+      "kind": "voicemail"
+    },
+    {
+      "id": "s1-e2-08",
+      "char": "pip",
+      "text": "While you were away, I had my interview. Sol asked about me, then about you! And I got the job. Mostly thanks to you.",
+      "kind": "recap"
+    },
+    {
+      "id": "s1-e3-01",
+      "char": "hank",
+      "text": "Hi. I want cheaper beans, please. Can you do ten percent?",
+      "speed": 0.85,
+      "take": "newcomer"
+    },
+    {
+      "id": "s1-e3-02",
+      "char": "hank",
+      "text": "[fast, impatient] Look, I buy fifty kilos a month, the place across the harbour does it for less, so unless you can match—",
+      "speed": 1.2,
+      "take": "local"
+    },
+    {
+      "id": "s1-e3-03",
+      "char": "mei",
+      "text": "[whispering, panicked] If I say yes, I can't pay the rent. If I say no, he goes. Help!"
+    },
+    {
+      "id": "s1-e3-04",
+      "char": "pip",
+      "text": "[whispers] Maybe… something else? Not money?"
+    },
+    {
+      "id": "s1-e3-05",
+      "char": "hank",
+      "text": "[surprised] Huh. Ok. [chuckles] I like you. Fine. Deal."
+    },
+    {
+      "id": "s1-e3-06",
+      "char": "hank",
+      "text": "[lowers voice] But between us, this town's gotta show it actually wants this place. Saw the landlord's guy measuring the door. Just saying."
+    },
+    {
+      "id": "s1-e3-07",
+      "char": "mei",
+      "text": "Sit down. Someone wants to buy the café building, and you'll never guess who…",
+      "kind": "voicemail",
+      "name_splice": "before",
+      "_full": "{name}, sit down. … (beep SFX after)"
+    },
+    {
+      "id": "s1-e3-08",
+      "char": "pip",
+      "text": "While you were away, a raccoon called Hank tried to get cheaper beans. We said no, nicely, and he said 'deal'! Then he said something worrying about the landlord.",
+      "kind": "recap"
+    },
+    {
+      "id": "s1-e4-01",
+      "char": "nell",
+      "text": "Right, everyone's here. Tea's on. Who wants to run this?"
+    },
+    {
+      "id": "s1-e4-02",
+      "char": "pip",
+      "text": "[excited] You! You're good at this."
+    },
+    {
+      "id": "s1-e4-03",
+      "char": "linh",
+      "text": "In my old town, people signed a petition. A hundred names, and the office had to listen."
+    },
+    {
+      "id": "s1-e4-04",
+      "char": "mei",
+      "text": "[moved] Thank you. Really. [quietly] Okay. Let's save my café."
+    },
+    {
+      "id": "s1-e4-05",
+      "char": "nell",
+      "text": "We need a hundred signatures by Friday. Pip's very excited. Pip's also never spoken to strangers. [amused] Good luck, love.",
+      "kind": "voicemail"
+    },
+    {
+      "id": "s1-e4-06",
+      "char": "pip",
+      "text": "While you were away, the whole town met at Nell's inn, and you ran the meeting! The plan: a petition. A hundred names. I'm in charge. [nervous] Help.",
+      "kind": "recap"
+    },
+    {
+      "id": "s1-e5-01",
+      "char": "bea",
+      "text": "Bus 45 leaves at nine sharp. Bring your best story, love.",
+      "kind": "postcard"
+    },
+    {
+      "id": "s1-e5-02",
+      "char": "bea",
+      "text": "Morning! Petition, is it? Go on then, love. You've got till the next stop."
+    },
+    {
+      "id": "s1-e5-03",
+      "char": "pip",
+      "text": "Ninety-seven… ninety-eight… ninety-nine. [dramatic] We need ONE more."
+    },
+    {
+      "id": "s1-e5-04",
+      "char": "bea",
+      "text": "Well, I haven't signed yet, have I? [warmly] Cheers, love. Lovely story, that."
+    },
+    {
+      "id": "s1-e5-05",
+      "char": "pip",
+      "text": "[overjoyed] One hundred! You were amazing. Each time, shorter and better!"
+    },
+    {
+      "id": "s1-e5-06",
+      "char": "mei",
+      "text": "A hundred names! The office says the town can vote on Saturday. In the square. In front of everyone. Will you speak for the café?",
+      "kind": "voicemail"
+    },
+    {
+      "id": "s1-e5-07",
+      "char": "pip",
+      "text": "While you were away, we rode Bus 45 and got one hundred signatures. Bea signed last! Now there's a vote, and Mei wants you to speak.",
+      "kind": "recap"
+    },
+    {
+      "id": "s1-e6-01",
+      "char": "mags",
+      "text": "[formal] The office proposes selling 12 Harbour Lane. Does anyone wish to speak?"
+    },
+    {
+      "id": "s1-e6-02",
+      "char": "pip",
+      "text": "[whispers] You can do it. First, second, thank you. Like we practised."
+    },
+    {
+      "id": "s1-e6-03",
+      "char": "mags",
+      "text": "[formal] The town has voted. The café stays."
+    },
+    {
+      "id": "s1-e6-04",
+      "char": "mei",
+      "text": "[crying and laughing] Shiok lah! Thank you, everyone. [softly] Especially you."
+    },
+    {
+      "id": "s1-e6-05",
+      "char": "pip",
+      "text": "[gasps] Look! In the harbour. A boat. [curious] Who's on it?"
+    },
+    {
+      "id": "s1-e6-06",
+      "char": "pip",
+      "text": "While you were away… actually, no. I waited. The town meeting is today, and you're speaking. Ready?",
+      "kind": "recap"
+    },
+    {
+      "id": "s1-e1-story-seagull",
+      "char": "pip",
+      "text": "[excited] Okay, story time! Today I walked around town alone. I wanted bread, but I got lost. So I asked a seagull for directions. 'Excuse me, where is the bread shop?' The seagull looked at me. [surprised] Then it took my map! [laughs] No map, no bread. Then a crab from the harbour said, 'Can I help?' Can I help! What a good question. She showed me the way. [warmly] Tomorrow, I want to say it to someone too.",
+      "kind": "story"
+    },
+    {
+      "id": "s1-e1-vm-oops",
+      "char": "pip",
+      "text": "[proud] Oh! And today at the café, a customer came in, and I said: Can I helping you?",
+      "kind": "voicemail"
+    },
+    {
+      "id": "s1-e1-vm-thanks",
+      "char": "pip",
+      "text": "[excited] Can I help you? Can I help you! Thank you. It's growing a leaf!",
+      "kind": "voicemail"
+    }
   ]
 }

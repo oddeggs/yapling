@@ -45,13 +45,7 @@ describe('recorded lines', () => {
   });
 
   it('keeps pending lines out of lines.json until they are recorded', () => {
-    const pending = pendingRecordings();
-    expect(pending.map((p) => p.id)).toEqual([
-      's1-e1-story-seagull',
-      's1-e1-vm-oops',
-      's1-e1-vm-thanks',
-    ]);
-    for (const p of pending) expect(sourceIds.has(p.id)).toBe(false);
+    for (const p of pendingRecordings()) expect(sourceIds.has(p.id)).toBe(false);
   });
 
   it('has unique line ids', () => {

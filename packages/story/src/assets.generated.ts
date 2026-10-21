@@ -206,6 +206,18 @@ export const RECORDED_LINE_ASSETS: Readonly<Record<RecordedLineId, RecordedLineA
     audio: () => require("../../../audio/season-1/lines/s1-e6-06-pip.mp3") as number,
     timing: () => require("../../../audio/season-1/lines/s1-e6-06-pip.timing.json") as LineTiming,
   },
+  "s1-e1-story-seagull": {
+    audio: () => require("../../../audio/season-1/lines/s1-e1-story-seagull-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-e1-story-seagull-pip.timing.json") as LineTiming,
+  },
+  "s1-e1-vm-oops": {
+    audio: () => require("../../../audio/season-1/lines/s1-e1-vm-oops-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-e1-vm-oops-pip.timing.json") as LineTiming,
+  },
+  "s1-e1-vm-thanks": {
+    audio: () => require("../../../audio/season-1/lines/s1-e1-vm-thanks-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-e1-vm-thanks-pip.timing.json") as LineTiming,
+  },
 };
 
 /** Sound effects (Metro asset ids). */

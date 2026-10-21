@@ -51,6 +51,9 @@ export const RECORDED_LINE_IDS = [
   "s1-e6-04",
   "s1-e6-05",
   "s1-e6-06",
+  "s1-e1-story-seagull",
+  "s1-e1-vm-oops",
+  "s1-e1-vm-thanks",
 ] as const;
 export type RecordedLineId = (typeof RECORDED_LINE_IDS)[number];
 
@@ -104,4 +107,7 @@ export const RECORDED_LINES: readonly RecordedLineData[] = [
   {"id":"s1-e6-04","character":"mei","text":"[crying and laughing] Shiok lah! Thank you, everyone. [softly] Especially you.","caption":"Shiok lah! Thank you, everyone. Especially you.","kind":"scene","take":null,"nameSplice":null,"audio":{"mp3":"s1-e6-04-mei.mp3","timing":"s1-e6-04-mei.timing.json","durationMs":5600}},
   {"id":"s1-e6-05","character":"pip","text":"[gasps] Look! In the harbour. A boat. [curious] Who's on it?","caption":"Look! In the harbour. A boat. Who's on it?","kind":"scene","take":null,"nameSplice":null,"audio":{"mp3":"s1-e6-05-pip.mp3","timing":"s1-e6-05-pip.timing.json","durationMs":4720}},
   {"id":"s1-e6-06","character":"pip","text":"While you were away… actually, no. I waited. The town meeting is today, and you're speaking. Ready?","caption":"While you were away… actually, no. I waited. The town meeting is today, and you're speaking. Ready?","kind":"recap","take":null,"nameSplice":null,"audio":{"mp3":"s1-e6-06-pip.mp3","timing":"s1-e6-06-pip.timing.json","durationMs":8240}},
+  {"id":"s1-e1-story-seagull","character":"pip","text":"[excited] Okay, story time! Today I walked around town alone. I wanted bread, but I got lost. So I asked a seagull for directions. 'Excuse me, where is the bread shop?' The seagull looked at me. [surprised] Then it took my map! [laughs] No map, no bread. Then a crab from the harbour said, 'Can I help?' Can I help! What a good question. She showed me the way. [warmly] Tomorrow, I want to say it to someone too.","caption":"Okay, story time! Today I walked around town alone. I wanted bread, but I got lost. So I asked a seagull for directions. 'Excuse me, where is the bread shop?' The seagull looked at me. Then it took my map! No map, no bread. Then a crab from the harbour said, 'Can I help?' Can I help! What a good question. She showed me the way. Tomorrow, I want to say it to someone too.","kind":"story","take":null,"nameSplice":null,"audio":{"mp3":"s1-e1-story-seagull-pip.mp3","timing":"s1-e1-story-seagull-pip.timing.json","durationMs":29120}},
+  {"id":"s1-e1-vm-oops","character":"pip","text":"[proud] Oh! And today at the café, a customer came in, and I said: Can I helping you?","caption":"Oh! And today at the café, a customer came in, and I said: Can I helping you?","kind":"voicemail","take":null,"nameSplice":null,"audio":{"mp3":"s1-e1-vm-oops-pip.mp3","timing":"s1-e1-vm-oops-pip.timing.json","durationMs":5600}},
+  {"id":"s1-e1-vm-thanks","character":"pip","text":"[excited] Can I help you? Can I help you! Thank you. It's growing a leaf!","caption":"Can I help you? Can I help you! Thank you. It's growing a leaf!","kind":"voicemail","take":null,"nameSplice":null,"audio":{"mp3":"s1-e1-vm-thanks-pip.mp3","timing":"s1-e1-vm-thanks-pip.timing.json","durationMs":5200}},
 ];

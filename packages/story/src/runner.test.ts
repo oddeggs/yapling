@@ -165,13 +165,13 @@ describe('scene runner', () => {
     expect(types(over.effects)).toEqual(['hint']);
   });
 
-  it("speaks Pip's pending lines with TTS until they are recorded, and hints its fix", () => {
+  it("plays Pip's voicemail lines and hints its fix", () => {
     const voicemail = getScene('s1-e1-voicemail');
     const oops = driveTo(voicemail, 'newcomer', 'oops');
     expect(oops.effects.at(-1)).toMatchObject({
       type: 'play_rec',
       lineId: 's1-e1-vm-oops',
-      recorded: false,
+      recorded: true,
       caption: 'Oh! And today at the café, a customer came in, and I said: Can I helping you?',
     });
     const fixing = send(voicemail, oops, 'rec_played');

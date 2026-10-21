@@ -12,26 +12,33 @@ export const plainCaption = (text: string): string =>
     .replace(/\s+/g, ' ')
     .trim();
 
+const scriptedById = new Map(S1_SCRIPTED_LINES.map((line) => [line.id, line]));
+
 const recorded: StoryLine[] = RECORDED_LINES.map((line) => ({
   ...line,
-  glosses: S1_LINE_GLOSSES[line.id] ?? NO_GLOSS,
-  segments: [],
+  glosses: S1_LINE_GLOSSES[line.id] ?? scriptedById.get(line.id)?.glosses ?? NO_GLOSS,
+  segments: scriptedById.get(line.id)?.segments ?? [],
   meaning: S1_LINE_MEANINGS[line.id] ?? null,
 }));
 
-const pending: StoryLine[] = S1_SCRIPTED_LINES.map((line) => ({
-  id: line.id,
-  character: line.character,
-  text: line.text,
-  caption: plainCaption(line.text),
-  kind: line.kind,
-  take: null,
-  nameSplice: null,
-  audio: null,
-  glosses: line.glosses,
-  segments: line.segments,
-  meaning: S1_LINE_MEANINGS[line.id] ?? null,
-}));
+const recordedIds = new Set(RECORDED_LINES.map((line) => line.id));
+
+/** Written lines with no recording yet: spoken with live TTS until `yap_voice.py` records them. */
+const pending: StoryLine[] = S1_SCRIPTED_LINES.filter((line) => !recordedIds.has(line.id)).map(
+  (line) => ({
+    id: line.id,
+    character: line.character,
+    text: line.text,
+    caption: plainCaption(line.text),
+    kind: line.kind,
+    take: null,
+    nameSplice: null,
+    audio: null,
+    glosses: line.glosses,
+    segments: line.segments,
+    meaning: S1_LINE_MEANINGS[line.id] ?? null,
+  }),
+);
 
 /** Every written line of the season, recorded or pending, in order. */
 export const STORY_LINES: readonly StoryLine[] = [...recorded, ...pending];
