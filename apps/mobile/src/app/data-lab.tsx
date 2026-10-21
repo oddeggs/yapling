@@ -1,6 +1,6 @@
 import { colours, layout } from '@yapling/theme';
-import { Redirect } from 'expo-router';
-import { useState } from 'react';
+import { Redirect, useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -22,6 +22,7 @@ import { Txt } from '../ui/text';
 /**
  * The data layer's lab, for development builds only (`yapling-dev://data-lab`): the session, the
  * connection, the cached profile and progress, and buttons that write through the real API.
+ * `?auto=save` saves the sample profile once the session is ready, when there is none yet.
  */
 export default function DataLab() {
   if (!__DEV__) return <Redirect href="/" />;
@@ -38,6 +39,8 @@ function Lab() {
   const week = useWeek();
   const memory = useMemory();
   const [last, setLast] = useState('—');
+  const { auto } = useLocalSearchParams<{ auto?: string }>();
+  const autoSaved = useRef(false);
 
   const run = (label: string, action: () => Promise<unknown>) => () => {
     setLast(`${label}…`);
@@ -46,6 +49,25 @@ function Lab() {
       (error: unknown) => setLast(`${label}: ${isDataError(error) ? error.kind : String(error)}`),
     );
   };
+
+  const save = run('save', () =>
+    profile.saveProfile({
+      displayName: 'Lan',
+      firstLanguage: 'vi',
+      roommate: { species: 'redpanda', name: 'Pip' },
+      track: 'life',
+      quietHours: { start: '22:00', end: '08:00' },
+      timezone: deviceTimeZone(),
+      notificationsAllowed: false,
+    }),
+  );
+
+  useEffect(() => {
+    if (auto !== 'save' || autoSaved.current) return;
+    if (session.status !== 'ready' || profile.source !== 'server' || profile.profile) return;
+    autoSaved.current = true;
+    save();
+  });
 
   const line = (label: string, value: string) => (
     <Txt variant="note" colour={colours.text} testID={`lab-${label}`}>{`${label}: ${value}`}</Txt>
@@ -93,20 +115,7 @@ function Lab() {
       {line('memory', `${memory.items.length} items from ${memory.source}`)}
       {line('last', last)}
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 }}>
-        <Chip
-          label="Save profile"
-          onPress={run('save', () =>
-            profile.saveProfile({
-              displayName: 'Lan',
-              firstLanguage: 'vi',
-              roommate: { species: 'redpanda', name: 'Pip' },
-              track: 'life',
-              quietHours: { start: '22:00', end: '08:00' },
-              timezone: deviceTimeZone(),
-              notificationsAllowed: false,
-            }),
-          )}
-        />
+        <Chip label="Save profile" onPress={save} />
         <Chip
           label="Rename Pip"
           onPress={run('rename', () =>
