@@ -242,17 +242,15 @@ describe('the call socket', () => {
     ended.socket.open();
     ended.last().open();
     ended.last().receive(ready(1, 'resume-token-aaaaaaaa'));
-    ended
-      .last()
-      .receive(
-        JSON.stringify({
-          type: 'ended',
-          seq: 2,
-          reason: 'scene_complete',
-          summaryPending: true,
-          callRecordId: 'call_1',
-        }),
-      );
+    ended.last().receive(
+      JSON.stringify({
+        type: 'ended',
+        seq: 2,
+        reason: 'scene_complete',
+        summaryPending: true,
+        callRecordId: 'call_1',
+      }),
+    );
     expect(ended.frames.at(-1)?.type).toBe('ended');
     expect(ended.statuses.at(-1)).toBe('closed');
     jest.advanceTimersByTime(10_000);
