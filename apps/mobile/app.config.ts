@@ -120,6 +120,8 @@ export function buildConfig(
         'react-native-audio-api',
         { iosBackgroundMode: true, androidForegroundService: false, androidPermissions: [] },
       ],
+      // Day knocks are local notifications; remote pushes (voicemails, calls) turn APNs on later.
+      ['expo-notifications', { enableRemoteNotifications: false }],
     ],
     experiments: {
       typedRoutes: true,

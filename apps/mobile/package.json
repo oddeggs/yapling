@@ -28,6 +28,7 @@
     "expo-font": "catalog:",
     "expo-haptics": "catalog:",
     "expo-linking": "catalog:",
+    "expo-notifications": "catalog:",
     "expo-router": "catalog:",
     "expo-secure-store": "catalog:",
     "expo-splash-screen": "catalog:",
