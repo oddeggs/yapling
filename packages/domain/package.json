@@ -1,0 +1,23 @@
+{
+  "name": "@yapling/domain",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The learning model: stages, can-dos, phrases, error targets, the weekly ring, the live-minute ledger, fluency metrics and the day clock. Pure functions, no IO",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@yapling/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "fast-check": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
