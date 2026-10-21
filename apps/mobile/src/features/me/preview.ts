@@ -1,0 +1,85 @@
+import type { MemoryItem } from '@yapling/contracts';
+import { useMemo, useState } from 'react';
+
+import type { MeActions } from './me-container';
+import type { MeInputs } from './me-model';
+
+/*
+ * Development builds only: a learner on day 7, for looking at the sheet before the app's data
+ * layer feeds it (`yapling-dev://me?preview=1`). Edits change this copy only, nothing is sent.
+ */
+
+const DAY = 24 * 60 * 60_000;
+
+const SAMPLE_MEMORY: readonly MemoryItem[] = [
+  {
+    id: 'sample-job',
+    text: 'You work in marketing at a bank in District 1.',
+    category: 'about_you',
+    createdAt: Date.UTC(2026, 9, 16),
+    sourceCallId: null,
+  },
+  {
+    id: 'sample-goal',
+    text: 'You want to speak up more in the Monday stand-up.',
+    category: 'about_you',
+    createdAt: Date.UTC(2026, 9, 17),
+    sourceCallId: null,
+  },
+  {
+    id: 'sample-interview',
+    text: 'Your interview with the Singapore team is on Thursday.',
+    category: 'coming_up',
+    createdAt: Date.UTC(2026, 9, 18),
+    sourceCallId: null,
+  },
+];
+
+const sampleInputs = (memory: readonly MemoryItem[]): MeInputs => ({
+  displayName: 'Lan',
+  roommateName: 'Pip',
+  stage: 'newcomer',
+  track: 'both',
+  canDos: [
+    {
+      id: 'introduce-yourself-30s',
+      stage: 'newcomer',
+      status: 'ticked',
+      evidence: [{ callRecordId: 'sample-call', quote: 'Hi, I’m Lan.', at: Date.now() - DAY }],
+      witness: 'mei',
+      tickedOn: '2026-10-21',
+    },
+  ],
+  minutes: {
+    plan: 'free',
+    periodStart: Date.now() - 2 * DAY,
+    periodEnd: Date.now() + 5 * DAY,
+    allowanceSeconds: 600,
+    usedSeconds: 240,
+    leftSeconds: 360,
+    firstWeek: false,
+  },
+  fluency: { flowSeconds: 48, paceWpm: 112, pausesPerMin: 3 },
+  memory,
+  quietHours: { start: '22:00', end: '08:00' },
+});
+
+/** The sample learner and actions that edit it in place; null when not previewing. */
+export function useMePreview(on: boolean): { inputs: MeInputs; actions: MeActions } | null {
+  const [memory, setMemory] = useState<readonly MemoryItem[]>(SAMPLE_MEMORY);
+  return useMemo(() => {
+    if (!on) return null;
+    const actions: MeActions = {
+      updateMemory: (id, text) => {
+        setMemory((m) => m.map((i) => (i.id === id ? { ...i, text } : i)));
+        return Promise.resolve();
+      },
+      deleteMemory: (id) => {
+        setMemory((m) => m.filter((i) => i.id !== id));
+        return Promise.resolve();
+      },
+      deleteAccount: () => Promise.reject(new Error('the preview has no account to delete')),
+    };
+    return { inputs: sampleInputs(memory), actions };
+  }, [on, memory]);
+}
