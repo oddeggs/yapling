@@ -74,6 +74,24 @@ describe('stage speech settings', () => {
   });
 });
 
+describe('phrase breaks', () => {
+  it('slow the two slowest stages, Newcomer most, and stop from Regular', () => {
+    expect(SPEECH_SETTINGS.newcomer.phraseBreakSeconds).toBe(0.35);
+    expect(SPEECH_SETTINGS.neighbour.phraseBreakSeconds).toBe(0.2);
+    for (const s of ['regular', 'local', 'voice'] as const) {
+      expect(SPEECH_SETTINGS[s].phraseBreakSeconds).toBeNull();
+    }
+  });
+
+  it('never grow as the stages get faster', () => {
+    for (let i = 1; i < STAGES.length; i++) {
+      const before = SPEECH_SETTINGS[STAGES[i - 1]!].phraseBreakSeconds ?? 0;
+      const after = SPEECH_SETTINGS[STAGES[i]!].phraseBreakSeconds ?? 0;
+      expect(after).toBeLessThanOrEqual(before);
+    }
+  });
+});
+
 describe('moving between stages', () => {
   it('steps one stage at a time and stops at the ends', () => {
     expect(nextStage('newcomer')).toBe('neighbour');

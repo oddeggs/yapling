@@ -1,14 +1,13 @@
 import type { CharacterId, Stage } from '@yapling/contracts';
-import { ttsSpeedFactor } from '@yapling/domain';
+import { speechSettings, ttsSpeedFactor } from '@yapling/domain';
 
-import { PHRASE_BREAK_SECONDS } from './phrase-breaks';
 import { openTts, voiceKey, type TtsVoice } from './tts';
 
 /** A character's live voice at the learner's stage: its speed and phrase breaks. */
 export const stageVoice = (character: CharacterId, stage: Stage): TtsVoice => ({
   character,
   speed: ttsSpeedFactor(stage),
-  breakSeconds: PHRASE_BREAK_SECONDS[stage],
+  breakSeconds: speechSettings(stage).phraseBreakSeconds,
 });
 
 /**
