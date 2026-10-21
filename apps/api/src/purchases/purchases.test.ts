@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { deleteAccount } from '../account';
 import { createApp } from '../app';
-import { call, expectError, expectJson, newGuest } from '../auth/testing/client';
+import { expectError, expectJson, newGuest } from '../auth/testing/client';
 import { userObject } from '../user';
 import { readEntitlement } from './entitlements';
 import { logicalProduct } from './products';
@@ -55,8 +55,14 @@ const balance = (userId: string) => userObject(env, userId).balance();
 
 describe('the RevenueCat webhook', () => {
   it('is unavailable until its secret is set', async () => {
-    const response = await call('/api/purchases/webhook', { body: { event: {} } });
-    await expectError(response, 503, 'not_configured');
+    for (const unset of [undefined, '']) {
+      const response = await app.request(
+        '/api/purchases/webhook',
+        { method: 'POST', headers: { authorization: '' }, body: '{}' },
+        { ...env, REVENUECAT_WEBHOOK_AUTH: unset },
+      );
+      await expectError(response, 503, 'not_configured');
+    }
   });
 
   it('refuses a request without the shared secret', async () => {
