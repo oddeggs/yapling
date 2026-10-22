@@ -26,7 +26,7 @@ import {
   type ErrorTargetRecord,
   type SeasonWeeks,
 } from '@yapling/domain';
-import { EPISODES, findPhrase, VISITOR_VERSIONS } from '@yapling/story';
+import { findPhrase, SEASON_1, seasonWeeks, VISITOR_VERSIONS } from '@yapling/story';
 
 import { ERROR_TARGETS } from '../call/targets';
 import type { LearnerLine } from '../call/transcript';
@@ -44,8 +44,8 @@ import type { Draft } from './summary';
  * played in week 4 fills ring 3, and a replay of Episode 1 finishes nothing.
  */
 
-/** The season's weeks the rings are read from, week 1 first. */
-export const SEASON_WEEKS: SeasonWeeks = EPISODES;
+/** The season's weeks the rings are read from, week 1 first: the episodes, then Bunting Week. */
+export const SEASON_WEEKS: SeasonWeeks = seasonWeeks(SEASON_1);
 
 /** A Visitor version stands in for its scene: it fills that scene's slot. */
 const STANDS_IN_FOR: ReadonlyMap<string, string> = new Map(
