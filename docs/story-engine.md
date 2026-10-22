@@ -239,7 +239,7 @@ The library gives the engine more than visuals: it can make finding things fun, 
   - common: met in a story;
   - uncommon: found only in a twist's scene;
   - rare: a story milestone (finish a season, bloom 25 phrases, the first time you follow Hank at full speed);
-  - limited: during a town festival only (decision 3).
+  - limited: during one of Natterwick's own seasonal festivals only (decision 3).
   A limited item you miss comes back the next year. Nothing is lost.
 - **Word props are earned by using the word, never bought.** A word prop moves into the burrow, and grows there, only when you say the word in a call (`concept.md` §10).
 - **Achievements** are album pages you complete, such as "Every café set", "20 food words", or "All of Bea's postcards". They become keepsakes in the burrow. None of them are about time spent or days in a row.
@@ -358,11 +358,13 @@ Spread over learners, that's **$0.014 each at 1,000 learners** and $0.05 each at
 
 ## Decisions for the founder
 
+All ten decided on 22 Oct 2026: the founder accepted every recommendation and left the festival question to the team (decided below).
+
 | # | Decision | Recommendation |
 |---|---|---|
 | 1 | **The engine's shape:** one shared town week per stage plus a small personal pass, rather than a full week written for each learner | **Shared plus personal.** About $0.10 vs $1.60–2.70 per learner per month, and easier to keep safe and good |
 | 2 | **A person reviews the six shared packs before each week goes out**, on a review page, about 20 minutes a week | **Yes, for the first 8 weeks**, then spot checks. Shadow weeks before launch fill the evergreen shelf |
-| 3 | **Holidays and festivals.** `journey-and-story.md` §2.3 says town festivals are "global and weather-based, never tied to specific cultural holidays", but the new direction asks for limited items around Tết and Mid-Autumn. Option a: keep the rule as written. Option b: Natterwick has its own festivals timed to the big moments of the learner's calendar ("Lantern Night" on the Mid-Autumn full moon, "New Year Lights" at Lunar New Year), with lights, lanterns and limited items but no traditional rites or customs shown. Real holidays otherwise appear only as the learner's own time off | **b.** It gives the limited items and the town goal a real-time pulse while the town stays its own place. Amend §2.3 to match |
+| 3 | **Holidays and festivals.** Should town festivals follow real cultural holidays (Tết, Mid-Autumn)? | **Decided: no.** §2.3 stands: Natterwick's festivals are its own, tied to weather and seasons (rainy-season fair, first cold night, end-of-year lights, the harbour festival's anniversary), never to a culture's holidays. Limited items appear during these town festivals. This also follows the founder's standing preference against building on Vietnamese traditions |
 | 4 | **About 70,000 ElevenLabs credits a month** for the shared town voices and prop words, a fixed cost | **Yes.** It's what makes shared weeks sound as good as Season One |
 | 5 | **The library at go-live:** the full ~100 scenes and ~1,000 props when the engine goes live (Release 3), with a style check at 30 scenes and 300 props | **Yes, with the check at 30 / 300**, pending the art spike's verdict |
 | 6 | **Jev for the safety filter**, reusing the studio's TypeSafe account, with Haiku as the fallback | **Decided: yes.** The Jev spike passed (`spikes/jev/REPORT.md`: crisis 42/42 caught, 0/57 false; ~90 ms from US West; $0.042 per million input tokens) |

@@ -253,7 +253,7 @@ Each rung unlocks a burrow keepsake and a Pip outfit. Users can always step down
 | Bring your homework (real-artifact rehearsal) | 1 trial | ✅ |
 | Deep feedback + pronunciation drills | Summary only | ✅ |
 | Camera call | — | ✅ |
-| Cosmetics | Earned | Earned + seasonal cosmetic packs (never care) |
+| Cosmetics | Earned in play; shop items at a direct price (from Release 4) | Same as free; Plus doesn't change the shop |
 
 Students ~40% off. No lifetime plans (unbounded AI cost).
 

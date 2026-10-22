@@ -14,7 +14,7 @@ Precedence: docs > design-review > design visuals > prototype logic.
 ## The product rules that never bend
 
 - **Nothing dies, no guilt.** No streak loss, no sad or sick critter for absence, no "you'll lose…" copy, no guilt notifications. Missed weeks wait.
-- **Never sell care.** Pip's wellbeing, food or affection are never purchasable. Plus sells live minutes and depth only.
+- **Never sell care.** Pip's wellbeing, food or affection are never purchasable. Plus sells live minutes and depth only. The shop sells cosmetics only (clothing, jewellery, decor, prop packs) at a direct price: no loot boxes or random paid items, no pay-to-learn, nothing that changes Pip's mood or affection, word items are earned by using the word, and bought items stay out of the album and boards.
 - **Always AI.** Every character shows the AI tag and never claims to be human. No romance, no exclusivity; characters encourage real-world conversation.
 - **The learner talks most.** Character turns stay under ~25 words at the learner's stage speed.
 - **Accents are voices, not jokes.** No phonetic spelling or broken grammar in character lines.
