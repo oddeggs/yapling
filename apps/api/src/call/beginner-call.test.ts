@@ -256,6 +256,25 @@ describe('Settling in', () => {
     expect(played(phone).filter((id) => id === 's1-set3-04')).toHaveLength(1);
   }, 40_000);
 
+  it('plays Chapter 4: reading the wrong card is a miss, though Jev knows which card it was', async () => {
+    const log = vi.spyOn(console, 'log');
+    providers.jevCard = (request) => (request.state.learner_said === '50.' ? 'card_b' : 'neither');
+    const { token } = await learner();
+    const { phone } = await settling('s1-set4', token);
+    await beat(phone, 'which-bus-answer');
+    await sleep(100);
+    // "Fifty." is a card, but not the bus: "Again?" and Linh's question once more.
+    let turn = await say(phone, '50.');
+    await phone.next('play_rec', (p) => p.lineId === 's1-set4-03', { from: turn.from });
+    await sleep(200);
+    // The second miss passes anyway (Linh says the right card).
+    turn = await say(phone, '50.');
+    await beat(phone, 'bea-nine', turn.from);
+    const logs = turnLogs(log);
+    expect(logs.map((l) => l['pass'])).toEqual([null, 'generous']);
+    expect(logs.map((l) => l['cardMatch'])).toEqual([false, false]);
+  }, 40_000);
+
   it('moves on after "Bỏ qua", and keeps the place and the turn counts when left as too hard', async () => {
     const { token, userId } = await learner();
     const { phone } = await settling('s1-set1', token);
