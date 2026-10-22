@@ -18,6 +18,8 @@ export const secretNames = [
   'APPLE_PRIVATE_KEY',
   // RevenueCat's webhook: the whole Authorization header it sends (src/purchases).
   'REVENUECAT_WEBHOOK_AUTH',
+  // TypeSafe: Jev, the live call's turn judge (src/call/judge.ts).
+  'TYPESAFE_API_KEY',
 ] as const;
 export type SecretName = (typeof secretNames)[number];
 
