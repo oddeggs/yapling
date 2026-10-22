@@ -49,14 +49,18 @@ export function scribeUrl(): string {
 export const TTS_MODEL = 'eleven_flash_v2_5';
 export const TTS_SAMPLE_RATE = 24_000;
 
-/** Flash stream-input for one voice; SSML parsing on for phrase breaks. */
-export function ttsUrl(voiceId: string): string {
+/**
+ * Flash stream-input for one voice; SSML parsing on for phrase breaks. A line in another language
+ * (Linh's Vietnamese) names it, so Flash doesn't read it with English sounds.
+ */
+export function ttsUrl(voiceId: string, language: string | null = null): string {
   const q = new URLSearchParams({
     model_id: TTS_MODEL,
     output_format: `pcm_${TTS_SAMPLE_RATE}`,
     inactivity_timeout: '180',
     enable_ssml_parsing: 'true',
   });
+  if (language !== null) q.set('language_code', language);
   return `${ELEVENLABS}/v1/text-to-speech/${encodeURIComponent(voiceId)}/stream-input?${q}`;
 }
 

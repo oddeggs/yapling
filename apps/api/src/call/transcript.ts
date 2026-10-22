@@ -1,4 +1,5 @@
 import type { CharacterId, HeardWord } from '@yapling/contracts';
+import { lastQuestion } from '@yapling/story';
 
 /*
  * The call's transcript: every line in order, the learner's with their word timings. Kept in the
@@ -60,4 +61,25 @@ export function lastCharacterLine(transcript: readonly TranscriptLine[]): Charac
     if (line !== undefined && !isLearnerLine(line)) return line;
   }
   return null;
+}
+
+/** The speaker's last question in the call, for a safe nudge to ask again. */
+export function lastAskedBy(
+  transcript: readonly TranscriptLine[],
+  speaker: CharacterId,
+): string | null {
+  for (let i = transcript.length - 1; i >= 0; i--) {
+    const line = transcript[i];
+    if (line?.speaker === speaker) return lastQuestion(line.text);
+  }
+  return null;
+}
+
+/** The character line the learner is answering, when the listener said it (their question). */
+export function promptLine(
+  transcript: readonly TranscriptLine[],
+  speaker: CharacterId,
+): string | null {
+  const line = lastCharacterLine(transcript);
+  return line?.speaker === speaker ? line.text.slice(0, 300) : null;
 }

@@ -288,6 +288,17 @@ const notYetText = (branch: Branch, kind: NotYet, asked: boolean): string => {
 const spokenOnly = (speaker: CharacterId) =>
   `Write only the exact words ${nameOf(speaker)} says out loud, in the first person: no narration, no stage directions, no quotation marks, no notes about the learner or the scene, no reasoning.`;
 
+/**
+ * The stage a line's rules are written for: a Settling-in chapter is the Visitor's, whoever plays
+ * it (a Newcomer going back to "Làm quen lại với Linh" hears it the same way).
+ */
+export const promptStage = (scene: Scene, stage: Stage): Stage =>
+  scene.kind === 'settling' ? 'visitor' : stage;
+
+/** The Visitor's few live lines: short, model then ask, plain words. */
+const VISITOR_RULES = (max: number) =>
+  `Say one short sentence, ${max} words at most (or two very short ones, ${max} words in all). When you ask something, say your own answer first, then ask (like "I'm Linh. And you?"). Only plain, everyday words: no idioms, no slang, no phrasal verbs. Spell numbers as words.`;
+
 function rules(
   speaker: CharacterId,
   stage: Stage,
@@ -296,7 +307,9 @@ function rules(
 ): string {
   const max = speechSettings(stage).maxWordsPerTurn;
   return [
-    `Say one or two short sentences, under ${max} words in all. Spell numbers as words.`,
+    stage === 'visitor'
+      ? VISITOR_RULES(max)
+      : `Say one or two short sentences, under ${max} words in all. Spell numbers as words.`,
     spokenOnly(speaker),
     CONTROL_RULE,
     phrases.length > 0 ? `Phrase ids you may list: ${phrases.join(', ')}.` : '',
