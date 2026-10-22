@@ -77,6 +77,8 @@ export const STAGES = [
   'phoneReply',
   // Turn judge request → Jev's answer (answered requests only).
   'judge',
+  // A card turn: end of learner speech → the turn decided by its words (no model), call clock.
+  'cardOut',
 ] as const;
 export type Stage = (typeof STAGES)[number];
 

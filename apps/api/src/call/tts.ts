@@ -17,9 +17,12 @@ export interface TtsVoice {
   readonly speed: number;
   /** Seconds between phrases, or null. */
   readonly breakSeconds: number | null;
+  /** A line not in English (Linh's Vietnamese): the language Flash must speak it in. */
+  readonly language?: 'vi';
 }
 
-export const voiceKey = (v: TtsVoice): string => `${voiceFor(v.character)}|${v.speed}`;
+export const voiceKey = (v: TtsVoice): string =>
+  `${voiceFor(v.character)}|${v.speed}|${v.language ?? 'en'}`;
 
 export interface TtsHandlers {
   audio(pcm: Uint8Array, alignment: MappedAlignment | null): void;
@@ -41,7 +44,7 @@ interface FlashMessage {
 
 /** An open Flash socket, before it is given its line. */
 export async function openTts(key: string, voice: TtsVoice): Promise<WebSocket> {
-  const ws = await openSocket(ttsUrl(voiceFor(voice.character)), key);
+  const ws = await openSocket(ttsUrl(voiceFor(voice.character), voice.language ?? null), key);
   ws.send(
     JSON.stringify({
       text: ' ',

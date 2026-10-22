@@ -126,6 +126,30 @@ export async function prewarm(
   usage.cacheRead += message.usage.cache_read_input_tokens ?? 0;
 }
 
+/**
+ * Warms every speaker of a scene (its generated lines and its listeners) before the first turn.
+ * Returns the speakers, first first, so the caller can warm a voice too.
+ */
+export function prewarmScene(
+  client: Anthropic,
+  scene: Scene,
+  learner: LearnerContext,
+  usage: Usage,
+): CharacterId[] {
+  const speakers = new Set<CharacterId>();
+  for (const beat of scene.beats) {
+    if (beat.kind === 'gen') speakers.add(beat.speaker);
+    if ((beat.kind === 'gen' || beat.kind === 'learner') && beat.answer)
+      speakers.add(beat.answer.listener);
+  }
+  for (const speaker of speakers) {
+    void prewarm(client, systemFor(speaker, scene, learner), usage).catch((error: unknown) => {
+      console.warn('prewarm failed', { error: String(error).slice(0, 200) });
+    });
+  }
+  return [...speakers];
+}
+
 export interface Explained {
   readonly simple: string;
   readonly gloss: string | null;

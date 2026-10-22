@@ -1,5 +1,5 @@
 import type { FirstLanguage, HelloFrame, Pace, Stage } from '@yapling/contracts';
-import { duePhrases, fromPhraseProgress } from '@yapling/domain';
+import { duePhrases, errorTargetsApply, fromPhraseProgress } from '@yapling/domain';
 import { findPhrase, type ErrorTargetBrief, type Scene } from '@yapling/story';
 
 import type { Bindings } from '../env';
@@ -37,8 +37,10 @@ export async function loadLearner(
     .first<{ display_name: string }>();
   const timezone = await learnerTimeZone(env.DB, userId);
   const progress = await readProgress(env.DB, userId, now);
+  // No corrections at Visitor, nor in a Settling-in chapter: everything there is recast.
+  const corrects = errorTargetsApply(hello.stage) && scene.kind !== 'settling';
   const targets = progress.errorTargets
-    .filter((t) => t.status === 'active')
+    .filter((t) => corrects && t.status === 'active')
     .slice(0, 2)
     .map((t) => targetBrief(t.id));
   const records = progress.phrases.map(fromPhraseProgress);

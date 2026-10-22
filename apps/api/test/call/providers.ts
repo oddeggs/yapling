@@ -7,12 +7,21 @@ import { scriptedAnswers, wire, type JevScript } from './jev';
  * judge) as JSON. Installed on the call's upstream `fetch`, so the protocol tests spend no credits.
  */
 
-/** A turn-judge request as the call sends it. */
+/** A turn-judge request as the call sends it: a turn's questions, or a card turn's card question. */
 export interface JevRequest {
   readonly model: string;
-  readonly state: { last_line: string; hoped_for: string; learner_said: string };
+  readonly state: {
+    last_line?: string;
+    hoped_for?: string;
+    learner_said: string;
+    card_a?: string;
+    card_b?: string;
+  };
   readonly questions: Record<string, unknown>;
 }
+
+/** Jev's answer to a card question: the card read, or neither. */
+export type CardAnswer = 'card_a' | 'card_b' | 'neither';
 
 interface ClaudeRequest {
   readonly model: string;
@@ -51,6 +60,8 @@ export class Providers {
   /** Milliseconds before Jev answers. */
   jevDelayMs = 5;
   readonly jevRequests: JevRequest[] = [];
+  /** Jev's answer to each card question; null leaves it down (the card turn's words decide). */
+  jevCard: ((request: JevRequest) => CardAnswer) | null = null;
   install(): this {
     upstream.fetch = (input, init) => this.fetch(new Request(input, init), init?.signal ?? null);
     return this;
@@ -91,8 +102,11 @@ export class Providers {
 
   private async judge(body: JevRequest, signal: AbortSignal | null): Promise<Response> {
     this.jevRequests.push(body);
+    const card = 'card' in body.questions;
     const answer = this.jev;
-    if (answer === null) return new Response('down', { status: 503 });
+    if (card ? this.jevCard === null : answer === null) {
+      return new Response('down', { status: 503 });
+    }
     // Like `fetch`, a request whose signal fires (the time budget, a dropped turn) rejects.
     await new Promise<void>((resolve, reject) => {
       const timer = setTimeout(resolve, this.jevDelayMs);
@@ -101,6 +115,9 @@ export class Providers {
         reject(signal.reason instanceof Error ? signal.reason : new Error('aborted'));
       });
     });
+    if (card)
+      return Response.json(cardWire(this.jevCard?.(body) ?? 'neither', !!body.state.card_b));
+    if (answer === null) return new Response('down', { status: 503 });
     const targets = Object.keys(body.questions)
       .filter((k) => k.startsWith('target_'))
       .map((k) => k.slice('target_'.length));
@@ -270,3 +287,16 @@ export function defaultReply(): string {
 
 /** A control line for scripted replies. */
 export const control = (c: Record<string, unknown>) => `\n§${JSON.stringify(c)}`;
+
+/** Jev's response to a card question, sure of `answer`. */
+function cardWire(answer: CardAnswer, two: boolean): Record<string, unknown> {
+  const keys: CardAnswer[] = two ? ['card_a', 'card_b', 'neither'] : ['card_a', 'neither'];
+  const probabilities = Object.fromEntries(
+    keys.map((k) => [k, k === answer ? 0.92 : 0.08 / (keys.length - 1)]),
+  );
+  return {
+    model: 'jev-1.13.0',
+    answers: { card: { type: 'choice', choice: answer, confidence: 0.92, probabilities } },
+    usage: { input_tokens: 420, output_tokens: 40 },
+  };
+}

@@ -1,4 +1,5 @@
 import type { CallEndReason, CallKind, Id, TurnMode } from '@yapling/contracts';
+import type { TurnPass } from '@yapling/domain';
 import type { RunnerState, Scene } from '@yapling/story';
 
 import { userBlobPrefix } from '../account';
@@ -39,10 +40,16 @@ export interface CallMeta {
   readonly clockOffsetMs?: number;
 }
 
+export interface TurnPassRecord {
+  readonly beatId: Id;
+  readonly pass: TurnPass;
+}
+
 export interface CallData {
   readonly version: 1;
   readonly meta: CallMeta;
-  readonly learner: LearnerContext;
+  /** The pace in it changes mid-call (`pace`). */
+  learner: LearnerContext;
   runner: RunnerState;
   transcript: TranscriptLine[];
   turns: number;
@@ -51,6 +58,8 @@ export interface CallData {
   usage: Usage;
   /** Jev's input tokens; missing in a call saved before the turn judge. */
   jevInputTokens?: number;
+  /** How each turn left its beat, in order; missing in a call saved before pass kinds. */
+  passes?: TurnPassRecord[];
   sttSeconds: number;
   ttsChars: number;
   samples: Samples;
@@ -89,6 +98,7 @@ export function newCallData(
     meter: { learnerMs: 0, characterMs: 0, billedLearner: 0, billedCharacter: 0 },
     usage: noUsage(),
     jevInputTokens: 0,
+    passes: [],
     sttSeconds: 0,
     ttsChars: 0,
     samples: noSamples(),

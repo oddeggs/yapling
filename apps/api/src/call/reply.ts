@@ -1,27 +1,21 @@
-import type { CallEndReason, CharacterId } from '@yapling/contracts';
+import type { CharacterId } from '@yapling/contracts';
 import { speechSettings } from '@yapling/domain';
-import { CAST, SAFE_REPLY, type Scene, type SceneEffect } from '@yapling/story';
+import { CAST, SAFE_REPLY } from '@yapling/story';
 
 import { NO_CONTROL, type Control, type Outcome } from './control';
 import { addSample } from './costs';
-import { caseFor, eventFor, replyDirection, type Director, type ReplyPlan } from './director';
-import type { CallData } from './finalize';
-import type { FrameSender } from './frames';
+import { caseFor, eventFor, promptStage, replyDirection } from './director';
 import { isCrisis, judgeTurn, type AgainAsk, type Judgement } from './judge';
-import type { LearnerTurn } from './learner-turn';
-import { SpokenLine, type LineHost, type LineResult, type LineSource } from './line';
+import { SpokenLine, type LineResult, type LineSource } from './line';
 import { HEDGE, messagesFor, systemFor, turnParams } from './llm';
 import { speechKind } from './real-words';
-import type { TtsVoice } from './tts';
-import {
-  isLearnerLine,
-  lastCharacterLine,
-  type LearnerLine,
-  type TranscriptLine,
-} from './transcript';
+import { Reply, type LineSpec, type ReplyHost } from './reply-state';
+import { passOf } from './placement';
+import { isLearnerLine, lastCharacterLine, promptLine, type LearnerLine } from './transcript';
 import { logTurn, type JudgeLog } from './turn-log';
 import { slowerVoice } from './voice-pool';
 import { pickReaction } from './voices';
+import { againAsk } from './words';
 
 /*
  * The answer to one learner turn: the listener's line, started speculatively and held (see
@@ -41,119 +35,12 @@ import { pickReaction } from './voices';
  * When Jev is late or down, the line's own case stands, as before Jev.
  */
 
+export type { Active, ReplyHost } from './reply-state';
+
 /** A hold-to-talk reply with no audio yet after this long shows the thinking head tilt. */
 export const SLOW_REPLY_MS = 600;
 /** A line said again is the line, not a reply: it may be longer than a reply. */
 const REPLAY_MAX_WORDS = 60;
-
-/** The line now playing, waiting for the phone's `played`. */
-export interface Active {
-  readonly streamId: number;
-  after: 'rec_played' | 'gen_done' | null;
-  durationMs: number;
-  ready: boolean;
-  played: boolean;
-  timer: ReturnType<typeof setTimeout> | null;
-  /** Ends the call when done (the wrap-up). */
-  endAfter: CallEndReason | null;
-}
-
-export interface ReplyHost {
-  readonly data: CallData;
-  readonly director: Director;
-  readonly scene: Scene;
-  /** Jev's key; the line's own case stands for every turn without it. */
-  readonly judgeKey: string | undefined;
-  frames(): FrameSender;
-  learner(): LearnerTurn | null;
-  active(): Active | null;
-  accepting(): boolean;
-  lineHost(): LineHost;
-  voice(character: CharacterId): TtsVoice;
-  thinking(on: boolean): void;
-  newActive(streamId: number, after: Active['after']): Active;
-  ready(active: Active, silent: boolean): void;
-  run(effects: readonly SceneEffect[]): void;
-  enqueue(effects: readonly SceneEffect[]): void;
-  pump(): void;
-  crisis(): void;
-  end(reason: CallEndReason): void;
-  addUsage(line: SpokenLine): void;
-  pushCharacterLine(speaker: CharacterId, text: string, beatId: string | null): void;
-  nextStreamId(): number;
-}
-
-/** Jev's side of one turn. */
-interface TurnJudge {
-  readonly startedAt: number;
-  readonly abort: AbortController;
-  status: 'pending' | 'answered' | 'failed' | 'late';
-  /** Jev's answer, when it came before the turn was committed. */
-  judgement: Judgement | null;
-  /** Jev's outcome, even one too late to count (for the log). */
-  outcome: Outcome | null;
-  ms: number | null;
-  /** The first line's case; undefined until its first word is in. */
-  tag: Outcome | null | undefined;
-  /** The line written for Jev's case, held until the first line's case is known. */
-  alt: SpokenLine | null;
-  /** Jev's case was compared with the line's (or the line's case can't be known). */
-  settled: boolean;
-  /** The voiced line was written for Jev's case: Jev's outcome is applied. */
-  decided: boolean;
-  /** Whether the line's case and Jev's led to the same runner event. */
-  agree: boolean | null;
-  /** The line written for Jev's case was voiced in place of the first. */
-  switched: boolean;
-}
-
-class Reply {
-  /** The line answering the turn: the first, or the one that replaced it. */
-  line!: SpokenLine;
-  committed = false;
-  control: Control | null = null;
-  applied = false;
-  /** The runner event the outcome was applied as, for the turn's log line. */
-  event: string | null = null;
-  learnerLine = -1;
-  /** The line is the last character line said again: no outcome, no try. */
-  replay: AgainAsk | null = null;
-  /** The hold ended before Jev answered: the recorded reaction waits for its answer. */
-  reactionDue = false;
-  readonly judge: TurnJudge = {
-    startedAt: Date.now(),
-    abort: new AbortController(),
-    status: 'pending',
-    judgement: null,
-    outcome: null,
-    ms: null,
-    tag: undefined,
-    alt: null,
-    settled: false,
-    decided: false,
-    agree: null,
-    switched: false,
-  };
-
-  constructor(
-    readonly plan: ReplyPlan,
-    /** Who speaks the line: the listener, or for a replay whoever said the last line. */
-    public speaker: CharacterId,
-    readonly speechEndAt: number,
-    readonly said: string,
-    /** The recorded reaction's words, when one plays before the line. */
-    readonly reaction: string | null,
-  ) {}
-}
-
-interface LineSpec {
-  readonly speaker: CharacterId;
-  readonly voice: TtsVoice;
-  readonly source: LineSource;
-  readonly gated: boolean;
-  readonly afterReaction: boolean;
-  readonly maxWords?: number;
-}
 
 export class Replies {
   private reply: Reply | null = null;
@@ -188,10 +75,17 @@ export class Replies {
     if (plan === null) return null;
     const { data } = host;
     const reaction = pickReaction(plan.speaker, text, data.turns);
-    const reply = new Reply(plan, plan.speaker, speechEndAt, text, reaction?.text ?? null);
+    const reply = new Reply(
+      plan,
+      plan.speaker,
+      speechEndAt,
+      text,
+      reaction?.text ?? null,
+      host.director.state.lastTurn,
+    );
     const direction = replyDirection(
       plan,
-      data.learner.stage,
+      promptStage(host.scene, data.learner.stage),
       data.learner.targets,
       reply.reaction,
       promptLine(data.transcript, plan.speaker),
@@ -272,7 +166,9 @@ export class Replies {
       voice: spec.voice,
       source: spec.source,
       gated: spec.gated,
-      maxWords: spec.maxWords ?? speechSettings(this.host.data.learner.stage).maxWordsPerTurn,
+      maxWords:
+        spec.maxWords ??
+        speechSettings(promptStage(this.host.scene, this.host.data.learner.stage)).maxWordsPerTurn,
       afterReaction: spec.afterReaction,
       onFirstAudio: () => {
         if (reply.line === line) this.committed(reply);
@@ -342,6 +238,9 @@ export class Replies {
     if (this.reply !== reply) return;
     if (judgement === null) {
       judge.status = 'failed';
+      // Without Jev, "Sorry? Again, please" and "Slowly, please" are read by the phrase list.
+      const ask = reply.committed ? null : againAsk(reply.said);
+      if (ask !== null && this.replay(reply, ask)) return;
       if (reply.reactionDue) this.react(reply);
       return;
     }
@@ -405,7 +304,7 @@ export class Replies {
         : null;
     const direction = replyDirection(
       plan,
-      data.learner.stage,
+      promptStage(host.scene, data.learner.stage),
       data.learner.targets,
       reply.reaction,
       promptLine(data.transcript, plan.speaker),
@@ -647,7 +546,14 @@ export class Replies {
   private log(reply: Reply, result: LineResult | null): void {
     const { judge } = reply;
     const judgeLog: JudgeLog = {
-      by: reply.replay !== null || judge.decided ? 'jev' : 'haiku',
+      by:
+        reply.replay !== null
+          ? judge.status === 'answered'
+            ? 'jev'
+            : 'words'
+          : judge.decided
+            ? 'jev'
+            : 'haiku',
       status: judge.status,
       ms: judge.ms,
       outcome: judge.outcome,
@@ -672,12 +578,8 @@ export class Replies {
       result,
       timings: reply.line.timings,
       speechEndAt: reply.speechEndAt,
+      pass: passOf(reply.passBefore, this.host.director.state.lastTurn, reply.plan.beatId),
+      cardMatch: null,
     });
   }
-}
-
-/** The character line the learner is answering, when the listener said it (their question). */
-function promptLine(transcript: readonly TranscriptLine[], speaker: CharacterId): string | null {
-  const line = lastCharacterLine(transcript);
-  return line?.speaker === speaker ? line.text.slice(0, 300) : null;
 }
