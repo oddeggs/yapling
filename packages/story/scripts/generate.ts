@@ -30,6 +30,8 @@ interface SourceLine {
   readonly name_splice?: string;
   readonly lang?: string;
   readonly speed?: number;
+  /** The line's Vietnamese gloss, written beside it in the script (a draft until reviewed). */
+  readonly _vi?: string;
 }
 
 interface Source {
@@ -69,6 +71,7 @@ const written = (line: SourceLine) => ({
   nameSplice: line.name_splice ?? null,
   language: line.lang ?? 'en',
   speed: line.speed ?? null,
+  vi: line._vi ?? null,
 });
 
 /** The two generated modules, by path relative to the package. */

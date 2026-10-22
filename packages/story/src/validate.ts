@@ -28,6 +28,20 @@ export const visitorLineProblems = (id: Id): string[] => {
   return words > VISITOR_MAX_WORDS ? [`${id} has ${words} words at Visitor`] : [];
 };
 
+/** Kinds of line that are heard, not answered: they keep their own pace and length at Visitor. */
+const LISTENING_LINE_KINDS: ReadonlySet<string> = new Set([
+  'story',
+  'postcard',
+  'voicemail',
+  'recap',
+]);
+
+/** A Visitor turn's line problems; a listening line replayed in a turn (a postcard) has none. */
+const visitorTurnLineProblems = (id: Id): string[] => {
+  const line = findLine(id);
+  return line && LISTENING_LINE_KINDS.has(line.kind) ? [] : visitorLineProblems(id);
+};
+
 /** Where a beat can go next: its own next, the fine exit and the fallback exit (after real tries). */
 const targetsOf = (beat: Beat): Id[] => {
   const answer = beat.kind === 'learner' || beat.kind === 'gen' ? beat.answer : null;
@@ -99,7 +113,7 @@ export const validateScene = (scene: Scene): string[] => {
     // Visitors' lines stay short: the chapters of Settling in and every Visitor-only beat.
     const visitorOnly = scene.kind === 'settling' || beat.maxStage === 'visitor';
     if (visitorOnly && beat.kind === 'rec') {
-      for (const p of visitorLineProblems(beat.line)) at(beat, p);
+      for (const p of visitorTurnLineProblems(beat.line)) at(beat, p);
     }
     if (visitorOnly && beat.kind === 'gen' && beat.example !== null) {
       const words = wordCount(beat.example);
@@ -108,7 +122,7 @@ export const validateScene = (scene: Scene): string[] => {
     if (answer) {
       for (const id of [...answer.praise, ...(answer.model === null ? [] : [answer.model])]) {
         if (!findLine(id)) at(beat, `unknown line ${id}`);
-        else if (visitorOnly) for (const p of visitorLineProblems(id)) at(beat, p);
+        else if (visitorOnly) for (const p of visitorTurnLineProblems(id)) at(beat, p);
       }
       if (answer.choices.length > 2) at(beat, 'more than two cards');
       if (answer.accept.some((w) => w !== w.toLowerCase()))
