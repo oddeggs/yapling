@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { GlassView, StickerButton, Sticker, Txt, useKeyframes, useLocale } from '../../ui';
-import { BurrowArtProvider, BurrowBackdrop } from '../burrow';
+import { BurrowBackdrop } from '../burrow';
 
 /*
  * The day-one burrow before the unpacking chat: boxes everywhere and Pip waving. When iOS hasn't
@@ -83,7 +83,7 @@ export function UnpackScreen({
 }: UnpackScreenProps) {
   const { t } = useLocale();
   return (
-    <BurrowArtProvider>
+    <>
       <BurrowBackdrop
         scene="burrow-day1"
         timeOfDay="afternoon"
@@ -108,6 +108,6 @@ export function UnpackScreen({
           <MicPrePrompt roommateName={roommateName} onAllow={onAllowMic} busy={asking} />
         ) : null}
       </BurrowBackdrop>
-    </BurrowArtProvider>
+    </>
   );
 }

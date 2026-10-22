@@ -1,5 +1,5 @@
 // Knocks: the first week's day notifications, the permission ask, and the welcome back.
-export type { KnockInputs } from './inputs';
+export { completedEpisodesOf, knockInputsOf, type KnockInputs } from './inputs';
 export { KnocksProvider, useKnockInputs, useReturnState } from './knocks-provider';
 export { hasKnockPermission, requestKnockPermission } from './permission';
 export {

@@ -100,6 +100,9 @@ const subscribe = (listener: () => void) => {
   };
 };
 
+/** The app's clock for the data layer: `now()`, and a call each time the test menu moves it. */
+export const appClock = { now, subscribe } as const;
+
 /** The debug clock's state, re-rendering when the test menu moves it. Read the time with `now()`. */
 export function useDebugClock(): DebugClockState {
   return useSyncExternalStore(subscribe, current, current);

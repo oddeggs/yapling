@@ -113,7 +113,7 @@ describe('the burrow changes day by day', () => {
     expect(burrowHomeModel(input(5)).keepsake).toBeNull();
     const kept = burrowHomeModel(input(5, { after: true })).keepsake;
     expect(kept?.heading).toBe('Lan can now…');
-    expect(kept?.canDo).toBe('Introduce yourself in 30 seconds');
+    expect(kept?.canDo).toBe('Introduced myself in 30 seconds');
     expect(kept?.witness).toBe('linh');
     expect(kept?.witnessed).toMatch(/^witnessed by Linh · [A-Z][a-z]{2} \d{1,2}$/);
     expect(burrowHomeModel(input(8)).keepsake).not.toBeNull();

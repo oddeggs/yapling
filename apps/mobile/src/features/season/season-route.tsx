@@ -2,10 +2,9 @@ import { SEASON_1 } from '@yapling/story';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo } from 'react';
 
-import { BurrowArtProvider } from '../burrow/art-fonts';
+import { useSeen } from '../../data';
 import { BURROW_ROUTES, callRoute } from '../burrow/routes';
 import { useStoryLearner } from '../story/learner';
-import { markSeen, SEASON_MAP_SEEN } from '../story/seen-store';
 import { seasonMapModel } from './season-model';
 import { SeasonScreen } from './season-screen';
 
@@ -28,10 +27,11 @@ export function SeasonRoute() {
       }),
     [learner],
   );
-  useEffect(() => markSeen([SEASON_MAP_SEEN]), []);
+  const { markSeen } = useSeen();
+  useEffect(() => void markSeen('season_map'), [markSeen]);
   const home = () => router.replace(BURROW_ROUTES.home);
   return (
-    <BurrowArtProvider>
+    <>
       <SeasonScreen
         model={model}
         onBack={() => (router.canGoBack() ? router.back() : home())}
@@ -41,6 +41,6 @@ export function SeasonRoute() {
           else home();
         }}
       />
-    </BurrowArtProvider>
+    </>
   );
 }

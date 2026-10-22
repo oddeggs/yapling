@@ -15,8 +15,7 @@ import {
   useKeyframes,
   useLocale,
 } from '../../ui';
-import { BurrowArtProvider } from '../burrow';
-import { Face } from '../burrow/art';
+import { Face } from '../burrow';
 import { BlurredScene, useScale } from './art';
 import type { ResidencyView } from './residency';
 
@@ -51,7 +50,7 @@ export function CardScreen({
   const { u } = useScale();
   const fly = useKeyframes(motion.screens.residencyCard);
   return (
-    <BurrowArtProvider>
+    <>
       <View style={{ flex: 1, backgroundColor: colours.accentSoft }}>
         <BlurredScene fn="s_burrow2" blur={12} wash={translucent.paperWash} />
         <Critter
@@ -141,7 +140,7 @@ export function CardScreen({
           />
         </GlassSheet>
       </View>
-    </BurrowArtProvider>
+    </>
   );
 }
 

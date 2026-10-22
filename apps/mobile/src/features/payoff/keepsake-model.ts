@@ -118,7 +118,7 @@ function canDoForWeek(keepsake: Keepsake, canDos: readonly CanDoProgress[]) {
 /** The certificate for any keepsake in progress (the burrow wall shows these). */
 export function certificateFor(
   keepsake: Keepsake,
-  progress: Pick<Progress, 'canDos'>,
+  progress: { readonly canDos: readonly CanDoProgress[] },
   learner: KeepsakeLearner,
 ): Certificate {
   const canDo =
@@ -133,7 +133,7 @@ export function certificateFor(
  * is drawn and hung (hanging it is the payoff, not a choice to keep it).
  */
 export function hungKeepsakes(
-  progress: Pick<Progress, 'canDos' | 'keepsakes'>,
+  progress: { readonly canDos: readonly CanDoProgress[]; readonly keepsakes: readonly Keepsake[] },
   learner: KeepsakeLearner,
 ): readonly Certificate[] {
   return [...progress.keepsakes]
