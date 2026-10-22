@@ -106,6 +106,52 @@ describe('hold-to-talk', () => {
     phone.close();
   }, 20_000);
 
+  /** Mic audio at the speed a phone sends it: a 100 ms chunk every 100 ms. */
+  async function stream(phone: Phone, ms: number, voiced: boolean) {
+    for (let sent = 0; sent < ms; sent += 100) {
+      phone.mic(pcm(Math.min(100, ms - sent), voiced));
+      await sleep(100);
+    }
+  }
+
+  it('waits out a pause in a long held answer without a hint and answers it as one turn', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token, { turnMode: 'hold_to_talk' });
+    await listening(phone);
+    const from = phone.frames.length;
+    providers.speech.push("What's wrong? Can I help you with the sign?");
+    // Longer than the stage's 4 s hint pause, then a breath while the button is still held.
+    await stream(phone, 4_500, true);
+    await stream(phone, 1_200, false);
+    await stream(phone, 500, true);
+    phone.send({ type: 'end_turn' });
+    const heard = await phone.next('heard', () => true, { from });
+    expect(heard.text).toBe("What's wrong? Can I help you with the sign?");
+    const before = phone.frames.slice(from, phone.frames.indexOf(heard));
+    // No hint and no nudge line: the only line is the reply to the whole answer.
+    expect(before.filter((f) => f.type === 'hint')).toHaveLength(0);
+    expect(before.filter((f) => f.type === 'say_start')).toHaveLength(1);
+    expect(phone.of('heard').slice(-1)).toEqual([heard]);
+    phone.close();
+  }, 30_000);
+
+  it('counts the quiet for a hint from when the learner stopped, not from when they started', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token, { turnMode: 'hold_to_talk' });
+    await listening(phone);
+    const from = phone.frames.length;
+    // A long press with nothing Scribe can make out, then the release: still the learner's turn.
+    providers.speech.push('');
+    await stream(phone, 4_500, true);
+    phone.send({ type: 'end_turn' });
+    const released = Date.now();
+    const hint = await phone.next('hint', () => true, { from, timeoutMs: 10_000 });
+    expect(hint.phrase.length).toBeGreaterThan(0);
+    // The stage's 4 s pause, counted from the release (a little early for the tick).
+    expect(Date.now() - released).toBeGreaterThan(3_500);
+    phone.close();
+  }, 30_000);
+
   it('reopens a Scribe session that closed, on the next press, with words on the mic clock', async () => {
     sttTiming.idleMs = 60_000;
     providers.scribeIdleCloseMs = 300;
