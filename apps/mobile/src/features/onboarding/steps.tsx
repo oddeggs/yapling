@@ -50,6 +50,7 @@ import {
 } from './residency';
 import { HOME_ROUTE, firstChapterHref, knockHref, placementCallHref, stepHref } from './routes';
 import { TooHardSheet } from './too-hard-sheet';
+import { track } from '../../observability';
 import { UnpackScreen } from './unpack-screen';
 import { useOnboarding } from './use-onboarding';
 import { VisitorCardScreen } from './visitor-card-screen';
@@ -392,6 +393,7 @@ function Card({ summary }: { summary: PlacementSummary }) {
   );
   const { session } = useSession();
   const [tooHard, setTooHard] = useState(false);
+  const cardStage = profile?.stage ?? 'newcomer';
   const adjust = (pace: Pace) => {
     dispatch({ type: 'adjustPace', pace });
     // On the profile for every call's `hello` (queued while offline).
@@ -417,7 +419,10 @@ function Card({ summary }: { summary: PlacementSummary }) {
         species={species}
         roommateName={roommateName}
         onTooEasy={() => adjust('faster')}
-        onTooHard={() => setTooHard(true)}
+        onTooHard={() => {
+          setTooHard(true);
+          track('too_hard_opened', { place: 'residency_card', stage: cardStage });
+        }}
         onContinue={() => {
           dispatch({ type: 'cardDone' });
           router.push(stepHref('notifications'));
@@ -429,17 +434,34 @@ function Card({ summary }: { summary: PlacementSummary }) {
           busy={false}
           onSlower={() => {
             setTooHard(false);
+            track('too_hard_chosen', {
+              place: 'residency_card',
+              stage: cardStage,
+              choice: 'slower',
+            });
             adjust('slower');
           }}
           onLinh={() => {
             setTooHard(false);
+            track('too_hard_chosen', {
+              place: 'residency_card',
+              stage: cardStage,
+              choice: 'practise_with_linh',
+            });
             settleIn(session?.userId);
             // Settling in first: a Visitor, and the story waits for the letter. The card turns
             // into the Visitor's.
             choose({ to: 'visitor', reason: 'too_hard' });
             void updateProfile({ storyStartedOn: null }).catch(() => undefined);
           }}
-          onClose={() => setTooHard(false)}
+          onClose={() => {
+            setTooHard(false);
+            track('too_hard_chosen', {
+              place: 'residency_card',
+              stage: cardStage,
+              choice: 'closed',
+            });
+          }}
         />
       ) : null}
     </>

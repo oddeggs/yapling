@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Linking, View } from 'react-native';
 
+import { track } from '../../observability';
 import { useLocale } from '../../ui';
 import { TooHardSheet, type TooHardChoice } from '../payoff/too-hard-sheet';
 import { DeleteButtons, DeleteConfirm } from './delete-confirm';
@@ -150,6 +151,11 @@ export function MeContainer({ inputs, actions }: MeContainerProps) {
 
   const onTooHard = (choice: TooHardChoice) => {
     setSheet(null);
+    track('too_hard_chosen', {
+      place: 'me',
+      stage: inputs.stage,
+      choice: choice === 'slower' ? 'slower' : 'practise_with_linh',
+    });
     if (choice === 'slower') actions.slowDown?.();
     else if (inputs.stage === 'visitor') setPage('settling');
     else {
@@ -173,7 +179,14 @@ export function MeContainer({ inputs, actions }: MeContainerProps) {
             }}
           />
         ) : sheet === 'tooHard' ? (
-          <TooHardSheet stage={inputs.stage} onClose={() => setSheet(null)} onChoose={onTooHard} />
+          <TooHardSheet
+            stage={inputs.stage}
+            onClose={() => {
+              setSheet(null);
+              track('too_hard_chosen', { place: 'me', stage: inputs.stage, choice: 'closed' });
+            }}
+            onChoose={onTooHard}
+          />
         ) : null
       }
     >
@@ -183,7 +196,10 @@ export function MeContainer({ inputs, actions }: MeContainerProps) {
         fasterOpen={sheet === 'faster'}
         onReplay={() => setPage('settling')}
         onFaster={() => setSheet('faster')}
-        onTooHard={() => setSheet('tooHard')}
+        onTooHard={() => {
+          setSheet('tooHard');
+          track('too_hard_opened', { place: 'me', stage: inputs.stage });
+        }}
         onPlus={() => router.push('/plus')}
         onMinutes={() => undefined}
         onProgress={() => actions.openProgress?.()}
