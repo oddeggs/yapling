@@ -3,7 +3,7 @@ import type { TurnPass } from '@yapling/domain';
 import type { RunnerState, Scene } from '@yapling/story';
 
 import { userBlobPrefix } from '../account';
-import { insertCall } from '../calls/store';
+import { countTurnPasses, insertCall } from '../calls/store';
 import type { Bindings } from '../env';
 import { PostCallJob } from '../jobs/messages';
 import { callCost, medians, noSamples, type Samples } from './costs';
@@ -153,8 +153,10 @@ export async function finalizeCall(
   });
   const summaryPending = data.transcript.some((l) => isLearnerLine(l) && l.text !== '');
   const reason = data.endReason ?? 'hangup';
-  // The scene keeps its place only when minutes ran out before it finished.
-  const sceneState = reason === 'minutes_exhausted' && runner.phase !== 'ended' ? runner : null;
+  // The scene keeps its place when minutes ran out before it finished, or the learner left it as
+  // too hard (to practise with Linh first).
+  const keepsPlace = reason === 'minutes_exhausted' || reason === 'too_hard';
+  const sceneState = keepsPlace && runner.phase !== 'ended' ? runner : null;
   const cost = callCost(data.sttSeconds, data.ttsChars, data.usage, data.jevInputTokens ?? 0);
   await insertCall(env.DB, {
     id: meta.callId,
@@ -174,6 +176,7 @@ export async function finalizeCall(
     cost,
     timings: medians(data.samples),
     transcriptKey: key,
+    turnPasses: data.passes ? countTurnPasses(data.passes) : null,
     samples: data.samples,
   });
   console.log('call ended', {

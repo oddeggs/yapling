@@ -2,6 +2,7 @@ import {
   CallRecord,
   CallSummary,
   LIMITS,
+  TurnPassCounts,
   type CallEndReason,
   type CallKind,
   type CharacterId,
@@ -31,6 +32,8 @@ export interface CallRow {
   cost: string;
   timings: string;
   transcript_key: string;
+  /** `TurnPassCounts` as JSON; null for calls from before it was kept. */
+  turn_passes: string | null;
 }
 
 export interface NewCall {
@@ -52,12 +55,25 @@ export interface NewCall {
   readonly cost: unknown;
   readonly timings: unknown;
   readonly transcriptKey: string;
+  /** How the call's learner turns passed; null when the call didn't keep them. */
+  readonly turnPasses?: TurnPassCounts | null;
   /** Per-stage latency samples, for the cost record's percentiles. */
   readonly samples?: Pick<Samples, 'replyOut' | 'phoneLag'>;
 }
 
+/** How each of a call's turns passed, counted by kind. */
+export function countTurnPasses(
+  passes: readonly { readonly pass: keyof TurnPassCounts }[],
+): TurnPassCounts {
+  const counts = { match: 0, generous: 0, skip: 0, fallback: 0 };
+  for (const p of passes) counts[p.pass] += 1;
+  return counts;
+}
+
 export function recordOf(row: CallRow): CallRecord {
   const summary = row.summary === null ? null : CallSummary.safeParse(JSON.parse(row.summary));
+  const passes =
+    row.turn_passes == null ? null : TurnPassCounts.safeParse(JSON.parse(row.turn_passes));
   return CallRecord.parse({
     id: row.id,
     kind: row.kind,
@@ -70,6 +86,7 @@ export function recordOf(row: CallRow): CallRecord {
     endReason: row.end_reason,
     summaryPending: row.summary_pending === 1,
     summary: summary?.success === true ? summary.data : null,
+    ...(passes?.success === true ? { turnPasses: passes.data } : {}),
   });
 }
 
@@ -78,8 +95,9 @@ export async function insertCall(db: D1Database, call: NewCall): Promise<void> {
     .prepare(
       `INSERT INTO calls (id, user_id, kind, scene_id, character, stage, started_at, ended_at,
          learner_seconds, character_seconds, end_reason, summary_pending, summary, scene_state,
-         safety_flag, cost, timings, transcript_key)
-       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, NULL, ?13, ?14, ?15, ?16, ?17)
+         safety_flag, cost, timings, transcript_key, turn_passes)
+       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, NULL, ?13, ?14, ?15, ?16, ?17,
+         ?18)
        ON CONFLICT (id) DO NOTHING`,
     )
     .bind(
@@ -100,6 +118,7 @@ export async function insertCall(db: D1Database, call: NewCall): Promise<void> {
       JSON.stringify(call.cost),
       JSON.stringify(call.timings),
       call.transcriptKey,
+      call.turnPasses ? JSON.stringify(call.turnPasses) : null,
     )
     .run();
   await saveCost(db, call);

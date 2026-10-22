@@ -256,6 +256,42 @@ describe('Settling in', () => {
     expect(played(phone).filter((id) => id === 's1-set3-04')).toHaveLength(1);
   }, 40_000);
 
+  it('moves on after "Bỏ qua", and keeps the place and the turn counts when left as too hard', async () => {
+    const { token, userId } = await learner();
+    const { phone } = await settling('s1-set1', token);
+    await beat(phone, 'say-hi');
+    await sleep(100);
+    const turn = await say(phone, 'Hi!');
+    await beat(phone, 'say-name', turn.from);
+    await sleep(100);
+    // "Bỏ qua": Linh says it's okay, from her recording, and the scene goes on.
+    const from = phone.frames.length;
+    phone.send({ type: 'skip' });
+    await phone.next('play_rec', (p) => p.lineId === 's1-set-linh-skip', { from });
+    await beat(phone, 'say-nice', from);
+    await sleep(100);
+    // "Khó quá" → "Tập với Linh trước": the call ends as too hard.
+    phone.send({ type: 'hangup', reason: 'too_hard' });
+    const ended = await phone.next('ended', () => true, { timeoutMs: 10_000 });
+    expect(ended.reason).toBe('too_hard');
+    const row = await env.DB.prepare(
+      'SELECT end_reason, scene_state, turn_passes FROM calls WHERE id = ? AND user_id = ?',
+    )
+      .bind(ended.callRecordId, userId)
+      .first<{ end_reason: string; scene_state: string | null; turn_passes: string | null }>();
+    expect(row?.end_reason).toBe('too_hard');
+    // The scene waits where it was left.
+    expect(JSON.parse(row?.scene_state ?? 'null')).toMatchObject({
+      sceneId: 's1-set1',
+      beatId: 'say-nice',
+    });
+    // The record tells the phone how the turns passed.
+    const record = await call(`/api/calls/${ended.callRecordId}`, { token });
+    expect(await record.json()).toMatchObject({
+      turnPasses: { match: 1, generous: 0, skip: 1, fallback: 0 },
+    });
+  }, 40_000);
+
   it('starts with the minutes used up, and charges none', async () => {
     const { token, userId } = await learner();
     await userObject(env, userId).charge(3_600, 'learner');
