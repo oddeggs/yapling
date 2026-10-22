@@ -116,6 +116,52 @@ describe('progress sync', () => {
     expect(await read(token)).toEqual(saved);
   });
 
+  it("keeps the Settling-in chapters through an older app's write, which never sends them", async () => {
+    const { token, userId } = await newGuest();
+    const fresh = await read(token);
+    const chapters = [
+      { chapter: 1, doneOn: '2026-10-22', callRecordId: 'call_s1' },
+      { chapter: 2, doneOn: '2026-10-23', callRecordId: null },
+    ];
+    const saved = Progress.parse(
+      await expectJson(await put(token, { ...fresh, settlingChaptersDone: chapters })),
+    );
+    expect(saved.settlingChaptersDone).toEqual(chapters);
+
+    // An older app's body: no Settling-in chapters at all.
+    const { settlingChaptersDone: _left, ...older } = { ...saved, ...lists };
+    const kept = Progress.parse(await expectJson(await put(token, older)));
+    expect(kept).toMatchObject({
+      revision: 3,
+      phrases: lists.phrases,
+      settlingChaptersDone: chapters,
+    });
+    expect((await read(token)).settlingChaptersDone).toEqual(chapters);
+
+    // A server-side change keeps them too.
+    const changed = await updateProgress(
+      env.DB,
+      userId,
+      (current) => ({ ...current, keepsakes: [] }),
+      Date.now(),
+    );
+    expect(changed.settlingChaptersDone).toEqual(chapters);
+
+    // A newer app's body replaces them, an empty list included.
+    const cleared = Progress.parse(
+      await expectJson(await put(token, { ...changed, settlingChaptersDone: [] })),
+    );
+    expect(cleared.settlingChaptersDone).toEqual([]);
+    await expectError(
+      await put(token, {
+        ...cleared,
+        settlingChaptersDone: [chapters[0], { ...chapters[1], chapter: 1 }],
+      }),
+      400,
+      'bad_request',
+    );
+  });
+
   it('refuses a stale revision with a typed error, and the server copy stands', async () => {
     const { token } = await newGuest();
     const fresh = await read(token);
