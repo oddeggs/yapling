@@ -87,6 +87,6 @@ States built from existing components because the design does not show them.
 | Call | Reconnecting mid-call | No design. The mic rests and the last line stays; the call resumes the beat when the socket is back. After two minutes the no-connection sheet shows |
 | Call | No connection | Voice notes are a later release: the sheet keeps the kicker and title, drops the voice-note line and button, and "Thử gọi lại" becomes the primary button |
 | Call | Microphone off | Typing to the roommate is a later release: the sheet keeps "Mở Cài đặt" and drops "Nhắn chữ thay thế" |
-| Call | Meaning, translation open | The board's "Ẩn bản dịch" has no catalogue key; once revealed the translation stays until the whisper's ✕ closes it (as in the Week 1 prototype) |
+| Call | Meaning, translation open | The board's "Ẩn bản dịch" chip replaces "Xem bản dịch" and folds the translation away again; the whisper's ✕ closes it all |
 | Call | The letter | The prototype's "HARBOUR LANE OFFICE · NOTICE" kicker isn't in the story or a catalogue; the letter shows the story's own lines, sign-off included |
 | Call | Notebook, knock, dusk letter, postcard, voicemail and leaf beats | Not part of the live calls built here; the call shows nothing for them and carries on |

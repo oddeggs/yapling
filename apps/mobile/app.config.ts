@@ -109,6 +109,10 @@ export function buildConfig(
       infoPlist: {
         NSMicrophoneUsageDescription: USAGE.microphone,
         NSSpeechRecognitionUsageDescription: USAGE.speechRecognition,
+        // Development builds: no floating "Tools" button from the Expo dev menu. It sits in the
+        // top corner over the call pill; the dev menu still opens with a shake, and the test menu
+        // with a three-finger tap.
+        EXDevMenuShowFloatingActionButton: false,
       },
     },
     plugins: [

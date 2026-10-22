@@ -98,6 +98,7 @@ export type TrackerEvent =
   | { readonly type: 'hint_dismissed' }
   | { readonly type: 'meaning_requested'; readonly line: MeaningLine | null }
   | { readonly type: 'translation_shown' }
+  | { readonly type: 'translation_hidden' }
   | { readonly type: 'meaning_closed' }
   /** The learner started talking on this beat. */
   | { readonly type: 'speech_started' }
@@ -146,6 +147,10 @@ export function reduceTracker(
     case 'translation_shown':
       return state.meaning?.phase === 'shown' && state.meaning.gloss !== null
         ? { ...state, meaning: { ...state.meaning, phase: 'translated' } }
+        : state;
+    case 'translation_hidden':
+      return state.meaning?.phase === 'translated'
+        ? { ...state, meaning: { ...state.meaning, phase: 'shown' } }
         : state;
     case 'meaning_closed':
       return { ...state, meaning: null };

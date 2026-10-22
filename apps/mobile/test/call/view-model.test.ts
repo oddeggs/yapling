@@ -335,6 +335,8 @@ describe('what does that mean', () => {
     expect(view(connected(), spoken).meaning?.phase).toBe('shown');
     const revealed = track(episode, [{ type: 'translation_shown' }], answered);
     expect(revealed.meaning?.phase).toBe('translated');
+    // "Hide translation" folds it back to the simple English.
+    expect(track(episode, [{ type: 'translation_hidden' }], revealed).meaning?.phase).toBe('shown');
     expect(track(episode, [{ type: 'meaning_closed' }], revealed).meaning).toBeNull();
   });
 

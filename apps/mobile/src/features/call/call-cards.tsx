@@ -125,6 +125,7 @@ export function MeaningWhisper({
   gloss,
   translated,
   onReveal,
+  onHide,
   onClose,
 }: {
   name: string;
@@ -132,6 +133,7 @@ export function MeaningWhisper({
   gloss: string | null;
   translated: boolean;
   onReveal: () => void;
+  onHide: () => void;
   onClose: () => void;
 }) {
   const { t } = useLocale();
@@ -157,9 +159,9 @@ export function MeaningWhisper({
           </Txt>
         )}
         {translated && gloss ? <GlossLine text={gloss} variant="glossWhisper" /> : null}
-        {simple !== null && gloss && !translated ? (
+        {simple !== null && gloss ? (
           <Press
-            onPress={onReveal}
+            onPress={translated ? onHide : onReveal}
             haptic="selection"
             style={{
               alignSelf: 'flex-start',
@@ -172,7 +174,9 @@ export function MeaningWhisper({
               backgroundColor: colours.surface,
             }}
           >
-            <Txt variant={{ ...typeExtras.meaningChip, size: 12 }}>{t('call.showTranslation')}</Txt>
+            <Txt variant={{ ...typeExtras.meaningChip, size: 12 }}>
+              {t(translated ? 'call.hideTranslation' : 'call.showTranslation')}
+            </Txt>
           </Press>
         ) : null}
         <Press
