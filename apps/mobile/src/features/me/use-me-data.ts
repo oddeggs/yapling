@@ -1,6 +1,14 @@
 import { useEffect, useMemo } from 'react';
 
-import { useAccount, useCalls, useMemory, useMinutes, useProfile, useProgress } from '../../data';
+import {
+  useAccount,
+  useCalls,
+  useMemory,
+  useMinutes,
+  useProfile,
+  useProgress,
+  useTurnMode,
+} from '../../data';
 import type { MeActions } from './me-container';
 import type { MeInputs } from './me-model';
 import { stageRequests, usePendingStage } from './stage-request';
@@ -18,6 +26,7 @@ export function useMeData(): { inputs: MeInputs | null; actions: MeActions } {
   const { items, refresh: refreshMemory, editMemory, removeMemory } = useMemory();
   const { calls } = useCalls();
   const { deleteAccount } = useAccount();
+  const { turnMode, setTurnMode } = useTurnMode();
 
   // The minutes and the notes change between visits: ask again each time the sheet opens.
   useEffect(() => {
@@ -42,8 +51,9 @@ export function useMeData(): { inputs: MeInputs | null; actions: MeActions } {
       quietHours: profile.quietHours,
       firstLanguage: profile.firstLanguage,
       settlingDone: progress?.settlingChaptersDone.map((c) => c.chapter) ?? [],
+      turnMode,
     };
-  }, [profile, pending, progress, minutes, items, calls]);
+  }, [profile, pending, progress, minutes, items, calls, turnMode]);
 
   const actions = useMemo<MeActions>(
     () => ({
@@ -58,8 +68,11 @@ export function useMeData(): { inputs: MeInputs | null; actions: MeActions } {
       slowDown: () => {
         void updateProfile({ pace: 'slower' }).catch(() => undefined);
       },
+      setTurnMode: (mode) => {
+        void setTurnMode(mode).catch(() => undefined);
+      },
     }),
-    [editMemory, removeMemory, deleteAccount, updateProfile],
+    [editMemory, removeMemory, deleteAccount, updateProfile, setTurnMode],
   );
 
   return { inputs, actions };

@@ -1,4 +1,4 @@
-import type { StageRequest } from '@yapling/contracts';
+import type { StageRequest, TurnMode } from '@yapling/contracts';
 import { SETTLING_SCENES } from '@yapling/domain';
 import { findScene } from '@yapling/story';
 import { useRouter } from 'expo-router';
@@ -33,6 +33,8 @@ export interface MeActions {
   readonly requestStage?: (request: StageRequest) => void;
   /** "Nói chậm hơn": the slower pace on the profile. */
   readonly slowDown?: () => void;
+  /** The hands-free switch: this phone's turn-mode preference for the next call. */
+  readonly setTurnMode?: (turnMode: TurnMode) => void;
 }
 
 export interface MeContainerProps {
@@ -196,6 +198,7 @@ export function MeContainer({ inputs, actions }: MeContainerProps) {
         fasterOpen={sheet === 'faster'}
         onReplay={() => setPage('settling')}
         onFaster={() => setSheet('faster')}
+        onHandsFree={(on) => actions.setTurnMode?.(on ? 'hands_free' : 'hold_to_talk')}
         onTooHard={() => {
           setSheet('tooHard');
           track('too_hard_opened', { place: 'me', stage: inputs.stage });

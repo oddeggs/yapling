@@ -108,34 +108,82 @@ describe('the can-dos', () => {
       {
         track: 'life',
         name: 'LIFE',
+        count: { label: '0/6', a11y: '0 of 6 this season' },
         items: [
           {
             id: 'ask-whats-wrong',
             title: 'Ask someone what’s wrong and offer help',
             gloss: null,
             ticked: false,
+            episode: { label: 'Ep. 1', a11y: 'Comes in episode 1' },
           },
         ],
       },
       {
         track: 'work',
         name: 'WORK',
+        count: { label: '1/6', a11y: '1 of 6 this season' },
         items: [
           {
             id: 'introduce-yourself-30s',
             title: 'Introduce yourself in 30 seconds',
             gloss: null,
             ticked: true,
+            episode: null,
           },
           {
             id: 'tell-me-about-yourself',
             title: 'Answer “Tell me about yourself”',
             gloss: null,
             ticked: false,
+            episode: { label: 'Ep. 2', a11y: 'Comes in episode 2' },
           },
         ],
       },
     ]);
+  });
+
+  it('keeps every can-do ticked across the season, then the next with the episode that brings it', () => {
+    const season = [
+      'ask-whats-wrong',
+      'say-what-youre-good-at',
+      'say-no-politely',
+      'agree-disagree-kindly',
+    ].map(ticked);
+    const [life] = canDoGroups('life', season, vi);
+    expect(life?.count).toEqual({ label: '4/6', a11y: '4/6 trong mùa này' });
+    expect(life?.items.map((i) => [i.id, i.ticked, i.episode?.label ?? null])).toEqual([
+      ['ask-whats-wrong', true, null],
+      ['say-what-youre-good-at', true, null],
+      ['say-no-politely', true, null],
+      ['agree-disagree-kindly', true, null],
+      ['short-story-with-a-point', false, 'Tập 5'],
+    ]);
+  });
+
+  it('aims for the can-do after the latest ticked, not one an earlier episode left', () => {
+    const [life] = canDoGroups('life', ['ask-whats-wrong', 'say-no-politely'].map(ticked), en);
+    expect(life?.items.map((i) => i.id)).toEqual([
+      'ask-whats-wrong',
+      'say-no-politely',
+      'agree-disagree-kindly',
+    ]);
+    expect(life?.items.at(-1)?.episode?.label).toBe('Ep. 4');
+  });
+
+  it('shows the whole track once the season’s six are ticked, with nothing more to aim for', () => {
+    const all = [
+      'ask-whats-wrong',
+      'say-what-youre-good-at',
+      'say-no-politely',
+      'agree-disagree-kindly',
+      'short-story-with-a-point',
+      'speak-to-a-group',
+    ].map(ticked);
+    const [life] = canDoGroups('life', all, en);
+    expect(life?.count?.label).toBe('6/6');
+    expect(life?.items).toHaveLength(6);
+    expect(life?.items.every((i) => i.ticked && i.episode === null)).toBe(true);
   });
 
   it('shows only the track the learner chose, and counts evidence in progress as not yet ticked', () => {
@@ -218,6 +266,31 @@ describe('the rest of the sheet', () => {
     });
     expect(meView(inputs, vi).stage.label).toBe('Người mới');
   });
+
+  it('shows the hands-free switch off by default and on when the learner chose it', () => {
+    const inputs: MeInputs = {
+      displayName: 'Lan',
+      roommateName: 'Bún',
+      stage: 'newcomer',
+      track: 'life',
+      canDos: [],
+      minutes: null,
+      fluency: null,
+      memory: [],
+      quietHours: null,
+    };
+    expect(meView(inputs, vi).handsFree).toEqual({
+      title: 'Gọi rảnh tay',
+      sub: 'Cứ nói, bạn ngừng thì Bún trả lời',
+      on: false,
+    });
+    expect(meView({ ...inputs, turnMode: 'hold_to_talk' }, en).handsFree.on).toBe(false);
+    expect(meView({ ...inputs, turnMode: 'hands_free' }, en).handsFree).toEqual({
+      title: 'Hands-free calls',
+      sub: 'Just talk; Bún answers when you pause',
+      on: true,
+    });
+  });
 });
 
 describe('a Visitor’s Me sheet', () => {
@@ -251,18 +324,21 @@ describe('a Visitor’s Me sheet', () => {
       {
         track: 'life',
         name: null,
+        count: null,
         items: [
           {
             id: 'say-hello-and-your-name',
             title: 'Say hello and your name',
             gloss: 'Chào hỏi và nói tên mình',
             ticked: true,
+            episode: null,
           },
           {
             id: 'answer-yes-or-no-politely',
             title: 'Answer yes or no politely',
             gloss: 'Trả lời có hoặc không một cách lịch sự',
             ticked: false,
+            episode: null,
           },
         ],
       },

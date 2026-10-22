@@ -8,10 +8,12 @@ import type {
   QuietHours,
   Stage,
   Track,
+  TurnMode,
 } from '@yapling/contracts';
 import { MEMORY_CATEGORIES, RESIDENCY_STAGES, STAGES } from '@yapling/contracts';
 import {
   SEASON_1_CAN_DOS,
+  SEASON_1_EPISODES,
   SETTLING_CAN_DOS,
   SETTLING_SCENES,
   type CanDoTrack,
@@ -41,6 +43,8 @@ export interface MeInputs {
   readonly firstLanguage?: FirstLanguage;
   /** Settling-in chapters done (`progress.settlingChaptersDone`). */
   readonly settlingDone?: readonly number[];
+  /** How the learner takes turns in a call (this phone's preference); left out: holding the mic. */
+  readonly turnMode?: TurnMode;
 }
 
 export interface CanDoItem {
@@ -49,12 +53,16 @@ export interface CanDoItem {
   /** The meaning in the learner's language, under a Visitor's English can-do; null otherwise. */
   readonly gloss: string | null;
   readonly ticked: boolean;
+  /** Beside the next can-do: the episode that gives the chance to show it ("Tập 4"). */
+  readonly episode: { readonly label: string; readonly a11y: string } | null;
 }
 
 export interface CanDoGroup {
   readonly track: CanDoTrack;
   /** The group's header; null for the Visitor's single list. */
   readonly name: string | null;
+  /** "3/6": the season's can-dos on this track ticked so far; null for the Visitor's list. */
+  readonly count: { readonly label: string; readonly a11y: string } | null;
   readonly items: readonly CanDoItem[];
 }
 
@@ -105,6 +113,8 @@ export interface MeView {
   readonly minutes: MinutesRow;
   readonly memory: { readonly title: string; readonly count: string };
   readonly notifications: { readonly title: string; readonly value: string };
+  /** The hands-free switch: just talk, and the call answers when the learner pauses. */
+  readonly handsFree: { readonly title: string; readonly sub: string; readonly on: boolean };
   readonly help: string;
   readonly aiExplainer: string;
   readonly deleteData: string;
@@ -134,8 +144,9 @@ const tracksOf = (track: Track): readonly CanDoTrack[] =>
   track === 'both' ? ['life', 'work'] : [track];
 
 /**
- * The can-dos to show, per track the learner chose: every one they have ticked, then the next one
- * to aim for, in the season's order.
+ * The can-dos across the season, per track the learner chose: every one they have ticked, whatever
+ * the episode, then the next one to aim for with the episode that brings it, and how many of the
+ * track's six are ticked so far.
  */
 export function canDoGroups(
   track: Track,
@@ -146,18 +157,34 @@ export function canDoGroups(
   return tracksOf(track).map((t) => {
     const season = SEASON_1_CAN_DOS.filter((d) => d.track === t);
     const done = season.filter((d) => ticked.has(d.id));
-    const next = season.find((d) => !ticked.has(d.id));
+    // The next to aim for comes after the latest one ticked; an earlier one waits for a replay.
+    const latest = season.reduce((last, d, i) => (ticked.has(d.id) ? i : last), -1);
+    const next =
+      season.slice(latest + 1).find((d) => !ticked.has(d.id)) ??
+      season.find((d) => !ticked.has(d.id));
     const shown = next === undefined ? done : [...done, next];
+    const counts = { done: done.length, total: season.length };
     return {
       track: t,
       name: copy(GROUP_KEYS[t]),
-      items: shown.map((d) => ({
-        id: d.id,
-        // `@yapling/i18n`'s completeness test keeps a title for every season can-do.
-        title: copy(d.titleKey as Extract<StringKey, `cando.${string}`>),
-        gloss: null,
-        ticked: ticked.has(d.id),
-      })),
+      count: { label: copy('me.canDoCount', counts), a11y: copy('me.a11y.canDoCount', counts) },
+      items: shown.map((d) => {
+        const number = SEASON_1_EPISODES.indexOf(d.episode) + 1;
+        return {
+          id: d.id,
+          // `@yapling/i18n`'s completeness test keeps a title for every season can-do.
+          title: copy(d.titleKey as Extract<StringKey, `cando.${string}`>),
+          gloss: null,
+          ticked: ticked.has(d.id),
+          episode:
+            ticked.has(d.id) || number < 1
+              ? null
+              : {
+                  label: copy('me.canDoEpisode', { number }),
+                  a11y: copy('me.a11y.canDoEpisode', { number }),
+                },
+        };
+      }),
     };
   });
 }
@@ -181,6 +208,7 @@ export function visitorCanDos(
   return {
     track: 'life',
     name: null,
+    count: null,
     items: shown.map((d) => {
       const title = en(d.titleKey as CanDoKey);
       const meaning = local ? local(d.titleKey as CanDoKey) : null;
@@ -189,6 +217,7 @@ export function visitorCanDos(
         title,
         gloss: meaning !== null && meaning !== title ? meaning : null,
         ticked: ticked.has(d.id),
+        episode: null,
       };
     }),
   };
@@ -308,6 +337,11 @@ export function meView(inputs: MeInputs, copy: Translate): MeView {
         inputs.quietHours === null
           ? copy('me.quietOff')
           : copy('common.timeRange', { from: inputs.quietHours.start, to: inputs.quietHours.end }),
+    },
+    handsFree: {
+      title: copy('me.handsFree'),
+      sub: copy('me.handsFreeSub', name),
+      on: inputs.turnMode === 'hands_free',
     },
     help: copy('me.help'),
     aiExplainer: copy('me.aiExplainer', name),
