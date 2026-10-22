@@ -12,6 +12,7 @@ import { SpokenLine, type LineHost, type LineResult } from './line';
 import { HEDGE, messagesFor, systemFor, turnParams } from './llm';
 import type { TtsVoice } from './tts';
 import { isLearnerLine, type LearnerLine, type TranscriptLine } from './transcript';
+import { logTurn } from './turn-log';
 import { pickReaction } from './voices';
 
 /*
@@ -66,6 +67,8 @@ interface Reply {
   committed: boolean;
   control: Control | null;
   applied: boolean;
+  /** The runner event the outcome was applied as, for the turn's log line. */
+  event: string | null;
   learnerLine: number;
 }
 
@@ -134,6 +137,7 @@ export class Replies {
       committed: false,
       control: null,
       applied: false,
+      event: null,
       learnerLine: -1,
     };
     this.reply = reply;
@@ -259,6 +263,7 @@ export class Replies {
     }
     // A line that came out as narration said only a safe word: the runner's own next line follows.
     const applied = host.director.apply(plan, control.outcome, { merge: !reply.line.replaced });
+    reply.event = applied.event;
     const valid = new Set([...plan.answer.phrases, ...scene.phrases]);
     const canDo =
       control.canDo !== null &&
@@ -316,6 +321,16 @@ export class Replies {
       this.apply(reply);
     }
     this.reply = null;
+    logTurn({
+      callId: host.data.meta.callId,
+      turn: host.data.turns,
+      beatId: reply.plan.beatId,
+      outcome: (reply.control ?? result.control).outcome,
+      applied: reply.event,
+      result,
+      timings: reply.line.timings,
+      speechEndAt: reply.speechEndAt,
+    });
     if (result.text) host.pushCharacterLine(reply.plan.speaker, result.text, reply.plan.beatId);
     if (this.correction && result.text) {
       host.frames().send({

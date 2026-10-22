@@ -30,6 +30,7 @@ import { Meter } from './meter';
 import { Replies, type Active } from './reply';
 import { AI_DISCLOSURE_EVERY_MS, BREAK_REMINDER_AFTER_MS, crisisResourcesKey } from './safety';
 import type { TtsVoice } from './tts';
+import { logGuardedLine } from './turn-log';
 import type { CharacterLine } from './transcript';
 import { paceSilenceMs, stageVoice, VoicePool } from './voice-pool';
 
@@ -418,6 +419,7 @@ export class CallSession {
       clearTimeout(thinkingTimer);
       this.thinking(false);
       this.addUsage(line);
+      logGuardedLine(this.data.meta.callId, beatId ?? this.director.state.beatId, result);
       if (this.active !== active) return;
       if (result.failed !== null && result.text === '') {
         this.frames.send({
