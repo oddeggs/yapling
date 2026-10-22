@@ -89,7 +89,7 @@ describe('the Visitor’s after-call card', () => {
       );
       expect(card.box).toBeNull();
       expect(card.seed).toBeNull();
-      expect(card.title).toBe('Tạm nghỉ!');
+      expect(card.title).toBe('Tạm nghỉ');
       // Only the turns reached: Hi! passed, nothing after it was.
       expect(card.said?.lines).toEqual(['Hi!']);
     }
