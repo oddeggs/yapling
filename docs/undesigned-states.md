@@ -61,7 +61,7 @@ States built from existing components because the design does not show them.
 | Unpacking chat (before the call) | Microphone not asked yet | The hub's first chat: the day-one burrow with Pip waving, the "First chat · about a minute" pill, and the white "So Pip can hear you" card with "Allow microphone" before the system sheet. When iOS has already asked, the call opens at once |
 | Residency card | Back button | Left out: the placement call can't be taken back, and "Continue" is the only way on |
 | Residency card | Summary still being written | One frosted row with a spinner and "Pip is writing it down…" in place of the strengths; after a minute without a summary, the three general strengths show |
-| Residency card | Strengths from the call | The summary's wins are written in simple English, so they show in English under the chrome's title; the general strengths that fill the three are Pip's own line after unpacking, in the chrome's language |
+| Residency card | Strengths from the call | The summary's wins are written in the chrome's language (the English the learner said quoted as it is), under the chrome's title; the general strengths that fill the three are Pip's own line after unpacking, in the chrome's language |
 | Residency card | First aims | The can-do catalogue's titles ("Ask someone what's wrong and offer help"), not the prototype's shorter wording |
 | Notifications | Changing the quiet hours | A small "Change" chip under the quiet hours row opens two rows of choice chips: from 21:00, 22:00 or 23:00, until 07:00, 08:00 or 09:00 |
 | Notifications | Pip's phone | The art's critter has no phone pose yet: Pip is drawn excited, without the phone |

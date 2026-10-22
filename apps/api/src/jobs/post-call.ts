@@ -130,10 +130,7 @@ export async function runPostCall(env: Bindings, job: PostCallJob, now: number):
               draft.fix.targetId && /^[a-z0-9][a-z0-9_.-]*$/.test(draft.fix.targetId)
                 ? draft.fix.targetId
                 : null,
-            explanation:
-              file.firstLanguage === 'other' && !['regular', 'local', 'voice'].includes(file.stage)
-                ? null
-                : draft.fix.explanation || null,
+            explanation: draft.fix.explanation || null,
           },
     phraseEvents: applied.phraseEvents,
     canDoEvidence: applied.canDoEvidence,

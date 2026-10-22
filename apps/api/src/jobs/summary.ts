@@ -1,4 +1,6 @@
 import type Anthropic from '@anthropic-ai/sdk';
+import type { FirstLanguage } from '@yapling/contracts';
+import { chromeLocale } from '@yapling/domain';
 import { CAST, findPhrase, type Scene } from '@yapling/story';
 import { z } from 'zod';
 
@@ -11,20 +13,21 @@ import { isLearnerLine, type TranscriptFile } from '../call/transcript';
  * The post-call read of a transcript by Claude Sonnet 5.5: two wins, one fix, can-do evidence with
  * the neighbour who heard it, recurring errors, phrases used, and what Pip should remember. The
  * model answers in a JSON schema; the job checks every id against the story before using it.
+ *
+ * The wins and the fix's explanation are read under the app's own words, so they are written in
+ * the language of the learner's chrome (Vietnamese for a Vietnamese speaker, English otherwise),
+ * with the English the learner said or should say quoted as it is. From Regular they are English.
  */
 
 export const SUMMARY_MODEL = 'claude-sonnet-5-5';
 
-const LANGUAGE_NAMES: Readonly<Record<string, string>> = {
-  vi: 'Vietnamese',
-  id: 'Indonesian',
-  th: 'Thai',
-  pt: 'Portuguese',
-  es: 'Spanish',
-  ja: 'Japanese',
-  ko: 'Korean',
-  tr: 'Turkish',
-};
+const CHROME_LANGUAGE_NAMES = { vi: 'Vietnamese', en: 'English' } as const;
+
+/** The language the wins and the explanation are written in. */
+export const summaryLanguage = (firstLanguage: string, stage: string): string =>
+  ['regular', 'local', 'voice'].includes(stage)
+    ? CHROME_LANGUAGE_NAMES.en
+    : CHROME_LANGUAGE_NAMES[chromeLocale(firstLanguage as FirstLanguage)];
 
 export const Draft = z.object({
   wins: z.array(z.string().min(1).max(300)).max(2),
@@ -112,8 +115,8 @@ const SCHEMA = {
 
 const SYSTEM = `You read the transcript of a live practice call in Yapling, an app where English learners talk with AI characters in a cosy town. Write the post-call card. Be warm and specific; never mention levels, scores or failure.
 
-- wins: at most two short lines (under 15 words each), in simple English, quoting or naming something the learner actually did well.
-- fix: the one most useful correction from what the learner said: "from" is their words, "to" the better way. Prefer one of their target errors when it came up. targetId is that target's id or null. explanation is one short line in the language given (null when none is given). Null when there was nothing worth fixing.
+- wins: at most two short lines (under 15 words each), in the language given, naming something the learner actually did well; quote the English they said in double quotes, exactly, never translated.
+- fix: the one most useful correction from what the learner said: "from" is their words, "to" the better way (both in English). Prefer one of their target errors when it came up. targetId is that target's id or null. explanation is one short line in the language given, quoting any English words in double quotes. Null when there was nothing worth fixing.
 - phrasesUsed: ids from the phrase list that the learner said correctly.
 - recurringErrors: ids from the error list the learner made more than once.
 - canDoEvidence: for each can-do the learner showed, their own words as the quote, and the id of the character who heard it (from the cast list).
@@ -131,8 +134,7 @@ export async function summarise(
   scene: Scene,
   targets: readonly string[],
 ): Promise<SummaryResult> {
-  const language = LANGUAGE_NAMES[file.firstLanguage];
-  const englishFixes = ['regular', 'local', 'voice'].includes(file.stage);
+  const language = summaryLanguage(file.firstLanguage, file.stage);
   const lines = file.lines
     .map((l) => (isLearnerLine(l) ? `Learner: ${l.text}` : `${CAST[l.speaker].name}: ${l.text}`))
     .join('\n');
@@ -152,7 +154,7 @@ export async function summarise(
     `Cast: ${cast}`,
     `Phrases: ${phrases || 'none'}`,
     `Errors: ${errors}`,
-    `Explanation language: ${englishFixes ? 'English' : (language ?? 'none')}`,
+    `Language for the wins and the explanation: ${language}`,
     '',
     'Transcript:',
     lines,

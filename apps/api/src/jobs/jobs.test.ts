@@ -10,6 +10,7 @@ import { listMemory } from '../memory';
 import { readProgress } from '../progress';
 import { Providers } from '../../test/call/providers';
 import { consumeJobs } from '.';
+import { summaryLanguage } from './summary';
 
 let providers: Providers;
 beforeEach(() => {
@@ -199,6 +200,10 @@ describe('the post-call job', () => {
     // Sonnet wrote it, with its own cost on the record.
     const sonnet = providers.claudeRequests.at(-1);
     expect(sonnet?.model).toBe('claude-sonnet-5-5');
+    // A Vietnamese Newcomer reads the wins and the fix in Vietnamese, under the app's own words.
+    expect(JSON.stringify(sonnet?.messages)).toContain(
+      'Language for the wins and the explanation: Vietnamese',
+    );
 
     // A redelivered job changes nothing.
     await runJobs([{ type: 'post_call', callId, userId }]);
@@ -355,5 +360,15 @@ describe('call records', () => {
       await env.DB.prepare('SELECT id FROM calls WHERE user_id = ?').bind(userId).first(),
     ).toBeNull();
     expect(await env.BLOBS.get(key)).toBeNull();
+  });
+});
+
+describe('the summary language', () => {
+  it("follows the learner's chrome, and turns English from Regular", () => {
+    expect(summaryLanguage('vi', 'newcomer')).toBe('Vietnamese');
+    expect(summaryLanguage('vi', 'neighbour')).toBe('Vietnamese');
+    expect(summaryLanguage('id', 'newcomer')).toBe('English');
+    expect(summaryLanguage('other', 'newcomer')).toBe('English');
+    expect(summaryLanguage('vi', 'regular')).toBe('English');
   });
 });
