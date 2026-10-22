@@ -8,7 +8,13 @@ import {
   startOfLocalDay,
 } from '@yapling/domain';
 
-import { chargeResult, DEFAULT_LEDGER_TIMEZONE, domainLedgerRules, minutesSummary } from './ledger';
+import {
+  chargeResult,
+  DEFAULT_LEDGER_TIMEZONE,
+  domainLedgerRules,
+  minutesSummary,
+  unmeteredResult,
+} from './ledger';
 
 const DAY = 24 * 60 * 60_000;
 const HCM = DEFAULT_LEDGER_TIMEZONE;
@@ -17,7 +23,12 @@ describe('the ledger rules', () => {
   // 22 Oct 2026, 16:00 in Ho Chi Minh City.
   const installed = Date.UTC(2026, 9, 22, 9);
   const midnight = startOfLocalDay('2026-10-22', HCM);
-  const learner = { plan: 'free', timezone: HCM, installedOn: '2026-10-22' } as const;
+  const learner = {
+    plan: 'free',
+    timezone: HCM,
+    installedOn: '2026-10-22',
+    storyStartedOn: null,
+  } as const;
 
   it('runs the free first week and then weekly allowances from the install day', () => {
     expect(domainLedgerRules.period(learner, installed + DAY)).toEqual({
@@ -31,6 +42,24 @@ describe('the ledger rules', () => {
       plan: 'free',
       start: midnight + 7 * DAY,
       end: midnight + 14 * DAY,
+      allowanceSeconds: FREE_WEEKLY_SECONDS,
+      firstWeek: false,
+    });
+  });
+
+  it('counts the free weeks from the day the story started', () => {
+    // A Visitor settled in for five days; the letter came on the 27th.
+    const visitor = { ...learner, storyStartedOn: '2026-10-27' } as const;
+    const storyDay = startOfLocalDay('2026-10-27', HCM);
+    expect(domainLedgerRules.period(visitor, midnight + 9 * DAY)).toEqual({
+      plan: 'free',
+      start: storyDay,
+      end: storyDay + 7 * DAY,
+      allowanceSeconds: FREE_FIRST_WEEK_SECONDS,
+      firstWeek: true,
+    });
+    expect(domainLedgerRules.period(visitor, storyDay + 7 * DAY)).toMatchObject({
+      start: storyDay + 7 * DAY,
       allowanceSeconds: FREE_WEEKLY_SECONDS,
       firstWeek: false,
     });
@@ -75,6 +104,16 @@ describe('the ledger rules', () => {
       wrappingUp: true,
       exhausted: true,
     });
+  });
+
+  it('never wraps up or runs out an unmetered call', () => {
+    const period = domainLedgerRules.period(learner, installed);
+    expect(unmeteredResult(period, 4_000)).toEqual({
+      secondsLeft: 0,
+      wrappingUp: false,
+      exhausted: false,
+    });
+    expect(unmeteredResult(period, 100)).toMatchObject({ secondsLeft: 3_500 });
   });
 
   it('summarises a period by the contracts', () => {

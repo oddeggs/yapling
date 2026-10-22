@@ -4,8 +4,9 @@ import { ledgerPeriod, WRAP_UP_SECONDS } from '@yapling/domain';
 /*
  * The live-minute ledger's rules, kept apart from storage and the object. `domainLedgerRules` is
  * `@yapling/domain`'s canonical ledger (`tech-decisions.md` §3): free has a generous first week
- * from the install day, then 10 minutes a week on the same weekday; Plus has 150 minutes a
- * calendar month, fair use. Periods start at the learner's local midnight.
+ * from the day the story started (the install day until that is known), then 10 minutes a week on
+ * the same weekday; Plus has 150 minutes a calendar month, fair use. Periods start at the
+ * learner's local midnight. Settling-in calls are free (`isMeteredCall`).
  */
 
 /**
@@ -18,8 +19,10 @@ export interface LedgerState {
   readonly plan: Plan;
   /** The learner's timezone: periods follow their local days. */
   readonly timezone: TimeZone;
-  /** The install day in that timezone: the first week counts from here. */
+  /** The install day in that timezone: the free weeks count from here until the story starts. */
   readonly installedOn: LocalDate;
+  /** The day the story started, once it has: the free weeks count from here. */
+  readonly storyStartedOn: LocalDate | null;
 }
 
 /** The period an instant falls in, and what it allows. */
@@ -40,6 +43,7 @@ export const domainLedgerRules: LedgerRules = {
     const p = ledgerPeriod({
       plan: state.plan,
       installedOn: state.installedOn,
+      storyStartedOn: state.storyStartedOn,
       timezone: state.timezone,
       now,
     });
@@ -85,4 +89,12 @@ export interface ChargeResult {
 export function chargeResult(period: Period, usedSeconds: number): ChargeResult {
   const left = secondsLeft(period, usedSeconds);
   return { secondsLeft: left, wrappingUp: left <= WRAP_UP_SECONDS, exhausted: left === 0 };
+}
+
+/**
+ * What a charge of an unmetered call (Settling in) leaves: nothing was charged, and the call never
+ * wraps up or ends for minutes, whatever the period has left.
+ */
+export function unmeteredResult(period: Period, usedSeconds: number): ChargeResult {
+  return { secondsLeft: secondsLeft(period, usedSeconds), wrappingUp: false, exhausted: false };
 }

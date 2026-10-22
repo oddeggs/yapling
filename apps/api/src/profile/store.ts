@@ -16,6 +16,8 @@ interface ProfileRow {
   pace: string | null;
   stage: string;
   updated_at: number;
+  story_started_on: string | null;
+  start_path: string | null;
 }
 
 function fromRow(row: ProfileRow): Profile {
@@ -34,6 +36,8 @@ function fromRow(row: ProfileRow): Profile {
     pace: row.pace,
     stage: row.stage,
     updatedAt: row.updated_at,
+    storyStartedOn: row.story_started_on,
+    startPath: row.start_path,
   });
 }
 
@@ -57,12 +61,18 @@ function editableValues(input: ProfileInput) {
     input.timezone,
     input.notificationsAllowed ? 1 : 0,
     input.pace ?? null,
+    input.storyStartedOn ?? null,
+    input.startPath ?? null,
   ] as const;
 }
 
+/** 1 when the body carries the field (null included), 0 when it leaves it out: then it's kept. */
+const given = (value: unknown): 0 | 1 => (value === undefined ? 0 : 1);
+
 /**
  * `PUT`: the whole editable profile, at the end of onboarding or again later. A new profile starts
- * at Newcomer; an existing one keeps its stage, and its pace when the body leaves it out.
+ * at Newcomer; an existing one keeps its stage, and its pace, story start and start path when the
+ * body leaves them out (older apps never send the last two).
  */
 export async function putProfile(
   db: D1Database,
@@ -74,16 +84,25 @@ export async function putProfile(
     .prepare(
       `INSERT INTO profiles (user_id, revision, display_name, first_language, roommate_species,
          roommate_name, track, quiet_start, quiet_end, timezone, notifications_allowed, pace,
-         updated_at)
-       VALUES (?1, 1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?13)
+         story_started_on, start_path, updated_at)
+       VALUES (?1, 1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?17)
        ON CONFLICT (user_id) DO UPDATE SET
          revision = revision + 1, display_name = ?2, first_language = ?3, roommate_species = ?4,
          roommate_name = ?5, track = ?6, quiet_start = ?7, quiet_end = ?8, timezone = ?9,
-         notifications_allowed = ?10, pace = CASE WHEN ?12 = 1 THEN ?11 ELSE pace END,
-         updated_at = ?13
+         notifications_allowed = ?10, pace = CASE WHEN ?14 = 1 THEN ?11 ELSE pace END,
+         story_started_on = CASE WHEN ?15 = 1 THEN ?12 ELSE story_started_on END,
+         start_path = CASE WHEN ?16 = 1 THEN ?13 ELSE start_path END,
+         updated_at = ?17
        RETURNING *`,
     )
-    .bind(userId, ...editableValues(input), input.pace === undefined ? 0 : 1, now)
+    .bind(
+      userId,
+      ...editableValues(input),
+      given(input.pace),
+      given(input.storyStartedOn),
+      given(input.startPath),
+      now,
+    )
     .first<ProfileRow>();
   if (row === null) throw new Error('the profile write returned nothing');
   return fromRow(row);
@@ -99,11 +118,15 @@ function merged(profile: Profile, update: ProfileUpdate): ProfileInput {
     timezone: update.timezone ?? profile.timezone,
     notificationsAllowed: update.notificationsAllowed ?? profile.notificationsAllowed,
     pace: update.pace === undefined ? profile.pace : update.pace,
+    storyStartedOn:
+      update.storyStartedOn === undefined ? profile.storyStartedOn : update.storyStartedOn,
+    startPath: update.startPath === undefined ? profile.startPath : update.startPath,
   };
 }
 
 /**
- * `PATCH`: some editable fields; null when there is no profile yet. Written only over the revision
+ * `PATCH`: some editable fields, or only the story start and start path; null when there is no
+ * profile yet. Written only over the revision
  * it read, so two edits racing both land, one after the other.
  */
 export async function patchProfile(
@@ -120,7 +143,8 @@ export async function patchProfile(
         `UPDATE profiles SET
            revision = revision + 1, display_name = ?3, first_language = ?4, roommate_species = ?5,
            roommate_name = ?6, track = ?7, quiet_start = ?8, quiet_end = ?9, timezone = ?10,
-           notifications_allowed = ?11, pace = ?12, updated_at = ?13
+           notifications_allowed = ?11, pace = ?12, story_started_on = ?13, start_path = ?14,
+           updated_at = ?15
          WHERE user_id = ?1 AND revision = ?2
          RETURNING *`,
       )
