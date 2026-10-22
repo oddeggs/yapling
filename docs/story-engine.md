@@ -295,7 +295,7 @@ Prices come from the current Claude pricing (via the `claude-api` reference, 22 
 - **Web search:** $10 per 1,000 searches.
 - **ElevenLabs:** Flash $0.04 per 1,000 characters.
 
-Jev's price isn't confirmed yet. On the Haiku fallback the filter costs under $0.01 a week for the whole town.
+Jev costs $0.042 per million input tokens, output free (`spikes/jev/REPORT.md`); the filter costs well under $0.01 a week for the whole town.
 
 **Shared, a fixed cost whatever the number of learners**
 
@@ -365,7 +365,7 @@ Spread over learners, that's **$0.014 each at 1,000 learners** and $0.05 each at
 | 3 | **Holidays and festivals.** `journey-and-story.md` §2.3 says town festivals are "global and weather-based, never tied to specific cultural holidays", but the new direction asks for limited items around Tết and Mid-Autumn. Option a: keep the rule as written. Option b: Natterwick has its own festivals timed to the big moments of the learner's calendar ("Lantern Night" on the Mid-Autumn full moon, "New Year Lights" at Lunar New Year), with lights, lanterns and limited items but no traditional rites or customs shown. Real holidays otherwise appear only as the learner's own time off | **b.** It gives the limited items and the town goal a real-time pulse while the town stays its own place. Amend §2.3 to match |
 | 4 | **About 70,000 ElevenLabs credits a month** for the shared town voices and prop words, a fixed cost | **Yes.** It's what makes shared weeks sound as good as Season One |
 | 5 | **The library at go-live:** the full ~100 scenes and ~1,000 props when the engine goes live (Release 3), with a style check at 30 scenes and 300 props | **Yes, with the check at 30 / 300**, pending the art spike's verdict |
-| 6 | **Jev for the safety filter**, reusing the studio's TypeSafe account, with Haiku as the fallback | **Yes, if the Jev spike passes**; otherwise Haiku alone |
+| 6 | **Jev for the safety filter**, reusing the studio's TypeSafe account, with Haiku as the fallback | **Decided: yes.** The Jev spike passed (`spikes/jev/REPORT.md`: crisis 42/42 caught, 0/57 false; ~90 ms from US West; $0.042 per million input tokens) |
 | 7 | **Amend "Never sell care" to allow cosmetics**, with the limits in "The shop" (no loot boxes, no pay-to-learn, nothing that touches Pip's mood or affection, learning items earned only, bought items outside the album and boards). CLAUDE.md and `concept.md` §13 change to match | **Yes.** Cosmetics aren't care, they cost no AI, and the limits keep the trust the product depends on |
 | 8 | **How the shop sells:** a direct price per item (₫25k / ₫49k / ₫99k) rather than a soft currency earned by speaking, and no monthly item in Plus at first | **Direct prices, no currency, Plus unchanged.** Simplest to build and explain; test a Plus item later |
 | 9 | **Leaderboards:** a shared town goal and personal bests in Release 3, opt-in friends-only boards later, never a public ranking, never ranked on live minutes | **Yes.** Engagement without ranking shame or extra AI spend |
