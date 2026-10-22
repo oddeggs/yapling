@@ -2,6 +2,18 @@
 
 _v0.1 · 22 Oct 2026 · design for Releases 3 and 4 · founder's direction of 22 Oct 2026: hybrid, simple, a level guide and a backbone prompt, an agent that preps each learner's stories from their level, life and light real-world references, a safety filter, and ~100 scenes with ~1,000 props · inputs: `concept.md`, `journey-and-story.md`, `cast-bible.md`, `season-1-script.md`, `beginner-path.md`, `tech-decisions.md`, `packages/story` (types, validate, runner, persona), `packages/domain`, `apps/api/src/call/director.ts`, `packages/art`. Build plan: Releases 2–4 in `plans/261022-0200-yapling-releases/plan.md`._
 
+## The founder's principle
+
+> "Keep the core engine loop simple and smart, design assets for visual storytelling, AI brings in the good stuff, our job is to keep it on the right track, always be creative and relevant." (22 Oct 2026)
+
+Every piece below answers to this:
+
+- **A simple loop.** One weekly write, one check, one personal pass, played by the runner we already have. A piece that doesn't make stories better or safer doesn't go in.
+- **Assets are made for storytelling.** Each scene and prop exists to set a mood, carry a word or land a payoff. The library is a set of stages and props, not decoration.
+- **The AI brings the good stuff.** Surprise, wit, references to the real week, callbacks to what the learner said. The backbone prompt asks for it and doesn't script it.
+- **Our job is the track.** The level guide, the town canon, the safety filter and the code checks are the rails. If a check rejects a good story, we fix the check rather than flatten the story.
+- **Creative and relevant, every week.** The weekly review asks two questions first: would a learner smile, and does this touch their real life?
+
 ## The short version
 
 - **Bones by hand, flesh by the engine, voice live as today.** We write the world, the cast, the tone, the levels and every season's big episodes. An agent writes the ordinary weeks in between. Code checks every scene before a learner sees it, and the scene runner we already have plays it. Calls still use Haiku live.
