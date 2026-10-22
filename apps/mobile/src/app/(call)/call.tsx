@@ -2,11 +2,12 @@ import { findScene } from '@yapling/story';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 
-import { getSessionToken, useProfile } from '../../data';
+import { getSessionToken, useProfile, useProgress } from '../../data';
 import { apiBase, clientVersion } from '../../data/config';
 import { CallScreen } from '../../features/call/call-screen';
 import { BURROW_ROUTE, postCallHref, SAFETY_ROUTE } from '../../features/call/routes';
 import { onboardingStore } from '../../features/onboarding';
+import { phraseForSeed } from '../../features/story';
 
 /** The call socket on the same host as the API: `ws(s)://<api>/calls/socket`. */
 const socketUrl = (base: string) =>
@@ -29,6 +30,7 @@ export default function CallRoute() {
   }>();
   const router = useRouter();
   const { profile, status } = useProfile();
+  const { meetPhrase } = useProgress();
   const scene = params.scene ? findScene(params.scene) : undefined;
   // No such scene (a stale link): back to the burrow rather than a call that can't run.
   useEffect(() => {
@@ -70,6 +72,11 @@ export default function CallRoute() {
       getToken={getSessionToken}
       devFixtures={fixtures}
       onSafety={() => navigate(router.push, SAFETY_ROUTE)}
+      onSeed={(seed) => {
+        // A phrase opened in the call is met: a seed packet in the burrow.
+        const phrase = phraseForSeed(seed, scene.phrases);
+        if (phrase) void meetPhrase(phrase).catch(() => undefined);
+      }}
       onFinish={({ callId }) => {
         // A call inside a flow (the placement call) goes on to where the flow said.
         if (next) navigate(router.replace, callId ? { pathname: next, params: { callId } } : next);
