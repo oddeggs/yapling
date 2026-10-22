@@ -61,8 +61,8 @@ export const burrowVi = {
   'burrow.later.voicemailSub': 'Ở Natterwick có chuyện rồi',
   'burrow.later.pipsMinute': 'Một phút với {name}',
   'burrow.later.pipsMinuteSub': 'Một cụm từ của bạn, trong một tình huống nhỏ',
-  'burrow.later.wrap': 'Tuần {week} khép lại',
-  'burrow.later.wrapFull': 'Vòng đã đầy. Có một kỷ niệm trên tường',
+  'burrow.later.wrap': 'Xong tuần {week} rồi',
+  'burrow.later.wrapFull': 'Vòng tuần đã đầy. Có một kỷ vật trên tường',
   'burrow.later.wrapSub': 'Xem tuần này đã lớn thêm những gì',
   'burrow.later.kicker.waiting': 'ĐANG ĐỢI BẠN',
   'burrow.later.waitingSub': 'Khi nào bạn sẵn sàng',
@@ -72,6 +72,7 @@ export const burrowVi = {
   'burrow.later.quietSub': 'Mọi thứ vẫn đúng chỗ bạn để',
   'burrow.later.action.postcard': 'Đọc thư',
   'burrow.later.action.pipsMinute': 'Bắt đầu · khoảng một phút',
+  'burrow.later.action.wrap': 'Xem tuần vừa qua',
   'burrow.chip.pipsMinute': 'Một phút với {name}',
   'burrow.chip.a11y.pipsMinute':
     'Một phút với {name}: một cụm từ của bạn. Không tính phút gọi trực tiếp.',

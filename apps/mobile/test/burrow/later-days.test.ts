@@ -86,6 +86,7 @@ describe('one thing a day, after the first week', () => {
     expect(card(16).target).toBe('/listen/s1-e3-story');
     expect(card(19).target).toBe('/listen/s1-e3-voicemail');
     expect(card(20).target).toBe(`/(call)/${DUE}`);
+    expect(card(21).target).toBe('/(home)/wrap?week=3');
     expect(render(vi, card(15).title)).toBe('Tập 3 đã sẵn sàng');
     expect(render(vi, card(17).title)).toBe('Cuộc gọi tuần thật với Dex');
     expect(render(vi, card(20).title)).toBe('Một phút với Pip');

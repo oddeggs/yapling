@@ -24,7 +24,7 @@ States built from existing components because the design does not show them.
 | Burrow home | Weeks 2 on, day by day | J1 shows only the week view. Each day's card is its thing from the week's plan (episode, story and post, real-week call, practice, voicemail, Pip's minute, the wrap), with the scene's English title under a Vietnamese line; on a day with nothing new it is the oldest thing waiting, Pip's minute, the shelf or a quiet day, never yesterday's card. |
 | Burrow home | Pip's minute chip | No design. A glass pill like the ring chip, Pip's face and "Một phút với Pip", on the top bar's right; no count or badge, gone when no phrase is due. |
 | Burrow home | Waiting card | From the R7 Week board's "đang đợi bạn" kicker, on the news card: the oldest call or scene still open, with no date or count. |
-| Burrow home | The week's wrap | The wrap screen isn't built yet: day 7's card names the week and leads to the week view. |
+| Burrow home | The week's wrap | Day 7's card names the week and opens the wrap; its button offers the oldest call still waiting first, then the wrap. |
 | Week | Still waiting row | From the R7 Week board: a fourth call row under the three, "Tuần N · đang đợi bạn", the oldest open call of an earlier week; the page scrolls when it doesn't fit. |
 | Week | Replay rings (weeks 7 on) | The three rows tagged "Chơi lại", each replaying a season scene in turn; the phrases are the learner's own with the most growing to do. |
 | Week | Done rows from week 2 | Tappable to play again (it doesn't move the ring), read "Đã xong. Chạm để chơi lại". |

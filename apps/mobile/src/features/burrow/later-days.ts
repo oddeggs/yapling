@@ -8,7 +8,7 @@ import { copy, text, type Copy } from './copy';
 import type { DayPlan } from './day-plan';
 import type { DeltaCard, FaceSpec, PrimaryAction } from './model';
 import { drawable, episodeOfScene, guestOf, isReplay, ringSceneFor, senderOf } from './ring-scenes';
-import { BURROW_ROUTES, callRoute, listenRoute } from './routes';
+import { BURROW_ROUTES, callRoute, listenRoute, wrapRoute } from './routes';
 
 /*
  * The days after the first week, from the story week's plan. Each day of a week has its thing:
@@ -181,7 +181,8 @@ const sceneTitle = (sceneId: Id | null): Copy =>
 
 /** Where a thing starts. */
 function targetOf(thing: Thing): Href {
-  if (thing.kind === 'wrap' || thing.sceneId === null) return BURROW_ROUTES.week;
+  if (thing.kind === 'wrap') return wrapRoute(thing.week);
+  if (thing.sceneId === null) return BURROW_ROUTES.week;
   return RING_KINDS.includes(thing.kind) || thing.kind === 'pips_minute'
     ? callRoute(thing.sceneId)
     : listenRoute(thing.sceneId);
@@ -206,7 +207,7 @@ function actionOf(thing: Thing, input: LaterDayInput): PrimaryAction {
     case 'pips_minute':
       return { label: copy('burrow.later.action.pipsMinute'), target };
     case 'wrap':
-      return { label: copy('burrow.action.week'), target };
+      return { label: copy('burrow.later.action.wrap'), target };
   }
 }
 
@@ -357,7 +358,9 @@ export function laterDayPlan(input: LaterDayInput): LaterDayPlan {
   const delta = candidates.find((c) => c.id !== input.previousCard) ?? candidates[0];
   if (delta === undefined) throw new Error('the burrow has no card for today');
 
-  const todo = dayThing !== null && !dayThing.done ? dayThing : (first ?? pips);
+  // Day 7's wrap has nothing to finish: it is the button once nothing else is waiting.
+  const wrap = dayThing?.kind === 'wrap' ? dayThing : null;
+  const todo = dayThing !== null && !dayThing.done ? dayThing : (first ?? pips ?? wrap);
   const action: PrimaryAction =
     todo === null || todo === undefined
       ? { label: copy('burrow.action.week'), target: BURROW_ROUTES.week }

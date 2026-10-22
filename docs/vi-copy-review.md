@@ -428,8 +428,9 @@ Knocks for weeks 2–7 (`season-1-script.md`, "Knocks"), Pip's minute, the week'
 | Burrow · Pip's minute card, line | One of your phrases, in a small moment | Một cụm từ của bạn, trong một tình huống nhỏ | New | Length |
 | Burrow · Pip's minute chip, VoiceOver | A minute with {name}: one of your phrases. No live minutes used. | Một phút với {name}: một cụm từ của bạn. Không tính phút gọi trực tiếp. | New |  |
 | Burrow · Pip's minute button | Start · about a minute | Bắt đầu · khoảng một phút | New |  |
-| Burrow · wrap card | Week {week}, wrapped up | Tuần {week} khép lại | New | Day 7; leads to the week until the wrap screen exists |
-| Burrow · wrap card, ring full | The ring is full. A keepsake is on the wall | Vòng đã đầy. Có một kỷ niệm trên tường | New | "kỷ niệm" as `burrow.delta.keepsake` (the draft above says "kỷ vật") |
+| Burrow · wrap card | Week {week}, wrapped up | Xong tuần {week} rồi | New | Day 7; as the wrap's own title |
+| Burrow · wrap button | See the week's wrap | Xem tuần vừa qua | New | Day 7, once nothing else is waiting |
+| Burrow · wrap card, ring full | The ring is full. A keepsake is on the wall | Vòng tuần đã đầy. Có một kỷ vật trên tường | Term | "kỷ vật" as the wrap screen; week 1's `burrow.delta.keepsake` says "kỷ niệm" |
 | Burrow · wrap card, ring not full | See what grew this week | Xem tuần này đã lớn thêm những gì | New | No count of calls not taken |
 | Burrow · waiting card, kicker | WAITING FOR YOU | ĐANG ĐỢI BẠN | Term | From the R7 Week board; the draft above says "Vẫn đang chờ bạn" |
 | Burrow · waiting card, line | Whenever you're ready | Khi nào bạn sẵn sàng | New |  |

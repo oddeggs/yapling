@@ -87,6 +87,7 @@ export const burrowEn = {
   'burrow.later.quietSub': 'Everything is right where you left it',
   'burrow.later.action.postcard': 'Read the post',
   'burrow.later.action.pipsMinute': 'Start · about a minute',
+  'burrow.later.action.wrap': 'See the week’s wrap',
   /** The small chip for Pip's minute on a day it isn't the card or the button. */
   'burrow.chip.pipsMinute': 'A minute with {name}',
   'burrow.chip.a11y.pipsMinute': 'A minute with {name}: one of your phrases. No live minutes used.',
