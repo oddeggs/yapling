@@ -82,7 +82,7 @@ describe("Pip's minute", () => {
     const scene = build('whats-wrong', 'can-i-help', { opening: 2 });
     expect(scene.id).toBe('s1-pm.2.whats-wrong.can-i-help');
     expect(scene.kind).toBe('daily');
-    expect(callKindOf(scene.kind)).toBeNull();
+    expect(callKindOf(scene.kind)).toBe('daily');
     expect(scene.phrases).toEqual(['whats-wrong', 'can-i-help']);
     expect(scene.beats.map((b) => (b.kind === 'rec' ? b.line : b.id))).toEqual([
       's1-pm-open-2',

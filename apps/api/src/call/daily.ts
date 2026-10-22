@@ -1,6 +1,14 @@
 import type { Id } from '@yapling/contracts';
 import type { TurnPass } from '@yapling/domain';
-import { isCardTurn, type Answer, type Beat, type Scene } from '@yapling/story';
+import {
+  findLine,
+  isCardTurn,
+  parsePipsMinuteSceneId,
+  pipsMinuteScene,
+  type Answer,
+  type Beat,
+  type Scene,
+} from '@yapling/story';
 
 /*
  * Pip's minute as a call (`daily`): about a minute in the burrow, two card turns built from
@@ -14,7 +22,8 @@ import { isCardTurn, type Answer, type Beat, type Scene } from '@yapling/story';
  * a fix turn that was played marks the phrase as reused by Pip, whether or not it was fixed.
  *
  * The app chooses the phrases (the learning model's `pipsMinuteFor`) and builds the scene from
- * the story; the scene id names that choice, so the call rebuilds the same scene from it.
+ * the story (`pipsMinuteSceneFor`); the scene id names that choice (`s1-pm.2.whats-wrong.deal`),
+ * so the call rebuilds the same scene from it, and a resumed call does again.
  */
 
 /** A Pip's-minute scene, rebuilt from its id, and the phrases it plays. */
@@ -32,8 +41,16 @@ export interface PipsMinuteScenes {
   find(sceneId: Id): PipsMinuteScene | null;
 }
 
-/** The story's Pip's-minute scenes: none until the story builds them. */
-const storyPipsMinutes: PipsMinuteScenes = { find: () => null };
+/** The story's Pip's-minute scenes, rebuilt from their ids. */
+export const storyPipsMinutes: PipsMinuteScenes = {
+  find: (sceneId) => {
+    const spec = parsePipsMinuteSceneId(sceneId);
+    const scene = spec === null ? null : pipsMinuteScene(spec);
+    // The builder drops a reuse with no wrong line; the scene's id and phrases say what it plays.
+    if (spec === null || scene === null || scene.id !== sceneId) return null;
+    return { scene, due: spec.due, reuse: scene.phrases.find((p) => p !== spec.due) ?? null };
+  },
+};
 
 /** The one place the call reads Pip's-minute scenes from; tests put their own here. */
 export const pipsMinuteScenes: { current: PipsMinuteScenes } = { current: storyPipsMinutes };
@@ -42,6 +59,11 @@ export const pipsMinuteScenes: { current: PipsMinuteScenes } = { current: storyP
 export interface PipsMinuteTurn {
   readonly beatId: Id;
   readonly phrase: Id;
+  /**
+   * The fix turn: what Pip said wrong just before it, so Jev's card question can tell the right
+   * words from Pip's mistake read back (which never passes).
+   */
+  readonly mistake?: string;
 }
 
 /** What a daily call keeps about its minute, so its end can write the phrase uses. */
@@ -63,7 +85,9 @@ export function pipsMinuteMeta(minute: PipsMinuteScene): PipsMinuteMeta | null {
   const { scene, due, reuse } = minute;
   if (scene.beats.some((b) => b.kind === 'gen')) return null;
   const turns: PipsMinuteTurn[] = [];
+  let lastLine: Id | null = null;
   for (const beat of scene.beats) {
+    if (beat.kind === 'rec') lastLine = beat.line;
     const answer = answerOf(beat);
     if (answer === null) continue;
     if (!isCardTurn(answer)) return null;
@@ -72,7 +96,9 @@ export function pipsMinuteMeta(minute: PipsMinuteScene): PipsMinuteMeta | null {
       : reuse !== null && answer.phrases.includes(reuse)
         ? reuse
         : null;
-    if (phrase !== null) turns.push({ beatId: beat.id, phrase });
+    if (phrase === null) continue;
+    const mistake = phrase === reuse && lastLine !== null ? findLine(lastLine)?.caption : undefined;
+    turns.push({ beatId: beat.id, phrase, ...(mistake ? { mistake } : {}) });
   }
   if (!turns.some((t) => t.phrase === due)) return null;
   if (reuse !== null && !turns.some((t) => t.phrase === reuse)) return null;

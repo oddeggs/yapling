@@ -1,6 +1,6 @@
 import type { PhraseProgress, Progress } from '@yapling/contracts';
 import { localDateOf } from '@yapling/domain';
-import { getScene, type Beat, type Scene } from '@yapling/story';
+import { findLine, getScene, type Beat, type Scene } from '@yapling/story';
 import { env } from 'cloudflare:workers';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -17,6 +17,7 @@ import {
   pipsMinuteMeta,
   pipsMinuteOutcome,
   pipsMinuteScenes,
+  storyPipsMinutes,
   type PipsMinuteScene,
   type PipsMinuteScenes,
 } from './daily';
@@ -129,7 +130,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   providers.uninstall();
-  pipsMinuteScenes.current = { find: () => null };
+  pipsMinuteScenes.current = storyPipsMinutes;
   vi.restoreAllMocks();
 });
 
@@ -222,8 +223,10 @@ describe("Pip's minute", () => {
       expect(await phone.next('error')).toMatchObject({ code: 'unknown_scene', fatal: true });
     }
     // And a minute only runs as a daily call: it never stands in for a metered one.
-    const phone = await Phone.call(token, { kind: 'practice', sceneId: MINUTE_ID });
-    expect(await phone.next('error')).toMatchObject({ code: 'unknown_scene' });
+    for (const sceneId of [MINUTE_ID, 's1-pm.1.whats-wrong.can-i-help']) {
+      const phone = await Phone.call(token, { kind: 'practice', sceneId });
+      expect(await phone.next('error')).toMatchObject({ code: 'unknown_scene' });
+    }
   }, 30_000);
 
   it('is written by the post-call job, with no model, when the call could not write it', async () => {
@@ -304,7 +307,12 @@ describe("Pip's minute's outcome", () => {
       reuse: 'nice-to-meet-you',
       turns: [
         { beatId: 'tea-for-you', phrase: 'yes-please' },
-        { beatId: 'say-nice', phrase: 'nice-to-meet-you' },
+        // The fix turn keeps the line before it, which Jev is shown as the other card.
+        {
+          beatId: 'say-nice',
+          phrase: 'nice-to-meet-you',
+          mistake: findLine('s1-set1-05')?.caption,
+        },
       ],
     });
     // A minute without a turn for its phrase isn't one.

@@ -393,10 +393,9 @@ export const callKindOf = (kind: SceneKind): CallKind | null => {
     case 'story':
     case 'postcard':
       return null;
-    // Pip's minute runs in the call frame as the `daily` call kind once `CallKind` has it; until
-    // then the call takes its kind from the hello.
+    // Pip's minute: in the call frame, with no live minutes and no ring slot.
     case 'daily':
-      return null;
+      return 'daily';
   }
 };
 
