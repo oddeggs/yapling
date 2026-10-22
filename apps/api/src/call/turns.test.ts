@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { newGuest } from '../auth/testing/client';
 import { pcm, Phone } from '../../test/call/phone';
 import { control, Providers } from '../../test/call/providers';
+import { quietTiming } from './session';
 import { sttTiming } from './stt';
 
 /*
@@ -13,6 +14,7 @@ import { sttTiming } from './stt';
 
 let providers: Providers;
 const timing = { ...sttTiming };
+const quiet = { ...quietTiming };
 beforeEach(() => {
   providers = new Providers().install();
   providers.reply = (request) => {
@@ -28,6 +30,7 @@ beforeEach(() => {
 afterEach(() => {
   providers.uninstall();
   Object.assign(sttTiming, timing);
+  Object.assign(quietTiming, quiet);
   vi.restoreAllMocks();
 });
 
@@ -120,7 +123,8 @@ describe('hold-to-talk', () => {
     await listening(phone);
     const from = phone.frames.length;
     providers.speech.push("What's wrong? Can I help you with the sign?");
-    // Longer than the stage's 4 s hint pause, then a breath while the button is still held.
+    // Longer than the long quiet, then a breath while the button is still held.
+    quietTiming.offerMs = 4_000;
     await stream(phone, 4_500, true);
     await stream(phone, 1_200, false);
     await stream(phone, 500, true);
@@ -135,7 +139,33 @@ describe('hold-to-talk', () => {
     phone.close();
   }, 30_000);
 
-  it('counts the quiet for a hint from when the learner stopped, not from when they started', async () => {
+  it('hears no turn in a press with no real words: the beat stays, nothing is answered', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token, { turnMode: 'hold_to_talk' });
+    await listening(phone);
+    await sleep(200);
+    const requests = providers.claudeRequests.length;
+    for (const said of ['', 'um', 'Ờ…']) {
+      const from = phone.frames.length;
+      providers.speech.push(said);
+      await stream(phone, 2_500, said !== '');
+      phone.send({ type: 'end_turn' });
+      await phone.next('not_heard', () => true, { from });
+      await sleep(300);
+      const after = phone.frames.slice(from);
+      expect(after.filter((f) => f.type === 'heard' || f.type === 'say_start')).toEqual([]);
+      expect(after.filter((f) => f.type === 'beat')).toEqual([]);
+    }
+    expect(providers.claudeRequests.length).toBe(requests);
+    // The next press with words is the turn, on the same beat, with only its own words.
+    const { heard } = await press(phone, "What's wrong?");
+    expect(heard).toMatchObject({ turn: 1, text: "What's wrong?" });
+    expect(heard.words.map((w) => w.word)).toEqual(["What's", 'wrong?']);
+    phone.close();
+  }, 30_000);
+
+  it('counts the quiet for the hint offer from when the learner stopped, not from when they started', async () => {
+    quietTiming.offerMs = 3_000;
     const { token } = await newGuest();
     const phone = await Phone.call(token, { turnMode: 'hold_to_talk' });
     await listening(phone);
@@ -145,25 +175,11 @@ describe('hold-to-talk', () => {
     await stream(phone, 4_500, true);
     phone.send({ type: 'end_turn' });
     const released = Date.now();
+    await phone.next('not_heard', () => true, { from });
     const hint = await phone.next('hint', () => true, { from, timeoutMs: 10_000 });
     expect(hint.phrase.length).toBeGreaterThan(0);
-    // The stage's 4 s pause, counted from the release (a little early for the tick).
-    expect(Date.now() - released).toBeGreaterThan(3_500);
-    phone.close();
-  }, 30_000);
-
-  it('gives the hint sooner to a learner who asked for a slower pace', async () => {
-    const { token } = await newGuest();
-    const phone = await Phone.call(token, { turnMode: 'hold_to_talk', pace: 'slower' });
-    await listening(phone);
-    const from = phone.frames.length;
-    const opened = Date.now();
-    const hint = await phone.next('hint', () => true, { from, timeoutMs: 10_000 });
-    expect(hint.phrase.length).toBeGreaterThan(0);
-    // Three quarters of the stage's 4 s pause.
-    const waited = Date.now() - opened;
-    expect(waited).toBeGreaterThan(2_500);
-    expect(waited).toBeLessThan(3_700);
+    // The long quiet, counted from the release (a little early for the tick).
+    expect(Date.now() - released).toBeGreaterThan(2_500);
     phone.close();
   }, 30_000);
 

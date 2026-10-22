@@ -1,5 +1,6 @@
 import { runDurableObjectAlarm, runInDurableObject } from 'cloudflare:test';
 import { env } from 'cloudflare:workers';
+import { LONG_QUIET_MS } from '@yapling/domain';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { newGuest } from '../auth/testing/client';
@@ -248,25 +249,36 @@ describe('an Episode 1 call', () => {
     expect(await phone.next('ended')).toMatchObject({ reason: 'hangup' });
   }, 30_000);
 
-  it('slides the phrase hint up after the stage pause of silence', async () => {
+  it('offers the hint once after the long quiet, then waits for as long as the learner likes', async () => {
     script();
     const { token } = await newGuest();
     const phone = await Phone.call(token);
     await beat(phone, 'ask-whats-wrong');
     await sleep(200);
-    phone.silence(3_000);
-    await sleep(200);
+    const from = phone.frames.length;
+    phone.silence(LONG_QUIET_MS - 2_000);
+    await sleep(300);
     expect(phone.of('hint')).toHaveLength(0);
-    phone.silence(1_500);
-    expect(await phone.next('hint')).toMatchObject({
+    phone.silence(2_500);
+    expect(await phone.next('hint', () => true, { from })).toMatchObject({
       type: 'hint',
       phrase: "What's wrong?",
       gloss: 'Có chuyện gì vậy?',
     });
+    // A minute more of quiet: no second hint, no nudge, no fallback, the beat stays.
+    phone.silence(60_000);
+    await sleep(1_000);
+    const after = phone.frames.slice(from);
+    expect(after.filter((f) => f.type === 'hint')).toHaveLength(1);
+    expect(after.filter((f) => f.type === 'say_start' || f.type === 'play_rec')).toEqual([]);
+    expect(after.filter((f) => f.type === 'beat')).toEqual([]);
+    expect(providers.directions().filter((d) => d.includes('again'))).toEqual([]);
+    // The learner answers in their own time and the scene goes on.
+    await turn(phone, "What's wrong?");
     phone.close();
-  }, 20_000);
+  }, 30_000);
 
-  it('waits while the learner holds, then hints', async () => {
+  it('waits while the learner holds, then offers the hint', async () => {
     script();
     const { token } = await newGuest();
     const phone = await Phone.call(token);
@@ -274,12 +286,12 @@ describe('an Episode 1 call', () => {
     await sleep(200);
     phone.send({ type: 'hold', seconds: 30 });
     await sleep(50);
-    phone.silence(6_000);
+    phone.silence(LONG_QUIET_MS + 2_000);
     await sleep(400);
     expect(phone.of('hint')).toHaveLength(0);
     phone.send({ type: 'hold', seconds: 0 });
     await sleep(50);
-    phone.silence(4_500);
+    phone.silence(LONG_QUIET_MS + 500);
     await phone.next('hint');
     phone.close();
   }, 20_000);

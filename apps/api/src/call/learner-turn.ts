@@ -2,6 +2,7 @@ import type { EndTurnFrame, HeardWord, HoldFrame, SpeechFrame, TurnMode } from '
 
 import { Endpointer, holdFor, joinSegments, ENDPOINTING } from './endpointing';
 import type { SpokenLine } from './line';
+import { hasRealWords } from './real-words';
 import { SttSession } from './stt';
 
 /*
@@ -9,8 +10,10 @@ import { SttSession } from './stt';
  * into one turn, the answer started speculatively and released after enough silence (or at once
  * on a hold-to-talk release), dropped when the learner speaks again before it reaches the phone.
  * "Chờ chút" pauses all of it until the learner speaks or the hold runs out. While the scene is
- * listening and nobody speaks, the silence is measured for the stage's hint pause, from when the
- * learner last stopped speaking; a pause inside a held hold-to-talk turn is never silence.
+ * listening and nobody speaks, the quiet is measured, from when the learner last stopped speaking,
+ * for the long-quiet hint offer (silence never ends or counts as a turn); a pause inside a held
+ * hold-to-talk turn is never quiet. A turn with no real words (noise, "um") is not a turn: it is
+ * dropped unanswered, and a hold-to-talk release hears `notHeard`.
  *
  * When the phone sends its own speech start and end (`speech` frames, from its echo-cancelled
  * mic), they decide when speech starts and ends; the energy gate stays as the fallback for a
@@ -38,8 +41,10 @@ export interface TurnHost {
   partial(text: string): void;
   /** A turn to answer; returns its line, or null when it can't be answered now. */
   answer(text: string, speechEndAt: number, gated: boolean): SpokenLine | null;
-  /** The learner was quiet for `ms` while the scene waited. */
+  /** The learner was quiet for `ms` while the scene waited (the hint may be offered). */
   silence(ms: number): void;
+  /** A hold-to-talk release with no real words: not a turn, nothing answered. */
+  notHeard(): void;
   /** The thinking head tilt: the reply was released before any audio was ready. */
   released(line: SpokenLine): void;
   /** Learner talk, for metering. */
@@ -64,6 +69,8 @@ export class LearnerTurn {
   private phone: PhoneVad | null = null;
   /** Hold-to-talk: when the last mic chunk of a press arrived; 0 once the turn was released. */
   private heldAt = 0;
+  /** Words before this point on the mic clock belong to a dropped turn. */
+  private wordsFrom = 0;
 
   constructor(
     key: string,
@@ -73,7 +80,7 @@ export class LearnerTurn {
     this.stt = new SttSession(key, {
       partial: (text) => this.host.partial(text),
       committed: (text) => this.onFinal(text),
-      words: (words) => this.words.push(...words),
+      words: (words) => this.words.push(...words.filter((w) => w.startMs >= this.wordsFrom)),
       failed: (detail) => this.host.sttFailed(detail),
     });
     this.tick = setInterval(() => this.check(), TICK_MS);
@@ -91,7 +98,7 @@ export class LearnerTurn {
     return this.speechEndAt;
   }
 
-  /** Waits for the learner, counting silence toward `silenceMs`. */
+  /** Waits for the learner, telling the host once the quiet reaches `silenceMs`. */
   openWindow(silenceMs: number): void {
     this.windowOpen = true;
     this.silenceMs = silenceMs;
@@ -227,8 +234,20 @@ export class LearnerTurn {
       this.dropReply();
     }
     if (text) this.pending = joinSegments(this.pending, text);
-    if (!this.pending) return;
+    if (!hasRealWords(this.pending)) {
+      // Noise or "um" only: not a turn. The beat stays and nothing is answered.
+      this.forgetTurn();
+      if (this.mode === 'hold_to_talk') this.host.notHeard();
+      return;
+    }
     this.reply = this.host.answer(this.pending, this.speechEndAt, this.mode === 'hands_free');
+  }
+
+  /** Drops what was heard of a turn that wasn't one, its late word timings included. */
+  private forgetTurn(): void {
+    this.pending = '';
+    this.words = [];
+    this.wordsFrom = this.endpointer.audioMs;
   }
 
   private dropReply(): void {
