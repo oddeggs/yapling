@@ -32,7 +32,6 @@ import { SpeechBubble, type BubbleTone } from '../../ui/speech-bubble';
 import { useToast } from '../../ui/toast';
 import { useCallAnalytics } from '../../observability';
 import { useLipsyncClock, type Lipsync } from '../../voice/lipsync';
-import { MIN_HOLD_MS } from '../../voice/turns';
 import { BubbleCaption } from './bubble-caption';
 import { CritterFace } from './call-art';
 import {
@@ -59,6 +58,7 @@ import { bandOf } from './letter-place';
 import { saidLines, transcriptOf } from './line-history';
 import { CallTimer, MirrorCard, RoundsStrip } from './pass-it-on';
 import { FRAME_WIDTH, layoutFor } from './scene-layout';
+import { TurnModeSwitch, useMicBar } from './turn-mode-switch';
 import { useCall } from './use-call';
 import { callView, lineGlossOffered } from './view-model';
 
@@ -90,6 +90,7 @@ export interface CallScreenProps {
   readonly pace?: Pace | null;
   /** The roommate the learner picked. */
   readonly roommate: { readonly name: string; readonly species: PipSpecies };
+  /** How the call starts (the learner's preference); the call's switch changes it. */
   readonly turnMode: TurnMode;
   /** `wss://<api>/api/calls/socket`. */
   readonly url: string;
@@ -271,7 +272,9 @@ export function CallScreen({
 
   const learnerTurn =
     view.mic === 'yourTurn' || (view.mic === 'listening' && state.phase === 'your_turn');
-  useDevMic(engine, devFixtures, learnerTurn && !state.onHold, turnMode === 'hold_to_talk', log);
+  const holdToTalk = state.turnMode === 'hold_to_talk';
+  useDevMic(engine, devFixtures, learnerTurn && !state.onHold, holdToTalk, log);
+  const micBar = useMicBar(engine, state, view);
 
   if (view.mode === 'error_net' || view.mode === 'error_mic') {
     return (
@@ -557,6 +560,13 @@ export function CallScreen({
             art={<CritterFace character="pip" species={roommate.species} size={30} />}
           />
         ) : null}
+        {view.mode === 'live' && !view.sceneDone ? (
+          <TurnModeSwitch
+            engine={engine}
+            state={state}
+            art={<CritterFace character="pip" species={roommate.species} size={30} />}
+          />
+        ) : null}
         {view.paused ? (
           <View style={{ alignItems: 'center' }} accessibilityLiveRegion="polite">
             <PhonePill
@@ -571,9 +581,7 @@ export function CallScreen({
           exitLabel={t(layout.exit)}
           onHoldToggle={() => engine?.holdOn(state.onHold ? 0 : LIMITS.holdSecondsMax)}
           onExit={exit}
-          onTalkStart={() => engine?.pressTalk()}
-          onTalkEnd={() => engine?.releaseTalk()}
-          {...(turnMode === 'hold_to_talk' ? { holdMs: MIN_HOLD_MS } : {})}
+          {...micBar}
         />
       </View>
     </View>

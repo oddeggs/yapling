@@ -25,12 +25,17 @@ function setup(mode: 'hands_free' | 'hold_to_talk', minHoldMs = 0) {
 }
 
 describe('turn-taking', () => {
-  it('streams every frame hands-free and never ends a turn itself', () => {
+  it('sends nothing hands-free until the learner speaks, and a press or release does nothing', () => {
     const { t, sent, endTurns } = setup('hands_free');
     [1, 2, 3].forEach((v) => t.frame(frame(v), false, null));
     t.press();
     t.release(false);
-    expect(sent).toEqual([[1], [2], [3]]);
+    expect(sent).toEqual([]);
+    expect(t.streaming).toBe(false);
+    t.frame(frame(4), true, { type: 'speech_start', atMs: 0 });
+    // The hands-free pre-roll (400 ms) holds every frame so far.
+    expect(sent.map((c) => c[0])).toEqual([1, 2, 3, 4]);
+    expect(t.streaming).toBe(true);
     expect(endTurns()).toBe(0);
   });
 
@@ -143,7 +148,7 @@ describe('the shortest turn', () => {
     const h = setup('hands_free', MIN_HOLD_MS);
     h.t.press();
     expect(h.t.release(false)).toBeNull();
-    h.t.frame(frame(1), true, null);
+    h.t.frame(frame(1), true, { type: 'speech_start', atMs: 0 });
     expect(h.sent).toEqual([[1]]);
   });
 });

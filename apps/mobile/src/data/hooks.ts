@@ -11,6 +11,7 @@ import type {
   ProfileUpdate,
   Progress,
   Session,
+  TurnMode,
 } from '@yapling/contracts';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -18,6 +19,7 @@ import type { ConnectivityState } from './connectivity';
 import type { OpenState, SeenMoment, SeenState } from './moments';
 import type { ProgressSave } from './progress';
 import { useData } from './provider';
+import type { TurnModeState } from './turn-mode';
 import type { Resource, ResourceState } from './resource';
 import type { SessionState } from './session';
 import { useStore } from './store';
@@ -150,6 +152,19 @@ export function useSeen(): SeenState & {
   const state = useStore(data.seen.store);
   const markSeen = useCallback((...moments: SeenMoment[]) => data.seen.mark(moments), [data]);
   return useMemo(() => ({ ...state, markSeen }), [state, markSeen]);
+}
+
+/**
+ * How the learner takes turns in calls (holding the mic, or hands-free), and the switch: for the
+ * call and for a settings row. Kept on this phone.
+ */
+export function useTurnMode(): TurnModeState & {
+  readonly setTurnMode: (turnMode: TurnMode) => Promise<void>;
+} {
+  const data = useData();
+  const state = useStore(data.turnMode.store);
+  const setTurnMode = useCallback((m: TurnMode) => data.turnMode.set(m), [data]);
+  return useMemo(() => ({ ...state, setTurnMode }), [state, setTurnMode]);
 }
 
 /** When the app was opened before this open (for the welcome back and day 8's knock). */
