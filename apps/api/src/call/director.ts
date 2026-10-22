@@ -188,11 +188,16 @@ const phraseList = (ids: readonly Id[]) =>
     .map((p) => `"${p.en}" (${p.id})`)
     .join(', ');
 
-/** What a generated line must do. */
-export function genDirection(effect: GenEffect): string {
+/**
+ * What a generated line must do. Folded into an answer (`withExample: false`), the line's written
+ * example is left out: it may hold the very answer the learner is meant to give.
+ */
+export function genDirection(effect: GenEffect, withExample = true): string {
   const lines = [effect.intent];
   for (const c of effect.constraints) lines.push(c);
-  if (effect.example) lines.push(`In this spirit, never word for word: "${effect.example}"`);
+  if (effect.example && withExample) {
+    lines.push(`In this spirit, never word for word: "${effect.example}"`);
+  }
   if (effect.resolution) lines.push(`Whatever is said, this stays true: ${effect.resolution}`);
   if (effect.elicits.length > 0) {
     lines.push(`Give the learner a chance to say: ${phraseList(effect.elicits)}.`);
@@ -209,27 +214,38 @@ const BRANCH_TEXT: Readonly<Record<Exclude<Branch['kind'], 'merge'>, string>> = 
 };
 
 const branchText = (branch: Branch) =>
-  branch.kind === 'merge' ? `Then: ${genDirection(branch.effect)}` : BRANCH_TEXT[branch.kind];
+  branch.kind === 'merge'
+    ? `Then: ${genDirection(branch.effect, false)}`
+    : BRANCH_TEXT[branch.kind];
 
 /** The turns that don't do what we hoped: the beat stays (a hint, a nudge) or falls back. */
 type NotYet = 'unclear' | 'question' | 'off_topic';
 
 const NOT_YET_WHEN: Readonly<Record<NotYet, string>> = {
   unclear:
-    'They don\'t know or don\'t understand, ask you to repeat, answer in another language, only say "um", or their words make no sense as an answer',
-  question: 'They ask you something, or talk near the topic, instead of doing what we hoped',
-  off_topic: 'They talk about something unrelated to the scene',
+    'they don\'t know or don\'t understand, ask you to repeat, answer in another language, only say "um", or their words make no sense as an answer',
+  question: 'they ask you something, or talk near the topic, instead of doing what we hoped',
+  off_topic: 'they talk about something unrelated to the scene',
 };
 
 /** The beat stays: help them try again, never answering for them. */
 const STAY: Readonly<Record<NotYet, string>> = {
   unclear:
-    'Ask your question again in fewer, simpler words, in one short sentence (if you asked nothing, gently invite what we hoped for). Do not explain it or answer it: the learner says it.',
+    'Say it is okay and invite them to try in their own words, asking your question again in fewer, simpler words, and stop there (like "That\'s okay! What do you think, in your words?"). Do not explain it or answer it: you don\'t know the answer, they do.',
   question:
-    'Two short sentences: answer it in a few words, then ask your question again, simply (if you asked nothing, bring the moment back so they can try, without saying their words for them).',
+    'Two short sentences: answer it in a few words, then end with your question again, simply.',
   off_topic:
-    'Two short sentences: acknowledge it kindly, in character, then ask your question again, simply (if you asked nothing, bring the moment back so they can try, without saying their words for them).',
+    'Two short sentences: acknowledge it kindly, in character, then end with your question again, simply.',
 };
+
+/** The beat stays, but the learner was prompted by someone else: no question of your own. */
+const STAY_UNASKED: Readonly<Record<NotYet, string>> = {
+  unclear: 'Say kindly, in a few words, that it is okay, with no question.',
+  question: 'Answer it in a few words, with no question back.',
+  off_topic: 'Acknowledge it kindly, in character, in a few words, with no question.',
+};
+const UNASKED_TAIL =
+  ' Let the moment show, so they can try again; never say their words for them or tell them what to ask.';
 
 /** Someone else speaks next: react, with no question. */
 const MOVE_ON: Readonly<Record<NotYet, string>> = {
@@ -246,12 +262,12 @@ const LAST_TRY_LEAD: Readonly<Record<NotYet, string>> = {
   off_topic: 'Acknowledge it in a few words, kindly. ',
 };
 
-const notYetText = (branch: Branch, kind: NotYet): string => {
+const notYetText = (branch: Branch, kind: NotYet, asked: boolean): string => {
   if (branch.kind === 'react') return MOVE_ON[kind];
   if (branch.kind === 'merge' && branch.effect.purpose === 'fallback') {
-    return `${LAST_TRY_LEAD[kind]}This was their last try, so then: ${genDirection(branch.effect)}`;
+    return `${LAST_TRY_LEAD[kind]}This was their last try, so then: ${genDirection(branch.effect, false)}`;
   }
-  return STAY[kind];
+  return asked ? STAY[kind] : `${STAY_UNASKED[kind]}${UNASKED_TAIL}`;
 };
 
 /** What every direction ends with: the reply is the character's own words and nothing else. */
@@ -284,15 +300,23 @@ export function replyDirection(
   afterReaction: string | null,
   /** The line the learner is answering, when it was this speaker's. */
   lastLine: string | null = null,
+  /** What the learner said (as heard so far). */
+  said: string | null = null,
 ): string {
   const lines = [`Your reply as ${nameOf(plan.speaker)} to what the learner just said.`];
-  if (lastLine) lines.push(`Your last line to them, with your question: "${lastLine}"`);
+  lines.push(
+    lastLine
+      ? `Your last line to them, with your question: "${lastLine}"`
+      : 'You have asked them nothing yet: the line before theirs was not yours.',
+  );
   if (afterReaction) {
     lines.push(
       `You have already said "${afterReaction}" out loud: carry on from it, without another Ooh, Oh, Mm or Hmm.`,
     );
   }
-  lines.push(`What we hoped they would do: ${plan.answer.expects}`);
+  lines.push(
+    `What we hoped they would do: ${plan.answer.expects} Only the learner may give that answer: never say it for them, in any case.`,
+  );
   if (plan.correcting) {
     lines.push(
       'This is their second try after you asked their mistake back. Whatever they say now, accept it warmly and move on.',
@@ -300,24 +324,29 @@ export function replyDirection(
       'In the control line, outcome is "fine" if they fixed it, "target_error" if not.',
     );
   } else {
+    lines.push('The cases, and what your line does in each (two short sentences at most):');
     lines.push(
-      'First decide which case fits their turn and write it in square brackets, like [fine]. Then write the line for that case only, in two short sentences at most:',
-    );
-    lines.push(
-      `[fine] Their turn actually does what we hoped, in any words; small mistakes are fine. A hello, a question back or another topic is not fine; when in doubt, it is not fine. → ${branchText(plan.fine)}`,
+      `[fine] → Build on what they actually said, never on an answer of your own. ${branchText(plan.fine)}`,
     );
     if (plan.error !== null && targets.length > 0) {
-      const list = targets.map((t) => `${t.id}: ${t.description}`).join('; ');
-      lines.push(
-        `[target_error] It shows one of their target errors (${list}). → ${branchText(plan.error)}`,
-      );
+      lines.push(`[target_error] → ${branchText(plan.error)}`);
     }
     for (const kind of ['unclear', 'question', 'off_topic'] as const) {
-      lines.push(`[${kind}] ${NOT_YET_WHEN[kind]}. → ${notYetText(plan.offTopic, kind)}`);
+      lines.push(`[${kind}] → ${notYetText(plan.offTopic, kind, lastLine !== null)}`);
     }
-    lines.push('The outcome in the control line is the case you wrote in brackets.');
   }
   lines.push(rules(plan.speaker, stage, plan.answer.phrases, plan.answer.canDo));
+  if (!plan.correcting) {
+    // The decision comes last, nearest the reply, and the reply starts with it.
+    const heard = said ? `They said: "${said.replace(/["\n]/g, ' ').slice(0, 300)}". ` : '';
+    const errors =
+      plan.error !== null && targets.length > 0
+        ? ` [target_error] if it shows one of their target errors (${targets.map((t) => `${t.id}: ${t.description}`).join('; ')}).`
+        : '';
+    lines.push(
+      `${heard}Pick the case: [fine] only if their turn does what we hoped (any words, small mistakes are fine); a hello, a question back or another topic is not fine unless that is what we hoped, garbled words are not fine, and when in doubt it is not fine.${errors} [unclear] if ${NOT_YET_WHEN.unclear}. [question] if ${NOT_YET_WHEN.question}. [off_topic] if ${NOT_YET_WHEN.off_topic}. Write the case in square brackets first, then the line; the control line's outcome is that case. Unless the case is [fine], your line never contains the answer we hoped for: they still have to say it.`,
+    );
+  }
   return lines.join('\n');
 }
 

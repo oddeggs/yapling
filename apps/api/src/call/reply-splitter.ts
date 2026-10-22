@@ -9,7 +9,8 @@ import { NarrationGuard, type GuardAction } from './narration-guard';
  * - Everything from the control marker (`§`), or from a `{` (spoken lines never hold braces), is
  *   control and is never returned as speech.
  * - The spoken line is trimmed: two sentences at most (an exclamation of one or two words, like
- *   "Hi!", doesn't count), and about `maxWords` words (cut at the next clause end once over, hard
+ *   "Hi!", doesn't count; a third that is a question is kept, so a reply ends on its question),
+ *   and about `maxWords` words (cut at the next clause end once over, hard
  *   cut a few words later).
  * - A leading case tag (`[unclear]`), which the model writes first to commit to how the
  *   learner's turn went, is kept for the call and never spoken.
@@ -51,6 +52,8 @@ export class ReplySplitter {
   private sentences = 0;
   /** Words in the sentence being spoken. */
   private sentenceWords = 0;
+  /** Past two sentences: a last sentence held, spoken only if it is a question. */
+  private trailing: string[] | null = null;
   private done = false;
   private first = true;
   private capitalizeNext = false;
@@ -164,6 +167,16 @@ export class ReplySplitter {
         return;
       }
     }
+    if (this.trailing !== null) {
+      this.trailing.push(word);
+      const ended = SENTENCE_END.test(word);
+      if (ended && /\?["'”’)]*$/.test(word)) out.push(...this.trailing);
+      if (ended || this.words + this.trailing.length > this.options.maxWords + OVERRUN_WORDS) {
+        this.trailing = null;
+        this.done = true;
+      }
+      return;
+    }
     let spoken = word;
     if (this.capitalizeNext || (this.spoken.length + out.length === 0 && this.guardAction)) {
       spoken = spoken.charAt(0).toUpperCase() + spoken.slice(1);
@@ -178,7 +191,9 @@ export class ReplySplitter {
     }
     const overLimit = this.words >= this.options.maxWords;
     if (this.sentences >= (this.options.maxSentences ?? 2)) {
-      this.done = true;
+      // A reply may still end on its question: a last sentence is held to see.
+      if (/\?["'”’)]*$/.test(spoken) || this.words >= this.options.maxWords) this.done = true;
+      else this.trailing = [];
     } else if (overLimit && CLAUSE_END.test(spoken)) {
       spoken = spoken.replace(/[,;:]$/, '.');
       this.done = true;

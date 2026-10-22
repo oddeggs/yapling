@@ -79,4 +79,25 @@ describe('the director', () => {
       /\[off_topic\][^\n]*with no question/,
     );
   });
+
+  it('never hands the listener the answer the learner is meant to give', () => {
+    const director = new Director(E1, listening(E1.id, 'teach-rent'), 'newcomer');
+    const plan = director.plan();
+    if (!plan) throw new Error('no plan');
+    const text = replyDirection(plan, 'newcomer', [], null, 'What does rent mean?', 'Not sure.');
+    expect(text).toContain('Only the learner may give that answer');
+    // The next line's written example holds the answer ("the money you pay"): left out.
+    expect(text).not.toMatch(/money you pay/);
+    expect(text).toContain('They said: "Not sure."');
+    expect(text).toMatch(/\[unclear\][^\n]*Do not explain it or answer it/);
+  });
+
+  it('asks no question of its own when someone else prompted the learner', () => {
+    const director = new Director(E1, listening(E1.id, 'ask-whats-wrong'), 'newcomer');
+    const plan = director.plan();
+    if (!plan) throw new Error('no plan');
+    const text = replyDirection(plan, 'newcomer', [], null, null, 'Can I have a coffee?');
+    expect(text).toContain('You have asked them nothing yet');
+    expect(text).toMatch(/\[off_topic\][^\n]*with no question/);
+  });
 });

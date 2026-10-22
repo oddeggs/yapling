@@ -106,6 +106,7 @@ export class Replies {
       data.learner.targets,
       reaction?.text ?? null,
       promptLine(data.transcript, plan.speaker),
+      text,
     );
     const pending = this.learnerLine(text, [], plan.beatId);
     const system = systemFor(plan.speaker, host.scene, data.learner);

@@ -60,7 +60,7 @@ export function systemFor(
     { type: 'text', text: prompt.cached, cache_control: { type: 'ephemeral' } },
     {
       type: 'text',
-      text: `${prompt.dynamic}${pace}\n\nThe learner's words come from speech recognition and may hold small recognition mistakes; guess the meaning kindly. Lines from other characters in the scene appear as [Name] in the conversation.`,
+      text: `${prompt.dynamic}${pace}\n\nThe learner's words come from speech recognition and may hold small recognition mistakes: read past a wrong word when the meaning is plain, but when you can't tell what they meant, treat it as unclear and ask again; never fill in what they might have said. Lines from other characters in the scene appear as [Name] in the conversation.`,
       cache_control: { type: 'ephemeral' },
     },
   ];
