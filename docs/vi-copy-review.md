@@ -2,7 +2,7 @@
 
 Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here.
 
-466 strings in 15 catalogues; 77 flagged.
+476 strings in 15 catalogues; 87 flagged.
 
 ## How to review
 
@@ -191,6 +191,16 @@ Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with 
 | `call.callee.harbourLaneOffice` | Harbour Lane Office | Văn phòng Harbour Lane |  |  |
 | `call.tapForMeaning` | Tap for Vietnamese | Chạm để xem nghĩa |  |  |
 | `call.whatDoesThatMean` | What does that mean? | What does that mean? | English on purpose? | English on purpose: the question the learner learns to ask |
+| `call.translating` | Translating… | Đang dịch… | New | New: the gloss row while a tapped line is translated |
+| `call.translateFailed` | Couldn't translate it. Tap to try again | Chưa dịch được. Chạm để thử lại nhé | New | New: a tapped line whose translation didn't come |
+| `call.noTranslation` | No translation for this line | Câu này chưa có bản dịch | New | New: a tapped line with nothing to give |
+| `call.page` | {index}/{count} | {index}/{count} | New | New: the line's place in its turn, on the bubble |
+| `call.a11y.page` | Line {index} of {count} | Câu {index} trên {count} | New | New: VoiceOver for that place |
+| `call.a11y.earlierLine` | Earlier line | Câu trước | New | New: VoiceOver for the back arrow on the bubble |
+| `call.a11y.laterLine` | Next line | Câu sau | New | New: VoiceOver for the on arrow on the bubble |
+| `call.history.title` | What was said | Những gì đã nói | New | New: the title of the call's line list (shown in capitals) |
+| `call.history.a11y.open` | What was said. Read the call again | Những gì đã nói. Xem lại cuộc gọi | New | New: VoiceOver for the button that opens it |
+| `call.history.replay` | Play again | Nghe lại | New | New: VoiceOver for a listed line's play button |
 | `call.whisper` | {name} whispers | {name} thì thầm |  |  |
 | `call.showTranslation` | Show translation | Xem bản dịch |  |  |
 | `call.hideTranslation` | Hide translation | Ẩn bản dịch |  |  |

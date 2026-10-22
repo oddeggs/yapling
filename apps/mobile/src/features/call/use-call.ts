@@ -198,6 +198,12 @@ export function useCall(setup: CallSetup) {
     if (talking) dispatch({ type: 'speech_started' });
   }, [talking, dispatch]);
 
+  // Every line shown goes in the call's history, so a missed one can be read again.
+  const caption = state.caption;
+  useEffect(() => {
+    if (caption) dispatch({ type: 'line_shown', caption });
+  }, [caption, dispatch]);
+
   // "Chờ chút" stays on until the learner speaks or lets it go.
   useEffect(() => {
     if (!engine || !state.onHold) return undefined;

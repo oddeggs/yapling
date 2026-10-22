@@ -21,6 +21,24 @@ export const callEn = {
    * learns to ask.
    */
   'call.whatDoesThatMean': 'What does that mean?',
+  /** A tapped line while its translation is on its way. */
+  'call.translating': 'Translating…',
+  /** A tapped line whose translation didn't come; a tap asks again. */
+  'call.translateFailed': "Couldn't translate it. Tap to try again",
+  /** A tapped line with no translation to give. */
+  'call.noTranslation': 'No translation for this line',
+  /** Where a line sits among its turn's lines, in the bubble ("1/3"). */
+  'call.page': '{index}/{count}',
+  /** Read for that place. */
+  'call.a11y.page': 'Line {index} of {count}',
+  /** Read for the arrows that page through a turn's lines. */
+  'call.a11y.earlierLine': 'Earlier line',
+  'call.a11y.laterLine': 'Next line',
+  /** The sheet listing the call's lines so far, and its button. */
+  'call.history.title': 'What was said',
+  'call.history.a11y.open': 'What was said. Read the call again',
+  /** Read for a listed line's play button. */
+  'call.history.replay': 'Play again',
   'call.whisper': '{name} whispers',
   'call.showTranslation': 'Show translation',
   'call.hideTranslation': 'Hide translation',
