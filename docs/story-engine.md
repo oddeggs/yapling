@@ -4,7 +4,7 @@ _v0.1 · 22 Oct 2026 · design for Releases 3 and 4 · founder's direction of 22
 
 ## The founder's principle
 
-> "Keep the core engine loop simple and smart, design assets for visual storytelling, AI brings in the good stuff, our job is to keep it on the right track, always be creative and relevant." (22 Oct 2026)
+> "Keep the core engine loop simple and smart, design assets for visual storytelling, AI brings in the good stuff, our job is to keep it on the right track, always be creative and relevant." And: "scalable, we want our product to grow all over the world." (22 Oct 2026)
 
 Every piece below answers to this:
 
@@ -13,6 +13,7 @@ Every piece below answers to this:
 - **The AI brings the good stuff.** Surprise, wit, references to the real week, callbacks to what the learner said. The backbone prompt asks for it and doesn't script it.
 - **Our job is the track.** The level guide, the town canon, the safety filter and the code checks are the rails. If a check rejects a good story, we fix the check rather than flatten the story.
 - **Creative and relevant, every week.** The weekly review asks two questions first: would a learner smile, and does this touch their real life?
+- **Built to grow worldwide.** Every piece works for a new country without new story work (see "Growing worldwide").
 
 ## The short version
 
@@ -296,6 +297,23 @@ The shop sells cosmetic IAP: clothes, hats and jewellery for your critter, burro
 - **Art cost.** Each wearable must fit each of Pip's three starter species (red panda, capybara, cat), so one wearable means three drawings to check. With fit points on each species' generator (head, neck, body, paws) and a golden test per item, species and mood, 60 wearables come to about 180 golden states, plus the moods. The cast is never dressed up, because their looks are part of who they are. Decor and decor packs reuse the prop library and need no species fit. Wearables are a lane in the library pipeline (Release 4).
 
 ---
+
+## Growing worldwide
+
+Vietnam first, then Indonesia, Thailand, Brazil, Mexico, the Philippines, Turkey, Japan and Korea (`concept.md`). The engine is built so a new market is a translation and a voice cast, not a new story.
+
+| Layer | Shared by every market | Per market |
+|---|---|---|
+| The town week | One English week per stage, written and checked once, for everyone | — |
+| Story, cast, library | Natterwick, its cast and accents, ~100 scenes, ~1,000 props, its own weather-and-season festivals (no country's holidays, so nothing to localise) | — |
+| Help in the learner's language | The gloss pipeline (written once in English, translated per language, reviewed by a native speaker) | Glosses, task cards, app copy (`@yapling/i18n`, one catalogue per language) |
+| The Home Neighbour | The role: a neighbour from home who also froze at first, speaking the learner's language at the start of a new kind of task (Linh for Vietnam) | One neighbour per market, cast and voiced in that language; the beginner chapters reuse the same script with that neighbour's lines |
+| Relevance | The backbone prompt and the safety categories | The market's calendar, seasons and light news (searched per market, Natterwick-ised the same way), the safety filter's questions run on that language, the personal pass in the learner's language |
+| Money | The shop rules and the cost cap ($0.15 per learner per month) | Store price tiers per country; the free-minute allowance per market |
+
+**What keeps it cheap as it grows.** The expensive parts (the town week, the stage passes, the shared voices) are written once for the whole world, so they cost less per learner as learners grow. The parts that grow with each learner (the personal pass, personal lines, Jev) cost cents. A new market adds one-off costs: a Home Neighbour voice, a gloss review, a store listing.
+
+**The check before a market launches:** the beginner chapters and week 1 with that market's neighbour and glosses; a native review of the glosses and the neighbour's lines; the safety filter's eval set in that language (Jev's Vietnamese was "handled, not equally well", so each language gets its own eval before launch).
 
 ## Cost per learner per month
 
