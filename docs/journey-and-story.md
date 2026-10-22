@@ -1,6 +1,6 @@
 # Yapling — learning journey & storyline
 
-*v0.2 · 2026-10-22 · adds the Visitor stage and Settling in (Release 1.1, `beginner-path.md`) · companion to `concept.md`. Evidence references point to `~/oddeggs/reports/Critter English app research.md`.*
+*v0.3 · 2026-10-23 · weeks 2–7 of Season One as written for Release 1.2 (`every-week-loop.md`, `season-1-script.md`): the Visitor rows of Episodes 2–6, the real-week and practice calls, Bunting Week · v0.2 added the Visitor stage and Settling in · companion to `concept.md`. Evidence references point to `~/oddeggs/reports/Critter English app research.md`.*
 
 The journey and the story are one system. **The curriculum decides what you need to say; the story decides why you're saying it.** The learner never sees a lesson list. They see a town that needs them.
 
@@ -75,7 +75,7 @@ Each week seeds 3–5 lexical chunks ("Could we push that to Friday?"). Every ch
 | Visitor | Pip, Linh (your own accent, and she speaks your language at first), Bea and Mei in one short scene each | Settling in: Bea at the bus stop (Chapter 4), Mei at her café before the letter (Chapter 5) |
 | Newcomer | Pip, Linh (your own accent), Mei (Singapore) | Linh is already next door on day 1 |
 | Neighbour | Sol (Philippines), Bea (Britain), Nell (Australia) | Move-in events, one every ~2 weeks |
-| Regular | Arjun (India), Dex (USA) | Dex runs Bring your homework interviews; Arjun moves in |
+| Regular | Arjun (India), Dex (USA) | Dex runs Bring your homework interviews; Arjun moves in. In Season One Dex already runs the real-week calls of weeks 3–5, at the learner's stage speed, and Arjun stays off-mic |
 | Local | Hank (fast USA, full speed), visiting voices from the Season 2 boat | Hank appears in S1 E3 at Newcomer speed and returns faster as you grow; boat arrivals in Season 2 |
 | Voice | Everyone, mixed, natural speed, overlapping | Town meetings and radio call-ins |
 
@@ -138,11 +138,12 @@ Available everywhere, designed to fade, never a crutch:
 |---|---|---|---|---|
 | 0 (Visitors) | Settling in: six short chapters with Linh, 3–6 days | Hello, yes/no, again/slowly, numbers, ordering, about me | (calls are unmetered; the first week's allowance starts with the story) | Bus Stop, Café; Bea and Mei met; the letter |
 | 1 | S1 E1 The Letter | Introduce yourself / your job | First Pass it on (90/60/45s) | Linh, Café, Bus Stop |
-| 2 | S1 E2 Help Wanted | Bring your homework: your CV or a job post | Interview chunks | Office, Interview Room, Sol |
-| 3 | S1 E3 Cheaper Beans | A real request you need to make | Polite pushback | Hank appears; Dex for real-week interviews |
-| 4 | S1 E4 The Plan | Speaking up in a meeting | Teach the yapling | Lantern Inn, Nell |
-| 5 | S1 E5 The Petition | Your 60-second self-pitch | 4/3/2 pitch build-up (on Bus 45) | Bea; Market Lane, Arjun |
-| 6 | S1 E6 The Town Meeting | "How did it go?" on a real event | Accent warm-up | First time capsule; Season 2 tease |
+| 2 | S1 E2 Help Wanted | Tell me about yourself, for real, with Pip (Bring your homework, a CV or a job post, from Release 2) | Teach the yapling: *deadline*, *team*, *shift* | Office, Interview Room, Sol |
+| 3 | S1 E3 Cheaper Beans | A real "no" you need to say, with Dex | Pass it on at the café: why it matters | Hank appears; Dex for real-week calls |
+| 4 | S1 E4 The Plan | One point for a real meeting, with Dex | Nell's listening checkpoint, then Teach the yapling: *petition*, *signature* | Lantern Inn, Nell |
+| 5 | S1 E5 The Petition | Your 60-second self-pitch, with Dex | Pass it on on Bus 45: the petition story | Bea; then and now (week 1 against week 5) |
+| 6 | S1 E6 The Town Meeting | "How did it go?" on a real event, with Pip | Accent warm-up: answer six neighbours' postcards | Season 2 tease (the boat) |
+| 7 | Bunting Week (festival) | Any, new each week | Any, replayed | Season keepsake, then and now, the boat; Season 2 and the town weeks come later (Releases 3 and 4), with replays and Pip's minute until then |
 | 7 | S2 E1 The Mystery Boat | Describe your weekend | Final-consonant pack | Bea moves in |
 | 8 | S2 E2 Lost Luggage | A complaint you need to make | Teach the yapling | Lantern Inn, Nell |
 | 9 | S2 E3 Speculation Station | Talk about plans and possibilities | Pass it on | Listening checkpoint |
@@ -197,7 +198,7 @@ Hollowbrook expands to support the festival. Pip is promoted to team lead and pa
 **Season 4 — The Radio Tower** *(Local focus: opinions, storytelling, debate, public speaking)*
 Ade arrives to restart the town's radio station. Each episode is a show segment: a call-in debate (Is the bus too early?), a storytelling night, a live interview with the festival captain, a crisis broadcast when a storm cuts the power. Finale: you and Pip co-host the anniversary show; past neighbours call in with messages for you.
 
-**Between seasons:** a one-week **festival interlude** (no new story pressure): the time capsule, a season keepsake, the town decorated with things you said. Seasonal events (rainy-season café specials, end-of-year lights) are global and weather-based, never tied to specific cultural holidays.
+**Between seasons:** a one-week **festival interlude** (no new story pressure): the time capsule, a season keepsake, the town decorated with things you said. Season One's is **Bunting Week**: after a town vote the little flags stay up in the square for a week, each carrying something someone said, and this year they carry the learner's phrases. Seasonal events (rainy-season café specials, end-of-year lights) are global and weather-based, never tied to specific cultural holidays.
 
 ### 2.4 How one scene scales by stage
 
@@ -212,7 +213,7 @@ Ade arrives to restart the town's radio station. Each episode is a show segment:
 | Local | Fast, interrupts | Hold your ground, handle interruptions, summarise the deal |
 | Voice | Fast, emotional, changes his mind | De-escalate, reframe, close the deal and keep the relationship |
 
-Every episode script gets a Visitor row like this one: the turn becomes one or two cards, the character models the answer first, and lines stay under 8 words. Week 1's Visitor turns are written (`season-1-script.md`, Settling in); Episodes 2–6 get theirs in Release 1.2 ([`every-week-loop.md`](every-week-loop.md) §2.2), and until then a Visitor plays their Newcomer turns with the Visitor's speech settings.
+Every episode script gets a Visitor row like this one: the turn becomes one or two cards, the character models the answer first, and lines stay under 8 words. Week 1's Visitor turns are in `season-1-script.md` (Settling in); Episodes 2–6 have theirs in the same script ("Weeks 2–7", Release 1.2, [`every-week-loop.md`](every-week-loop.md) §2.2), with the real-week and practice calls and Pip's minute. Until they are built, a Visitor plays the Newcomer turns with the Visitor's speech settings.
 
 ### 2.5 What the AI generates vs. what's written
 
@@ -223,7 +224,7 @@ Every episode script gets a Visitor row like this one: the turn becomes one or t
 | Safety rails and tone rules | Real-week scenes from your homework and calendar |
 | Can-do checklist and stage gates | Recaps, voicemails, "how did it go?" follow-ups |
 
-Key story beats are **pre-written and pre-recorded** where possible (cheaper, consistent, better acting). Free conversation inside a beat is generated.
+Key story beats are **pre-written and pre-recorded** where possible (cheaper, consistent, better acting). Free conversation inside a beat is generated. In Season One, Pip's stories, the postcards, the voicemails and the opening and closing line of each real-week and practice call are written and recorded too (`season-1-script.md`); the engine generates them per learner from Release 3.
 
 ### 2.6 After Season One: the story engine
 
