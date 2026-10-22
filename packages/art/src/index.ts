@@ -52,6 +52,26 @@ export {
   idleTransformAt,
   skiaTransformAt,
 } from './motion';
+export { ACT_NAMES, ACTS, ARM_REST, type Act, type ActName, type Channel } from './rig/acts';
+export { drawRig, REST_POSE } from './rig/draw';
+export {
+  bell,
+  flow,
+  hop,
+  keepVolume,
+  loop,
+  seeded,
+  seg,
+  track,
+  wave,
+  type FlowKey,
+  type FlowKeys,
+  type Key,
+  type Keys,
+} from './rig/engine';
+export { critterRig, type CritterRig, type RigEye } from './rig/parts';
+export type { RigEyePictures, RigPictures } from './rig/pictures';
+export { IDLE_PERIOD, poseAt, seedOf, type Pose } from './rig/pose';
 export {
   loadPrototype,
   type Generator,
