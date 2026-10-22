@@ -32,8 +32,9 @@ import { againAsk, cardWords, matchesCard, withName } from './words';
  *    On Pip's minute's fix turn Jev is shown Pip's mistake as the other card, and only the right
  *    words pass: reading Pip's version back never does.
  *
- * A card that is itself "Sorry? Again, please." or "Slowly, please." (a lifesaver to read back)
- * is answered by its words first, like a turn that teaches it.
+ * A card that is itself "Sorry? Again, please." or "Slowly, please." (a lifesaver to read back, as
+ * on Pip's minute's fix turn) is answered by its words first, like a turn that teaches it; a turn
+ * that replays to pass (`replay_and_pass`) still replays.
  *
  * The decision is held like a reply (a `hold` line): in hands-free it waits for the end of the
  * learner's pause, and a learner who goes on is answered again with the joined words.
@@ -173,8 +174,10 @@ export class CardTurns {
     const { data } = this.host;
     const words = () => ({ by: 'words' as const, jev: null, cardMatch: null, judgeMs: null });
     const ask = againAsk(text);
-    const teaches =
-      answer.onReplay === 'pass' || answer.choices.some((c) => againAsk(c.en) !== null);
+    // A card that is the lifesaver itself, on a turn that doesn't replay to pass, is the answer.
+    const lifesaver =
+      answer.onReplay === 'replay' && answer.choices.some((c) => againAsk(c.en) !== null);
+    const teaches = answer.onReplay === 'pass' || lifesaver;
     if (ask !== null && !teaches) return { event: null, again: ask, ...words() };
     // A name is no English: "Mình là Lan." is Vietnamese, though it holds the card's name.
     const kind = speechKind(text);
