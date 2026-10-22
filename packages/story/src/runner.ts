@@ -1,9 +1,34 @@
 import type { CharacterId, Id, Stage } from '@yapling/contracts';
+import type { TurnPass } from '@yapling/domain';
 
 import { getScene } from './catalogue';
 import { getLine } from './lines';
+import {
+  answerOf,
+  fromStart,
+  hintEffect,
+  isCardTurn,
+  playEffect,
+  sayLine,
+  sayShared,
+  sayText,
+  visitorRun,
+} from './runner-effects';
+import {
+  GENEROUS_AFTER,
+  MAX_ASKS,
+  type GenPurpose,
+  type RunnerState,
+  type SceneEffect,
+  type SceneEvent,
+  type Step,
+} from './runner-types';
+import { S1_SHARED_LINES } from './season-1/shared-lines';
 import { STAGE_SPEECH, stageInRange, stageValue } from './stage';
-import type { Answer, Beat, GlossedText, Meaning, Scene, UiSpec } from './types';
+import type { Answer, Beat, Scene } from './types';
+
+export * from './runner-types';
+export { isCardTurn } from './runner-effects';
 
 /*
  * The scene runner: a pure reducer from learner outcomes and playback events to the next beat
@@ -19,93 +44,13 @@ import type { Answer, Beat, GlossedText, Meaning, Scene, UiSpec } from './types'
  * didn't get there (unclear answers, hinted errors: the fallback line); asking for hints or
  * meanings more than `MAX_ASKS` times counts as such a try. Beats only ever point forward (checked
  * by `validateScene`), so every scene ends for a learner who keeps talking.
+ *
+ * Card turns (say-this cards with words to match, the Visitor's turns): the cards are up from the
+ * start; the beat's word passes; an English try without it brings "Again?" and the line once more,
+ * and the second such try passes anyway (the generous pass); Vietnamese or noise is never a try.
+ * At every stage, "again" and "slowly" replay the last line and never count as a try, and a
+ * skipped turn moves on with a kind "That's okay!".
  */
-
-export type SceneEvent =
-  | { readonly type: 'fine' }
-  | { readonly type: 'target_error' }
-  /** The learner spoke, but not what the beat hoped (unclear, a question back, off topic). */
-  | { readonly type: 'unclear' }
-  /** A long quiet while the beat waits: never a try. */
-  | { readonly type: 'silent' }
-  | { readonly type: 'meaning_request' }
-  | { readonly type: 'hint_request' }
-  | { readonly type: 'timer_end' }
-  | { readonly type: 'rec_played' }
-  | { readonly type: 'gen_done' };
-
-export type SceneEventType = SceneEvent['type'];
-
-/**
- * - `playing`: a written line is playing; waits for `rec_played`.
- * - `speaking`: a generated line is being spoken; waits for `gen_done`.
- * - `listening`: waits for the learner's outcome.
- * - `fallback`: the guaranteed move-on line is being spoken; waits for `gen_done`.
- */
-export type Phase = 'playing' | 'speaking' | 'listening' | 'fallback' | 'ended';
-
-export interface RunnerState {
-  readonly version: 1;
-  readonly sceneId: Id;
-  readonly stage: Stage;
-  /** Null once the scene has ended. */
-  readonly beatId: Id | null;
-  readonly phase: Phase;
-  /** Unclear tries and hinted errors on this beat. */
-  readonly tries: number;
-  /** Hint and meaning requests on this beat. */
-  readonly asks: number;
-  /** A correction prompt is waiting for the learner's second try. */
-  readonly correcting: boolean;
-  /** The written line spoken last, for "What does that mean?"; null after a generated line. */
-  readonly lastLine: Id | null;
-  /**
-   * The phrase hint has shown on this beat (offered after a long quiet, asked for, or after a
-   * try), so a long quiet offers nothing more. Optional: states saved before it read as false.
-   */
-  readonly hinted?: boolean;
-}
-
-export type GenPurpose = 'line' | 'nudge' | 'fallback' | 'meaning';
-
-export type SceneEffect =
-  | { readonly type: 'beat_changed'; readonly beatId: Id; readonly progress: number }
-  | {
-      readonly type: 'play_rec';
-      readonly beatId: Id;
-      readonly lineId: Id;
-      readonly character: CharacterId;
-      readonly caption: string;
-      /** False while the line waits for its recording: speak `text` with the character's TTS. */
-      readonly recorded: boolean;
-      readonly text: string;
-    }
-  | {
-      readonly type: 'gen';
-      readonly beatId: Id;
-      readonly purpose: GenPurpose;
-      readonly speaker: CharacterId;
-      readonly intent: string;
-      readonly constraints: readonly string[];
-      readonly example: string | null;
-      readonly resolution: string | null;
-      /** Target phrases to give the learner a chance to use. */
-      readonly elicits: readonly Id[];
-      /** For `meaning`: the line asked about (null: the last generated line) and a written answer. */
-      readonly meaning: { readonly lineId: Id | null; readonly known: Meaning | null } | null;
-    }
-  | { readonly type: 'hint'; readonly beatId: Id; readonly hint: GlossedText }
-  | { readonly type: 'correction'; readonly beatId: Id; readonly speaker: CharacterId }
-  | { readonly type: 'show_ui'; readonly beatId: Id; readonly ui: UiSpec }
-  | { readonly type: 'scene_end'; readonly reason: 'complete' };
-
-export interface Step {
-  readonly state: RunnerState;
-  readonly effects: readonly SceneEffect[];
-}
-
-/** Hint and meaning requests on one beat before the next one counts as a try. */
-export const MAX_ASKS = 3;
 
 /** Directions are instructions to the character, never text about the learner it could echo. */
 const NUDGE_INTENT =
@@ -121,9 +66,6 @@ const beatOf = (scene: Scene, id: Id): Beat => {
   if (!beat) throw new Error(`No beat ${id} in ${scene.id}`);
   return beat;
 };
-
-const answerOf = (beat: Beat): Answer | null =>
-  beat.kind === 'learner' ? beat.answer : beat.kind === 'gen' ? beat.answer : null;
 
 /** The first beat at or after `id` (in scene order) that plays at this stage. */
 const firstActiveFrom = (scene: Scene, stage: Stage, index: number): Beat | null =>
@@ -179,6 +121,15 @@ const timerEffects = (beat: Beat, stage: Stage): SceneEffect[] => {
     : [];
 };
 
+/** What starts a turn: the timer ring, and the card when it is up from the start. */
+const listenEffects = (beat: Beat, stage: Stage): { effects: SceneEffect[]; hinted: boolean } => {
+  const answer = answerOf(beat);
+  const effects = timerEffects(beat, stage);
+  const hint = answer && fromStart(answer, stage) ? hintEffect(beat, answer, stage) : null;
+  if (hint) effects.push(hint);
+  return { effects, hinted: hint !== null };
+};
+
 const ended = (state: RunnerState): Step => ({
   state: {
     ...state,
@@ -217,26 +168,21 @@ const enter = (scene: Scene, state: RunnerState, first: Beat | null): Step => {
         effects.push({ type: 'show_ui', beatId: beat.id, ui: beat.ui });
         beat = nextBeat(scene, state.stage, beat);
         continue;
-      case 'rec': {
-        const line = getLine(beat.line);
-        lastLine = line.id;
-        effects.push({
-          type: 'play_rec',
-          beatId: beat.id,
-          lineId: line.id,
-          character: line.character,
-          caption: line.caption,
-          recorded: line.audio !== null,
-          text: line.text,
-        });
+      case 'rec':
+        lastLine = beat.line;
+        effects.push(playEffect(beat, beat.line, beat.slower === true));
         return { state: { ...base, phase: 'playing', lastLine }, effects };
-      }
       case 'gen':
         effects.push(genEffect(beat, 'line', beat.speaker, beat.intent));
         return { state: { ...base, phase: 'speaking', lastLine: null }, effects };
-      case 'learner':
-        effects.push(...timerEffects(beat, state.stage));
-        return { state: { ...base, phase: 'listening', lastLine }, effects };
+      case 'learner': {
+        const start = listenEffects(beat, state.stage);
+        effects.push(...start.effects);
+        return {
+          state: { ...base, phase: 'listening', lastLine, hinted: start.hinted },
+          effects,
+        };
+      }
     }
   }
   const end = ended({ ...state, lastLine });
@@ -246,6 +192,95 @@ const enter = (scene: Scene, state: RunnerState, first: Beat | null): Step => {
 const advance = (scene: Scene, state: RunnerState, beat: Beat, to?: Id): Step =>
   enter(scene, state, nextBeat(scene, state.stage, beat, to));
 
+/** Leaves a turn: what is said first (not waited on), then the next beat. */
+const leaveTurn = (
+  scene: Scene,
+  state: RunnerState,
+  beat: Beat,
+  pass: TurnPass,
+  to: Id | undefined,
+  said: readonly SceneEffect[] = [],
+): Step => {
+  const next = advance(scene, { ...state, lastTurn: { beatId: beat.id, pass } }, beat, to);
+  return { state: next.state, effects: [...said, ...next.effects] };
+};
+
+/** One praise line from the answer's pool, picked by the beat's place so it varies. */
+const praiseEffects = (scene: Scene, beat: Beat, answer: Answer): SceneEffect[] => {
+  const pool = answer.praise;
+  if (pool.length === 0) return [];
+  const id = pool[scene.beats.indexOf(beat) % pool.length];
+  return id === undefined ? [] : [sayLine(beat, id)];
+};
+
+const passTurn = (scene: Scene, state: RunnerState, beat: Beat, answer: Answer): Step =>
+  leaveTurn(scene, state, beat, 'match', answer.exits.fine.to, praiseEffects(scene, beat, answer));
+
+/** The second English try without the words: the listener says it properly, and on we go. */
+const generousPass = (scene: Scene, state: RunnerState, beat: Beat, answer: Answer): Step => {
+  const said =
+    answer.recast === null
+      ? praiseEffects(scene, beat, answer)
+      : [sayText(beat, answer.listener, { en: answer.recast, glosses: {} })];
+  return leaveTurn(scene, state, beat, 'generous', answer.exits.fine.to, said);
+};
+
+/**
+ * The line to say again: `lineId` (or the last written line) played, slower when asked, preceded
+ * at the Visitor's pace by the speaker's "Sure. Slowly.". After a generated line there is no
+ * written one: the call says its own last line again (it has the text), so nothing here.
+ */
+const replayEffects = (
+  scene: Scene,
+  state: RunnerState,
+  beat: Beat,
+  slower: boolean,
+  lineId: Id | null = state.lastLine,
+): SceneEffect[] => {
+  if (lineId === null) return [];
+  const before = S1_SHARED_LINES.slowly[getLine(lineId).character];
+  const lead = slower && visitorRun(scene, state.stage) && before ? [sayLine(beat, before)] : [];
+  return [...lead, playEffect(beat, lineId, slower)];
+};
+
+/** "Again" or "slowly" during a turn. */
+const replayRequest = (
+  scene: Scene,
+  state: RunnerState,
+  beat: Beat,
+  answer: Answer,
+  slower: boolean,
+): Step => {
+  switch (answer.onReplay) {
+    case 'pass':
+      return passTurn(scene, state, beat, answer);
+    case 'replay_and_pass': {
+      if (state.lastLine === null) return passTurn(scene, state, beat, answer);
+      // Said slower, waited on, then the turn is passed (`rec_played` moves on).
+      return {
+        state: { ...state, phase: 'playing', lastTurn: { beatId: beat.id, pass: 'match' } },
+        effects: replayEffects(scene, state, beat, true),
+      };
+    }
+    case 'replay':
+      return { state, effects: replayEffects(scene, state, beat, slower) };
+  }
+};
+
+/** An English try without the words on the cards: "Again?" and the line once more. */
+const askAgain = (scene: Scene, state: RunnerState, beat: Beat, answer: Answer): Step => {
+  const line = answer.model ?? state.lastLine;
+  const again = sayShared(
+    beat,
+    answer.listener,
+    S1_SHARED_LINES.again[answer.listener],
+    S1_SHARED_LINES.againText,
+  );
+  return {
+    state: { ...state, lastLine: line },
+    effects: [again, ...replayEffects(scene, state, beat, false, line)],
+  };
+};
 /** An unclear try or a hinted error: a hint (or a nudge), then the fallback after `maxTries`. */
 const tryAgain = (
   scene: Scene,
@@ -256,17 +291,27 @@ const tryAgain = (
 ): Step => {
   const tries = state.tries + 1;
   const { hint, maxTries, fallback } = answer.exits.silent;
+  if (isCardTurn(answer)) {
+    return tries >= GENEROUS_AFTER
+      ? generousPass(scene, { ...state, tries }, beat, answer)
+      : askAgain(scene, { ...state, tries }, beat, answer);
+  }
   if (tries >= maxTries) {
     return {
-      state: { ...state, tries, phase: 'fallback', correcting: false, lastLine: null },
+      state: {
+        ...state,
+        tries,
+        phase: 'fallback',
+        correcting: false,
+        lastLine: null,
+        lastTurn: { beatId: beat.id, pass: 'fallback' },
+      },
       effects: [genEffect(beat, 'fallback', fallback.speaker, fallback.intent)],
     };
   }
-  if (hint && (alwaysHint || STAGE_SPEECH[state.stage].hintsOnSilence)) {
-    return {
-      state: { ...state, tries, hinted: true },
-      effects: [{ type: 'hint', beatId: beat.id, hint }],
-    };
+  const effect = hint ? hintEffect(beat, answer, state.stage) : null;
+  if (effect && (alwaysHint || STAGE_SPEECH[state.stage].hintsOnSilence)) {
+    return { state: { ...state, tries, hinted: true }, effects: [effect] };
   }
   return {
     state: { ...state, tries, lastLine: null },
@@ -280,10 +325,8 @@ const quietOffer = (state: RunnerState, beat: Beat, answer: Answer): Step => {
   if (!hint || state.hinted === true || !STAGE_SPEECH[state.stage].hintsOnSilence) {
     return { state, effects: [] };
   }
-  return {
-    state: { ...state, hinted: true },
-    effects: [{ type: 'hint', beatId: beat.id, hint }],
-  };
+  const effect = hintEffect(beat, answer, state.stage);
+  return effect ? { state: { ...state, hinted: true }, effects: [effect] } : { state, effects: [] };
 };
 
 const listen = (
@@ -294,12 +337,34 @@ const listen = (
   event: SceneEvent,
 ): Step => {
   const stay: Step = { state, effects: [] };
-  const fine = () => advance(scene, state, beat, answer.exits.fine.to);
+  const fine = () => passTurn(scene, state, beat, answer);
+  const linhHere = scene.cast.includes('linh');
   switch (event.type) {
     case 'fine':
       return fine();
     case 'timer_end':
       return answer.timer ? fine() : stay;
+    case 'not_english':
+      // Never a try. Once a scene, on a card, Linh asks (in Vietnamese) for the card in English.
+      if (!isCardTurn(answer) || !linhHere || state.askedEnglish === true) return stay;
+      return {
+        state: { ...state, askedEnglish: true },
+        effects: [sayLine(beat, S1_SHARED_LINES.english)],
+      };
+    case 'repeat_request':
+      return replayRequest(scene, state, beat, answer, false);
+    case 'slower_request':
+      return replayRequest(scene, state, beat, answer, true);
+    case 'skip': {
+      const { listener } = answer;
+      const kind = sayShared(
+        beat,
+        listener,
+        S1_SHARED_LINES.skip[listener],
+        S1_SHARED_LINES.skipText,
+      );
+      return leaveTurn(scene, state, beat, 'skip', answer.exits.silent.fallback.to, [kind]);
+    }
     case 'target_error':
       switch (answer.exits.targetError.mode) {
         case 'accept':
@@ -322,12 +387,20 @@ const listen = (
     case 'hint_request': {
       const asks = state.asks + 1;
       if (asks > MAX_ASKS) return tryAgain(scene, { ...state, asks }, beat, answer, false);
-      const { hint } = answer.exits.silent;
+      if (isCardTurn(answer) && linhHere) {
+        // Linh offers to say it together, and the line that says it plays again.
+        const line = answer.model ?? state.lastLine;
+        return {
+          state: { ...state, asks, hinted: true, lastLine: line },
+          effects: [
+            sayLine(beat, S1_SHARED_LINES.together),
+            ...replayEffects(scene, state, beat, false, line),
+          ],
+        };
+      }
+      const hint = hintEffect(beat, answer, state.stage);
       return hint
-        ? {
-            state: { ...state, asks, hinted: true },
-            effects: [{ type: 'hint', beatId: beat.id, hint }],
-          }
+        ? { state: { ...state, asks, hinted: true }, effects: [hint] }
         : {
             state: { ...state, asks, lastLine: null },
             effects: [genEffect(beat, 'nudge', answer.listener, NUDGE_INTENT)],
@@ -375,12 +448,19 @@ export const reduceScene = (scene: Scene, state: RunnerState, event: SceneEvent)
   }
   switch (state.phase) {
     case 'playing':
-      return event.type === 'rec_played' ? advance(scene, state, beat) : { state, effects: [] };
-    case 'speaking':
+      // A turn's line said again before it passes moves on by the turn's fine exit.
+      return event.type === 'rec_played'
+        ? advance(scene, state, beat, answer?.exits.fine.to)
+        : { state, effects: [] };
+    case 'speaking': {
       if (event.type !== 'gen_done') return { state, effects: [] };
-      return answer
-        ? { state: { ...state, phase: 'listening' }, effects: timerEffects(beat, state.stage) }
-        : advance(scene, state, beat);
+      if (!answer) return advance(scene, state, beat);
+      const start = listenEffects(beat, state.stage);
+      return {
+        state: { ...state, phase: 'listening', hinted: start.hinted || state.hinted === true },
+        effects: start.effects,
+      };
+    }
     case 'fallback':
       return event.type === 'gen_done'
         ? advance(scene, state, beat, answer?.exits.silent.fallback.to)
@@ -418,10 +498,13 @@ export const resumeScene = (scene: Scene, state: RunnerState): Step => {
   ];
   switch (state.phase) {
     case 'playing':
+      // A turn's slow replay was cut off: the turn had passed, so go on.
+      if (answerOf(beat)) return advance(scene, state, beat, answerOf(beat)?.exits.fine.to);
+      return enter(scene, state, beat);
     case 'speaking':
       return enter(scene, state, beat);
     case 'listening':
-      effects.push(...timerEffects(beat, state.stage));
+      effects.push(...listenEffects(beat, state.stage).effects);
       break;
     case 'fallback': {
       const fallback = answerOf(beat)?.exits.silent.fallback;

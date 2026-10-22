@@ -19,19 +19,24 @@ export interface StageSpeech {
    * asked). Silence never counts as a try and never brings a spoken nudge.
    */
   readonly hintsOnSilence: boolean;
+  /** Whether the phrase hint (the say-this card) is up from the start of every turn. */
+  readonly hintsFromStart: boolean;
   /** Whether hints carry the first-language gloss (line-level help fades from Regular). */
   readonly glossHints: boolean;
 }
 
-const PROSE: Readonly<Record<Stage, Omit<StageSpeech, 'hintsOnSilence' | 'glossHints'>>> = {
-  // Visitor: Newcomer's prose until its own row is written.
+const PROSE: Readonly<
+  Record<Stage, Omit<StageSpeech, 'hintsOnSilence' | 'hintsFromStart' | 'glossHints'>>
+> = {
   visitor: {
     label: 'Visitor',
-    wordsPerMinute: '~110',
-    sentences: 'short, one idea',
-    idioms: 'none',
+    wordsPerMinute: '~85',
+    sentences:
+      'one short sentence, 8 words at most; say your own answer first, then ask ("I\'m Linh. And you?")',
+    idioms: 'none (Mei keeps one "lah", Bea one "love")',
     interruptions: 'never',
-    hints: 'phrase hint offered quietly after a long pause, or when asked',
+    hints:
+      'say-this cards with Vietnamese from the start; a Vietnamese task card for a new kind of turn',
   },
   newcomer: {
     label: 'Newcomer',
@@ -80,6 +85,7 @@ const speech = (stage: Stage): StageSpeech => {
   return {
     ...PROSE[stage],
     hintsOnSilence: hint.kind === 'after_pause',
+    hintsFromStart: hint.kind === 'from_start',
     glossHints: glossPolicy(stage, 'captions', { firstLanguage: 'vi' }).unit === 'line',
   };
 };

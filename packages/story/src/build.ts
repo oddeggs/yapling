@@ -8,6 +8,7 @@ import type {
   LearnerBeat,
   Meaning,
   RecBeat,
+  ReplayMode,
   Scene,
   StageValue,
   TargetErrorMode,
@@ -27,7 +28,12 @@ export interface BeatOptions {
 /** Silences and hinted errors before the fallback line moves the scene on. */
 export const DEFAULT_MAX_TRIES = 3;
 
-export const rec = (id: Id, line: Id, options: BeatOptions = {}): RecBeat => ({
+export interface RecOptions extends BeatOptions {
+  /** Said again one speed step slower, after someone asked. */
+  readonly slower?: boolean;
+}
+
+export const rec = (id: Id, line: Id, options: RecOptions = {}): RecBeat => ({
   ...options,
   id,
   kind: 'rec',
@@ -84,6 +90,15 @@ export interface AnswerSpec {
   readonly fallback: Fallback;
   readonly fine?: Id;
   readonly meaning?: Meaning;
+  readonly choices?: readonly GlossedText[];
+  readonly accept?: readonly string[];
+  readonly showHint?: Answer['showHint'];
+  readonly model?: Id;
+  readonly praise?: readonly Id[];
+  readonly recast?: string;
+  readonly onReplay?: ReplayMode;
+  readonly task?: GlossedText;
+  readonly scored?: boolean;
 }
 
 export const answer = (spec: AnswerSpec): Answer => ({
@@ -92,17 +107,75 @@ export const answer = (spec: AnswerSpec): Answer => ({
   phrases: spec.phrases ?? [],
   canDo: spec.canDo ?? null,
   timer: spec.timer ?? null,
+  choices: spec.choices ?? [],
+  accept: spec.accept ?? [],
+  showHint: spec.showHint ?? 'stage',
+  model: spec.model ?? null,
+  praise: spec.praise ?? [],
+  recast: spec.recast ?? null,
+  onReplay: spec.onReplay ?? 'replay',
+  task: spec.task ?? null,
+  scored: spec.scored ?? true,
   exits: {
     fine: spec.fine === undefined ? {} : { to: spec.fine },
     targetError: { mode: spec.onTargetError ?? 'correct' },
     silent: {
-      hint: spec.hint ?? null,
+      hint: spec.hint ?? spec.choices?.[0] ?? null,
       maxTries: spec.maxTries ?? DEFAULT_MAX_TRIES,
       fallback: spec.fallback,
     },
     meaning: spec.meaning ?? null,
   },
 });
+
+/** A say-this card turn: the cards from the start, passed by their words, never corrected. */
+export interface CardSpec {
+  readonly listener: CharacterId;
+  /** One or two cards to read aloud. */
+  readonly choices: readonly [GlossedText] | readonly [GlossedText, GlossedText];
+  readonly accept: readonly string[];
+  /** What a fine answer is, for logs and the persona; the cards read aloud by default. */
+  readonly expects?: string;
+  readonly phrases?: readonly Id[];
+  readonly canDo?: Id;
+  readonly model?: Id;
+  /** After a pass; none by default (the season's builders give each listener its pool). */
+  readonly praise?: readonly Id[];
+  readonly recast?: string;
+  readonly onReplay?: ReplayMode;
+  readonly task?: GlossedText;
+  readonly scored?: boolean;
+  readonly fine?: Id;
+  /** Where a skipped turn goes; the next beat by default. */
+  readonly skipTo?: Id;
+}
+
+export const cards = (spec: CardSpec): Answer =>
+  answer({
+    listener: spec.listener,
+    expects:
+      spec.expects ?? `Reads a card aloud: ${spec.choices.map((c) => `"${c.en}"`).join(' or ')}.`,
+    ...(spec.phrases === undefined ? {} : { phrases: spec.phrases }),
+    ...(spec.canDo === undefined ? {} : { canDo: spec.canDo }),
+    ...(spec.model === undefined ? {} : { model: spec.model }),
+    ...(spec.praise === undefined ? {} : { praise: spec.praise }),
+    ...(spec.recast === undefined ? {} : { recast: spec.recast }),
+    ...(spec.onReplay === undefined ? {} : { onReplay: spec.onReplay }),
+    ...(spec.task === undefined ? {} : { task: spec.task }),
+    ...(spec.scored === undefined ? {} : { scored: spec.scored }),
+    ...(spec.fine === undefined ? {} : { fine: spec.fine }),
+    choices: spec.choices,
+    accept: spec.accept,
+    showHint: 'always',
+    onTargetError: 'accept',
+    // Card turns pass generously after two English misses, so this is only a backstop.
+    maxTries: DEFAULT_MAX_TRIES,
+    fallback: {
+      speaker: spec.listener,
+      intent: 'Say the words on the card warmly, as if together, and go on.',
+      ...(spec.skipTo === undefined ? {} : { to: spec.skipTo }),
+    },
+  });
 
 export type SceneSpec = Omit<Scene, 'canDos' | 'phrases' | 'draft'> &
   Partial<Pick<Scene, 'canDos' | 'phrases' | 'draft'>>;

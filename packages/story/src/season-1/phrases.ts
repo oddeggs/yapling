@@ -1,8 +1,26 @@
 import { viDesign, viDraft } from '../gloss';
 import type { TargetPhrase } from '../types';
 
-/** Season 1's target phrases, four per episode, from the season overview. */
+/**
+ * Season 1's target phrases: the Settling-in seed packets (ids from the learning model's
+ * `SETTLING_PHRASES`), then four per episode, from the season overview.
+ */
 export const S1_PHRASES = [
+  // Settling in, glossed as the script's cards.
+  {
+    id: 'nice-to-meet-you',
+    en: 'Nice to meet you',
+    glosses: viDraft('Rất vui được gặp bạn'),
+  },
+  { id: 'yes-please', en: 'Yes, please', glosses: viDraft('Có, cảm ơn nhé') },
+  {
+    id: 'sorry-again-please',
+    en: 'Sorry? Again, please.',
+    glosses: viDraft('Xin lỗi? Nói lại giúp mình nhé.'),
+  },
+  { id: 'slowly-please', en: 'Slowly, please.', glosses: viDraft('Nói chậm giúp mình nhé.') },
+  { id: 'how-much', en: 'How much?', glosses: viDraft('Bao nhiêu tiền?') },
+  { id: 'im-from', en: "I'm from …", glosses: viDraft('Mình đến từ …') },
   // Episode 1, glossed in the design's week view.
   { id: 'whats-wrong', en: "What's wrong?", glosses: viDesign('Có chuyện gì vậy?') },
   { id: 'i-need-a-plan', en: 'I need a plan', glosses: viDesign('Mình cần một kế hoạch') },

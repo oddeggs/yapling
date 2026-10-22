@@ -1,14 +1,15 @@
-import type { Id } from '@yapling/contracts';
+import type { Id, Stage } from '@yapling/contracts';
 import { recapKey, SEASON_1_EPISODES, type Season1EpisodeId } from '@yapling/domain';
 
-import { S1_PHRASES, SEASON_1 } from './season-1';
+import { S1_PHRASES, S1_VISITOR_VERSIONS, SEASON_1 } from './season-1';
 import type { Episode, Scene, Season, TargetPhrase } from './types';
 
 export const SEASONS: readonly Season[] = [SEASON_1];
 
-/** Every scene of every season: prologues first, then each episode's scenes. */
+/** Every scene of every season: prologues first, Settling in, then each episode's scenes. */
 export const SCENES: readonly Scene[] = SEASONS.flatMap((season) => [
   ...season.prologue,
+  ...season.settling,
   ...season.episodes.flatMap((episode) => episode.scenes),
 ]);
 
@@ -26,6 +27,13 @@ export const getScene = (id: Id): Scene => {
   if (!scene) throw new Error(`No scene ${id}`);
   return scene;
 };
+
+/** Scenes with a Visitor version of their own, by the scene they stand in for. */
+export const VISITOR_VERSIONS: Readonly<Record<Id, Id>> = S1_VISITOR_VERSIONS;
+
+/** The scene to play for a scheduled one at a stage: its Visitor version at Visitor, if any. */
+export const sceneIdForStage = (id: Id, stage: Stage): Id =>
+  stage === 'visitor' ? (VISITOR_VERSIONS[id] ?? id) : id;
 
 export const findPhrase = (id: Id): TargetPhrase | undefined => phrases.get(id);
 

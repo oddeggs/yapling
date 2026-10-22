@@ -1,11 +1,18 @@
 import { answer, gen, learner, rec, scene, ui } from '../build';
 import { glossed, viDesign, viDraft } from '../gloss';
 import type { Letter } from '../types';
+import { card, task, visitorCards } from './visitor';
+
+const V = { maxStage: 'visitor' } as const;
+const N = { minStage: 'newcomer' } as const;
 
 /*
  * Episode 1, "The Letter", the episode call at the Lantern Café, step by step from the script.
  * Recorded lines carry the story; generated slots let the learner speak, and each one resolves
  * the same way whatever is said (Mei shows the letter, the office offers a Friday meeting).
+ * Visitors play the same scene with card turns in place of the hard ones (`season-1-script.md`,
+ * "Week 1 for Visitors"): Mei doesn't deflect, Pip and Mei ask in shorter recorded lines, and the
+ * learner reads one of two cards.
  */
 
 export const S1_E1_LETTER: Letter = {
@@ -73,12 +80,27 @@ export const S1_E1_CALL = scene({
           intent: 'Ask Mei for the learner, gently: "Mei, what\'s wrong?"',
         },
       }),
+      N,
+    ),
+    learner(
+      'ask-whats-wrong-visitor',
+      // Mei shows the letter next, in her own words.
+      visitorCards({
+        listener: 'mei',
+        choices: [card("What's wrong?", 'Có chuyện gì vậy?')],
+        accept: ['wrong', 'okay', 'ok'],
+        phrases: ['whats-wrong'],
+        canDo: 'ask-whats-wrong',
+        praise: [],
+        task: task("Ask Mei what's wrong. Read the card.", 'Hỏi Mei có chuyện gì. Đọc thẻ nhé.'),
+      }),
+      V,
     ),
     gen(
       'mei-deflects',
       'mei',
       'Deflect once, lightly, with a joke: say it is nothing. Do not show the letter yet.',
-      { example: 'Aiyah, nothing lah.', answer: askAgain('letter') },
+      { ...N, example: 'Aiyah, nothing lah.', answer: askAgain('letter') },
     ),
     gen(
       'mei-deflects-again',
@@ -102,7 +124,8 @@ export const S1_E1_CALL = scene({
     ui('letter', { type: 'letter', letter: S1_E1_LETTER }),
     rec('double', 's1-e1-04'),
     // 4. Teach the yapling
-    rec('rent-question', 's1-e1-05'),
+    rec('rent-question', 's1-e1-05', N),
+    rec('rent-question-visitor', 's1-e1-visitor-rent', V),
     learner(
       'teach-rent',
       answer({
@@ -115,6 +138,22 @@ export const S1_E1_CALL = scene({
             'Work it out aloud with what the learner said: "Oh! Money to use the café? Every month?" Thank them.',
         },
       }),
+      N,
+    ),
+    learner(
+      'teach-rent-visitor',
+      // Pip writes it down next.
+      visitorCards({
+        listener: 'pip',
+        choices: [
+          card("It's money.", 'Là tiền.'),
+          card("It's money for a home.", 'Là tiền thuê nhà.'),
+        ],
+        accept: ['money', 'pay', 'home'],
+        praise: [],
+        task: task('Pip asks what "rent" is. Pick a card.', 'Pip hỏi "rent" là gì. Chọn một thẻ.'),
+      }),
+      V,
     ),
     ui('notebook', { type: 'notebook', word: 'rent' }),
     gen(
@@ -124,7 +163,8 @@ export const S1_E1_CALL = scene({
       { example: 'Wait, let me write that. Rent: the money you pay to use a place. Ooh.' },
     ),
     // 5. The call to the landlord's office
-    rec('ask-call', 's1-e1-06'),
+    rec('ask-call', 's1-e1-06', N),
+    rec('ask-call-visitor', 's1-e1-visitor-call', V),
     learner(
       'agree-to-call',
       answer({
@@ -140,6 +180,19 @@ export const S1_E1_CALL = scene({
           intent: 'Say "We can do it!" and pick up the phone for the learner.',
         },
       }),
+      N,
+    ),
+    learner(
+      'agree-to-call-visitor',
+      visitorCards({
+        listener: 'mei',
+        choices: [card('Yes, I can help.', 'Ừ, mình giúp được.'), card('Okay!', 'Được!')],
+        accept: ['yes', 'okay', 'ok', 'sure', 'help'],
+        phrases: ['can-i-help'],
+        canDo: 'ask-whats-wrong',
+        task: task('Mei asks you to call. Say yes.', 'Mei nhờ bạn gọi điện. Nhận lời nhé.'),
+      }),
+      V,
     ),
     ui('dial', { type: 'phone', state: 'ringing' }),
     gen(
@@ -147,6 +200,7 @@ export const S1_E1_CALL = scene({
       'office',
       'Answer the phone for the Harbour Property Office, politely, and ask who is calling.',
       {
+        ...N,
         example: "Harbour Property Office, good morning. Who's calling, please?",
         answer: answer({
           listener: 'office',
@@ -161,6 +215,29 @@ export const S1_E1_CALL = scene({
             intent:
               'Help the caller along: ask if they are calling for Ms Mei at the Lantern Café, and take any yes.',
           },
+        }),
+      },
+    ),
+    gen(
+      'office-answers-visitor',
+      'office',
+      'Answer the phone for the Harbour Property Office and ask who is calling, in five words at most.',
+      {
+        ...V,
+        constraints: ['Five words at most.'],
+        example: "Hello. Who's calling, please?",
+        answer: visitorCards({
+          listener: 'office',
+          choices: [
+            card("I'm {name}.", 'Tôi là {name}.'),
+            card("I'm {name}. I'm calling for Mei.", 'Tôi là {name}. Tôi gọi giúp Mei.'),
+          ],
+          accept: ["i'm", 'i am', 'my name', 'this is', '{name}', 'mei'],
+          canDo: 'introduce-yourself-30s',
+          task: task(
+            'The office asks who is calling. Say your name.',
+            'Văn phòng hỏi ai đang gọi. Nói tên bạn.',
+          ),
         }),
       },
     ),
@@ -212,6 +289,16 @@ export const S1_E1_CALL = scene({
         resolution: 'Mei has a meeting at the property office on Friday.',
       },
     ),
+    learner(
+      'office-bye-visitor',
+      visitorCards({
+        listener: 'office',
+        choices: [card('Thank you. Bye!', 'Cảm ơn. Tạm biệt!')],
+        accept: ['thank', 'thanks', 'bye'],
+        task: task('Say goodbye to the office.', 'Chào tạm biệt văn phòng.'),
+      }),
+      V,
+    ),
     ui('hang-up', { type: 'phone', state: 'ended' }),
     // 6. Advice
     rec('what-now', 's1-e1-07'),
@@ -228,6 +315,27 @@ export const S1_E1_CALL = scene({
           intent: 'Offer a simple idea yourself: "I think you should go to the meeting on Friday!"',
         },
       }),
+      N,
+    ),
+    learner(
+      'advice-visitor',
+      // Mei reacts warmly next.
+      visitorCards({
+        listener: 'mei',
+        choices: [
+          card('Go on Friday.', 'Thứ Sáu đi gặp họ nhé.'),
+          card('I think you should go on Friday.', 'Mình nghĩ bạn nên đi vào thứ Sáu.'),
+        ],
+        accept: ['friday', 'go', 'should', 'meeting'],
+        phrases: ['i-think-you-should'],
+        canDo: 'ask-whats-wrong',
+        praise: [],
+        task: task(
+          'Mei asks what to do. Pick some advice.',
+          'Mei hỏi nên làm gì. Chọn một lời khuyên.',
+        ),
+      }),
+      V,
     ),
     gen(
       'mei-warm',

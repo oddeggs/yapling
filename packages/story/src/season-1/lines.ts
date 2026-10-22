@@ -2,6 +2,7 @@ import type { CharacterId, Id } from '@yapling/contracts';
 
 import { glossed, viDesign, viDraft } from '../gloss';
 import type { Glosses, GlossedText, LineKind, Meaning } from '../types';
+import { SETTLING_LINE_ENGLISH, SETTLING_LINE_GLOSSES } from './settling-lines';
 
 /*
  * Season 1's per-line extras: glosses for the recorded lines shown on screen, the hand-written
@@ -37,7 +38,11 @@ export const S1_LINE_GLOSSES: Readonly<Record<Id, Glosses>> = {
     'Chào! Mình là Sol ở Hollowbrook. Hẹn gặp bạn và Pip vào thứ Năm. Mẹo nhỏ: người phỏng vấn rất thích ví dụ!',
   ),
   's1-e5-01': viDraft('Xe buýt 45 chạy lúc đúng chín giờ. Mang theo câu chuyện hay nhất nhé.'),
+  ...SETTLING_LINE_GLOSSES,
 };
+
+/** English meanings of the lines not spoken in English, by line id. */
+export const S1_LINE_ENGLISH: Readonly<Record<Id, string>> = SETTLING_LINE_ENGLISH;
 
 /** Hand-written answers to "What does that mean?", by line id. */
 export const S1_LINE_MEANINGS: Readonly<Record<Id, Meaning>> = {

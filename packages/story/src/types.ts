@@ -37,8 +37,12 @@ export interface GlossedText {
   readonly glosses: Glosses;
 }
 
-/** What a scene is. The first five run as live calls; `story` and `postcard` play on the phone. */
+/**
+ * What a scene is. All but `story` and `postcard` run as live calls; those two play on the phone.
+ * `settling` is a Settling-in chapter with Linh, before the story starts.
+ */
 export const SCENE_KINDS = [
+  'settling',
   'placement',
   'episode',
   'real_week',
@@ -70,7 +74,15 @@ export interface LineAudio {
   readonly durationMs: number;
 }
 
-/** A written line of the season: recorded already (`audio` set) or waiting to be recorded. */
+/** The language a written line is spoken in: English, or Linh's Vietnamese in Settling in. */
+export const LINE_LANGUAGES = ['en', 'vi'] as const;
+export type LineLanguage = (typeof LINE_LANGUAGES)[number];
+
+/**
+ * A written line of the season: recorded already (`audio` set) or waiting to be recorded. Scenes
+ * name lines by id only, so a line moves from `pending` to `lines` in `audio/season-1/lines.json`
+ * (and through `pnpm --filter @yapling/story gen`) without touching any scene.
+ */
 export interface StoryLine {
   readonly id: Id;
   readonly character: CharacterId;
@@ -85,7 +97,14 @@ export interface StoryLine {
   readonly nameSplice: 'before' | null;
   /** Null until recorded (`tools/voice`, `yap_voice.py render <id>`). */
   readonly audio: LineAudio | null;
+  /** The language the line is spoken in; TTS uses it while the line is pending. */
+  readonly language: LineLanguage;
+  /** The render speed from `lines.json` (Visitor lines are slow), or null for the voice's default. */
+  readonly speed: number | null;
+  /** The on-screen gloss of an English line; empty for a line not spoken in English. */
   readonly glosses: Glosses;
+  /** For a line not spoken in English (Linh's Vietnamese), what it says in English. */
+  readonly english: string | null;
   /** Tap-to-gloss segments for a long line (a story); the caption split into sentences. */
   readonly segments: readonly GlossedText[];
   /** The "What does that mean?" answer for this line, when written by hand. */
@@ -128,6 +147,13 @@ export interface Fallback {
   readonly to?: Id;
 }
 
+/**
+ * What again and slowly do on a turn. `replay` (most turns): the last line again, never a try.
+ * `pass`: saying it is the answer (the turn teaches "Sorry? Again, please."). `replay_and_pass`:
+ * the character says the last line again, slower, and that answers the turn (a card offers it).
+ */
+export type ReplayMode = 'replay' | 'pass' | 'replay_and_pass';
+
 /** An expected learner turn and what each outcome does. */
 export interface Answer {
   /** Who reacts to the learner (corrections and nudges come from them). */
@@ -140,6 +166,33 @@ export interface Answer {
   readonly canDo: Id | null;
   /** A timer ring for timed rounds; `timer_end` closes the turn. */
   readonly timer: StageValue | null;
+  /**
+   * Say-this cards: the words to read aloud, at most two, each glossed. `{name}` stands for the
+   * learner's name and `…` for their own words. Empty: the turn has the single phrase hint only.
+   */
+  readonly choices: readonly GlossedText[];
+  /**
+   * Words that pass the turn by a word match on the transcript (lower case; `{name}` is the
+   * learner's name), judged without the model. Empty: the director's judge decides. A turn with
+   * words is generous: an English try without them asks again, and the second such try passes.
+   */
+  readonly accept: readonly string[];
+  /** `always`: the card is up from the start for the whole turn. `stage`: as the stage hints. */
+  readonly showHint: 'always' | 'stage';
+  /**
+   * The written line that says the answer first (model, then ask): the card's tap-to-hear, and
+   * what plays again after an English miss. Null: the miss replays the last line spoken.
+   */
+  readonly model: Id | null;
+  /** Lines one is picked from after a pass (a word match or the generous pass). Empty: none. */
+  readonly praise: readonly Id[];
+  /** What the listener says back after the generous pass (the card, said properly); null: praise. */
+  readonly recast: string | null;
+  readonly onReplay: ReplayMode;
+  /** The task in the learner's first language, on a card when a new kind of turn starts. */
+  readonly task: GlossedText | null;
+  /** Counted by the placement rule. False for the placement's warm-up box. */
+  readonly scored: boolean;
   readonly exits: AnswerExits;
 }
 
@@ -177,6 +230,8 @@ interface BeatBase {
 export interface RecBeat extends BeatBase {
   readonly kind: 'rec';
   readonly line: Id;
+  /** Said again one speed step slower (the live voice reads it), after someone asked. */
+  readonly slower?: boolean;
 }
 
 export interface GenBeat extends BeatBase {
@@ -290,6 +345,8 @@ export interface Season {
   readonly title: string;
   /** Onboarding, day one. */
   readonly prologue: readonly Scene[];
+  /** Settling in: Visitors' short chapters with Linh before the story, in order. */
+  readonly settling: readonly Scene[];
   readonly episodes: readonly Episode[];
 }
 
@@ -301,6 +358,8 @@ export const callKindOf = (kind: SceneKind): CallKind | null => {
     case 'real_week':
     case 'practice':
       return kind;
+    case 'settling':
+      return 'settling';
     case 'voicemail':
       return 'voicemail_reply';
     case 'story':
@@ -309,8 +368,8 @@ export const callKindOf = (kind: SceneKind): CallKind | null => {
   }
 };
 
-/** A recorded line as compiled from `audio/season-1/lines.json` and its timing file. */
-export interface RecordedLineData {
+/** A line of `audio/season-1/lines.json`, compiled by `pnpm --filter @yapling/story gen`. */
+export interface WrittenLineData {
   readonly id: Id;
   readonly character: CharacterId;
   readonly text: string;
@@ -318,7 +377,19 @@ export interface RecordedLineData {
   readonly kind: LineKind;
   readonly take: Stage | null;
   readonly nameSplice: 'before' | null;
+  readonly language: LineLanguage;
+  readonly speed: number | null;
+  readonly audio: LineAudio | null;
+}
+
+/** A recorded line, with its timing file's caption and its audio. */
+export interface RecordedLineData extends WrittenLineData {
   readonly audio: LineAudio;
+}
+
+/** A line written in `pending`, not recorded yet: its caption is the voice text without tags. */
+export interface PendingLineData extends WrittenLineData {
+  readonly audio: null;
 }
 
 /** A recorded line's timing file: per-character alignment of the caption (seconds). */
