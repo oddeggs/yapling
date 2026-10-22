@@ -160,12 +160,12 @@ describe('the Visitor’s card', () => {
       {
         id: 'say-hello-and-your-name',
         text: 'Say hello and your name',
-        gloss: 'Chào và nói tên mình',
+        gloss: 'Chào hỏi và nói tên mình',
       },
       {
         id: 'ask-again-or-slower',
-        text: 'Ask someone to say it again',
-        gloss: 'Nhờ người khác nói lại',
+        text: 'Ask someone to say it again or slower',
+        gloss: 'Nhờ người khác nói lại hoặc nói chậm hơn',
       },
     ]);
     expect(view(null).aims.map((a) => a.gloss)).toEqual([null, null]);

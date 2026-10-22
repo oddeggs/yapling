@@ -66,9 +66,6 @@ export const onboardingEn = {
   /** The stamp's middle line, between VISITOR and the date. */
   'onboarding.visitor.stamp': 'WELCOME',
   'onboarding.visitor.aimsTitle': 'YOU’LL DO THESE FIRST',
-  /** The two first can-dos, English with their Vietnamese meaning (the `.vi` entry). */
-  'onboarding.visitor.aim.hello': 'Say hello and your name',
-  'onboarding.visitor.aim.again': 'Ask someone to say it again',
   'onboarding.visitor.chip': 'SETTLING IN',
   'onboarding.visitor.how': '6 short calls with Linh, 2–3 minutes each. No clock, no score.',
   'onboarding.visitor.start': 'Settle in with Linh',

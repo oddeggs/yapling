@@ -50,8 +50,6 @@ export const onboardingVi = {
   'onboarding.visitor.welcome': 'Linh sẽ giúp bạn làm quen trước',
   'onboarding.visitor.stamp': 'KHÁCH',
   'onboarding.visitor.aimsTitle': 'BẠN SẼ LÀM ĐƯỢC TRƯỚC TIÊN',
-  'onboarding.visitor.aim.hello': 'Chào và nói tên mình',
-  'onboarding.visitor.aim.again': 'Nhờ người khác nói lại',
   'onboarding.visitor.chip': 'LÀM QUEN',
   'onboarding.visitor.how':
     '6 cuộc gọi ngắn với Linh, 2–3 phút mỗi cuộc. Không bấm giờ, không chấm điểm.',

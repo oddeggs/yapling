@@ -18,7 +18,9 @@ import { deviceTimeZone } from '../../data/week';
 import { useLanguageOverride, useLocale, useToast } from '../../ui';
 import { micPermissionStatus, requestMicPermission } from '../../voice';
 import { Face } from '../burrow';
+import { startSettlingIn } from '../burrow/settling-store';
 import { requestKnockPermission } from '../knocks';
+import { stageRequests, usePendingStage } from '../me';
 import { AiExplainer } from '../safety';
 import { CardScreen } from './card-screen';
 import { AgeScreen, LanguageScreen } from './ferry';
@@ -32,6 +34,7 @@ import {
   notificationsUpdateOf,
   profileInputOf,
   shownStage,
+  type OnboardingState,
   type Pace,
 } from './flow';
 import { LEVEL_STEP, LEVEL_STEPS, LevelScreen } from './level-screen';
@@ -48,7 +51,7 @@ import {
 import { HOME_ROUTE, firstChapterHref, knockHref, placementCallHref, stepHref } from './routes';
 import { TooHardSheet } from './too-hard-sheet';
 import { UnpackScreen } from './unpack-screen';
-import { flushPendingStage, requestStage, useOnboarding } from './use-onboarding';
+import { useOnboarding } from './use-onboarding';
 import { VisitorCardScreen } from './visitor-card-screen';
 
 /*
@@ -62,8 +65,26 @@ const vi = translator('vi');
 /** The meanings under English lines: written in Vietnamese only, so only for Vietnamese learners. */
 const glossFor = (firstLanguage: string) => (firstLanguage === 'vi' ? vi : null);
 
-/** A stage choice goes to the server in the background; the screens already show it. */
-const choose = (request: StageRequest) => void requestStage(request).catch(() => undefined);
+/**
+ * A stage choice goes to the server in the background (kept on the phone and sent again until the
+ * server has it); the screens already show it.
+ */
+const choose = (request: StageRequest) =>
+  void stageRequests()
+    .request(request)
+    .catch(() => undefined);
+
+/** Settling in with Linh, on this phone at once (the burrow plans the chapters from it). */
+const settleIn = (userId: string | undefined) => {
+  if (userId !== undefined) void startSettlingIn(userId).catch(() => undefined);
+};
+
+/** The stage the onboarding screens show: a choice still on its way first, then the profile's. */
+function useShownStage(startPath: OnboardingState['startPath']) {
+  const { profile } = useProfile();
+  const pending = usePendingStage();
+  return shownStage(startPath, profile?.stage ?? null, pending?.request.to ?? null);
+}
 
 /** How long the knock waits for a pending stage to reach the server before the call starts. */
 const STAGE_WAIT_MS = 3_000;
@@ -210,6 +231,7 @@ export function PickStep() {
   const router = useRouter();
   const { t } = useLocale();
   const { saveProfile } = useProfile();
+  const { session } = useSession();
   const [state, dispatch] = useOnboarding();
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
@@ -225,7 +247,10 @@ export function PickStep() {
       dispatch({ type: 'movedIn' });
       // "Mình mới bắt đầu": the server makes the learner a Visitor (sent again later if it can't).
       const request = levelStageRequest(state.startPath);
-      if (request !== null) choose(request);
+      if (request !== null) {
+        settleIn(session?.userId);
+        choose(request);
+      }
       router.push(stepHref(afterMoveIn(state)));
     } catch {
       setProblem(t('onboarding.pick.saveFailed'));
@@ -296,7 +321,8 @@ export function UnpackStep() {
 export function CardStep() {
   const params = useLocalSearchParams<{ callId?: string; preview?: string }>();
   const [state, dispatch] = useOnboarding();
-  const { profile, refresh } = useProfile();
+  const { refresh } = useProfile();
+  const stage = useShownStage(state.startPath);
   const fromCall = typeof params.callId === 'string' && params.callId !== '' ? params.callId : null;
   const { markSeen } = useSeen();
   useEffect(() => {
@@ -305,12 +331,14 @@ export function CardStep() {
     void markSeen('placement_chat');
     // The placement call sets the stage when it ends; a stage chosen earlier may still be waiting.
     void refresh().catch(() => undefined);
-    void flushPendingStage();
+    void stageRequests()
+      .flush()
+      .catch(() => undefined);
   }, [fromCall, dispatch, markSeen, refresh]);
   const preview = __DEV__ ? previewSummary(params.preview) : null;
   if (__DEV__ && params.preview === 'visitor') return <VisitorCard />;
   if (preview !== null) return <Card summary={preview} />;
-  if (shownStage(state, profile?.stage ?? null) === 'visitor') return <VisitorCard />;
+  if (stage === 'visitor') return <VisitorCard />;
   const callId = fromCall ?? state.placementCallId;
   return callId !== null ? <CardForCall id={callId} /> : <CardFromList />;
 }
@@ -362,6 +390,7 @@ function Card({ summary }: { summary: PlacementSummary }) {
       }),
     [summary.kind, summary.kind === 'ready' ? summary.wins.join('\n') : '', profile, t],
   );
+  const { session } = useSession();
   const [tooHard, setTooHard] = useState(false);
   const adjust = (pace: Pace) => {
     dispatch({ type: 'adjustPace', pace });
@@ -404,6 +433,7 @@ function Card({ summary }: { summary: PlacementSummary }) {
           }}
           onLinh={() => {
             setTooHard(false);
+            settleIn(session?.userId);
             // Settling in first: a Visitor, and the story waits for the letter. The card turns
             // into the Visitor's.
             choose({ to: 'visitor', reason: 'too_hard' });
@@ -477,7 +507,7 @@ export function NotificationsStep() {
   const [state, dispatch] = useOnboarding();
   const [busy, setBusy] = useState(false);
   const { markSeen } = useSeen();
-  const visitor = shownStage(state, profile?.stage ?? null) === 'visitor';
+  const visitor = useShownStage(state.startPath) === 'visitor';
   const finish = (allowed: boolean) => {
     const update = notificationsUpdateOf(state, allowed);
     // A Visitor's knock is Settling in's first call, not the Newcomer's welcome at the door with
@@ -532,7 +562,9 @@ export function KnockStep() {
       await markSeen('placement_chat', 'linh_welcome').catch(() => undefined);
       // The call takes the learner's stage from the server: give a waiting choice a moment.
       await Promise.race([
-        flushPendingStage(),
+        stageRequests()
+          .flush()
+          .catch(() => undefined),
         new Promise((resolve) => setTimeout(resolve, STAGE_WAIT_MS)),
       ]);
       router.replace(firstChapterHref());

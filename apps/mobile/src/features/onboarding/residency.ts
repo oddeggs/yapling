@@ -131,14 +131,6 @@ const summaryWins = (s: PlacementSummary): readonly string[] => (s.kind === 'rea
 
 // --- The Visitor's card ---
 
-/** The two first can-dos the Visitor's card shows, by their domain ids. */
-const VISITOR_AIM_KEYS: Readonly<
-  Record<string, Extract<StringKey, `onboarding.visitor.aim.${string}`>>
-> = {
-  'say-hello-and-your-name': 'onboarding.visitor.aim.hello',
-  'ask-again-or-slower': 'onboarding.visitor.aim.again',
-};
-
 export interface VisitorCardInputs {
   readonly learnerName: string;
   readonly now: EpochMs;
@@ -164,11 +156,10 @@ export function visitorCardView(i: VisitorCardInputs): VisitorCardView {
       stampDateOf(i.now, i.timezone, i.tEn),
     ],
     aimsTitle: i.t('onboarding.visitor.aimsTitle'),
-    aims: VISITOR_CARD_CAN_DOS.flatMap((c) => {
-      const key = VISITOR_AIM_KEYS[c.id];
-      return key === undefined
-        ? []
-        : [{ id: c.id, text: i.tEn(key), gloss: i.tGloss ? i.tGloss(key) : null }];
+    // The can-do catalogue's English, its Vietnamese as the meaning under it.
+    aims: VISITOR_CARD_CAN_DOS.map((c) => {
+      const key = c.titleKey as CanDoKey;
+      return { id: c.id, text: i.tEn(key), gloss: i.tGloss ? i.tGloss(key) : null };
     }),
     chip: i.t('onboarding.visitor.chip'),
     how: i.t('onboarding.visitor.how'),

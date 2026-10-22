@@ -15,13 +15,7 @@ export {
 } from './steps';
 export { MicPrePrompt, type MicPrePromptProps } from './unpack-screen';
 export { chromeLanguageOf, launchTarget, type LaunchTarget, type Pace } from './flow';
-export {
-  flushPendingStage,
-  onboardingStore,
-  pacePreference,
-  requestStage,
-  useOnboarding,
-} from './use-onboarding';
+export { onboardingStore, pacePreference, useOnboarding } from './use-onboarding';
 export {
   FIRST_CHAPTER_SCENE_ID,
   HOME_ROUTE,

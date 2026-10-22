@@ -99,6 +99,8 @@ describe('moving in', () => {
       timezone: 'Asia/Jakarta',
       notificationsAllowed: false,
       pace: null,
+      startPath: 'placement',
+      storyStartedOn: '2026-10-23',
     });
     expect(ProfileInput.safeParse(input).success).toBe(true);
   });
@@ -181,42 +183,15 @@ describe('the level question', () => {
 });
 
 describe('the stage the screens show', () => {
-  const visitor = run([
-    ...throughTheFerry,
-    { type: 'aiUnderstood' },
-    { type: 'chooseStartPath', path: 'visitor' },
-  ]);
-
   it('follows the level question until the profile has a stage', () => {
-    expect(shownStage(visitor, null)).toBe('visitor');
-    expect(shownStage(INITIAL_ONBOARDING, null)).toBe('newcomer');
-    expect(shownStage(INITIAL_ONBOARDING, 'visitor')).toBe('visitor');
+    expect(shownStage('visitor', null, null)).toBe('visitor');
+    expect(shownStage(null, null, null)).toBe('newcomer');
+    expect(shownStage('placement', 'visitor', null)).toBe('visitor');
   });
 
-  it('shows a choice the server hasn’t taken yet, and the server’s once it has', () => {
-    const pending = run(
-      [{ type: 'stageRequested', request: { to: 'visitor', reason: 'self_select' } }],
-      visitor,
-    );
-    expect(shownStage(pending, 'newcomer')).toBe('visitor');
-    const settled = run(
-      [{ type: 'stageSettled', request: { to: 'visitor', reason: 'self_select' } }],
-      pending,
-    );
-    expect(settled.pendingStage).toBeNull();
-    expect(shownStage(settled, 'newcomer')).toBe('newcomer');
-  });
-
-  it('keeps a newer choice made while an older one was being sent', () => {
-    const state = run(
-      [
-        { type: 'stageRequested', request: { to: 'visitor', reason: 'too_hard' } },
-        { type: 'stageRequested', request: { to: 'newcomer', reason: 'self_select' } },
-        { type: 'stageSettled', request: { to: 'visitor', reason: 'too_hard' } },
-      ],
-      visitor,
-    );
-    expect(state.pendingStage).toEqual({ to: 'newcomer', reason: 'self_select' });
+  it('shows a choice the server hasn’t taken yet over the profile’s stage', () => {
+    expect(shownStage('placement', 'newcomer', 'visitor')).toBe('visitor');
+    expect(shownStage('visitor', 'visitor', 'newcomer')).toBe('newcomer');
   });
 });
 
@@ -358,14 +333,9 @@ describe('the onboarding store', () => {
   });
 
   it('reads a state saved before the level question existed', () => {
-    const old = JSON.stringify({
-      ...INITIAL_ONBOARDING,
-      startPath: undefined,
-      pendingStage: undefined,
-      step: 'pick',
-    });
-    const store = createOnboardingStore({ get: () => old, set: () => undefined });
-    expect(store.store.get()).toMatchObject({ step: 'pick', startPath: null, pendingStage: null });
+    const { startPath: _left, ...old } = { ...INITIAL_ONBOARDING, step: 'pick' as const };
+    const store = createOnboardingStore({ get: () => JSON.stringify(old), set: () => undefined });
+    expect(store.store.get()).toMatchObject({ step: 'pick', startPath: null });
   });
 
   it('starts again from a value it can’t read', () => {

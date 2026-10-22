@@ -4,13 +4,13 @@ import {
   Pace,
   QuietHours,
   RoommateSpecies,
-  StageRequest,
   StartPath,
   type LocalDate,
   type Profile,
   type ProfileInput,
   type ProfileUpdate,
   type Stage,
+  type StageRequest,
   type TimeZone,
   type Track,
 } from '@yapling/contracts';
@@ -71,11 +71,6 @@ export const OnboardingState = z.object({
    * state saved before the question existed).
    */
   startPath: StartPath.nullable().default(null),
-  /**
-   * A stage the learner chose that the server hasn't taken yet (offline, or an API without the
-   * route): the screens already show it, and it is sent again until the server answers.
-   */
-  pendingStage: StageRequest.nullable().default(null),
 });
 export type OnboardingState = z.infer<typeof OnboardingState>;
 
@@ -91,7 +86,6 @@ export const INITIAL_ONBOARDING: OnboardingState = {
   pace: null,
   placementCallId: null,
   startPath: null,
-  pendingStage: null,
 };
 
 export type OnboardingEvent =
@@ -110,10 +104,6 @@ export type OnboardingEvent =
   | { readonly type: 'movedIn' }
   | { readonly type: 'placed'; readonly callId: string | null }
   | { readonly type: 'adjustPace'; readonly pace: Pace }
-  /** The learner moved their own stage (the level question, "Tập với Linh trước", "Vào truyện"). */
-  | { readonly type: 'stageRequested'; readonly request: StageRequest }
-  /** The server took the pending stage, or refused it for good. */
-  | { readonly type: 'stageSettled'; readonly request: StageRequest }
   | { readonly type: 'cardDone' }
   | { readonly type: 'setQuietOn'; readonly on: boolean }
   | { readonly type: 'setQuietHours'; readonly hours: QuietHours }
@@ -152,13 +142,17 @@ export const levelStageRequest = (path: StartPath | null): StageRequest | null =
   path === 'visitor' ? { to: 'visitor', reason: 'self_select' } : null;
 
 /**
- * The stage the screens show: the one the learner just chose while the server hasn't taken it,
- * else the profile's, else what the level question implies (before the profile exists).
+ * The stage the screens show: the one the learner just chose while the server hasn't taken it
+ * (`pending`), else the profile's, else what the level question implies (before the profile).
  */
-export function shownStage(s: OnboardingState, profileStage: Stage | null): Stage {
-  if (s.pendingStage !== null) return s.pendingStage.to;
+export function shownStage(
+  startPath: StartPath | null,
+  profileStage: Stage | null,
+  pending: Stage | null,
+): Stage {
+  if (pending !== null) return pending;
   if (profileStage !== null) return profileStage;
-  return s.startPath === 'visitor' ? 'visitor' : 'newcomer';
+  return startPath === 'visitor' ? 'visitor' : 'newcomer';
 }
 
 export function onboardingReducer(state: OnboardingState, event: OnboardingEvent): OnboardingState {
@@ -194,13 +188,7 @@ export function onboardingReducer(state: OnboardingState, event: OnboardingEvent
         : state;
     case 'adjustPace':
       return { ...state, pace: event.pace };
-    case 'stageRequested':
-      return { ...state, pendingStage: event.request };
-    case 'stageSettled':
-      // Only the request that was sent: a newer choice made meanwhile stays pending.
-      return sameRequest(state.pendingStage, event.request)
-        ? { ...state, pendingStage: null }
-        : state;
+
     case 'cardDone':
       return stepIndex(state.step) >= stepIndex('card') ? reach(state, 'notifications') : state;
     case 'setQuietOn':
@@ -213,9 +201,6 @@ export function onboardingReducer(state: OnboardingState, event: OnboardingEvent
       return INITIAL_ONBOARDING;
   }
 }
-
-const sameRequest = (a: StageRequest | null, b: StageRequest) =>
-  a !== null && a.to === b.to && a.reason === b.reason;
 
 /** The chrome's language for the learner's first language (English chrome for the others). */
 export const chromeLanguageOf = (firstLanguage: FirstLanguage): ChromeLocale =>
@@ -240,12 +225,10 @@ export function profileInputOf(
     // Asked in context later, after the residency card.
     notificationsAllowed: false,
     pace: s.pace,
-    ...(s.startPath === null
-      ? {}
-      : {
-          startPath: s.startPath,
-          storyStartedOn: s.startPath === 'placement' ? today : null,
-        }),
+    // Always sent: a profile without it reads as an older app's. The roommate step is only
+    // reached with an answer; the placement call is the path when there is none.
+    startPath: s.startPath ?? 'placement',
+    storyStartedOn: s.startPath === 'visitor' ? null : today,
   };
 }
 
