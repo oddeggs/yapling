@@ -3,20 +3,30 @@ import type {
   CanDoProgress,
   CharacterId,
   FirstLanguage,
+  Id,
   Keepsake,
+  LocalDate,
   PhraseProgress,
   PhraseState,
   RingSlotKind,
   Roommate,
   WeekRing,
 } from '@yapling/contracts';
-import { ringWeeks, weekOfDay, type Welcome, type WeekOneUnlock } from '@yapling/domain';
+import {
+  ringWeeks,
+  weekOfDay,
+  type StoryWeek,
+  type Welcome,
+  type WeekOneUnlock,
+} from '@yapling/domain';
 import type { StringKey } from '@yapling/i18n';
 import type { Href } from 'expo-router';
 
 import { hungKeepsakes } from '../payoff/keepsake-model';
 import { copy, text, type Copy } from './copy';
 import { planFor } from './day-plan';
+import { laterDayPlan, type PipsMinuteChip } from './later-days';
+import { storyWeekFor } from './ring-scenes';
 import { timeOfDayAt } from './time-of-day';
 
 /*
@@ -50,6 +60,14 @@ export interface BurrowInput {
   readonly welcome: Welcome;
   /** The learner settled in with Linh first: every box is already unpacked. */
   readonly settledIn?: boolean;
+  /** Week 1's day 1 (the story's start), for the weeks' dates; left out, any date will do. */
+  readonly startedOn?: LocalDate;
+  /** Scenes heard on this phone (stories, postcards, voicemails of every week), by id. */
+  readonly scenes?: ReadonlySet<Id>;
+  /** Today's Pip's minute, as the scene to start; null or left out when no phrase is due. */
+  readonly pipsMinute?: Id | null;
+  /** The top card on the last day the burrow was opened before today, so it isn't repeated. */
+  readonly previousCard?: string | null;
 }
 
 /** Which burrow screen the home shows. */
@@ -124,6 +142,8 @@ export interface BurrowHomeModel {
   readonly action: PrimaryAction | null;
   /** This week's calls, once the week view has opened. */
   readonly ring: { readonly done: number; readonly total: number } | null;
+  /** Pip's minute, as a small chip, on a day a phrase is due and it isn't the card or button. */
+  readonly chip: PipsMinuteChip | null;
 }
 
 /** Calls that fill the ring, in the ring's order. */
@@ -139,6 +159,17 @@ export function currentRing(input: Pick<BurrowInput, 'day' | 'progress'>): WeekR
 
 export const slotDone = (ring: WeekRing, kind: RingSlotKind): boolean =>
   ring.slots[SLOT_KINDS.indexOf(kind)]?.status === 'done';
+
+/** The first day of week 2: from here the days follow the story week's plan. */
+export const LATER_WEEKS_FROM_DAY = 8;
+
+/** A date for the story week when the input has none: only the weeks' dates read it. */
+const ANY_DATE = '2026-01-01';
+
+/** The learner's story week (from week 2 on, what the burrow and the week view follow). */
+export const storyWeekOfInput = (
+  input: Pick<BurrowInput, 'day' | 'progress' | 'startedOn'>,
+): StoryWeek => storyWeekFor(input.progress.weeks, input.day, input.startedOn ?? ANY_DATE);
 
 /** Week 1's episode, the first call: until it is done, the last box is still unpacked. */
 const firstEpisodeDone = (progress: BurrowInput['progress']): boolean =>
@@ -230,6 +261,13 @@ export function keepsakeFor(
   };
 }
 
+/** Post the story week has opened and the learner hasn't opened yet. */
+const unopenedPost = (week: StoryWeek, scenes: ReadonlySet<Id>): boolean =>
+  week.opened.some(
+    (o) =>
+      (o.kind === 'postcard' || o.kind === 'voicemail') && o.scene !== null && !scenes.has(o.scene),
+  );
+
 /** The mailbox appears with the first postcard and holds a letter while there is post unopened. */
 function mailboxFor(day: number, seen: ReadonlySet<WeekOneUnlock>): BurrowHomeModel['mailbox'] {
   if (day < 3) return null;
@@ -239,6 +277,7 @@ function mailboxFor(day: number, seen: ReadonlySet<WeekOneUnlock>): BurrowHomeMo
 
 /** The burrow home: the room by the time of day, what has grown on the shelves, and today. */
 export function burrowHomeModel(input: BurrowInput): BurrowHomeModel {
+  if (input.day >= LATER_WEEKS_FROM_DAY) return laterHomeModel(input);
   const ring = currentRing(input);
   const plan = planFor(input, ring);
   return {
@@ -259,5 +298,37 @@ export function burrowHomeModel(input: BurrowInput): BurrowHomeModel {
       input.day >= 2
         ? { done: ring.slots.filter((s) => s.status === 'done').length, total: ring.slots.length }
         : null,
+    chip: null,
+  };
+}
+
+/** The burrow home from week 2 on: the same room, the story week's day. */
+function laterHomeModel(input: BurrowInput): BurrowHomeModel {
+  const week = storyWeekOfInput(input);
+  const scenes = input.scenes ?? new Set<Id>();
+  const plan = laterDayPlan({
+    week,
+    roommateName: input.roommate.name,
+    away: input.welcome.daysAway >= 1,
+    scenesSeen: scenes,
+    pipsMinute: input.pipsMinute ?? null,
+    previousCard: input.previousCard ?? null,
+  });
+  return {
+    scene: 'burrow',
+    timeOfDay: timeOfDayAt(input.hour),
+    roommate: input.roommate,
+    pipMood: plan.pipMood,
+    shelves: shelvesFor(input.progress.phrases, input.seen),
+    mailbox: unopenedPost(week, scenes) ? 'letter' : 'empty',
+    keepsake: keepsakeFor(input.progress, {
+      name: input.learnerName,
+      roommateName: input.roommate.name,
+    }),
+    delta: plan.delta,
+    line: plan.line,
+    action: plan.action,
+    ring: { done: week.ring.filter((s) => s.status === 'done').length, total: week.ring.length },
+    chip: plan.chip,
   };
 }

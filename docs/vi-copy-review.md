@@ -415,6 +415,35 @@ Knocks for weeks 2–7 (`season-1-script.md`, "Knocks"), Pip's minute, the week'
 | Bunting Week · flags | Your phrases are on the flags | Câu nói của bạn ở trên những lá cờ | New |  |
 | Season end · residency stamp | Season One | Mùa Một | Term | "Mùa" for season everywhere |
 | Burrow · weeks 8 on | Season One is done. Replay any episode, or call Pip. | Mùa Một đã xong. Chơi lại tập nào cũng được, hoặc gọi Pip. | New |  |
+| Burrow · replay ring card | Play Episode {episode} again | Chơi lại Tập {episode} | New | Weeks 7 on: the ring's episode slot replays an episode |
+| Burrow · real-week card | A real-week call with {who} | Cuộc gọi tuần thật với {who} | New | `{who}` is Pip's name or Dex |
+| Burrow · practice card | Practice with {who} | Luyện tập với {who} | New |  |
+| Burrow · story card | {name} has a story for you | {name} có chuyện kể cho bạn | New |  |
+| Burrow · story card, line | Tap a line to see what it means | Chạm vào một câu để xem nghĩa | New | Matches the call's "Chạm để xem nghĩa" |
+| Burrow · story card, with post | And there's post in the mailbox | Và có thư trong hộp thư | New |  |
+| Burrow · post card | Post in the mailbox | Có thư trong hộp thư | New | The postcard's English title is under it |
+| Burrow · voicemail card | {from} left you a voicemail | {from} để lại thư thoại cho bạn | New |  |
+| Burrow · voicemail card, line | Something's happening in Natterwick | Ở Natterwick có chuyện rồi | New | Machine-like? |
+| Burrow · Pip's minute card | A minute with {name} | Một phút với {name} | New | Day 6 of each week, when a phrase is due |
+| Burrow · Pip's minute card, line | One of your phrases, in a small moment | Một cụm từ của bạn, trong một tình huống nhỏ | New | Length |
+| Burrow · Pip's minute chip, VoiceOver | A minute with {name}: one of your phrases. No live minutes used. | Một phút với {name}: một cụm từ của bạn. Không tính phút gọi trực tiếp. | New |  |
+| Burrow · Pip's minute button | Start · about a minute | Bắt đầu · khoảng một phút | New |  |
+| Burrow · wrap card | Week {week}, wrapped up | Xong tuần {week} rồi | New | Day 7; as the wrap's own title |
+| Burrow · wrap button | See the week's wrap | Xem tuần vừa qua | New | Day 7, once nothing else is waiting |
+| Burrow · wrap card, ring full | The ring is full. A keepsake is on the wall | Vòng tuần đã đầy. Có một kỷ vật trên tường | Term | "kỷ vật" as the wrap screen; week 1's `burrow.delta.keepsake` says "kỷ niệm" |
+| Burrow · wrap card, ring not full | See what grew this week | Xem tuần này đã lớn thêm những gì | New | No count of calls not taken |
+| Burrow · waiting card, kicker | WAITING FOR YOU | ĐANG ĐỢI BẠN | Term | From the R7 Week board; the draft above says "Vẫn đang chờ bạn" |
+| Burrow · waiting card, line | Whenever you're ready | Khi nào bạn sẵn sàng | New |  |
+| Burrow · shelf card | Your phrases are growing | Các cụm từ của bạn đang lớn | New | A day with nothing new |
+| Burrow · shelf card, line | See them on this week's page | Xem chúng ở trang tuần này | New |  |
+| Burrow · quiet day card | A quiet day with {name} | Một ngày yên ả với {name} | New | A day with nothing new |
+| Burrow · quiet day card, line | Everything is right where you left it | Mọi thứ vẫn đúng chỗ bạn để | New |  |
+| Burrow · post button | Read the post | Đọc thư | New |  |
+| Week · waiting row | Week {week} · waiting for you | Tuần {week} · đang đợi bạn | Term | As the waiting card's kicker |
+| Week · waiting row, when | Ready | Sẵn sàng | New |  |
+| Week · waiting row, VoiceOver | Waiting for you from week {week}: {title}. Tap to start. | Đang đợi bạn từ tuần {week}: {title}. Chạm để bắt đầu. | New |  |
+| Week · done row, VoiceOver | Done. Tap to play it again | Đã xong. Chạm để chơi lại | New |  |
+| Week · replay tag | Replay | Chơi lại | New | Weeks 7 on, on each ring row |
 
 The knocks above are in `knocks.week{N}_{episode|story|voicemail}`. At Visitor a character's day-1 line is replaced by the Vietnamese in its row (`knocks.week{N}_episode_visitor`); in English it reads as Yapling telling the same news.
 

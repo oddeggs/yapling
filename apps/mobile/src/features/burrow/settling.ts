@@ -1,10 +1,12 @@
 import {
   SETTLING_CHAPTER_COUNT,
   type CallRecord,
+  type EpochMs,
   type LocalDate,
   type SettlingChapterDone,
+  type TimeZone,
 } from '@yapling/contracts';
-import { daysBetween, SETTLING_SCENES, type SettlingChapter } from '@yapling/domain';
+import { daysBetween, localDateOf, SETTLING_SCENES, type SettlingChapter } from '@yapling/domain';
 
 /*
  * Settling in, as rules: which chapter is next, when the burrow suggests a rest, and when the
@@ -77,6 +79,17 @@ export function chaptersFromCalls(
     }));
   return mergeChapters(finished);
 }
+
+/**
+ * A call's day on the app's clock, which the test menu may have moved: the instant it ended, moved
+ * by the clock's offset read now (`appNow` and `realNow` taken together), in the learner's
+ * timezone. Two chapters played on a moved day count as the same day, however long ago the clock
+ * was moved.
+ */
+export const callDayOnAppClock =
+  (appNow: EpochMs, realNow: EpochMs, timezone: TimeZone) =>
+  (at: EpochMs): LocalDate =>
+    localDateOf(at + (appNow - realNow), timezone);
 
 /** Whether a chapter is done. */
 export const isChapterDone = (

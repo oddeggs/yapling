@@ -11,12 +11,14 @@ import { Redirect, useLocalSearchParams, useRouter, type Href } from 'expo-route
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useLastOpen, useSeen, useSession, type SeenMoment } from '../../data';
+import { useAppNow, useLastOpen, useSeen, useSession, type SeenMoment } from '../../data';
 import { useReturnState, type ReturnState } from '../knocks';
 import { stepHref } from '../onboarding/routes';
+import { useCardLog } from './card-log';
 import { BurrowHomeScreen } from './home-screen';
 import { useLinePlayer } from './line-player';
-import { burrowHomeModel, burrowVariant, type BurrowInput } from './model';
+import { burrowHomeModel, burrowVariant, LATER_WEEKS_FROM_DAY, type BurrowInput } from './model';
+import { pipsMinuteSceneOf } from './pips-minute';
 import { previewModel, previewOptionsFrom, settlingPreviewFrom } from './preview';
 import { BURROW_ROUTES, callRoute } from './routes';
 import { backModel, doorModel } from './scenes';
@@ -68,14 +70,19 @@ function impliedSeen(day: number, progress: Progress, visitorPath: boolean): Wee
 }
 
 /** The learner's burrow input from the app's data, on the story's day; null while it loads. */
-function useLiveInput(live: SettlingLive | null): BurrowInput | null {
+function useLiveInput(
+  live: SettlingLive | null,
+  previousCard: string | null | undefined,
+): BurrowInput | null {
   const seen = useSeen();
   const returnState = useReturnState();
   const { previousAt } = useLastOpen();
+  const now = useAppNow(live?.profile.timezone);
   return useMemo(() => {
-    if (live === null || !seen.loaded) return null;
+    if (live === null || !seen.loaded || previousCard === undefined) return null;
     const { profile, progress, clock } = live;
     const welcome = welcomed.has(previousAt) ? welcomeOf({ ...returnState, away: false }) : null;
+    const later = clock.storyDay >= LATER_WEEKS_FROM_DAY;
     return {
       day: clock.storyDay,
       hour: live.hour,
@@ -86,8 +93,20 @@ function useLiveInput(live: SettlingLive | null): BurrowInput | null {
       seen: new Set([...seen.seen, ...impliedSeen(clock.storyDay, progress, live.visitorPath)]),
       welcome: welcome ?? welcomeOf(returnState),
       settledIn: live.visitorPath && live.day.letterOn !== null,
+      startedOn: clock.startedOn,
+      scenes: seen.scenes,
+      pipsMinute: later
+        ? pipsMinuteSceneOf({
+            phrases: progress.phrases,
+            now,
+            timezone: profile.timezone,
+            day: clock.storyDay,
+            stage: profile.stage,
+          })
+        : null,
+      previousCard,
     };
-  }, [live, seen, returnState, previousAt]);
+  }, [live, seen, returnState, previousAt, now, previousCard]);
 }
 
 /** Development only: the preview learner the route's params ask for, or null. */
@@ -125,16 +144,17 @@ export function BurrowHome() {
   const params = useLocalSearchParams();
   const router = useRouter();
   const settling = useSettlingLive();
-  const live = useLiveInput(settling);
+  const session = useSession();
+  const userId = session.session?.userId ?? null;
+  const today = settling?.day.today ?? null;
+  const cards = useCardLog(userId, today);
+  const live = useLiveInput(settling, cards.previous);
   const preview = usePreviewInput(params);
   const settlingPreview = useSettlingPreview(params);
-  const session = useSession();
   // Development only: `?visitor=1&chapters=N` starts the live learner with Linh, chapters done.
   const seedKey = __DEV__
     ? `${one(params, 'visitor') ?? ''}:${one(params, 'chapters') ?? ''}`
     : ':';
-  const userId = session.session?.userId ?? null;
-  const today = settling?.day.today ?? null;
   useEffect(() => {
     if (seedKey === ':' || userId === null || today === null) return;
     const [visitor, chapters] = seedKey.split(':');
@@ -256,6 +276,7 @@ export function BurrowHome() {
   return withList(
     <BurrowHomeScreen
       model={burrowHomeModel(input)}
+      {...(preview === null ? { onShown: cards.shown } : {})}
       onOpenMe={() => go(BURROW_ROUTES.me)}
       onOpenWeek={() => go(BURROW_ROUTES.week)}
       onNavigate={go}

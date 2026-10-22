@@ -18,4 +18,10 @@ export const weekVi = {
   'week.phrasesTitle': 'CỤM TỪ TUẦN NÀY',
   'week.seedNote': 'Gói hạt: bạn mới nghe thấy. Nói ra để chúng nảy mầm.',
   'week.cta': 'Đến quán cà phê với {name}',
+  'week.waiting.tag': 'Tuần {week} · đang đợi bạn',
+  'week.waiting.when': 'Sẵn sàng',
+  'week.waiting.a11y': 'Đang đợi bạn từ tuần {week}: {title}. Chạm để bắt đầu.',
+  'week.slot.again': 'Chơi lại',
+  'week.slot.a11y.again': 'Đã xong. Chạm để chơi lại',
+  'week.slot.replay': 'Chơi lại',
 } as const satisfies Translation<typeof weekEn>;

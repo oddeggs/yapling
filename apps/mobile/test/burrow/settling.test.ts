@@ -4,6 +4,7 @@ import { translator } from '@yapling/i18n';
 
 import { render } from '../../src/features/burrow/copy';
 import {
+  callDayOnAppClock,
   chapterOfScene,
   chaptersFromCalls,
   letterDayOf,
@@ -149,6 +150,25 @@ describe('the day plan', () => {
     ).toEqual({ kind: 'letter', done: 1, goodnight: false });
     expect(settlingPlan(day({ chapters: all, goodnightOn: '2026-10-23' }))).toMatchObject({
       goodnight: true,
+    });
+  });
+});
+
+describe('the day plan on a moved clock', () => {
+  it('counts two chapters played on a moved day as that day, and suggests a rest', () => {
+    const real = Date.UTC(2026, 9, 23, 3, 0); // 10:00 in Hồ Chí Minh City, on the 23rd
+    const moved = real + 2 * 86_400_000; // the test menu moved the app to the 25th
+    // The clock was moved an hour before the second chapter ended; the burrow reads it now.
+    const dayOf = callDayOnAppClock(moved + 3_600_000, real + 3_600_000, 'Asia/Ho_Chi_Minh');
+    const calls = [
+      { id: 'c2', sceneId: 's1-set2', endReason: 'scene_complete', endedAt: real + 600_000 },
+      { id: 'c3', sceneId: 's1-set3', endReason: 'scene_complete', endedAt: real + 3_500_000 },
+    ] as const;
+    const chapters = mergeChapters([done(1, '2026-10-24')], chaptersFromCalls(calls, dayOf));
+    expect(chapters.map((c) => c.doneOn)).toEqual(['2026-10-24', '2026-10-25', '2026-10-25']);
+    expect(settlingPlan(day({ chapters, today: '2026-10-25' }))).toMatchObject({
+      kind: 'rest',
+      chapter: 4,
     });
   });
 });

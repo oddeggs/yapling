@@ -20,6 +20,9 @@ export const BURROW_ROUTES = {
   seasonMap: href('/season'),
 } as const;
 
+/** The week's wrap on the last day of week `week` (the payoff's `PAYOFF_ROUTES.wrap`). */
+export const wrapRoute = (week: number): Href => href(`/(home)/wrap?week=${week}`);
+
 /** A call: the episode, the real-week call or the practice call, by scene id. */
 export const callRoute = (sceneId: string): Href => href(`/(call)/${sceneId}`);
 

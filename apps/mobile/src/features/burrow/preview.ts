@@ -16,6 +16,7 @@ import {
 import { findPhrase, S1_E1 } from '@yapling/story';
 
 import type { BurrowInput, BurrowProgress } from './model';
+import { laterPreview } from './preview-later';
 import type { SettlingInput } from './settling-model';
 
 /*
@@ -34,6 +35,10 @@ export interface PreviewOptions {
   readonly hour?: number;
   /** Day 1 before Linh has knocked. */
   readonly beforeDoor?: boolean;
+  /** After the first week: the calendar weeks the learner was away and did nothing. */
+  readonly missed?: readonly number[];
+  /** After the first week: the card shown the day before. */
+  readonly previousCard?: string | null;
 }
 
 export interface PreviewData {
@@ -44,12 +49,19 @@ export interface PreviewData {
 
 const PREVIEW_TIMEZONE = 'Asia/Ho_Chi_Minh';
 
-/** A learner on day `day` of the first week, having done everything up to it. */
+/** The last day the preview learner can be on (week 10). */
+export const PREVIEW_LAST_DAY = 70;
+
+/**
+ * A learner on day `day`, having done everything up to it: the first week as it plays, and after
+ * it each day's thing (`laterPreview`).
+ */
 export function previewModel(
   day: number,
   options: PreviewOptions = {},
   now = Date.now(),
 ): PreviewData {
+  if (day > 8) return laterPreview(day, options, now);
   const after = options.after === true;
   const installedAt = now - (day - 1) * DAY_MS;
   const at = (d: number, hour = 10) => installedAt + (d - 1) * DAY_MS + (hour - 12) * 3_600_000;
@@ -137,7 +149,10 @@ export function previewModel(
   };
 }
 
-/** The dev params a preview route reads: `?day=5&after=1&away=1&hour=19&door=1`. */
+/**
+ * The dev params a preview route reads: `?day=5&after=1&away=1&hour=19&door=1`, and after the
+ * first week `missed=3,4` (weeks away) and `prev=<card id>` (yesterday's card).
+ */
 export function previewOptionsFrom(
   params: Readonly<Record<string, string | string[] | undefined>>,
 ): {
@@ -148,8 +163,13 @@ export function previewOptionsFrom(
     const v = params[key];
     return Array.isArray(v) ? v[0] : v;
   };
-  const day = Math.max(1, Math.min(8, Number(one('day') ?? 2) || 2));
+  const day = Math.max(1, Math.min(PREVIEW_LAST_DAY, Number(one('day') ?? 2) || 2));
   const hour = one('hour');
+  const missed = (one('missed') ?? '')
+    .split(',')
+    .map(Number)
+    .filter((n) => n > 0);
+  const previous = one('prev');
   return {
     day,
     options: {
@@ -157,6 +177,8 @@ export function previewOptionsFrom(
       away: one('away') === '1',
       beforeDoor: one('door') === '1',
       ...(hour !== undefined ? { hour: Number(hour) } : {}),
+      ...(missed.length > 0 ? { missed } : {}),
+      ...(previous !== undefined ? { previousCard: previous } : {}),
     },
   };
 }
