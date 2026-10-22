@@ -1,0 +1,398 @@
+{
+  "s1-e1-visitor-call": {
+    "sha1": "00dfd1844262af071639aa1637b5b6cbbd9d707e",
+    "heard": "Can you call them please?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e1-visitor-postcard": {
+    "sha1": "6c1c627b69bd3561fafbc6a80a163d4e3d08d96e",
+    "heard": "Remember. Sorry? Again, please. It always works",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e1-visitor-rent": {
+    "sha1": "7254a407145a6d97f20887f54bbeaba495a7a79e",
+    "heard": "Rent is it bread or money?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-bea-lovely": {
+    "sha1": "30e72e304e2659e5d172a5ab4c954aacf9c9f34f",
+    "heard": "Lovely",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-bea-right": {
+    "sha1": "8920c822708e5ca88790fd1df69936a6cd2edf5a",
+    "heard": "Right",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-bea-slowly": {
+    "sha1": "476739051d257f7ea8c484f57178828c1480e17b",
+    "heard": "Of course, love",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-linh-again": {
+    "sha1": "ef1e1f641fe362f4e688903b67d9de840e4dea23",
+    "heard": "Again",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-linh-english": {
+    "sha1": "5d71a299e0ddf8b77fe16cada702404ae3efc4b6",
+    "heard": "Bạn thử nói bằng tiếng Anh nhé. Cứ đọc thẻ gợi ý là được",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-linh-great": {
+    "sha1": "681c0c42e7956f38173e5c5a3d9b8c02126de30e",
+    "heard": "Great",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-linh-okay": {
+    "sha1": "9bb8f16ff13dd8b079e7c247311555f73d4cf244",
+    "heard": "Okay",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-linh-skip": {
+    "sha1": "d33f1f7d82a81b9e0628dda08716437eb20a3310",
+    "heard": "That's okay",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-linh-slowly": {
+    "sha1": "cb910116e2c3e89431e63b7697a09dc4d1ed98aa",
+    "heard": "Sure. Slowly",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-linh-together": {
+    "sha1": "1e6c58a05314825812064a02971f83e3211ff750",
+    "heard": "Mình nói cùng nhau nhé",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-linh-yes": {
+    "sha1": "5649ea0b946c30fe5390973d7bf302607cbe7a9a",
+    "heard": "Yes",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-mei-great": {
+    "sha1": "ed3c1edfa363cc367038baea95a360b5d654fa79",
+    "heard": "Great",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-mei-okay": {
+    "sha1": "223dcc7535072d5e4c0ab9b6a2d6cc7128138416",
+    "heard": "Okay",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-mei-slowly": {
+    "sha1": "04f50f4c547b82807f9e770d7fc1dcf792dcfd7e",
+    "heard": "Sure, sure",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-pip-great": {
+    "sha1": "556a2425c8bca8dfc0c61634d90a3e48579e33ea",
+    "heard": "Great",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-pip-slowly": {
+    "sha1": "4483d58e0d8d0a2cd21a63ba8bc8446161072e0b",
+    "heard": "Okay. Slowly",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set-pip-yes": {
+    "sha1": "4a14d5669727ce206700b6fff7f4922329dbd020",
+    "heard": "Yes!",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set1-01": {
+    "sha1": "aca2fcad3a2618b020d09fc3f1358c0f73657668",
+    "heard": "Hi, I'm Lynn.",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set1-02": {
+    "sha1": "696d872a391ced62769f16409414652579acde7f",
+    "heard": "Chào bạn, mình là Linh ở nhà bên cạnh. Hồi mới xuống phà, mình cũng chưa nói được câu nào đâu. Giờ mình nói trước, bạn nói theo nhé",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set1-03": {
+    "sha1": "a82bc46bbffaa03988d92586342b43b3e81541cd",
+    "heard": "Hi. Hi, Lynn",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set1-04": {
+    "sha1": "d97f63fc612209de0e9fe5cc1cbd0a0bb9dae3f4",
+    "heard": "I'm Lynn and you?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set1-05": {
+    "sha1": "4e9c77300d193912abde395a8008300d54574a02",
+    "heard": "Nice to meet you",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set1-06": {
+    "sha1": "acff3c5e9030348b6bb478748ce3fd07e53f8661",
+    "heard": "Nice to meet you too i'm Pip",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set1-07": {
+    "sha1": "6142dec89c311917ef07765c2221c58c8121c8f2",
+    "heard": "Bye. See you tomorrow",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set1-08": {
+    "sha1": "06c9fb566a740cd8743a4dbc19ba42fde1a36b4d",
+    "heard": "Bạn vừa nói tiếng Anh rồi đó. Mai gặp lại nhé",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set2-01": {
+    "sha1": "d4a58ebc9752de983116f8bd5bbaf890c2887947",
+    "heard": "So many boxes help, please",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set2-02": {
+    "sha1": "5a963cf9fe6a52e7bef498e2c02aff61408cfb2c",
+    "heard": "Mình hỏi: \"Bạn chọn một thẻ rồi đọc to lên nhé.\"",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set2-03": {
+    "sha1": "ae7a773f6ba1c0d59b7d9a8e1b9a8be3bee7217d",
+    "heard": "Is this your box?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set2-04": {
+    "sha1": "8da425a976583caab1654975ccb627854925de08",
+    "heard": "Books or clothes?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set2-05": {
+    "sha1": "0ed1d5a42d746bf84a33e56f0971426fff485744",
+    "heard": "Tea? For you",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set2-06": {
+    "sha1": "274e4135836c61c998df9f0b0544d8d1adae2de9",
+    "heard": "A gift for you. Here you go",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set2-07": {
+    "sha1": "5b549fb0fae53bdca7d52db54811dc10b809af00",
+    "heard": "You're welcome",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set2-08": {
+    "sha1": "d9884b32003c879168156069d8bbfba63a5b0cc4",
+    "heard": "One box done. Thank you",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set3-01": {
+    "sha1": "1a07d10b81f8ddc13417e1200e790c715dc66bb8",
+    "heard": "Mình chỉ bạn hai câu cứu nguy nhé. Không nghe kịp thì nói \"Sorry, again please\". Người ta nói nhanh quá thì nói \"Slowly please\". Ở Natwick, ai cũng sẵn lòng nói lại cho bạn",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set3-02": {
+    "sha1": "dfcce33fb4fb99ed44d5c520d80fe701ee3aac5e",
+    "heard": "Sorry? Again, please",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set3-03": {
+    "sha1": "347eba87404250982f18501d630d9d35181bf221",
+    "heard": "Slowly please",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set3-04": {
+    "sha1": "f42f8152608f504f1c1b0d189250cfe3feec55cf",
+    "heard": "Ooh, I found my snacks and my map and my notebook",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set3-05": {
+    "sha1": "b266839a28e6e4a65cb2bb9c120d98481bcdda3e",
+    "heard": "Snacks Map Notebook",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set3-06": {
+    "sha1": "6844d4c56b2aaf41b8cf98ccc2d526aa2eb1c035",
+    "heard": "See? It works every time",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set3-07": {
+    "sha1": "0024be79c0ea9c2ed8f1616ff619f675b33bda5d",
+    "heard": "Use them every day. Bye",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set4-01": {
+    "sha1": "f491c34c41364ddd492645446932c6c9fda66745",
+    "heard": "This is the bus stop",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set4-02": {
+    "sha1": "6d919b864e91d398e3e3a9a789d98cab36112760",
+    "heard": "Morning. This is bus 45",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set4-03": {
+    "sha1": "643a188c4a71ded46561e0f108610a2d0ff5b30d",
+    "heard": "Which bus? 45 or 50?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set4-04": {
+    "sha1": "849f8e6973e5c37c1754a43e2dcb96bd8030476e",
+    "heard": "I leave at nine",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set4-05": {
+    "sha1": "69c21a51e5f47ff688195f76bc46d50b9bfb2e98",
+    "heard": "What time nine or ten?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set4-06": {
+    "sha1": "af726d031e77d925ae7b4c7d554bb2a7b945a210",
+    "heard": "Tickets are $2 each, love",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set4-07": {
+    "sha1": "7fc71477902bd6947f00e9a1a29701f8d7decc46",
+    "heard": "How many tickets? One or two?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set4-08": {
+    "sha1": "d3a443fa45ada8447e8a576e2a517b85bc26c6f8",
+    "heard": "Two tickets. Here you go",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set4-09": {
+    "sha1": "19bc9acd150a59365da9edd9ab6218f3899fc536",
+    "heard": "Lovely. Have a nice day",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set5-01": {
+    "sha1": "c23548a7b749ec4bd8c951daf100d7ac02745115",
+    "heard": "Hi. Welcome to my cafe",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set5-02": {
+    "sha1": "26bf616fb385cc52485df64cf52050659f5665be",
+    "heard": "I'm May. Tea or coffee?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set5-03": {
+    "sha1": "b8bcf054ac5b30369035f2d350f02ed69b1036a6",
+    "heard": "Kaya toast too? It's really good",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set5-04": {
+    "sha1": "43737f2d498291253887ef67f02f838c760bfeca",
+    "heard": "Ask her how much?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set5-05": {
+    "sha1": "804fda007956259d59772d34123f0b3cae1d1db2",
+    "heard": "$3, please",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set5-06": {
+    "sha1": "e747195a46507155a53941debddce84d5f646211",
+    "heard": "Thanks, Lah. Enjoy",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set5-07": {
+    "sha1": "637f18d1368c906ba2d1042f001f5420c708222f",
+    "heard": "Okay back to work",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set5-08": {
+    "sha1": "b81b55b79cca56681ccabb59ece2e7927317dda3",
+    "heard": "Mae looks tired",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set6-01": {
+    "sha1": "2482e640569086cd916543fd2d1c94ab55fd1c72",
+    "heard": "I'm writing a page about you",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set6-02": {
+    "sha1": "fcfd675fdea5965aff3732680a1b8bc1b889a1e7",
+    "heard": "I'm from Vietnam. And you?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set6-03": {
+    "sha1": "a83653b702c56be5093947cebc34858424b95cdd",
+    "heard": "I work at the library. And you?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set6-04": {
+    "sha1": "23f2d2659844958864d0e4fed8f4ee33c053beb1",
+    "heard": "I like snacks and you?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set6-05": {
+    "sha1": "652787e35431a16924a372562c45bcfbf41ffe33",
+    "heard": "Giỏi lắm! Bạn sẵn sàng rồi đó. Mai mình gặp nhau ở quán của May nhé",
+    "diff": [],
+    "stray": []
+  },
+  "s1-set6-06": {
+    "sha1": "d3579601004df778523f160458c3fcd72c8d72de",
+    "heard": "Look! A letter under May's door",
+    "diff": [],
+    "stray": []
+  }
+}
