@@ -15,7 +15,10 @@ describe('who speaks with which voice', () => {
     }
   });
 
-  it("lets Dex borrow Sol's voice while he has none of his own", () => {
-    expect(voiceFor('dex')).toBe(cast['dex']?.voice_id ?? cast['sol']?.voice_id);
+  it('lets Dex speak with his own voice, not a stand-in', () => {
+    expect(cast['dex']?.voice_id).toBeTruthy();
+    expect(voiceFor('dex')).toBe(cast['dex']?.voice_id);
+    expect(voiceFor('dex')).not.toBe(cast['sol']?.voice_id);
+    expect(VOICE_STAND_INS.dex).toBeUndefined();
   });
 });
