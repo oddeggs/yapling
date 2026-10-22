@@ -35,7 +35,15 @@ export function registerDeletionStep(name: string, step: DeletionStep): () => vo
 }
 
 /** This lane's tables, explicit rather than trusting the cascade alone. */
-const OWN_TABLES = ['push_tokens', 'memory_items', 'progress', 'profiles', 'accounts', 'sessions'];
+const OWN_TABLES = [
+  'push_tokens',
+  'memory_items',
+  'stage_changes',
+  'progress',
+  'profiles',
+  'accounts',
+  'sessions',
+];
 
 async function revokeApple(env: Bindings, userId: string, now: number): Promise<void> {
   const key = appleKeyOf(env, identityConfig(env.ENVIRONMENT).appleBundleId);
