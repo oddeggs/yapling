@@ -57,6 +57,7 @@ export default function CallRoute() {
       scene={scene}
       stage={profile?.stage ?? 'newcomer'}
       firstLanguage={profile?.firstLanguage ?? chosen.firstLanguage}
+      pace={profile?.pace ?? chosen.pace}
       roommate={
         profile?.roommate ?? {
           name: chosen.roommateName.trim() || 'Pip',

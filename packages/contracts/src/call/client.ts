@@ -7,6 +7,7 @@ import {
   Id,
   LIMITS,
   Ms,
+  Pace,
   Phrase,
   Stage,
   Token,
@@ -40,6 +41,8 @@ export const HelloFrame = z.object({
   turnMode: TurnMode,
   /** From the last `ready` of a dropped call, to resume its beat; null for a new call. */
   resumeToken: Token.nullable(),
+  /** The pace from the learner's profile; left out or null for the stage's own. */
+  pace: Pace.nullable().optional(),
 });
 export type HelloFrame = z.infer<typeof HelloFrame>;
 

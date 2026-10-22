@@ -152,6 +152,21 @@ describe('hold-to-talk', () => {
     phone.close();
   }, 30_000);
 
+  it('gives the hint sooner to a learner who asked for a slower pace', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token, { turnMode: 'hold_to_talk', pace: 'slower' });
+    await listening(phone);
+    const from = phone.frames.length;
+    const opened = Date.now();
+    const hint = await phone.next('hint', () => true, { from, timeoutMs: 10_000 });
+    expect(hint.phrase.length).toBeGreaterThan(0);
+    // Three quarters of the stage's 4 s pause.
+    const waited = Date.now() - opened;
+    expect(waited).toBeGreaterThan(2_500);
+    expect(waited).toBeLessThan(3_700);
+    phone.close();
+  }, 30_000);
+
   it('reopens a Scribe session that closed, on the next press, with words on the mic clock', async () => {
     sttTiming.idleMs = 60_000;
     providers.scribeIdleCloseMs = 300;

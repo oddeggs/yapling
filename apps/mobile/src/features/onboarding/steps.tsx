@@ -239,7 +239,7 @@ function Card({ summary }: { summary: PlacementSummary }) {
   const router = useRouter();
   const { t } = useLocale();
   const toast = useToast();
-  const { profile } = useProfile();
+  const { profile, updateProfile } = useProfile();
   const [state, dispatch] = useOnboarding();
   const species = profile?.roommate.species ?? state.species;
   const roommateName = profile?.roommate.name ?? nameOrPip(state.roommateName);
@@ -257,6 +257,8 @@ function Card({ summary }: { summary: PlacementSummary }) {
   );
   const adjust = (pace: Pace) => {
     dispatch({ type: 'adjustPace', pace });
+    // On the profile for every call's `hello` (queued while offline).
+    void updateProfile({ pace }).catch(() => undefined);
     toast({
       text: t(
         pace === 'faster' ? 'onboarding.card.adjustedFaster' : 'onboarding.card.adjustedSlower',

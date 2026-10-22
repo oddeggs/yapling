@@ -6,6 +6,7 @@ import {
   type CallEndReason,
   type CharacterId,
   type FirstLanguage,
+  type Pace,
   type Stage,
   type TurnMode,
 } from '@yapling/contracts';
@@ -64,6 +65,8 @@ export interface CallScreenProps {
   readonly scene: Scene;
   readonly stage: Stage;
   readonly firstLanguage: FirstLanguage;
+  /** The pace the learner asked for on the residency card; null for the stage's own. */
+  readonly pace?: Pace | null;
   /** The roommate the learner picked. */
   readonly roommate: { readonly name: string; readonly species: PipSpecies };
   readonly turnMode: TurnMode;
@@ -111,6 +114,7 @@ function CallScreenInner({
   scene,
   stage,
   firstLanguage,
+  pace = null,
   roommate,
   turnMode,
   url,
@@ -137,6 +141,7 @@ function CallScreenInner({
     kind,
     stage,
     firstLanguage,
+    pace,
     turnMode,
     url,
     clientVersion,

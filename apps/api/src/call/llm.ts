@@ -50,11 +50,17 @@ export function systemFor(
     targets: learner.targets,
     firstLanguage: learner.firstLanguage,
   });
+  const pace =
+    learner.pace === 'slower'
+      ? '\n\nThe learner asked for a slower pace: keep every sentence especially short and simple, one idea at a time.'
+      : learner.pace === 'faster'
+        ? '\n\nThe learner asked for more challenge: talk at the top of the stage, with a little more variety, still briefly.'
+        : '';
   return [
     { type: 'text', text: prompt.cached, cache_control: { type: 'ephemeral' } },
     {
       type: 'text',
-      text: `${prompt.dynamic}\n\nThe learner's words come from speech recognition and may hold small recognition mistakes; guess the meaning kindly. Lines from other characters in the scene appear as [Name] in the conversation.`,
+      text: `${prompt.dynamic}${pace}\n\nThe learner's words come from speech recognition and may hold small recognition mistakes; guess the meaning kindly. Lines from other characters in the scene appear as [Name] in the conversation.`,
       cache_control: { type: 'ephemeral' },
     },
   ];

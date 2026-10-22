@@ -95,6 +95,7 @@ describe('moving in', () => {
       quietHours: { start: '22:00', end: '08:00' },
       timezone: 'Asia/Jakarta',
       notificationsAllowed: false,
+      pace: null,
     });
     expect(ProfileInput.safeParse(input).success).toBe(true);
   });

@@ -60,6 +60,31 @@ describe('the profile', () => {
     });
   });
 
+  it("keeps the learner's pace: asked after onboarding, kept by a whole-profile write", async () => {
+    const { session, profile } = await onboarded();
+    expect(profile.pace).toBeNull();
+    const token = session.token;
+    const patch = await call('/api/me/profile', {
+      method: 'PATCH',
+      body: { pace: 'slower' },
+      token,
+    });
+    expect(Profile.parse(await expectJson(patch)).pace).toBe('slower');
+    const kept = await call('/api/me/profile', { method: 'PUT', body: onboarding, token });
+    expect(Profile.parse(await expectJson(kept)).pace).toBe('slower');
+    const cleared = await call('/api/me/profile', {
+      method: 'PUT',
+      body: { ...onboarding, pace: null },
+      token,
+    });
+    expect(Profile.parse(await expectJson(cleared)).pace).toBeNull();
+    await expectError(
+      await call('/api/me/profile', { method: 'PATCH', body: { pace: 'fast' }, token }),
+      400,
+      'bad_request',
+    );
+  });
+
   it('never takes the stage from the client', async () => {
     const { session } = await onboarded();
     const put = await call('/api/me/profile', {

@@ -51,6 +51,10 @@ describeSchemas('primitives', primitives, {
     ['neighbor', 'b1'],
   ],
   Track: [['life', 'work', 'both'], ['play']],
+  Pace: [
+    ['slower', 'faster'],
+    ['both', 'normal'],
+  ],
   FirstLanguage: [
     ['vi', 'id', 'th', 'pt', 'es', 'ja', 'ko', 'tr', 'other'],
     ['en', 'vi-VN', ''],

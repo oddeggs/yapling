@@ -71,7 +71,7 @@ const profileInput = {
   timezone: 'Asia/Ho_Chi_Minh',
   notificationsAllowed: true,
 };
-const profileBody = { revision: 3, ...profileInput, stage: 'newcomer', updatedAt: at };
+const profileBody = { revision: 3, ...profileInput, pace: null, stage: 'newcomer', updatedAt: at };
 
 describeSchemas('profile', profile, {
   Name: [
@@ -93,8 +93,13 @@ describeSchemas('profile', profile, {
     ],
   ],
   Profile: [
-    [profileBody, { ...profileBody, quietHours: null, firstLanguage: 'other', stage: 'voice' }],
     [
+      profileBody,
+      { ...profileBody, quietHours: null, firstLanguage: 'other', stage: 'voice' },
+      { ...profileBody, pace: 'slower' },
+    ],
+    [
+      { ...profileBody, pace: 'both' },
       { ...profileBody, revision: 0 },
       { ...profileBody, stage: 'b1' },
       { ...profileBody, firstLanguage: 'en' },
@@ -103,14 +108,24 @@ describeSchemas('profile', profile, {
     ],
   ],
   ProfileInput: [
-    [profileInput, { ...profileInput, notificationsAllowed: false, quietHours: null }],
-    [{ ...profileInput, track: undefined }],
+    [
+      profileInput,
+      { ...profileInput, notificationsAllowed: false, quietHours: null },
+      { ...profileInput, pace: 'faster' },
+      { ...profileInput, pace: null },
+    ],
+    [
+      { ...profileInput, track: undefined },
+      { ...profileInput, pace: 'fast' },
+    ],
   ],
   ProfileUpdate: [
     [
       { displayName: 'Lan Anh' },
       { quietHours: null },
       { track: 'both', notificationsAllowed: false },
+      { pace: 'slower' },
+      { pace: null },
     ],
     [{}, { stage: 'regular', displayName: '' }, { roommate: { species: 'cat' } }],
   ],

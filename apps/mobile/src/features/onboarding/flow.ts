@@ -1,6 +1,7 @@
 import {
   FirstLanguage,
   Name,
+  Pace,
   QuietHours,
   RoommateSpecies,
   type Profile,
@@ -41,12 +42,8 @@ export const DEFAULT_TRACK: Track = 'both';
 /** The roommate's name until the learner renames it. */
 export const DEFAULT_ROOMMATE_NAME = CAST.pip.name;
 
-/**
- * "Too easy" / "Too hard" on the residency card. The profile has no field for it yet: it stays on
- * the phone for the call's `hello` to carry once the protocol has a place for it.
- */
-export const Pace = z.enum(['faster', 'slower']);
-export type Pace = z.infer<typeof Pace>;
+/** "Too easy" / "Too hard" on the residency card: saved on the profile, sent in each call's `hello`. */
+export { Pace };
 
 export const OnboardingState = z.object({
   /** The furthest step reached: where a relaunch picks up. */
@@ -176,6 +173,7 @@ export function profileInputOf(s: OnboardingState, timezone: TimeZone): ProfileI
     timezone,
     // Asked in context later, after the residency card.
     notificationsAllowed: false,
+    pace: s.pace,
   };
 }
 

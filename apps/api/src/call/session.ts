@@ -28,7 +28,7 @@ import { Replies, type Active } from './reply';
 import { AI_DISCLOSURE_EVERY_MS, BREAK_REMINDER_AFTER_MS, crisisResourcesKey } from './safety';
 import type { TtsVoice } from './tts';
 import type { CharacterLine } from './transcript';
-import { stageVoice, VoicePool } from './voice-pool';
+import { paceSilenceMs, stageVoice, VoicePool } from './voice-pool';
 
 /*
  * One live call while a phone is attached: the director's effects carried out in order (recorded
@@ -303,7 +303,12 @@ export class CallSession {
       }
     }
     if (this.director.listening() !== null) {
-      this.learner?.openWindow(STAGE_SPEECH[this.data.learner.stage].silenceMs);
+      this.learner?.openWindow(
+        paceSilenceMs(
+          STAGE_SPEECH[this.data.learner.stage].silenceMs,
+          this.data.learner.pace ?? null,
+        ),
+      );
     }
   }
 
@@ -354,7 +359,7 @@ export class CallSession {
   }
 
   private voice(character: CharacterId): TtsVoice {
-    return stageVoice(character, this.data.learner.stage);
+    return stageVoice(character, this.data.learner.stage, this.data.learner.pace ?? null);
   }
 
   private lineHost(): LineHost {

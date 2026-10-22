@@ -13,6 +13,7 @@ interface ProfileRow {
   quiet_end: string | null;
   timezone: string;
   notifications_allowed: number;
+  pace: string | null;
   stage: string;
   updated_at: number;
 }
@@ -30,6 +31,7 @@ function fromRow(row: ProfileRow): Profile {
         : { start: row.quiet_start, end: row.quiet_end },
     timezone: row.timezone,
     notificationsAllowed: row.notifications_allowed === 1,
+    pace: row.pace,
     stage: row.stage,
     updatedAt: row.updated_at,
   });
@@ -54,12 +56,13 @@ function editableValues(input: ProfileInput) {
     input.quietHours?.end ?? null,
     input.timezone,
     input.notificationsAllowed ? 1 : 0,
+    input.pace ?? null,
   ] as const;
 }
 
 /**
  * `PUT`: the whole editable profile, at the end of onboarding or again later. A new profile starts
- * at Newcomer; an existing one keeps its stage.
+ * at Newcomer; an existing one keeps its stage, and its pace when the body leaves it out.
  */
 export async function putProfile(
   db: D1Database,
@@ -70,15 +73,17 @@ export async function putProfile(
   const row = await db
     .prepare(
       `INSERT INTO profiles (user_id, revision, display_name, first_language, roommate_species,
-         roommate_name, track, quiet_start, quiet_end, timezone, notifications_allowed, updated_at)
-       VALUES (?1, 1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
+         roommate_name, track, quiet_start, quiet_end, timezone, notifications_allowed, pace,
+         updated_at)
+       VALUES (?1, 1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?13)
        ON CONFLICT (user_id) DO UPDATE SET
          revision = revision + 1, display_name = ?2, first_language = ?3, roommate_species = ?4,
          roommate_name = ?5, track = ?6, quiet_start = ?7, quiet_end = ?8, timezone = ?9,
-         notifications_allowed = ?10, updated_at = ?11
+         notifications_allowed = ?10, pace = CASE WHEN ?12 = 1 THEN ?11 ELSE pace END,
+         updated_at = ?13
        RETURNING *`,
     )
-    .bind(userId, ...editableValues(input), now)
+    .bind(userId, ...editableValues(input), input.pace === undefined ? 0 : 1, now)
     .first<ProfileRow>();
   if (row === null) throw new Error('the profile write returned nothing');
   return fromRow(row);
@@ -93,6 +98,7 @@ function merged(profile: Profile, update: ProfileUpdate): ProfileInput {
     quietHours: update.quietHours === undefined ? profile.quietHours : update.quietHours,
     timezone: update.timezone ?? profile.timezone,
     notificationsAllowed: update.notificationsAllowed ?? profile.notificationsAllowed,
+    pace: update.pace === undefined ? profile.pace : update.pace,
   };
 }
 
@@ -114,7 +120,7 @@ export async function patchProfile(
         `UPDATE profiles SET
            revision = revision + 1, display_name = ?3, first_language = ?4, roommate_species = ?5,
            roommate_name = ?6, track = ?7, quiet_start = ?8, quiet_end = ?9, timezone = ?10,
-           notifications_allowed = ?11, updated_at = ?12
+           notifications_allowed = ?11, pace = ?12, updated_at = ?13
          WHERE user_id = ?1 AND revision = ?2
          RETURNING *`,
       )
