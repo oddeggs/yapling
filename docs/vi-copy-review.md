@@ -995,7 +995,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## After the call, phrase growth, fix graduation, the keepsake
 
-`packages/i18n/src/payoff.vi.ts` · 63 strings
+`packages/i18n/src/payoff.vi.ts` · 133 strings
 
 | Key                                     | English                                                                          | Tiếng Việt                                                                             | Flag                | Notes                                                                                                                                             |
 | --------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1094,6 +1094,42 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `payoff.stageUp.take`                   | Take the card                                                                    | Nhận thẻ                                                                               | New                 |                                                                                                                                                   |
 | `payoff.stageUp.goodnight`              | Good night                                                                       | Chúc ngủ ngon                                                                          | New                 |                                                                                                                                                   |
 | `payoff.stageUp.a11yCard`               | Natterwick residency card for {name}: {stage}                                    | Thẻ cư trú Natterwick của {name}: {stage}                                              | New                 |                                                                                                                                                   |
+| `payoff.afterCall.episode` | Episode {number} · {title} | Tập {number} · {title} | New | Kicker over "Xong rồi!" after an episode; the title stays English |
+| `payoff.minute.title` | Into {name}’s notebook | Đã vào sổ tay của {name} | New | Over Pip's minute rows; {name} is the roommate |
+| `payoff.minute.now.seed` | A new seed packet | Một gói hạt mới | New |  |
+| `payoff.minute.now.sprout` | Now a sprout | Giờ đã thành mầm | New |  |
+| `payoff.minute.now.leaf` | Now a leaf | Giờ đã thành lá | New |  |
+| `payoff.minute.now.bloom` | Now in bloom | Giờ đã nở hoa | New |  |
+| `payoff.minute.again` | Said again. It grows on another day. | Đã nói lại. Hôm khác nó sẽ lớn thêm. | New | A phrase said again the same day (it grows on another day) |
+| `payoff.minute.fixed` | You fixed {name}’s version | Bạn đã sửa câu của {name} | New |  |
+| `payoff.minute.later` | {name} will try this one again another day. | Hôm khác {name} sẽ thử lại câu này nhé. | New | The phrase not said this time; never a miss |
+| `payoff.bloomMoment.you` | YOU SAID | BẠN ĐÃ NÓI | New |  |
+| `payoff.bloomMoment.cta` | Nice | Tuyệt | New |  |
+| `payoff.wrap.title` | Week {week} done | Xong tuần {week} rồi | New |  |
+| `payoff.wrap.festival` | Bunting Week | Tuần Cờ Dây | New |  |
+| `payoff.wrap.ringFull` | Your ring is full. The keepsake is on your wall. | Vòng tuần đã đầy. Kỷ vật đã treo trên tường. | New |  |
+| `payoff.wrap.ringPart` |  |  | New | Plural; no guilt: never "you missed" |
+| `payoff.wrap.ringNone` | This week’s calls are waiting for you, whenever you like. | Các cuộc gọi tuần này đang chờ bạn, lúc nào cũng được. | New |  |
+| `payoff.wrap.rings` |  |  | New |  |
+| `payoff.wrap.phrases` | PHRASES THAT GREW THIS WEEK | NHỮNG CÂU ĐÃ LỚN THÊM TUẦN NÀY | New |  |
+| `payoff.wrap.canDos` | NEW THINGS YOU CAN DO | ĐIỀU MỚI BẠN LÀM ĐƯỢC | New |  |
+| `payoff.wrap.quiet` | A quiet week. Everything is still here for you. | Một tuần nhẹ nhàng. Mọi thứ vẫn ở đây chờ bạn. | New | A week with nothing grown: kind, never a miss |
+| `payoff.wrap.next` | Episode {number} opens on {day} | Tập {number} mở vào {day} | New |  |
+| `payoff.wrap.nextWaiting` | Episode {number} is open and waiting for you | Tập {number} đã mở, đang chờ bạn | New |  |
+| `payoff.wrap.nextFestival` | Bunting Week opens on {day} | Tuần Cờ Dây bắt đầu vào {day} | New |  |
+| `payoff.thenNow.kicker` | THEN AND NOW | NGÀY ẤY · BÂY GIỜ | New |  |
+| `payoff.thenNow.title` | Listen to you now | Nghe bạn bây giờ này | New | Only shown when Flow grew |
+| `payoff.thenNow.line` | {now} s without stopping. In week 1 it was {then}. | Nói liền {now} giây không dừng. Tuần 1 là {then} giây. | New |  |
+| `payoff.thenNow.flow` | without stopping | nói liền | New |  |
+| `payoff.thenNow.a11y` | Week {then}: {thenSeconds} seconds. Week {now}: {nowSeconds} seconds. | Tuần {then}: {thenSeconds} giây. Tuần {now}: {nowSeconds} giây. | New |  |
+| `payoff.season.tag` | SEASON ONE | MÙA MỘT | New |  |
+| `payoff.season.title` | Season One is done! | Mùa Một đã xong! | New |  |
+| `payoff.season.heading` | {learner} helped… | {learner} helped… | New | The roommate’s handwriting: stays English |
+| `payoff.season.canDo` | keep the Lantern Café open! | keep the Lantern Café open! | New | The roommate’s handwriting: stays English |
+| `payoff.season.signed` | signed by {witness} · {date} | signed by {witness} · {date} | New | The roommate’s handwriting: stays English |
+| `payoff.season.stamp` | SEASON ONE | SEASON ONE | New | Stamp on the keepsake: stays English |
+| `payoff.season.roommateSays` | Mei gave us the café’s little sign! | Mei tặng tụi mình tấm biển nhỏ của quán! | New |  |
+| `payoff.stageUp.noteOfferLater` | Another week in Natterwick. The Newcomer card is yours if you want it. | Thêm một tuần ở Natterwick. Thẻ Người mới là của bạn nếu bạn muốn. | New | Linh’s note at the second ring on |
 
 ## Can-dos (residency card aims, keepsakes, the Me sheet)
 
@@ -1234,7 +1270,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## The Me sheet, memory page, delete data
 
-`packages/i18n/src/me.vi.ts` · 41 strings
+`packages/i18n/src/me.vi.ts` · 67 strings
 
 | Key                          | English                                                                                                                   | Tiếng Việt                                                                                                       | Flag         | Notes                                                                                            |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------ |
@@ -1299,6 +1335,12 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `me.faster.back`             | Want the old pace back? Open Me › Too hard?                                                                               | Muốn quay lại nhịp cũ? Mở mục Tôi › Khó quá?                                                                     | New          |                                                                                                  |
 | `me.faster.confirm`          | Try it                                                                                                                    | Thử luôn                                                                                                         | New          |                                                                                                  |
 | `me.faster.later`            | Later                                                                                                                     | Để sau                                                                                                           | New          |                                                                                                  |
+| `me.handsFree` | Hands-free calls | Gọi rảnh tay | New | The Me sheet’s hands-free switch; the call says "Rảnh tay" |
+| `me.handsFreeSub` | Just talk; {name} answers when you pause | Cứ nói, bạn ngừng thì {name} trả lời | New |  |
+| `me.canDoCount` | {done}/{total} | {done}/{total} | New |  |
+| `me.a11y.canDoCount` | {done} of {total} this season | {done}/{total} trong mùa này | New |  |
+| `me.canDoEpisode` | Ep. {number} | Tập {number} | New | Beside the next can-do |
+| `me.a11y.canDoEpisode` | Comes in episode {number} | Có ở tập {number} | New |  |
 
 ## Safety sheet (crisis)
 

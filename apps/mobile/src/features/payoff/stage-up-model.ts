@@ -7,7 +7,7 @@ import {
   type StageRequest,
   type WeekRing,
 } from '@yapling/contracts';
-import { earnsNewcomerCard, type TurnPass } from '@yapling/domain';
+import { newcomerCardAtRing, type TurnPass } from '@yapling/domain';
 import { translator, type Translate } from '@yapling/i18n';
 
 import { filledRing } from './keepsake-model';
@@ -30,12 +30,20 @@ export interface StageUpInput {
   readonly answeredWeeks: readonly number[];
 }
 
-/** Linh offers the card when this call filled a ring and the rule is met; null otherwise. */
+/**
+ * Linh offers the card when this call filled a ring, any week's, and that week's turns meet the
+ * rule (the learning model's `newcomerCardAtRing`); null otherwise, and while the phone can't tell
+ * how the week's turns passed.
+ */
 export function stageUpOffer(input: StageUpInput): { readonly week: number } | null {
   const ring = filledRing(input.weeks, input.call.id);
-  if (ring === null || input.answeredWeeks.includes(ring.week)) return null;
-  if (input.weekTurns === null || !earnsNewcomerCard(input.stage, input.weekTurns)) return null;
-  return { week: ring.week };
+  if (ring === null || input.weekTurns === null) return null;
+  return newcomerCardAtRing({
+    stage: input.stage,
+    fullRingWeek: ring.week,
+    ringTurns: input.weekTurns,
+    answeredWeeks: input.answeredWeeks,
+  });
 }
 
 /** The two answers, as the server takes them. */
@@ -96,6 +104,8 @@ export interface StageUpCopyInput {
   readonly today: LocalDate;
   /** The local hour: after five the stay ends with "Chúc ngủ ngon". */
   readonly hour: number;
+  /** The week whose ring Linh comes at the end of: from week 2 her note says another week. */
+  readonly week?: number;
 }
 
 /** Everything the stage-up screen shows in a phase, in the chrome's language `t`. */
@@ -140,7 +150,10 @@ export function stageUpView(input: StageUpCopyInput, t: Translate): StageUpView 
         stage: stageLocal ? `${stageName}, ${stageLocal}` : stageName,
       }),
     },
-    note: t(NOTE_KEYS[phase]),
+    note:
+      phase === 'offer' && (input.week ?? 1) > 1
+        ? t('payoff.stageUp.noteOfferLater')
+        : t(NOTE_KEYS[phase]),
     choice:
       phase === 'offer' ? { stay: t('payoff.stageUp.stay'), take: t('payoff.stageUp.take') } : null,
     cta:

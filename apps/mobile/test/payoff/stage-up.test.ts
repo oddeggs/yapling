@@ -61,6 +61,40 @@ describe('Linh’s Newcomer card', () => {
     });
   });
 
+  it('is offered at every full ring of the season, weeks 2 to 6, until it is taken', () => {
+    const ring = (week: number, last: string) => ({
+      week,
+      slots: RING_FULL.slots.map((slot) => ({
+        ...slot,
+        callRecordId: slot.kind === 'practice' ? last : `${slot.callRecordId}-w${week}`,
+      })),
+    });
+    for (const week of [2, 3, 4, 5, 6]) {
+      const weeks = Array.from({ length: week }, (_, i) =>
+        ring(i + 1, i + 1 === week ? CALL_ID : `practice-w${i + 1}`),
+      );
+      const answered = Array.from({ length: week - 1 }, (_, i) => i + 1);
+      expect(offer({ weeks, answeredWeeks: answered })).toEqual({ week });
+      expect(offer({ weeks, answeredWeeks: [...answered, week] })).toBeNull();
+      expect(offer({ weeks, answeredWeeks: answered, stage: 'newcomer' })).toBeNull();
+    }
+  });
+
+  it('isn’t offered at a later ring the call didn’t fill', () => {
+    const weeks = [RING_FULL, { ...RING_ONE, week: 2 }];
+    expect(
+      offer({
+        weeks: [
+          {
+            ...RING_FULL,
+            slots: RING_FULL.slots.map((s) => ({ ...s, callRecordId: `${s.callRecordId}-w1` })),
+          },
+          ...weeks.slice(1),
+        ],
+      }),
+    ).toBeNull();
+  });
+
   it('asks the server for the card or for a little longer as a Visitor', () => {
     expect(STAGE_UP_REQUESTS.take).toEqual({ to: 'newcomer', reason: 'stage_up' });
     expect(STAGE_UP_REQUESTS.stay).toEqual({ to: 'visitor', reason: 'stay' });
@@ -79,6 +113,15 @@ describe('the stage-up screen', () => {
       choice: { stay: 'Ở lại thêm', take: 'Nhận thẻ' },
       cta: null,
     });
+  });
+
+  it('says another week has passed when Linh comes again at a later ring', () => {
+    expect(stageUpView({ ...base, phase: 'offer', week: 3 }, vi).note).toBe(
+      'Thêm một tuần ở Natterwick. Thẻ Người mới là của bạn nếu bạn muốn.',
+    );
+    expect(stageUpView({ ...base, phase: 'offer', week: 1 }, vi).note).toBe(
+      'Một tuần làm quen đã xong. Thẻ mới mở các cuộc gọi trong truyện.',
+    );
   });
 
   it('stamps the card with the day once it’s taken, then hangs it', () => {

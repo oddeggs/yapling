@@ -138,4 +138,57 @@ export const payoffEn = {
   'payoff.stageUp.take': 'Take the card',
   'payoff.stageUp.goodnight': 'Good night',
   'payoff.stageUp.a11yCard': 'Natterwick residency card for {name}: {stage}',
+  /** The kicker over "Done!" after an episode's call: its number and title. */
+  'payoff.afterCall.episode': 'Episode {number} · {title}',
+  /**
+   * Pip's minute, after the call: each phrase and what happened to it. No count, no score; a phrase
+   * not said this time simply waits for another day.
+   */
+  'payoff.minute.title': 'Into {name}’s notebook',
+  'payoff.minute.now.seed': 'A new seed packet',
+  'payoff.minute.now.sprout': 'Now a sprout',
+  'payoff.minute.now.leaf': 'Now a leaf',
+  'payoff.minute.now.bloom': 'Now in bloom',
+  'payoff.minute.again': 'Said again. It grows on another day.',
+  'payoff.minute.fixed': 'You fixed {name}’s version',
+  'payoff.minute.later': '{name} will try this one again another day.',
+  /** A phrase in bloom: the learner used it on their own, in a new place, weeks after. */
+  'payoff.bloomMoment.you': 'YOU SAID',
+  'payoff.bloomMoment.cta': 'Nice',
+  /** The week's wrap on its last day: the ring, the phrases that grew, can-dos, what's next. */
+  'payoff.wrap.title': 'Week {week} done',
+  'payoff.wrap.festival': 'Bunting Week',
+  'payoff.wrap.ringFull': 'Your ring is full. The keepsake is on your wall.',
+  'payoff.wrap.ringPart': {
+    one: '{count} call this week. The rest will wait for you.',
+    other: '{count} calls this week. The rest will wait for you.',
+  },
+  'payoff.wrap.ringNone': 'This week’s calls are waiting for you, whenever you like.',
+  'payoff.wrap.rings': { one: '{count} full ring so far', other: '{count} full rings so far' },
+  'payoff.wrap.phrases': 'PHRASES THAT GREW THIS WEEK',
+  'payoff.wrap.canDos': 'NEW THINGS YOU CAN DO',
+  'payoff.wrap.quiet': 'A quiet week. Everything is still here for you.',
+  'payoff.wrap.next': 'Episode {number} opens on {day}',
+  'payoff.wrap.nextWaiting': 'Episode {number} is open and waiting for you',
+  'payoff.wrap.nextFestival': 'Bunting Week opens on {day}',
+  /** Then and now: Flow in week 1's Pass it on next to a later pitch. Only shown when it grew. */
+  'payoff.thenNow.kicker': 'THEN AND NOW',
+  'payoff.thenNow.title': 'Listen to you now',
+  'payoff.thenNow.line': '{now} s without stopping. In week 1 it was {then}.',
+  'payoff.thenNow.flow': 'without stopping',
+  'payoff.thenNow.a11y': 'Week {then}: {thenSeconds} seconds. Week {now}: {nowSeconds} seconds.',
+  /**
+   * The season keepsake: a tiny Lantern Café sign, drawn by the roommate and signed by Mei. The
+   * heading, wording and signature are the roommate's writing, in English.
+   */
+  'payoff.season.tag': 'SEASON ONE',
+  'payoff.season.title': 'Season One is done!',
+  'payoff.season.heading': '{learner} helped…',
+  'payoff.season.canDo': 'keep the Lantern Café open!',
+  'payoff.season.signed': 'signed by {witness} · {date}',
+  'payoff.season.stamp': 'SEASON ONE',
+  'payoff.season.roommateSays': 'Mei gave us the café’s little sign!',
+  /** Linh's note when she offers the card again at a later ring. */
+  'payoff.stageUp.noteOfferLater':
+    'Another week in Natterwick. The Newcomer card is yours if you want it.',
 } as const satisfies EnCatalogue;

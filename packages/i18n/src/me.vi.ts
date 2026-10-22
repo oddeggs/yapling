@@ -66,4 +66,10 @@ export const meVi = {
   'me.faster.back': 'Muốn quay lại nhịp cũ? Mở mục Tôi › Khó quá?',
   'me.faster.confirm': 'Thử luôn',
   'me.faster.later': 'Để sau',
+  'me.handsFree': 'Gọi rảnh tay',
+  'me.handsFreeSub': 'Cứ nói, bạn ngừng thì {name} trả lời',
+  'me.canDoCount': '{done}/{total}',
+  'me.a11y.canDoCount': '{done}/{total} trong mùa này',
+  'me.canDoEpisode': 'Tập {number}',
+  'me.a11y.canDoEpisode': 'Có ở tập {number}',
 } as const satisfies Translation<typeof meEn>;
