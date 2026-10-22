@@ -228,10 +228,7 @@ export class VoiceEngine {
     return this.audio.startMic();
   }
 
-  /**
-   * Hands-free: the learner tapped the mic to say they're done, so the call answers now instead
-   * of waiting out the pause. Nothing happens before they have said anything.
-   */
+  /** Hands-free "I'm done": the call answers now, not after the pause (once they've spoken). */
   endTurnNow(): boolean {
     if (this.turns.mode !== 'hands_free' || !this.turns.gate.inTurn) return false;
     this.vad.forceEnd();
@@ -242,11 +239,11 @@ export class VoiceEngine {
   /** Switches between holding the mic and hands-free mid-call, finishing an answer under way. */
   setTurnMode(mode: TurnMode): void {
     if (mode === this.turns.mode) return;
-    if (this.turns.mode === 'hands_free') this.endTurnNow();
-    else if (this.turns.isHeld) this.releaseTalk();
+    if (!this.endTurnNow() && this.turns.isHeld) this.releaseTalk();
     this.turns.setMode(mode);
     this.log(`turn mode ${mode}`);
-    this.patch({ turnMode: mode, talkHeld: false, learnerSpeaking: false, notice: null });
+    const quiet = { talkHeld: false, learnerSpeaking: false, turnOpen: false } as const;
+    this.patch({ ...quiet, turnMode: mode, notice: null });
   }
 
   /** Hold-to-talk: the mic button went down. */
@@ -380,6 +377,8 @@ export class VoiceEngine {
     if (!this.socket.ready) return;
     this.turns.frame(frame, r.speaking, r.event, endMs);
     this.level.push(r.db, this.vad.noiseFloorDb, handsFree && this.turns.gate.state === 'speech');
+    const open = handsFree && this.turns.gate.streaming;
+    if (open !== this.state.get().turnOpen) this.patch({ turnOpen: open });
   }
 
   /** Hands-free: the gate heard the learner start or stop; the call hears it on its mic clock. */

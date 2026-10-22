@@ -9,7 +9,8 @@ import type { VoiceEngine } from '../../voice/engine';
  * of a voice; between them the mic hears quiet room noise. `silent` in the list lets a turn pass
  * with nothing said: the call waits (offering the hint once after a long quiet) until the next
  * turn starts, from a press on the mic; `silent:<seconds>` waits that long in quiet, then the next
- * fixture answers the same turn (hands-free thinking time). Hold-to-talk holds the mic for the
+ * fixture answers the same turn (hands-free thinking time), and `<url>@tap=<ms>` taps the mic that
+ * long after the answer starts (hands-free "I'm done"). Hold-to-talk holds the mic for the
  * fixture's length, so a fixture shorter than the shortest turn is a tap. Release builds never run
  * this.
  */
@@ -63,7 +64,12 @@ export function useDevMic(
             next.current += 1;
             if (cancelled || !answer) return;
           }
-          const buffer = await decodeAudioData(answer, 16_000);
+          // `<url>@tap=<ms>`: hands-free, the mic is tapped that long after the answer starts.
+          const [src = answer, tapAt] = answer.split('@tap=');
+          if (tapAt !== undefined) {
+            setTimeout(() => log(`fixture: tap ${String(engine.endTurnNow())}`), Number(tapAt));
+          }
+          const buffer = await decodeAudioData(src, 16_000);
           log(`fixture ${next.current}: ${buffer.duration.toFixed(1)} s`);
           await engine.simulateMic(buffer.getChannelData(0), holdToTalk);
           // Room noise again until the next answer.

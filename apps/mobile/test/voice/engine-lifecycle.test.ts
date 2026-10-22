@@ -443,16 +443,23 @@ describe('hands-free', () => {
     expect(socket.sent.filter((f) => f['type'] === 'speech')).toMatchObject([{ state: 'start' }]);
     expect(socket.binary).toBeGreaterThan(20);
     expect(e.state.get()).toMatchObject({ phase: 'listening', learnerSpeaking: true });
+    // A pause to find the next word: still listening, still the learner's turn.
+    feed(50, 2);
+    expect(e.state.get()).toMatchObject({
+      phase: 'listening',
+      learnerSpeaking: false,
+      turnOpen: true,
+    });
     expect(e.endTurnNow()).toBe(true);
     expect(socket.sent.slice(-2)).toMatchObject([
       { type: 'speech', state: 'end' },
       { type: 'end_turn' },
     ]);
-    expect(e.state.get()).toMatchObject({ phase: 'thinking', learnerSpeaking: false });
     // Quiet again: the gate is shut.
     const sent = socket.binary;
     feed(500, 2);
     expect(socket.binary).toBe(sent);
+    expect(e.state.get()).toMatchObject({ phase: 'thinking', turnOpen: false });
     await e.dispose();
   });
 

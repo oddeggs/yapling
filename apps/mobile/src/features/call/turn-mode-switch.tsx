@@ -1,6 +1,6 @@
 import type { TurnMode } from '@yapling/contracts';
 import { controls, pill, translucent } from '@yapling/theme';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, type ReactNode } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
@@ -26,15 +26,18 @@ import { MIN_HOLD_MS } from '../../voice/turns';
 export function TurnModeSwitch({
   engine,
   state,
+  art,
 }: {
   engine: VoiceEngine | null;
   state: CallState;
+  /** The roommate's face, on the toast that says what changed. */
+  art: ReactNode;
 }) {
   const { t } = useLocale();
   const toast = useToast();
   const { setTurnMode } = useTurnMode();
   const on = state.turnMode === 'hands_free';
-  const busy = state.talkHeld || state.learnerSpeaking;
+  const busy = state.talkHeld || state.learnerSpeaking || state.turnOpen;
   const held = useSharedValue(0);
   const squeeze = useAnimatedStyle(() => ({ transform: [{ scale: 1 - 0.04 * held.get() }] }));
   const flip = useCallback(() => {
@@ -42,8 +45,8 @@ export function TurnModeSwitch({
     const next: TurnMode = on ? 'hold_to_talk' : 'hands_free';
     engine.setTurnMode(next);
     void setTurnMode(next).catch(() => undefined);
-    toast({ text: t(next === 'hands_free' ? 'call.handsFree.on' : 'call.handsFree.off') });
-  }, [engine, on, setTurnMode, t, toast]);
+    toast({ text: t(next === 'hands_free' ? 'call.handsFree.on' : 'call.handsFree.off'), art });
+  }, [engine, on, setTurnMode, t, toast, art]);
   return (
     <Press
       onPress={flip}

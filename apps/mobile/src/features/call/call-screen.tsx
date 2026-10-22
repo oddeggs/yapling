@@ -561,7 +561,11 @@ export function CallScreen({
           />
         ) : null}
         {view.mode === 'live' && !view.sceneDone ? (
-          <TurnModeSwitch engine={engine} state={state} />
+          <TurnModeSwitch
+            engine={engine}
+            state={state}
+            art={<CritterFace character="pip" species={roommate.species} size={30} />}
+          />
         ) : null}
         {view.paused ? (
           <View style={{ alignItems: 'center' }} accessibilityLiveRegion="polite">
