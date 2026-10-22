@@ -1,9 +1,9 @@
-import { ACT_NAMES, MOUTHS, type ActName, type Character, type Mouth } from '@yapling/art';
-import { Critter, RigCritter, useArtRenderer } from '@yapling/art/native';
+import { ACT_NAMES, MOUTHS, type Character, type Mood, type Mouth } from '@yapling/art';
+import { Critter, useArtRenderer, type CritterAct } from '@yapling/art/native';
 import { colours, layout } from '@yapling/theme';
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { PixelRatio, ScrollView, View } from 'react-native';
 import {
   useFrameCallback,
   useReducedMotion,
@@ -16,10 +16,10 @@ import { ChoiceChip } from '../ui/chip';
 import { Txt } from '../ui/text';
 
 /*
- * Dev-only lab for the critter rig (`yapling-dev://motion-lab`): today's Pip beside the rigged Pip
- * cycling the rig's acts, and three critters on screen (Pip, Mei, Linh) with the UI thread's frame
- * times, to measure. Not part of the product: release builds redirect home, and its labels are
- * English on purpose.
+ * Dev-only lab for the living critters (`yapling-dev://motion-lab`): today's drawing beside the
+ * rig cycling its acts, three critters on screen (Pip, Mei, Linh) as the rig or as today's drawing,
+ * and the whole cast at once, with the UI thread's frame times, to measure. Not part of the
+ * product: release builds redirect home, and its labels are English on purpose.
  */
 
 const FRAME_MS = 1000 / 60;
@@ -48,7 +48,18 @@ export default function MotionLab() {
   return <Lab />;
 }
 
-type Mode = 'compare' | 'three-rig' | 'three-today' | 'none';
+type Mode = 'compare' | 'three-rig' | 'three-today' | 'cast' | 'none';
+const MODES: readonly Mode[] = ['compare', 'three-rig', 'three-today', 'cast', 'none'];
+const LAB_MOODS: readonly Mood[] = ['happy', 'listen', 'excited', 'confused', 'sleepy', 'laugh'];
+
+/** How long the cycle stays on each act (the held ones loop meanwhile). */
+const CYCLE_MS: Record<CritterAct, number> = {
+  idle: 4000,
+  listen: 7000,
+  think: 6000,
+  hop: 2400,
+  wave: 3800,
+};
 
 function Lab() {
   const insets = useSafeAreaInsets();
@@ -57,39 +68,43 @@ function Lab() {
   const [reduceToggle, setReduce] = useState(false);
   const reduced = systemReduce || reduceToggle;
   const [mode, setMode] = useState<Mode>('compare');
+  const [mood, setMood] = useState<Mood>('happy');
   const [cycle, setCycle] = useState(true);
   const [actIndex, setActIndex] = useState(0);
   const [play, setPlay] = useState(0);
   const [talk, setTalk] = useState(false);
-  const act: ActName = ACT_NAMES[actIndex % ACT_NAMES.length] ?? 'breathe';
+  const [left, setLeft] = useState(false);
+  const act: CritterAct = ACT_NAMES[actIndex % ACT_NAMES.length] ?? 'idle';
   const [line, setLine] = useState('');
   const [recordMs, setRecordMs] = useState<string>('');
 
-  // Cycle the acts: each one starts and ends at rest, so the next follows without a jump.
+  // Cycle the acts: any act can follow any other at any moment; what is on screen melts into it.
   useEffect(() => {
     if (!cycle || reduced) return;
-    const next = setTimeout(
-      () => {
-        setActIndex((i) => i + 1);
-        setPlay((p) => p + 1);
-      },
-      act === 'breathe' ? 4000 : act === 'hop' ? 2600 : act === 'wave' ? 3900 : 6900,
-    );
+    const next = setTimeout(() => {
+      setActIndex((i) => i + 1);
+      setPlay((p) => p + 1);
+    }, CYCLE_MS[act]);
     return () => clearTimeout(next);
   }, [cycle, reduced, act, play]);
 
-  // What recording costs: the rig for Pip, Mei and Linh, fresh (JS thread, once each).
+  // What recording costs: today's critter and the rig for Pip, Mei and Linh, fresh (JS thread).
   useEffect(() => {
     const out: string[] = [];
+    const ratio = PixelRatio.get();
     for (const species of ['redpanda', 'otter', 'pangolin'] as const) {
-      const spec = { species, mood: 'happy' as const, size: 151 };
+      const spec = { species, mood: 'patient' as const, size: 151 };
       const t0 = performance.now();
-      renderer.critter(spec);
+      renderer.critter(spec, ratio);
       const t1 = performance.now();
-      renderer.critterRig(spec, 3);
+      renderer.critterRig(spec, ratio);
       const t2 = performance.now();
       out.push(`${species} today ${(t1 - t0).toFixed(0)} ms · rig ${(t2 - t1).toFixed(0)} ms`);
     }
+    const mb = (n: number) => (n / 1024 / 1024).toFixed(1);
+    out.push(
+      `cache ${mb(renderer.cache.bytes)} MB of ${mb(renderer.cache.cap)} · on screen ${mb(renderer.cache.pinnedBytes)} MB · ${renderer.cache.size} entries`,
+    );
     setRecordMs(out.join('\n'));
     console.log(`[motion-lab] record\n${out.join('\n')}`);
   }, [renderer]);
@@ -121,15 +136,16 @@ function Lab() {
     const timer = setInterval(() => {
       const s = stats.value;
       if (s.frames === 0) return;
+      const fps = 1000 / (s.sumDt / s.frames);
       const text =
-        `${mode} · ${s.frames} frames · interval ${(s.sumDt / s.frames).toFixed(2)} ms (max ${s.maxDt.toFixed(1)}) · ` +
+        `${mode} · ${s.frames} frames · ${fps.toFixed(1)} fps · interval ${(s.sumDt / s.frames).toFixed(2)} ms (max ${s.maxDt.toFixed(1)}) · ` +
         `dropped ${s.dropped} (${((100 * s.dropped) / (s.frames + s.dropped)).toFixed(1)}%) · ` +
         `rig work ${(s.costSum / s.frames).toFixed(2)} ms/frame (max ${s.costMax.toFixed(1)}, >4 ms ${s.costOver4})`;
       setLine(text);
       console.log(`[motion-lab] ${text}`);
     }, 2000);
     return () => clearInterval(timer);
-  }, [mode, stats, c0, c1, c2]);
+  }, [mode, mood, stats, c0, c1, c2]);
 
   // Lipsync stays as it is: a mouth shared value swaps the mouth picture.
   const mouth = useSharedValue<Mouth>('rest');
@@ -143,6 +159,14 @@ function Lab() {
     if (mouth.value !== next) mouth.value = next;
   });
 
+  const shared = {
+    mood,
+    act,
+    play,
+    lookAt: left ? ('left' as const) : ('right' as const),
+    animated: !reduced,
+  };
+
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colours.background }}
@@ -155,7 +179,7 @@ function Lab() {
     >
       <Txt variant="screenTitle">motion lab</Txt>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-        {(['compare', 'three-rig', 'three-today', 'none'] as const).map((m) => (
+        {MODES.map((m) => (
           <ChoiceChip key={m} label={m} selected={mode === m} onPress={() => setMode(m)} />
         ))}
       </View>
@@ -174,31 +198,29 @@ function Lab() {
         ))}
         <ChoiceChip label="cycle" selected={cycle} onPress={() => setCycle(!cycle)} />
         <ChoiceChip label="talk" selected={talk} onPress={() => setTalk(!talk)} />
+        <ChoiceChip label="look left" selected={left} onPress={() => setLeft(!left)} />
         <ChoiceChip
           label={systemReduce ? 'Reduce Motion (system)' : 'Reduce Motion'}
           selected={reduced}
           onPress={() => setReduce(!reduceToggle)}
         />
       </View>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        {LAB_MOODS.map((m) => (
+          <ChoiceChip key={m} label={m} selected={mood === m} onPress={() => setMood(m)} />
+        ))}
+      </View>
 
       {mode === 'compare' ? (
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingTop: 30 }}>
           <View style={{ alignItems: 'center', gap: 30 }}>
-            <Critter character="pip" size={140} animated={!reduced} mouth={mouth} />
+            <Critter character="pip" size={140} {...shared} rig={false} mouth={mouth} />
             <Txt variant="note" colour={colours.textMuted}>
               today
             </Txt>
           </View>
           <View style={{ alignItems: 'center', gap: 30 }}>
-            <RigCritter
-              character="pip"
-              size={140}
-              act={act}
-              play={play}
-              reduced={reduced}
-              mouth={mouth}
-              cost={c0}
-            />
+            <Critter character="pip" size={140} {...shared} mouth={mouth} cost={c0} />
             <Txt variant="note" colour={colours.textMuted}>
               {`rig · ${act}`}
             </Txt>
@@ -206,15 +228,10 @@ function Lab() {
         </View>
       ) : mode === 'none' ? (
         <View style={{ height: 200 }} />
+      ) : mode === 'cast' ? (
+        <Cast {...shared} />
       ) : (
-        <Three
-          rig={mode === 'three-rig'}
-          act={act}
-          play={play}
-          reduced={reduced}
-          mouth={mouth}
-          costs={costs}
-        />
+        <Three rig={mode === 'three-rig'} {...shared} mouth={mouth} costs={costs} />
       )}
 
       <Txt variant="note" colour={colours.textBody}>
@@ -227,24 +244,27 @@ function Lab() {
   );
 }
 
-const TRIO: readonly { character: Character; side: 1 | -1 }[] = [
-  { character: 'pip', side: 1 },
-  { character: 'mei', side: -1 },
-  { character: 'linh', side: -1 },
+interface Shared {
+  mood: Mood;
+  act: CritterAct;
+  play: number;
+  lookAt: 'left' | 'right';
+  animated: boolean;
+}
+
+const TRIO: readonly { character: Character; lookAt: 'left' | 'right' }[] = [
+  { character: 'pip', lookAt: 'right' },
+  { character: 'mei', lookAt: 'left' },
+  { character: 'linh', lookAt: 'left' },
 ];
 
 function Three({
   rig,
-  act,
-  play,
-  reduced,
   mouth,
   costs,
-}: {
+  ...shared
+}: Shared & {
   rig: boolean;
-  act: ActName;
-  play: number;
-  reduced: boolean;
   mouth: SharedValue<Mouth>;
   costs: readonly [SharedValue<number>, SharedValue<number>, SharedValue<number>];
 }) {
@@ -258,29 +278,58 @@ function Three({
         rowGap: 40,
       }}
     >
-      {TRIO.map(({ character, side }, i) =>
-        rig ? (
-          <RigCritter
-            key={character}
-            character={character}
-            size={110}
-            act={act}
-            play={play}
-            side={side}
-            reduced={reduced}
-            {...(i === 0 ? { mouth } : {})}
-            {...(costs[i] ? { cost: costs[i] } : {})}
-          />
-        ) : (
-          <Critter
-            key={character}
-            character={character}
-            size={110}
-            animated={!reduced}
-            {...(i === 0 ? { mouth } : {})}
-          />
-        ),
-      )}
+      {TRIO.map(({ character, lookAt }, i) => (
+        <Critter
+          key={character}
+          character={character}
+          size={110}
+          {...shared}
+          lookAt={lookAt}
+          rig={rig}
+          {...(i === 0 ? { mouth } : {})}
+          {...(costs[i] && rig ? { cost: costs[i] } : {})}
+        />
+      ))}
+    </View>
+  );
+}
+
+/** Every cast member and Pip's three species at once, as a crowded screen would show them. */
+const CAST: readonly { character: Character; species?: 'redpanda' | 'capybara' | 'cat' }[] = [
+  { character: 'pip', species: 'redpanda' },
+  { character: 'pip', species: 'capybara' },
+  { character: 'pip', species: 'cat' },
+  { character: 'mei' },
+  { character: 'linh' },
+  { character: 'sol' },
+  { character: 'hank' },
+  { character: 'nell' },
+  { character: 'bea' },
+  { character: 'dex' },
+  { character: 'arjun' },
+];
+
+function Cast(shared: Shared) {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        paddingTop: 20,
+        rowGap: 28,
+      }}
+    >
+      {CAST.map(({ character, species }, i) => (
+        <Critter
+          key={`${character}${species ?? ''}`}
+          character={character}
+          {...(species ? { species } : {})}
+          size={84}
+          {...shared}
+          lookAt={i % 2 ? 'left' : 'right'}
+        />
+      ))}
     </View>
   );
 }

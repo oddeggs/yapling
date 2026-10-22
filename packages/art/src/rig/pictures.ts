@@ -36,6 +36,10 @@ export interface RigEyePictures {
 export interface RigPictures {
   readonly width: number;
   readonly height: number;
+  /**
+   * Points per rig unit of motion: the box's (its width over 200) times the species' size, so a
+   * small tarsier leans, slides and reaches as far for its size as a red panda does.
+   */
   readonly unit: number;
   readonly ground: SkPicture;
   readonly outline: {
@@ -90,7 +94,7 @@ export function rigPictures(
   return {
     width: rig.width,
     height: rig.height,
-    unit: rig.unit,
+    unit: rig.unit * rig.scale,
     ground: record(rig.ground),
     outline: {
       body: out(rig.outline.body),

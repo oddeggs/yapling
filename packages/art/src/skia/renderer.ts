@@ -14,7 +14,7 @@ import { Player, PICTURE_BOUNDS, type Op } from '../canvas/ops';
 import { ParagraphText, type FontFamilies } from '../canvas/text';
 import { critterParts, MOUTHS, type CritterSpec, type Mouth } from '../critter';
 import { critterRig } from '../rig/parts';
-import type { Box } from '../rig/parts';
+import { outlineBox, type Box } from '../rig/parts';
 import { disposeRig, rigOps, rigPictures, type RigPictures } from '../rig/pictures';
 import { loadPrototype, type Prototype } from '../runtime/prototype';
 import { FilterMode, MipmapMode, type SkiaApi } from './api';
@@ -48,26 +48,6 @@ export interface ArtRendererOptions {
 
 /** A picture's rough memory: per-operation overhead and its paths. */
 const estimate = (ops: readonly Op[]) => 1024 + ops.length * 320;
-
-/**
- * Where a sticker critter's outline reaches, in points: its box, out by the outline's radius and
- * the hard shadow's offset (yap-sticker's `outline`: r = max(1.4, 3.2k), sh = max(2, 5k),
- * k = w / 200; the silhouettes are copies of the box moved by up to r + 0.35 sh across and r + sh
- * down), plus a point for anti-aliasing.
- */
-export function outlineBox(width: number, height: number): Box {
-  const k = width / 200;
-  const r = Math.max(1.4, 3.2 * k);
-  const sh = Math.max(2, 5 * k);
-  const x = Math.floor(-r - 1);
-  const y = Math.floor(-r - 1);
-  return {
-    x,
-    y,
-    width: Math.ceil(width + r + 0.35 * sh + 1) - x,
-    height: Math.ceil(height + r + sh + 1) - y,
-  };
-}
 
 /** Lets go of a critter's pictures at once (an evicted entry nothing draws any more). */
 function disposeCritter(p: CritterPictures): void {

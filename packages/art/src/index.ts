@@ -71,7 +71,27 @@ export {
 } from './rig/engine';
 export { critterRig, type CritterRig, type RigEye } from './rig/parts';
 export type { RigEyePictures, RigPictures } from './rig/pictures';
-export { IDLE_PERIOD, poseAt, seedOf, type Pose } from './rig/pose';
+export {
+  IDLE_PERIOD,
+  NO_TUNE,
+  poseAt,
+  seedOf,
+  type Pose,
+  type PoseOptions,
+  type Tune,
+} from './rig/pose';
+export {
+  ACT_LIST,
+  actIndex,
+  actTime,
+  FADE_MS,
+  livePose,
+  startAct,
+  type ActRequest,
+  type LiveState,
+} from './rig/live';
+export { raisedPaws, RIG_MOODS, usesRig } from './rig/support';
+export { TUNING, tuneOf } from './rig/tuning';
 export {
   loadPrototype,
   type Generator,
