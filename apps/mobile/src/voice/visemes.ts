@@ -1,11 +1,12 @@
+import { visemeTrack as artVisemes } from '@yapling/art';
+
 import type { CaptionTrack } from './caption-clock';
 
 /*
- * Mouth shapes on the audio clock. `@yapling/art` owns the mouths and will provide
- * `visemeTrack(alignment)`; until it lands this file maps characters to the prototype's eight
- * lip shapes with the prototype's own rule (`mouthFor` in `design/prototype/art/yap-dc.js`).
- * Swap `localVisemeTrack` for the art package's function when it exists; the shape below is the
- * interface the lipsync driver needs.
+ * Mouth shapes on the audio clock. `@yapling/art` owns the mouths: `artVisemeTrack` runs its
+ * `visemeTrack` (the prototype's own `mouthFor`, tags skipped, the 60 ms hold) and lays the result
+ * out as the lipsync driver reads it. `localVisemeTrack` is the same rule written here, kept for
+ * the dev lab and the clock's tests; calls pass `artVisemeTrack` to the engine.
  */
 
 /** The prototype's lip shapes; `rest` is the closed mouth between words. */
@@ -62,3 +63,24 @@ export function mouthAt(visemes: VisemeTrack, ms: number): Mouth {
   if (ms > (visemes.endMs[k] ?? 0) + MOUTH_HOLD_MS) return 'rest';
   return visemes.mouth[k] ?? 'rest';
 }
+
+/**
+ * The art package's mouth track for a caption track. Each art event holds its mouth until the
+ * next event; as a `VisemeTrack` it ends one hold before the next starts, so `mouthAt` keeps it.
+ */
+export const artVisemeTrack: VisemeTrackFn = (track) => {
+  const events = artVisemes({
+    chars: track.text.split(''),
+    startMs: track.startMs,
+    endMs: track.endMs,
+  });
+  const startMs = events.map((e) => Math.round(e.t * 1000));
+  return {
+    startMs,
+    endMs: startMs.map((start, i) => {
+      const next = startMs[i + 1];
+      return next === undefined ? start : next - MOUTH_HOLD_MS;
+    }),
+    mouth: events.map((e) => e.mouth),
+  };
+};
