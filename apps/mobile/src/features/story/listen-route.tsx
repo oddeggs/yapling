@@ -1,6 +1,6 @@
-import { findScene } from '@yapling/story';
+import { findPhrase, findScene, type Scene } from '@yapling/story';
 import { translator } from '@yapling/i18n';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 
 import { BurrowArtProvider } from '../burrow/art-fonts';
@@ -11,12 +11,16 @@ import { listenPlan } from './plan';
 import { markSeen } from './seen-store';
 import type { SeedEvent } from './story-model';
 import { StoryScreen } from './story-screen';
+import { useVoicemailCall } from './voicemail-call';
+import { growthOfFix } from './voicemail-model';
+import { VoicemailScreen } from './voicemail-screen';
 
 /*
  * `/listen/<sceneId>`: a scene with nothing to fail. Pip's story and the postcards that come with
- * it play on the phone.
+ * it play on the phone; a voicemail with a phrase to fix opens a short live turn.
  *
- * Development: `?day=N` reads the burrow's preview learner.
+ * Development: `?day=N` reads the burrow's preview learner; `?fixture=<url>` plays fixture audio
+ * into the mic on the voicemail's turn (a simulator without a microphone).
  */
 
 type Params = Readonly<Record<string, string | string[] | undefined>>;
@@ -46,7 +50,11 @@ export function ListenRoute() {
   const scene = findScene(sceneId);
   return (
     <BurrowArtProvider>
-      {scene ? <StoryRoute sceneId={sceneId} params={params} /> : null}
+      {scene?.kind === 'voicemail' ? (
+        <VoicemailRoute scene={scene} params={params} />
+      ) : (
+        <StoryRoute sceneId={sceneId} params={params} />
+      )}
     </BurrowArtProvider>
   );
 }
@@ -87,6 +95,55 @@ function StoryRoute({ sceneId, params }: { sceneId: string; params: Params }) {
         markSeen(plan.scenes.map((s) => s.id));
         leave();
       }}
+      onBack={leave}
+    />
+  );
+}
+
+function VoicemailRoute({ scene, params }: { scene: Scene; params: Params }) {
+  const router = useRouter();
+  const learner = useStoryLearner(params);
+  const leave = useLeave();
+  const sceneId = scene.id;
+  const [attempt, setAttempt] = useState(0);
+  const call = useVoicemailCall({
+    scene,
+    stage: learner.stage,
+    firstLanguage: learner.firstLanguage,
+    attempt,
+    fixture: __DEV__ ? one(params, 'fixture') : undefined,
+  });
+  const target = findPhrase(scene.phrases[0] ?? '');
+  const [now] = useState(() => Date.now());
+  const growth = useMemo(
+    () =>
+      target
+        ? growthOfFix(
+            learner.phrases.find((p) => p.id === target.id),
+            { id: target.id, text: target.en },
+            sceneId,
+            now,
+            learner.timezone,
+          )
+        : { from: 'sprout' as const, to: 'leaf' as const },
+    [target, learner.phrases, learner.timezone, sceneId, now],
+  );
+  return (
+    <VoicemailScreen
+      scene={scene}
+      roommateName={learner.roommate.name}
+      species={learner.roommate.species}
+      firstLanguage={learner.firstLanguage}
+      call={call}
+      growth={growth}
+      phrase={target?.en ?? ''}
+      onSeasonMap={() => {
+        markSeen([sceneId]);
+        // In development the season map keeps the preview's day.
+        const day = __DEV__ ? one(params, 'day') : undefined;
+        router.replace(day ? (`/season?day=${day}&after=1` as Href) : BURROW_ROUTES.seasonMap);
+      }}
+      onRetry={() => setAttempt((a) => a + 1)}
       onBack={leave}
     />
   );
