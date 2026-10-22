@@ -13,6 +13,9 @@ import { DEFAULT_CACHE_BYTES, LruCache, stableKey } from '../cache';
 import { Player, PICTURE_BOUNDS, type Op } from '../canvas/ops';
 import { ParagraphText, type FontFamilies } from '../canvas/text';
 import { critterParts, MOUTHS, type CritterSpec, type Mouth } from '../critter';
+import { critterRig } from '../rig/parts';
+import type { Box } from '../rig/parts';
+import { rigOps, rigPictures, type RigPictures } from '../rig/pictures';
 import { loadPrototype, type Prototype } from '../runtime/prototype';
 import type { SkiaApi } from './api';
 
@@ -95,6 +98,44 @@ export class ArtRenderer {
       const bytes = all.reduce((n, ops) => n + estimate(ops), 0) * 2;
       return { value, bytes };
     }) as CritterPictures;
+  }
+
+  /**
+   * A critter cut into parts on their own pivots (tail, feet, ears, bean, markings, paws, eyes with
+   * pupils and lids, brows, nose, mouths), each part a picture, for the rig's motion. Recorded once
+   * per species, mood and size, like `critter`.
+   */
+  critterRig(spec: CritterSpec, pixelRatio = 0): RigPictures {
+    const key = `rig:${spec.species}:${spec.mood}:${spec.size}:${pixelRatio}`;
+    return this.cache.getOrSet(key, () => {
+      const rig = critterRig(this.proto, this.skia, spec);
+      let pixels = 0;
+      // Outlines into pixels at the screen's density (0 keeps them as pictures).
+      const raster =
+        pixelRatio > 0
+          ? (picture: SkPicture, box: Box) => {
+              const w = Math.ceil(box.width * pixelRatio);
+              const h = Math.ceil(box.height * pixelRatio);
+              const surface = this.skia.Surface.Make(w, h);
+              if (!surface) throw new Error('@yapling/art: could not make a raster surface');
+              const c = surface.getCanvas();
+              c.clear(Float32Array.of(0, 0, 0, 0));
+              c.scale(pixelRatio, pixelRatio);
+              c.translate(-box.x, -box.y);
+              c.drawPicture(picture);
+              surface.flush();
+              const image = surface.makeImageSnapshot();
+              surface.dispose?.();
+              pixels += w * h;
+              return image;
+            }
+          : null;
+      const smooth = this.skia.Paint();
+      smooth.setAntiAlias(true);
+      const value = rigPictures(rig, (ops) => this.record(ops), raster, this.skia.Paint(), smooth);
+      const bytes = rigOps(rig).reduce((n, ops) => n + estimate(ops), 0) + pixels * 4;
+      return { value, bytes };
+    }) as RigPictures;
   }
 
   /** Any generator call as one picture, cached by the call. */
