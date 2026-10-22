@@ -214,9 +214,16 @@ describe('hints', () => {
     });
   });
 
-  it('hides on a tap, when the learner speaks, and on the next beat', () => {
+  it('hides on a tap, while the learner talks, once heard, and on the next beat', () => {
     expect(track(episode, [{ type: 'hint_dismissed' }], asked).hint).toBeNull();
-    expect(track(episode, [{ type: 'speech_started' }], asked).hint).toBeNull();
+    const talking = track(episode, [{ type: 'speech_started' }], asked);
+    expect(view(connected({ talkHeld: true }), talking).hint).toBeNull();
+    // A tap or a hold with no words: the hint is still there for the next try.
+    const notHeard = track(episode, [frame({ type: 'not_heard' })], talking);
+    expect(view(connected({ notice: 'not_heard' }), notHeard).hint).not.toBeNull();
+    expect(
+      track(episode, [frame({ type: 'heard', turn: 1, text: 'Hi', words: [] })], talking).hint,
+    ).toBeNull();
     expect(
       track(episode, [frame({ type: 'beat', beatId: 'mei-deflects', progress: 0.2 })], asked).hint,
     ).toBeNull();

@@ -441,6 +441,7 @@ export class VoiceEngine {
         break;
       case 'not_heard':
         // No real words in the turn: nothing is coming, the turn is the learner's again.
+        this.log('not heard: no words in the turn');
         this.replies.on({ type: 'settled' });
         this.patch({ awaitingReply: false, serverThinking: false, notice: 'not_heard' });
         break;

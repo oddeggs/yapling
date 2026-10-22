@@ -155,9 +155,10 @@ export function reduceTracker(
     case 'meaning_closed':
       return { ...state, meaning: null };
     case 'speech_started':
+      // The hint stays until the turn is heard (hidden while the learner talks), so a tap or a
+      // hold with no words in it never takes it away.
       return {
         ...state,
-        hint: null,
         heardAtSpeech: state.heard.length,
         timer: state.timer && !state.timer.done ? { ...state.timer, started: true } : state.timer,
       };
