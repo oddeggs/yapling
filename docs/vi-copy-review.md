@@ -2,7 +2,7 @@
 
 Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here, except two sets reviewed first: the Vietnamese of weeks 2–7 (Release 1.2: Visitor task cards, card and hint glosses, line glosses, knocks), and the beginner path's (Release 1.1), whose spoken lines gated the recording.
 
-526 strings in 15 catalogues; 97 flagged.
+554 strings in 15 catalogues; 125 flagged.
 
 ## How to review
 
@@ -974,7 +974,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## Voice story, postcard and voicemail
 
-`packages/i18n/src/story.vi.ts` · 14 strings
+`packages/i18n/src/story.vi.ts` · 36 strings
 
 | Key                           | English                                                         | Tiếng Việt                                                 | Flag     | Notes                                                                                                                  |
 | ----------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------- |
@@ -992,6 +992,28 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `story.voicemail.tryAgain`    | Try again                                                       | Thử lại                                                    |          |                                                                                                                        |
 | `story.a11y.waveform`         | Played {elapsed} of {duration}                                  | Đã nghe {elapsed} trên {duration}                          |          |                                                                                                                        |
 | `story.a11y.postcard`         | Postcard from {name}: {text}                                    | Bưu thiếp từ {name}: {text}                                |          |                                                                                                                        |
+| `story.place.postcard` | Postcard | Bưu thiếp | New |  |
+| `story.place.postcards` | {count} postcard / {count} postcards | {count} tấm bưu thiếp | New | Week 6's six good-luck postcards |
+| `story.tapForMeaning` | Tap for Vietnamese | Chạm để xem nghĩa | New | Under a line at Newcomer; same as `call.tapForMeaning` |
+| `story.mailbox.tag` | In your mailbox | Trong hộp thư | New | The tag over a voicemail shown as a postcard |
+| `story.mailbox.address` | The Burrow, Natterwick | Hang nhà mình, Natterwick | New | The address under the learner's name |
+| `story.mailbox.later` | Later · it'll wait in your mailbox | Để sau · thư vẫn nằm trong hộp thư | New | From the design; no guilt |
+| `story.mailbox.a11y.play` | Play the voicemail | Nghe thư thoại | New | VoiceOver |
+| `story.mailbox.a11y.pause` | Pause the voicemail | Tạm dừng thư thoại | New | VoiceOver |
+| `story.mailbox.a11y.card` | Voicemail from {name}: {text} | Thư thoại từ {name}: {text} | New | VoiceOver |
+| `story.end.kicker` | SEASON {season} · END OF EPISODE {episode} | MÙA {season} · HẾT TẬP {episode} | New | The title card at the end of an episode's week |
+| `story.end.nextEpisode` | NEXT WEEK · EPISODE {episode} | TUẦN SAU · TẬP {episode} | New |  |
+| `story.end.nextWeek` | NEXT WEEK | TUẦN SAU | New | Before Bunting Week |
+| `story.end.nextTitle` | {title}… | {title}… | New | The next episode's English title |
+| `story.end.outOn` | Out {day} · missed weeks wait | Ra mắt {day} · tuần lỡ vẫn chờ bạn | New | From the design; `{day}` is a weekday ("Thứ Hai") |
+| `story.end.readyNow` | Ready now · missed weeks wait | Đã sẵn sàng · tuần lỡ vẫn chờ bạn | New |  |
+| `story.end.backToTown` | Back to town | Về thị trấn | New | From the design |
+| `story.end.a11y.next` | Next week: {title}. {when} | Tuần sau: {title}. {when} | New | VoiceOver |
+| `story.recap.title` | Previously in Natterwick | Chuyện trước ở Natterwick | New | From the design; two lines |
+| `story.recap.badge` | S{season} · E{episode} | M{season} · T{episode} | New, Term | Mùa / Tập initials; the call's tag stays "S1 · E2": pick one |
+| `story.recap.withVoices` | {name} reads it to you, with voices. | {name} đọc cho bạn nghe, đủ cả giọng. | New | From the design |
+| `story.recap.go` | Let's go | Đi thôi | New | Opens the waiting episode (the design's "To the café") |
+| `story.recap.a11y.panel` | Panel {n}: {text} | Khung {n}: {text} | New | VoiceOver |
 
 ## After the call, phrase growth, fix graduation, the keepsake
 
@@ -1176,7 +1198,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## The season map
 
-`packages/i18n/src/season.vi.ts` · 20 strings
+`packages/i18n/src/season.vi.ts` · 26 strings
 
 | Key                              | English                                           | Tiếng Việt                              | Flag                | Notes                                                                     |
 | -------------------------------- | ------------------------------------------------- | --------------------------------------- | ------------------- | ------------------------------------------------------------------------- |
@@ -1200,6 +1222,12 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `season.a11y.done`               | done                                              | đã xong                                 |                     |                                                                           |
 | `season.a11y.current`            | next up                                           | tập tiếp theo                           |                     |                                                                           |
 | `season.a11y.upcoming`           | coming later                                      | sắp tới                                 |                     |                                                                           |
+| `season.replayKicker` | EPISODE {episode} · PLAY IT AGAIN | TẬP {episode} · CHƠI LẠI | New | A finished episode picked on the map |
+| `season.replay` | Play again | Chơi lại | New |  |
+| `season.festivalKicker` | SEASON {season} · EVERY EPISODE DONE | MÙA {season} · ĐÃ XONG CẢ MÙA | New |  |
+| `season.festivalHint` | Tap an episode to play it again | Chạm vào một tập để chơi lại | New |  |
+| `season.a11y.replayHint` | Plays this episode again | Chơi lại tập này | New | VoiceOver hint |
+| `season.a11y.playHint` | Plays this episode | Chơi tập này | New | VoiceOver hint |
 
 ## Lock-screen knocks (local notifications)
 

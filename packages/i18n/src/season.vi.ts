@@ -22,4 +22,10 @@ export const seasonVi = {
   'season.a11y.done': 'đã xong',
   'season.a11y.current': 'tập tiếp theo',
   'season.a11y.upcoming': 'sắp tới',
+  'season.replayKicker': 'TẬP {episode} · CHƠI LẠI',
+  'season.replay': 'Chơi lại',
+  'season.festivalKicker': 'MÙA {season} · ĐÃ XONG CẢ MÙA',
+  'season.festivalHint': 'Chạm vào một tập để chơi lại',
+  'season.a11y.replayHint': 'Chơi lại tập này',
+  'season.a11y.playHint': 'Chơi tập này',
 } as const satisfies Translation<typeof seasonEn>;

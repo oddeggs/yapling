@@ -1,5 +1,4 @@
 import { findPhrase, findScene, type Scene } from '@yapling/story';
-import { translator } from '@yapling/i18n';
 import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -7,8 +6,12 @@ import { BURROW_ROUTES } from '../burrow/routes';
 import { useAppNow, useProgress, useSeen } from '../../data';
 import { useLocale } from '../../ui';
 import { useStoryLearner } from './learner';
+import { glossRevealFor, isFirstWeekScene, isRecapId, mailboxPlan } from './listening';
 import { listenPlan } from './plan';
 import { momentsOfScenes } from './moments';
+import { MailboxRoute, RecapRoute } from './mailbox-route';
+import { one, postmarkDay, useLeave, type Params } from './route-helpers';
+import { WeekListenScreen } from './week-listen-screen';
 import { phraseForSeed } from './seeds';
 import type { SeedEvent } from './story-model';
 import { StoryScreen } from './story-screen';
@@ -19,53 +22,36 @@ import { now as appNow } from '../devmenu';
 
 /*
  * `/listen/<sceneId>`: a scene with nothing to fail. Pip's story and the postcards that come with
- * it play on the phone; a voicemail with a phrase to fix opens a short live turn.
+ * it play on the phone; a voicemail with a phrase to fix opens a short live turn, and one that is
+ * only a message plays as a postcard in the mailbox, then the episode's closing card.
+ * `/listen/<episode>.recap` is Pip's recap for a learner coming back (the learning model's key).
  *
  * Development: `?day=N` reads the burrow's preview learner; `?fixture=<url>` plays fixture audio
  * into the mic on the voicemail's turn (a simulator without a microphone).
  */
-
-type Params = Readonly<Record<string, string | string[] | undefined>>;
-
-const one = (params: Params, key: string): string | undefined => {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] : v;
-};
 
 /** Gifts a story leaves in the burrow, toasted when it ends. */
 const GIFTS: Readonly<Record<string, 'story.gift.seagullFeather'>> = {
   's1-e1-story': 'story.gift.seagullFeather',
 };
 
-const en = translator('en');
-
-/** A postmark's day in the town's own style: `SEP 23`. */
-function postmarkDay(now: number): string {
-  const d = new Date(now);
-  const month = en(`common.monthShort.${d.getMonth() + 1}` as 'common.monthShort.1');
-  return `${month.toUpperCase()} ${d.getDate()}`;
-}
-
 export function ListenRoute() {
   const params: Params = useLocalSearchParams();
   const sceneId = one(params, 'sceneId') ?? '';
   const scene = findScene(sceneId);
-  return (
-    <>
-      {scene?.kind === 'voicemail' ? (
-        <VoicemailRoute scene={scene} params={params} />
-      ) : (
-        <StoryRoute sceneId={sceneId} params={params} />
-      )}
-    </>
-  );
-}
-
-function useLeave() {
-  const router = useRouter();
-  return useCallback(
-    () => (router.canGoBack() ? router.back() : router.replace(BURROW_ROUTES.home)),
-    [router],
+  if (isRecapId(sceneId)) return <RecapRoute recapId={sceneId} params={params} />;
+  if (scene?.kind === 'voicemail') {
+    // A message alone plays on the phone; a voicemail with a fix in it is a short call.
+    return mailboxPlan(sceneId, 'vi') ? (
+      <MailboxRoute sceneId={sceneId} params={params} />
+    ) : (
+      <VoicemailRoute scene={scene} params={params} />
+    );
+  }
+  return isFirstWeekScene(sceneId) ? (
+    <StoryRoute sceneId={sceneId} params={params} />
+  ) : (
+    <WeekStoryRoute sceneId={sceneId} params={params} />
   );
 }
 
@@ -101,6 +87,43 @@ function StoryRoute({ sceneId, params }: { sceneId: string; params: Params }) {
       onSeed={onSeed}
       onFinish={() => {
         void markSeen(...momentsOfScenes(plan.scenes.map((s) => s.id)));
+        leave();
+      }}
+      onBack={leave}
+    />
+  );
+}
+
+/** A later week's story and postcards: lines glossed as the learner's stage gives help. */
+function WeekStoryRoute({ sceneId, params }: { sceneId: string; params: Params }) {
+  const learner = useStoryLearner(params);
+  const leave = useLeave();
+  const plan = useMemo(
+    () => listenPlan(sceneId, learner.firstLanguage, learner.name),
+    [sceneId, learner.firstLanguage, learner.name],
+  );
+  const now = useAppNow(learner.timezone);
+  const [postmark] = useState(() => postmarkDay(now));
+  const { markScenesSeen } = useSeen();
+  const { meetPhrase } = useProgress();
+  const onSeed = useCallback(
+    (event: SeedEvent) => {
+      const phrase = phraseForSeed({ phraseId: event.phraseId, text: event.phrase ?? event.text });
+      if (phrase) void meetPhrase(phrase).catch(() => undefined);
+    },
+    [meetPhrase],
+  );
+  if (!plan) return null;
+  return (
+    <WeekListenScreen
+      plan={plan}
+      roommateName={learner.roommate.name}
+      species={learner.roommate.species}
+      postmarkDate={postmark}
+      glossReveal={glossRevealFor(learner.stage, learner.firstLanguage)}
+      onSeed={onSeed}
+      onFinish={() => {
+        void markScenesSeen(...plan.scenes.map((s) => s.id));
         leave();
       }}
       onBack={leave}

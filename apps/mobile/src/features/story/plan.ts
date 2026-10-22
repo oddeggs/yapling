@@ -1,12 +1,14 @@
 import type { CharacterId, FirstLanguage, Id } from '@yapling/contracts';
 import {
-  EPISODES,
   findPhrase,
   findScene,
   getLine,
   glossFor,
+  SEASON_1,
+  seasonWeeks,
   type Episode,
   type Scene,
+  type StoryWeek,
   type UiSpec,
 } from '@yapling/story';
 
@@ -43,8 +45,14 @@ export interface UiStep {
 
 export type ListenStep = LineStep | UiStep;
 
+/** A week of the season: an episode's week, or a week without an episode (the festival). */
+export type SeasonWeek = Episode | StoryWeek;
+
 export interface ListenPlan {
-  readonly episode: Episode;
+  /** The week the scenes arrive in. */
+  readonly week: SeasonWeek;
+  /** Its number in the season (1 for the first week, 7 for the festival). */
+  readonly weekNumber: number;
   /** The scenes played, in order: the first is the one the route named. */
   readonly scenes: readonly Scene[];
   readonly steps: readonly ListenStep[];
@@ -54,9 +62,40 @@ export interface ListenPlan {
 
 const LISTEN_KINDS: readonly Scene['kind'][] = ['story', 'postcard'];
 
-/** The episode a scene belongs to. */
-export const episodeOf = (sceneId: Id): Episode | undefined =>
-  EPISODES.find((e) => e.scenes.some((s) => s.id === sceneId));
+const WEEKS: readonly SeasonWeek[] = seasonWeeks(SEASON_1);
+
+/** The week of the season a scene arrives in, with its number. */
+export function weekOf(sceneId: Id): { readonly week: SeasonWeek; readonly number: number } | null {
+  const i = WEEKS.findIndex((w) => w.scenes.some((s) => s.id === sceneId));
+  const week = WEEKS[i];
+  return week ? { week, number: i + 1 } : null;
+}
+
+/** The season's weeks, week 1 first. */
+export const seasonWeekAt = (number: number): SeasonWeek | undefined => WEEKS[number - 1];
+
+/**
+ * A line's caption and gloss as the learner reads them. A line that names the learner (`Lan, this
+ * is…`) carries their name on screen; the gloss's `{name}` is filled the same way.
+ */
+export function namedCaption(
+  line: { readonly caption: string; readonly nameSplice: 'before' | null },
+  gloss: string | null,
+  learnerName: string | null,
+): { readonly caption: string; readonly gloss: string | null } {
+  const name = learnerName?.trim() ?? '';
+  let tidy = gloss;
+  if (gloss !== null && gloss.includes('{name}')) {
+    // With no name to say, the call ("{name} ơi,") goes and the sentence starts afresh.
+    const filled =
+      name === ''
+        ? gloss.replace(/\{name\}\s*(ơi)?[,!]?\s*/u, '')
+        : gloss.replaceAll('{name}', name);
+    tidy = filled.charAt(0).toUpperCase() + filled.slice(1);
+  }
+  if (line.nameSplice !== 'before' || name === '') return { caption: line.caption, gloss: tidy };
+  return { caption: `${name}! ${line.caption}`, gloss: tidy };
+}
 
 /** A line's caption split into its tap-to-gloss segments (the whole line when it has none). */
 export function segmentsOf(lineId: Id, language: FirstLanguage): readonly StorySegment[] {
@@ -77,14 +116,19 @@ export function segmentsOf(lineId: Id, language: FirstLanguage): readonly StoryS
  * The plan for a listening route: the scene, then the episode's other story and postcard scenes
  * on the same day of the week. Null for a scene that isn't played on the phone.
  */
-export function listenPlan(sceneId: Id, language: FirstLanguage): ListenPlan | null {
+export function listenPlan(
+  sceneId: Id,
+  language: FirstLanguage,
+  learnerName: string | null = null,
+): ListenPlan | null {
   const first = findScene(sceneId);
-  const episode = episodeOf(sceneId);
-  if (!first || !episode || !LISTEN_KINDS.includes(first.kind)) return null;
-  const slot = episode.week.find((w) => w.scene === sceneId);
+  const found = weekOf(sceneId);
+  if (!first || !found || !LISTEN_KINDS.includes(first.kind)) return null;
+  const { week, number } = found;
+  const slot = week.week.find((w) => w.scene === sceneId);
   const sameDay = slot
-    ? episode.week
-        .slice(episode.week.indexOf(slot) + 1)
+    ? week.week
+        .slice(week.week.indexOf(slot) + 1)
         .filter((w) => w.day === slot.day)
         .map((w) => findScene(w.scene))
         .filter((s): s is Scene => s !== undefined && LISTEN_KINDS.includes(s.kind))
@@ -95,16 +139,20 @@ export function listenPlan(sceneId: Id, language: FirstLanguage): ListenPlan | n
       if (beat.kind === 'ui') return [{ kind: 'ui', scene: scene.id, ui: beat.ui }];
       if (beat.kind !== 'rec') return [];
       const line = getLine(beat.line);
+      const named = namedCaption(line, glossFor(line.glosses, language), learnerName);
       return [
         {
           kind: 'line',
           scene: scene.id,
           lineId: line.id,
           character: line.character,
-          caption: line.caption,
-          gloss: glossFor(line.glosses, language),
+          caption: named.caption,
+          gloss: named.gloss,
           durationMs: line.audio?.durationMs ?? null,
-          segments: segmentsOf(line.id, language),
+          segments:
+            line.segments.length === 0
+              ? [{ en: named.caption, gloss: named.gloss, start: 0 }]
+              : segmentsOf(line.id, language),
         },
       ];
     }),
@@ -113,5 +161,5 @@ export function listenPlan(sceneId: Id, language: FirstLanguage): ListenPlan | n
     .map((id) => findPhrase(id))
     .filter((p) => p !== undefined)
     .map((p) => ({ id: p.id, en: p.en }));
-  return { episode, scenes, steps, phrases };
+  return { week, weekNumber: number, scenes, steps, phrases };
 }
