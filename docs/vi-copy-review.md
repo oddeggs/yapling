@@ -2,7 +2,7 @@
 
 Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here, except two sets reviewed first: the Vietnamese of weeks 2–7 (Release 1.2: Visitor task cards, card and hint glosses, line glosses, knocks), and the beginner path's (Release 1.1), whose spoken lines gated the recording.
 
-526 strings in 15 catalogues; 97 flagged.
+554 strings in 15 catalogues; 125 flagged.
 
 ## How to review
 
@@ -444,6 +444,49 @@ Knocks for weeks 2–7 (`season-1-script.md`, "Knocks"), Pip's minute, the week'
 | Week · waiting row, VoiceOver | Waiting for you from week {week}: {title}. Tap to start. | Đang đợi bạn từ tuần {week}: {title}. Chạm để bắt đầu. | New |  |
 | Week · done row, VoiceOver | Done. Tap to play it again | Đã xong. Chạm để chơi lại | New |  |
 | Week · replay tag | Replay | Chơi lại | New | Weeks 7 on, on each ring row |
+
+The knocks above are in `knocks.week{N}_{episode|story|voicemail}`. At Visitor a character's day-1 line is replaced by the Vietnamese in its row (`knocks.week{N}_episode_visitor`); in English it reads as Yapling telling the same news.
+
+The test menu's later-week tools (test builds only, `devmenu.*`):
+
+| Key | English | Tiếng Việt | Flag | Notes |
+|---|---|---|---|---|
+| `devmenu.weeks.heading` | LATER WEEKS | CÁC TUẦN SAU | New | Test menu |
+| `devmenu.weeks.status` | Story week {week}, day {day} · ring {done} of 3 | Tuần truyện {week}, ngày {day} · vòng tuần {done}/3 | New | Test menu |
+| `devmenu.weeks.needsStory` | The story hasn’t started: finish Settling in first (the letter day). | Truyện chưa bắt đầu: hãy làm quen xong trước (ngày lá thư). | New | Test menu |
+| `devmenu.weeks.needsLearner` | No learner yet: onboarding hasn’t made one. | Chưa có người học: phần mở đầu chưa tạo người học. | New | Test menu |
+| `devmenu.weeks.weekChip` | Week {week} | Tuần {week} | New | Test menu |
+| `devmenu.weeks.a11y.weekChip` | Choose week {week} | Chọn tuần {week} | New | Test menu |
+| `devmenu.weeks.dayChip` | {day} | {day} | New | Test menu |
+| `devmenu.weeks.a11y.dayChip` | Choose day {day} of the week | Chọn ngày {day} trong tuần | New | Test menu |
+| `devmenu.weeks.jump` | Jump to week {week}, day {day} | Chuyển tới tuần {week}, ngày {day} | New | Test menu |
+| `devmenu.weeks.jumpHint` | Every week before it played in full, its own calls not yet; the clock on that day | Các tuần trước coi như đã chơi hết, các cuộc gọi của tuần này thì chưa; đồng hồ chuyển tới ngày đó | New | Test menu |
+| `devmenu.weeks.fill` | Fill week {week}’s ring | Lấp đầy vòng tuần {week} | New | Test menu |
+| `devmenu.weeks.fillHint` | Marks the week’s three calls done and hangs its keepsake | Đánh dấu xong ba cuộc gọi của tuần và treo kỷ vật | New | Test menu |
+| `devmenu.weeks.working` | Working… | Đang làm… | New | Test menu |
+| `devmenu.weeks.failed` | Didn’t work: {reason} | Không được: {reason} | New | Test menu |
+| `devmenu.weeks.done.jump` | Week {week}, day {day}. Every week before it is played. | Tuần {week}, ngày {day}. Các tuần trước đã chơi xong. | New | Test menu |
+| `devmenu.weeks.done.fill` | Week {week}’s ring is full. | Vòng tuần {week} đã đầy. | New | Test menu |
+| `devmenu.weeks.knocksHeading` | WEEK {week}’S KNOCKS | THÔNG BÁO TUẦN {week} | New | Test menu |
+| `devmenu.weeks.knockChip` | Day {day} | Ngày {day} | New | Test menu |
+| `devmenu.weeks.a11y.knockChip` | Preview the knock on day {day} of week {week} | Xem trước thông báo ngày {day} của tuần {week} | New | Test menu |
+| `devmenu.weeks.noKnocks` | Nothing in this week knocks. | Tuần này không có thông báo nào. | New | Test menu |
+| `devmenu.weeks.tag` | Week {week} · day {day} | Tuần {week} · ngày {day} | New | Test menu |
+| `devmenu.weeks.previewHint` | Jumps to that day and opens what the tapped knock opens | Chuyển tới ngày đó và mở nơi thông báo dẫn tới khi chạm vào | New | Test menu |
+| `devmenu.weeks.ringSoon` | Week {week} day {day}, a minute before its knock | Tuần {week} ngày {day}, một phút trước thông báo | New | Test menu |
+| `devmenu.weeks.ringSoonHint` | Jumps to that day and moves the clock to a minute before its scheduled knock | Chuyển tới ngày đó và đưa đồng hồ tới một phút trước thông báo đã hẹn | New | Test menu |
+| `devmenu.weeks.ringNote` | Week {week}’s scheduled knock rings in a minute. Lock the phone or leave the app. | Thông báo đã hẹn của tuần {week} sẽ reo sau một phút. Khoá máy hoặc thoát ứng dụng. | New | Test menu |
+| `devmenu.weeks.fire` | Fire it in 5 s | Gửi sau 5 giây | New | Test menu |
+| `devmenu.weeks.fireNote` | The knock rings in 5 s. Lock the phone or leave the app. | Thông báo sẽ reo sau 5 giây. Khoá máy hoặc thoát ứng dụng. | New | Test menu |
+| `devmenu.weeks.noWeekOneKnock` | Day {day} has no week-1 knock: see the later weeks | Ngày {day} không có thông báo tuần 1: xem phần các tuần sau | New | Test menu |
+| `devmenu.back.heading` | BACK AFTER DAYS AWAY | QUAY LẠI SAU VÀI NGÀY | New | Test menu |
+| `devmenu.back.off` | Not away | Không vắng | New | Test menu |
+| `devmenu.back.days` | {days} days | {days} ngày | New | Test menu |
+| `devmenu.back.a11y` | Treat this open as a return after {days} days | Coi lần mở này là quay lại sau {days} ngày | New | Test menu |
+| `devmenu.back.offA11y` | Treat this open as an ordinary one | Coi lần mở này như bình thường | New | Test menu |
+| `devmenu.back.note` | The welcome back with the story so far; everything waits where it was. | Lời chào khi quay lại kèm phần truyện đã qua; mọi thứ vẫn chờ ở chỗ cũ. | New | Test menu |
+| `devmenu.handsFree.title` | Hands-free calls | Gọi rảnh tay | New | Test menu |
+| `devmenu.handsFree.sub` | Talk and pause to answer, without holding the mic | Nói rồi ngừng để trả lời, không cần giữ nút mic | New | Test menu |
 
 ---
 
@@ -1003,7 +1046,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## Voice story, postcard and voicemail
 
-`packages/i18n/src/story.vi.ts` · 14 strings
+`packages/i18n/src/story.vi.ts` · 36 strings
 
 | Key                           | English                                                         | Tiếng Việt                                                 | Flag     | Notes                                                                                                                  |
 | ----------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------- |
@@ -1021,6 +1064,28 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `story.voicemail.tryAgain`    | Try again                                                       | Thử lại                                                    |          |                                                                                                                        |
 | `story.a11y.waveform`         | Played {elapsed} of {duration}                                  | Đã nghe {elapsed} trên {duration}                          |          |                                                                                                                        |
 | `story.a11y.postcard`         | Postcard from {name}: {text}                                    | Bưu thiếp từ {name}: {text}                                |          |                                                                                                                        |
+| `story.place.postcard` | Postcard | Bưu thiếp | New |  |
+| `story.place.postcards` | {count} postcard / {count} postcards | {count} tấm bưu thiếp | New | Week 6's six good-luck postcards |
+| `story.tapForMeaning` | Tap for Vietnamese | Chạm để xem nghĩa | New | Under a line at Newcomer; same as `call.tapForMeaning` |
+| `story.mailbox.tag` | In your mailbox | Trong hộp thư | New | The tag over a voicemail shown as a postcard |
+| `story.mailbox.address` | The Burrow, Natterwick | Hang nhà mình, Natterwick | New | The address under the learner's name |
+| `story.mailbox.later` | Later · it'll wait in your mailbox | Để sau · thư vẫn nằm trong hộp thư | New | From the design; no guilt |
+| `story.mailbox.a11y.play` | Play the voicemail | Nghe thư thoại | New | VoiceOver |
+| `story.mailbox.a11y.pause` | Pause the voicemail | Tạm dừng thư thoại | New | VoiceOver |
+| `story.mailbox.a11y.card` | Voicemail from {name}: {text} | Thư thoại từ {name}: {text} | New | VoiceOver |
+| `story.end.kicker` | SEASON {season} · END OF EPISODE {episode} | MÙA {season} · HẾT TẬP {episode} | New | The title card at the end of an episode's week |
+| `story.end.nextEpisode` | NEXT WEEK · EPISODE {episode} | TUẦN SAU · TẬP {episode} | New |  |
+| `story.end.nextWeek` | NEXT WEEK | TUẦN SAU | New | Before Bunting Week |
+| `story.end.nextTitle` | {title}… | {title}… | New | The next episode's English title |
+| `story.end.outOn` | Out {day} · missed weeks wait | Ra mắt {day} · tuần lỡ vẫn chờ bạn | New | From the design; `{day}` is a weekday ("Thứ Hai") |
+| `story.end.readyNow` | Ready now · missed weeks wait | Đã sẵn sàng · tuần lỡ vẫn chờ bạn | New |  |
+| `story.end.backToTown` | Back to town | Về thị trấn | New | From the design |
+| `story.end.a11y.next` | Next week: {title}. {when} | Tuần sau: {title}. {when} | New | VoiceOver |
+| `story.recap.title` | Previously in Natterwick | Chuyện trước ở Natterwick | New | From the design; two lines |
+| `story.recap.badge` | S{season} · E{episode} | M{season} · T{episode} | New, Term | Mùa / Tập initials; the call's tag stays "S1 · E2": pick one |
+| `story.recap.withVoices` | {name} reads it to you, with voices. | {name} đọc cho bạn nghe, đủ cả giọng. | New | From the design |
+| `story.recap.go` | Let's go | Đi thôi | New | Opens the waiting episode (the design's "To the café") |
+| `story.recap.a11y.panel` | Panel {n}: {text} | Khung {n}: {text} | New | VoiceOver |
 
 ## After the call, phrase growth, fix graduation, the keepsake
 
@@ -1205,7 +1270,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## The season map
 
-`packages/i18n/src/season.vi.ts` · 20 strings
+`packages/i18n/src/season.vi.ts` · 26 strings
 
 | Key                              | English                                           | Tiếng Việt                              | Flag                | Notes                                                                     |
 | -------------------------------- | ------------------------------------------------- | --------------------------------------- | ------------------- | ------------------------------------------------------------------------- |
@@ -1229,6 +1294,12 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `season.a11y.done`               | done                                              | đã xong                                 |                     |                                                                           |
 | `season.a11y.current`            | next up                                           | tập tiếp theo                           |                     |                                                                           |
 | `season.a11y.upcoming`           | coming later                                      | sắp tới                                 |                     |                                                                           |
+| `season.replayKicker` | EPISODE {episode} · PLAY IT AGAIN | TẬP {episode} · CHƠI LẠI | New | A finished episode picked on the map |
+| `season.replay` | Play again | Chơi lại | New |  |
+| `season.festivalKicker` | SEASON {season} · EVERY EPISODE DONE | MÙA {season} · ĐÃ XONG CẢ MÙA | New |  |
+| `season.festivalHint` | Tap an episode to play it again | Chạm vào một tập để chơi lại | New |  |
+| `season.a11y.replayHint` | Plays this episode again | Chơi lại tập này | New | VoiceOver hint |
+| `season.a11y.playHint` | Plays this episode | Chơi tập này | New | VoiceOver hint |
 
 ## Lock-screen knocks (local notifications)
 

@@ -6,6 +6,7 @@ import type {
   QuietHours,
   SettlingChapterDone,
   TimeZone,
+  WeekRing,
 } from '@yapling/contracts';
 import { SEASON_1_EPISODES, type Season1EpisodeId } from '@yapling/domain';
 
@@ -37,6 +38,10 @@ export interface KnockInputs {
   readonly storyStartedOn?: LocalDate | null;
   /** The Settling-in chapters done; left out for none. */
   readonly settlingChaptersDone?: readonly SettlingChapterDone[];
+  /** The rings as progress has them, for the later weeks' knocks; left out for none. */
+  readonly weeks?: readonly WeekRing[];
+  /** At the Visitor stage now: every later week's knock comes from Yapling, translated. */
+  readonly atVisitor?: boolean;
 }
 
 /** Week N's episode is Episode N: the episodes whose ring slot is done, in order. */
@@ -46,7 +51,6 @@ export const completedEpisodesOf = (progress: Pick<Progress, 'weeks'>): Season1E
     return week.slots[0]?.status === 'done' && id !== undefined ? [id] : [];
   });
 
-/** The knocks' inputs from the learner's profile, progress and last open; null without a profile. */
 /** Where the learner is with Settling in, from the knocks' inputs. */
 export const settlingStateOf = (
   inputs: Pick<KnockInputs, 'visitorPath' | 'storyStartedOn' | 'settlingChaptersDone'>,
@@ -56,6 +60,7 @@ export const settlingStateOf = (
   storyStartedOn: inputs.storyStartedOn ?? null,
 });
 
+/** The knocks' inputs from the learner's profile, progress and last open; null without a profile. */
 export function knockInputsOf(
   profile: Profile | null,
   progress: Progress | null,
@@ -73,5 +78,7 @@ export function knockInputsOf(
     visitorPath: isVisitorPath(profile),
     storyStartedOn: profile.storyStartedOn,
     settlingChaptersDone: progress.settlingChaptersDone,
+    weeks: progress.weeks,
+    atVisitor: profile.stage === 'visitor',
   };
 }

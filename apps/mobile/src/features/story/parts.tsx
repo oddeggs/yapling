@@ -1,5 +1,5 @@
 import { Blur, Canvas, Group, Paint, Picture } from '@shopify/react-native-skia';
-import type { BurrowObjectId, Character, Mood, PipSpecies } from '@yapling/art';
+import type { BurrowObjectId, Character, Mood, PipSpecies, SceneName } from '@yapling/art';
 import { useArtRenderer } from '@yapling/art/native';
 import {
   colours,
@@ -45,11 +45,20 @@ export function useFrame() {
   return { width, height, k, drop, u: (n: number) => n * k, y: (n: number) => drop + n * k };
 }
 
-/** The burrow, blurred and washed toward paper: behind every listening screen. */
-export function BlurredBurrow({ children }: { children?: ReactNode }) {
+/**
+ * The burrow (or another place: a voicemail from the café), blurred and washed toward paper:
+ * behind every listening screen.
+ */
+export function BlurredBurrow({
+  children,
+  scene = 'burrow',
+}: {
+  children?: ReactNode;
+  scene?: SceneName;
+}) {
   const { width, height } = useWindowDimensions();
   const renderer = useArtRenderer();
-  const art = useMemo(() => renderer.scene('burrow', {}), [renderer]);
+  const art = useMemo(() => renderer.scene(scene, {}), [renderer, scene]);
   // The prototype draws the room 24 points past each edge so the blur has no hard border.
   const k = art ? (width + 48) / art.width : 1;
   return (
@@ -226,6 +235,9 @@ export function PostcardCard({
   postmark,
   species,
   style,
+  glossReveal = 'on_tap',
+  tilt = -3,
+  onGloss,
 }: {
   from: Character;
   fromName: string;
@@ -234,10 +246,18 @@ export function PostcardCard({
   postmark: string;
   species: PipSpecies;
   style?: object;
+  /** `shown`: the gloss sits under the note from the start; otherwise a tap opens it. */
+  glossReveal?: 'shown' | 'marked' | 'on_tap' | 'none';
+  /** The card's tilt, in degrees. */
+  tilt?: number;
+  /** The gloss was opened by a tap. */
+  onGloss?: () => void;
 }) {
   const { t } = useLocale();
   const fly = useKeyframes(motion.call.postcard);
-  const [glossShown, setGlossShown] = useState(false);
+  const [tapped, setTapped] = useState(false);
+  const glossShown = glossReveal === 'shown' || tapped;
+  const tappable = gloss !== null && glossReveal !== 'shown' && glossReveal !== 'none';
   return (
     <Animated.View style={[style, fly]}>
       <Sticker
@@ -245,14 +265,25 @@ export function PostcardCard({
         radius={radii.aiTag}
         outline={outline.bold}
         fill={colours.surfacePaper}
-        style={{ transform: [{ rotate: '-3deg' }] }}
+        style={{ transform: [{ rotate: `${tilt}deg` }] }}
         contentStyle={styles.postcard}
       >
         <Press
-          onPress={gloss ? () => setGlossShown((g) => !g) : undefined}
-          haptic={gloss ? 'selection' : null}
-          accessibilityLabel={t('story.a11y.postcard', { name: fromName, text })}
-          {...(gloss ? { accessibilityHint: t('call.tapForMeaning') } : {})}
+          onPress={
+            tappable
+              ? () => {
+                  if (!tapped) onGloss?.();
+                  setTapped((g) => !g);
+                }
+              : undefined
+          }
+          haptic={tappable ? 'selection' : null}
+          accessibilityLabel={
+            glossShown && gloss
+              ? `${t('story.a11y.postcard', { name: fromName, text })}. ${gloss}`
+              : t('story.a11y.postcard', { name: fromName, text })
+          }
+          {...(tappable ? { accessibilityHint: t('call.tapForMeaning') } : {})}
           style={styles.postcardText}
         >
           <Txt variant="postcard">{text}</Txt>
@@ -288,7 +319,7 @@ export function PostcardCard({
 }
 
 /** A 2-point dashed rule down the postcard: the right edge of a dashed box, the rest clipped. */
-function VerticalDash() {
+export function VerticalDash() {
   return (
     <View style={{ width: 2, marginLeft: -12, overflow: 'hidden' }}>
       <View

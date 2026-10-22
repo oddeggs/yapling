@@ -54,4 +54,15 @@ describe('back after a few days', () => {
     });
     expect(longer.days).toBe(7);
   });
+
+  it('comes back after as many days as the test menu says, with the story so far', () => {
+    const twoWeeks = returnStateOf({
+      ...base,
+      completedEpisodes: ['s1-e1', 's1-e2', 's1-e3'],
+      cameBackAfterAway: true,
+      awayDays: 14,
+      lastOpenedAt: now - 60_000,
+    });
+    expect(twoWeeks).toEqual({ away: true, days: 14, recapKey: 's1-e3.recap' });
+  });
 });

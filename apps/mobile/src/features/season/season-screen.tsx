@@ -22,6 +22,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   BackButton,
   GlassView,
+  Press,
   StickerButton,
   Sticker,
   Txt,
@@ -31,6 +32,7 @@ import {
 } from '../../ui';
 import { glowTracks } from '../../ui/motion/keyframes';
 import { Face } from '../burrow/art';
+import type { CharacterId } from '@yapling/contracts';
 import type { SeasonMapModel, SeasonPin } from './season-model';
 
 /*
@@ -52,14 +54,29 @@ export const placeKey = (prefix: 'season.place' | 'season.pin', place: Place) =>
 
 export interface SeasonScreenProps {
   readonly model: SeasonMapModel;
+  /** The finished episode picked to play again, if any. */
+  readonly picked: SeasonPin | null;
+  /** The face on a picked episode's card. */
+  readonly pickedFace: CharacterId | null;
   readonly onBack: () => void;
   readonly onContinue: () => void;
+  /** A pin with something to play was tapped. */
+  readonly onPin: (pin: SeasonPin) => void;
+  readonly onReplay: (pin: SeasonPin) => void;
 }
 
 const PIN = 36;
 const PIN_BORDER = 2.5;
 
-export function SeasonScreen({ model, onBack, onContinue }: SeasonScreenProps) {
+export function SeasonScreen({
+  model,
+  picked,
+  pickedFace,
+  onBack,
+  onContinue,
+  onPin,
+  onReplay,
+}: SeasonScreenProps) {
   const { t } = useLocale();
   const { width } = useWindowDimensions();
   const { top } = useSafeAreaInsets();
@@ -118,12 +135,14 @@ export function SeasonScreen({ model, onBack, onContinue }: SeasonScreenProps) {
           key={pin.id}
           pin={pin}
           k={k}
+          picked={picked?.episode === pin.episode}
           label={tr(placeKey('season.pin', pin.place))}
           a11y={t('season.a11y.pin', {
             episode: pin.episode,
             title: pin.title,
             state: t(`season.a11y.${pin.state}`),
           })}
+          onPress={pin.action ? () => onPin(pin) : undefined}
         />
       ))}
       <View style={{ position: 'absolute', left: u(232), top: u(676) }} pointerEvents="none">
@@ -151,7 +170,24 @@ export function SeasonScreen({ model, onBack, onContinue }: SeasonScreenProps) {
           {model.title}
         </Txt>
       </GlassView>
-      {next ? (
+      {picked ? (
+        <GlassView glass={glass.panel} radius={radii.bar32} style={styles.next}>
+          <View style={styles.nextFace}>
+            <Face
+              character={faceOf(pickedFace ?? 'pip')}
+              size={44 - outline.regular * 2}
+              background={palette.mintTint}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Txt variant="labelSmall" colour={colours.textMuted}>
+              {t('season.replayKicker', { episode: picked.episode })}
+            </Txt>
+            <Txt variant={NEXT_TITLE}>{picked.title}</Txt>
+          </View>
+          <StickerButton label={t('season.replay')} size="small" onPress={() => onReplay(picked)} />
+        </GlassView>
+      ) : next ? (
         <GlassView glass={glass.panel} radius={radii.bar32} style={styles.next}>
           <View style={styles.nextFace}>
             <Face
@@ -174,6 +210,19 @@ export function SeasonScreen({ model, onBack, onContinue }: SeasonScreenProps) {
                     day: tr(`common.weekday.${next.opensOn}`),
                   })
                 : next.title}
+            </Txt>
+          </View>
+          <StickerButton label={t('common.continue')} size="small" onPress={onContinue} />
+        </GlassView>
+      ) : model.festival ? (
+        <GlassView glass={glass.panel} radius={radii.bar32} style={styles.next}>
+          <View style={{ flex: 1 }}>
+            <Txt variant="labelSmall" colour={colours.textMuted}>
+              {t('season.festivalKicker', { season: model.season })}
+            </Txt>
+            <Txt variant={NEXT_TITLE}>{model.festival.title}</Txt>
+            <Txt variant="note" colour={colours.textMuted}>
+              {t('season.festivalHint')}
             </Txt>
           </View>
           <StickerButton label={t('common.continue')} size="small" onPress={onContinue} />
@@ -201,7 +250,22 @@ const FILL: Readonly<Record<SeasonPin['state'], string>> = {
 
 const glow = glowTracks(motion.call.micGlow.keyframes.tracks.boxShadow ?? []);
 
-function Pin({ pin, k, label, a11y }: { pin: SeasonPin; k: number; label: string; a11y: string }) {
+function Pin({
+  pin,
+  k,
+  picked,
+  label,
+  a11y,
+  onPress,
+}: {
+  pin: SeasonPin;
+  k: number;
+  picked: boolean;
+  label: string;
+  a11y: string;
+  onPress: (() => void) | undefined;
+}) {
+  const { t } = useLocale();
   const reduce = useReduceMotion();
   const current = pin.state === 'current';
   const clock = useClock(motion.call.micGlow, { active: current && !reduce });
@@ -212,12 +276,25 @@ function Pin({ pin, k, label, a11y }: { pin: SeasonPin; k: number; label: string
     return { opacity: alpha, transform: [{ scale: (PIN + 2 * spread) / PIN }] };
   });
   return (
-    <View
-      accessible
+    <Press
+      onPress={onPress}
+      haptic={onPress ? 'selection' : null}
       accessibilityLabel={a11y}
-      style={{ position: 'absolute', left: pin.x * k - PIN / 2, top: pin.y * k - PIN / 2 }}
+      {...(onPress
+        ? {
+            accessibilityHint:
+              pin.action === 'replay' ? t('season.a11y.replayHint') : t('season.a11y.playHint'),
+          }
+        : {})}
+      hitSlop={8}
+      style={{
+        position: 'absolute',
+        left: pin.x * k - PIN / 2,
+        top: pin.y * k - PIN / 2,
+      }}
     >
       {current ? <Animated.View pointerEvents="none" style={[styles.halo, halo]} /> : null}
+      {picked ? <View pointerEvents="none" style={styles.picked} /> : null}
       <Sticker
         shadow={stickerShadows.chip}
         radius={PIN / 2}
@@ -235,7 +312,7 @@ function Pin({ pin, k, label, a11y }: { pin: SeasonPin; k: number; label: string
           </Txt>
         </View>
       </View>
-    </View>
+    </Press>
   );
 }
 
@@ -279,6 +356,16 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-4deg' }],
   },
   pin: { width: PIN, height: PIN, alignItems: 'center', justifyContent: 'center' },
+  picked: {
+    position: 'absolute',
+    left: -5,
+    top: -5,
+    width: PIN + 10,
+    height: PIN + 10,
+    borderRadius: (PIN + 10) / 2,
+    borderWidth: outline.regular,
+    borderColor: palette.lilac,
+  },
   halo: {
     position: 'absolute',
     width: PIN,

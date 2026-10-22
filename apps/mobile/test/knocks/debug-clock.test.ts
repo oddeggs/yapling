@@ -86,7 +86,28 @@ describe('the debug clock', () => {
 
   it('reads a damaged record as the real clock', async () => {
     mockStore.set('yapling.devmenu.clock', '{not json');
-    expect((await restart()).debugClock()).toEqual({ offsetMs: 0, cameBackAfterAway: false });
+    expect((await restart()).debugClock()).toEqual({
+      offsetMs: 0,
+      cameBackAfterAway: false,
+      awayDays: 3,
+    });
+  });
+
+  it('keeps how many days away a return stands for, three at least', async () => {
+    const clock = await restart();
+    clock.setBackAfterDays(14);
+    expect(clock.debugClock()).toMatchObject({ cameBackAfterAway: true, awayDays: 14 });
+    expect((await restart()).debugClock().awayDays).toBe(14);
+    clock.setBackAfterDays(1);
+    expect(clock.debugClock().awayDays).toBe(3);
+    clock.setBackAfterDays(0);
+    expect(clock.debugClock().cameBackAfterAway).toBe(false);
+    // A record from before the days were kept reads as three.
+    mockStore.set(
+      'yapling.devmenu.clock',
+      JSON.stringify({ offsetMs: 0, cameBackAfterAway: true }),
+    );
+    expect((await restart()).debugClock()).toMatchObject({ cameBackAfterAway: true, awayDays: 3 });
   });
 });
 
