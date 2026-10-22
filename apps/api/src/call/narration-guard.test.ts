@@ -63,6 +63,40 @@ describe('the narration guard', () => {
     ).toBe('What is your job?');
   });
 
+  it('never reads out a direction it was given as if it were the line', () => {
+    for (const size of [1, 3, 7, 80]) {
+      const fallback = speak(
+        "Say that's okay, no rush, you can tell me later. Then open the next box.",
+        'Pip',
+        size,
+      );
+      expect(fallback.spoken).toBe('');
+      expect(fallback.action).toBe('dropped');
+    }
+    const lines: [string, string][] = [
+      ['Say something kind about the job. Ooh, a teacher!', 'Ooh, a teacher!'],
+      ['No problem! Then ask Mei about the date.', 'No problem!'],
+      ['React warmly. That sounds fun!', 'That sounds fun!'],
+      ['Tell them that it is fine. You can tell me later!', 'You can tell me later!'],
+      ['Say kindly that it is okay. Okay! Next box!', 'Okay! Next box!'],
+    ];
+    for (const [line, spoken] of lines) expect(speak(line, 'Pip').spoken).toBe(spoken);
+  });
+
+  it('still speaks lines that only start like a direction', () => {
+    for (const line of [
+      'Say that again? I missed it.',
+      'Tell me more!',
+      'Say hello to Mei for me!',
+      'Then we can rest!',
+      'Then?',
+    ]) {
+      const out = speak(line, 'Pip');
+      expect(out.spoken).toBe(line);
+      expect(out.action).toBeNull();
+    }
+  });
+
   it('passes ordinary lines unchanged, word by word as they stream', () => {
     const lines: [string, string][] = [
       ['Aiyah, nothing lah, don’t worry about me.', 'Mei'],

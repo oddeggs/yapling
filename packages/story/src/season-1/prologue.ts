@@ -26,7 +26,7 @@ const pipAnswer = (
     fallback: {
       speaker: 'pip',
       intent:
-        "Say that's okay, no rush, you can tell me later. Then open the next box. Light and cheerful.",
+        'Tell the learner kindly that it does not matter and there is no rush: they can tell you another time. Move on to the next box, light and cheerful.',
       to: to.miss,
     },
     ...(to.fine === undefined ? {} : { fine: to.fine }),

@@ -9,6 +9,9 @@
  *   held for a word or three until it is clearly speech (then released) or narration. Narration
  *   is held to the sentence's end and dropped; when it describes the speaker speaking, the words
  *   it quotes (or that follow a colon) are spoken.
+ * - A sentence shaped like the direction the model was given, not a line ("Say that's okay, no
+ *   rush.", "Then open the next box.", "React warmly."), is narration too: held for a word or two
+ *   and dropped. "Say that again?" or "Tell me more!" are speech.
  * - Asides in brackets and stage directions in asterisks are dropped wherever they appear, a
  *   speaker label ("Mei:") is dropped, and quotation marks are never spoken.
  */
@@ -64,6 +67,32 @@ const META_VERBS = new Set([
   'write',
   'stay',
 ]);
+
+/** "Say …" / "Tell …" open a direction when what follows is reported, not the words to say. */
+const TELLS = new Set(['say', 'tell']);
+/** After "Say" / "Tell": the content of a direction ("Say that's okay", "Say something kind"). */
+const REPORTED = new Set(["that's", 'something', 'anything', 'sorry', 'yes', 'no']);
+/** "Say that …" is a direction unless it asks for the words again ("Say that again?"). */
+const AGAIN_WORDS = new Set(['again', 'once', 'one', 'word', 'slowly', 'louder', 'please']);
+/** "Then …" + one of these opens a direction for the scene ("Then open the next box."). */
+const SCENE_VERBS = new Set([
+  'open',
+  'say',
+  'tell',
+  'ask',
+  'react',
+  'move',
+  'give',
+  'hand',
+  'pick',
+  'show',
+  'offer',
+  'mention',
+  'acknowledge',
+  'answer',
+]);
+/** First words that only ever open a direction to the model ("React warmly…"). */
+const DIRECTION_LEADS = new Set(['react', 'acknowledge', 'respond']);
 
 /** First words that open a clause where "the learner" may follow ("Since the learner…"). */
 const CLAUSE_LEADS = new Set(['since', 'as', 'so', 'because', 'given']);
@@ -224,6 +253,8 @@ export class NarrationGuard {
         : 'speech';
     }
     if (META_LEADS.has(first)) return 'narration';
+    const direction = this.directionShaped(w, ended);
+    if (direction !== null) return direction;
     if (first === 'the') {
       const short = enough(2);
       if (short) return short;
@@ -256,11 +287,35 @@ export class NarrationGuard {
     return 'speech';
   }
 
+  /**
+   * A direction read out as if it were the line: "Say that's okay…", "Say something kind…",
+   * "Tell them that…", "Then open the next box.", "React warmly…". Null when it isn't one of those
+   * shapes; `wait` while too few words are in to tell.
+   */
+  private directionShaped(w: readonly string[], ended: boolean): Verdict | null {
+    const first = w[0] ?? '';
+    const second = w[1];
+    if (DIRECTION_LEADS.has(first)) return 'narration';
+    if (!TELLS.has(first) && first !== 'then') return null;
+    if (second === undefined) return ended ? 'speech' : 'wait';
+    if (first === 'then') return SCENE_VERBS.has(second) ? 'narration' : 'speech';
+    if (REPORTED.has(second) || (/ly$/.test(second) && second.length > 4)) return 'narration';
+    if (second === 'that' || (first === 'tell' && second === 'them')) {
+      const third = w[2];
+      if (third === undefined) return ended ? 'speech' : 'wait';
+      return AGAIN_WORDS.has(third) ? 'speech' : 'narration';
+    }
+    return 'speech';
+  }
+
   private suspicious(raw: string): boolean {
     const w = bare(raw);
     return (
       w === this.own ||
       META_LEADS.has(w) ||
+      TELLS.has(w) ||
+      w === 'then' ||
+      DIRECTION_LEADS.has(w) ||
       w === 'the' ||
       CLAUSE_LEADS.has(w) ||
       w === 'i' ||

@@ -287,7 +287,8 @@ export class CallSession {
         this.played(frame.streamId, frame.lagMs);
         return;
       case 'hangup':
-        void this.end('hangup');
+        // "Khó quá" on the exit sheet ends the call as too hard (the scene keeps its place).
+        void this.end(frame.reason ?? 'hangup');
         return;
       case 'replay':
         // "Nói lại" / "Chậm thôi": the same replay as saying it, while the scene waits.
@@ -295,6 +296,10 @@ export class CallSession {
         return;
       case 'pace':
         this.setPace(frame.pace);
+        return;
+      case 'skip':
+        // "Bỏ qua": the turn waiting moves on, kindly, as a skip.
+        if (this.accepting()) this.run(this.director.dispatch({ type: 'skip' }));
         return;
       case 'hello':
       case 'unknown':

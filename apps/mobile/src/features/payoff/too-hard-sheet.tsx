@@ -95,13 +95,21 @@ function Option({
   );
 }
 
+/** Lines a sheet opened in a call says instead (it stays in the call; the scene keeps its place). */
+export interface TooHardCopy {
+  readonly slowerSub: string;
+  readonly practiseSub: string;
+  readonly back: string;
+}
+
 export interface TooHardSheetProps {
   readonly stage: Stage;
   readonly onChoose: (choice: TooHardChoice) => void;
   readonly onClose: () => void;
+  readonly copy?: TooHardCopy;
 }
 
-export function TooHardSheet({ stage, onChoose, onClose }: TooHardSheetProps) {
+export function TooHardSheet({ stage, onChoose, onClose, copy }: TooHardSheetProps) {
   const { t } = useLocale();
   const circle = {
     width: 46,
@@ -143,7 +151,7 @@ export function TooHardSheet({ stage, onChoose, onClose }: TooHardSheetProps) {
             </View>
           }
           title={t('payoff.tooHard.slower')}
-          sub={t('payoff.tooHard.slowerSub')}
+          sub={copy?.slowerSub ?? t('payoff.tooHard.slowerSub')}
           onPress={() => onChoose('slower')}
         />
         <Option
@@ -153,11 +161,14 @@ export function TooHardSheet({ stage, onChoose, onClose }: TooHardSheetProps) {
             </View>
           }
           title={t('payoff.tooHard.linh')}
-          sub={t(
-            stage === 'visitor'
-              ? 'payoff.tooHard.linhSubVisitor'
-              : 'payoff.tooHard.linhSubNewcomer',
-          )}
+          sub={
+            copy?.practiseSub ??
+            t(
+              stage === 'visitor'
+                ? 'payoff.tooHard.linhSubVisitor'
+                : 'payoff.tooHard.linhSubNewcomer',
+            )
+          }
           onPress={() => onChoose('practise')}
         />
       </View>
@@ -172,7 +183,7 @@ export function TooHardSheet({ stage, onChoose, onClose }: TooHardSheetProps) {
         <Txt variant={sheetType.note}>{t('payoff.tooHard.note')}</Txt>
       </Sticker>
       <Press onPress={onClose} accessibilityRole="button" style={[quietButton, { marginTop: 4 }]}>
-        <Txt variant="buttonGlass">{t('payoff.tooHard.back')}</Txt>
+        <Txt variant="buttonGlass">{copy?.back ?? t('payoff.tooHard.back')}</Txt>
       </Press>
     </OverlaySheet>
   );

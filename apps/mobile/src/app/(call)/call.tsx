@@ -1,13 +1,24 @@
-import { findScene } from '@yapling/story';
+import { RING_SLOT_KINDS } from '@yapling/contracts';
+import { callKindOf, findScene } from '@yapling/story';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 
-import { getSessionToken, useProfile, useProgress, useTurnMode, useWeek } from '../../data';
+import {
+  getSessionToken,
+  useProfile,
+  useProgress,
+  useSession,
+  useTurnMode,
+  useWeek,
+} from '../../data';
+import { startSettlingIn } from '../../features/burrow/settling-store';
 import { apiBase, clientVersion } from '../../data/config';
 import { CallScreen } from '../../features/call/call-screen';
 import { now } from '../../features/devmenu';
 import { BURROW_ROUTE, postCallHref, SAFETY_ROUTE } from '../../features/call/routes';
+import { stageRequests } from '../../features/me';
 import { onboardingStore } from '../../features/onboarding';
+import { keepWhatWasSaid } from '../../features/payoff';
 import { phraseForSeed } from '../../features/story';
 import { withAppClock } from '../../voice/call-socket';
 
@@ -31,15 +42,19 @@ export default function CallRoute() {
     fixtures?: string;
   }>();
   const router = useRouter();
-  const { profile, status } = useProfile();
+  const { profile, status, updateProfile } = useProfile();
   const { meetPhrase, openRing } = useProgress();
+  const userId = useSession().session?.userId ?? null;
   const turnPref = useTurnMode();
-  // The slot this call fills is open on the server too, before the call's record lands.
+  const scene = params.scene ? findScene(params.scene) : undefined;
+  // The slot this call fills is open on the server too, before the call's record lands. Only a
+  // call that fills a ring slot opens it, on the day as the week counts it (from the story's start).
+  const kind = scene ? callKindOf(scene.kind) : null;
+  const ringCall = kind !== null && (RING_SLOT_KINDS as readonly string[]).includes(kind);
   const dayIndex = useWeek()?.dayIndex ?? null;
   useEffect(() => {
-    if (dayIndex !== null) void openRing(dayIndex).catch(() => undefined);
-  }, [dayIndex, openRing]);
-  const scene = params.scene ? findScene(params.scene) : undefined;
+    if (ringCall && dayIndex !== null) void openRing(dayIndex).catch(() => undefined);
+  }, [ringCall, dayIndex, openRing]);
   // No such scene (a stale link): back to the burrow rather than a call that can't run.
   useEffect(() => {
     if (!scene) navigate(router.replace, BURROW_ROUTE);
@@ -100,9 +115,22 @@ export default function CallRoute() {
         const phrase = phraseForSeed(seed, scene.phrases);
         if (phrase) void meetPhrase(phrase).catch(() => undefined);
       }}
-      onFinish={({ callId }) => {
-        // A call inside a flow (the placement call) goes on to where the flow said.
-        if (next) navigate(router.replace, callId ? { pathname: next, params: { callId } } : next);
+      onPace={(pace) => void updateProfile({ pace }).catch(() => undefined)}
+      onFinish={({ callId, reason, heard }) => {
+        // The after-call card gives the learner's own sentences back.
+        if (callId) keepWhatWasSaid(callId, heard);
+        if (reason === 'too_hard') {
+          // "Tập với Linh trước": a Newcomer becomes a Visitor, and Linh's chapters wait in the
+          // burrow (a Visitor opens the list to play one again). The scene kept its place.
+          const visitor = (profile?.stage ?? 'newcomer') === 'visitor';
+          if (!visitor)
+            void stageRequests()
+              .request({ to: 'visitor', reason: 'too_hard' })
+              .catch(() => undefined);
+          if (userId !== null) void startSettlingIn(userId).catch(() => undefined);
+          navigate(router.replace, visitor ? `${BURROW_ROUTE}?settling=1` : BURROW_ROUTE);
+        } else if (next)
+          navigate(router.replace, callId ? { pathname: next, params: { callId } } : next);
         else if (callId) navigate(router.replace, postCallHref(callId));
         else if (router.canGoBack()) router.back();
         else navigate(router.replace, BURROW_ROUTE);

@@ -1,4 +1,4 @@
-import type { CallRecord, FirstLanguage, Stage } from '@yapling/contracts';
+import type { CallRecord, FirstLanguage, Stage, WeekRing } from '@yapling/contracts';
 import { localDateOf, localTimeOf, type TurnPass } from '@yapling/domain';
 import { colours } from '@yapling/theme';
 import { CAST } from '@yapling/story';
@@ -6,6 +6,7 @@ import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useAppNow, useCall, useCalls, useProfile, useProgress } from '../../data';
+import { track } from '../../observability';
 import { useLocale, useToast } from '../../ui';
 import { AfterCallScreen } from './after-call-screen';
 import { Face } from '../burrow/art';
@@ -79,11 +80,27 @@ function usePreview(kind: 'visitor' | 'stage-up'): boolean {
 }
 
 /**
- * How each learner turn of a ring's week passed (the turn log's pass kinds). The phone isn't sent
- * these yet, so it can't tell, and Linh's card waits until it can.
+ * How each learner turn of a ring's week passed (the turn log's pass kinds), from the counts on the
+ * records of the calls that filled its slots. Null (Linh waits) until every one of those records is
+ * on the phone; a call from before the counts were kept adds no turns.
  */
-function weekTurnsFor(_week: number): readonly TurnPass[] | null {
-  return null;
+function weekTurnsFor(
+  week: number,
+  weeks: readonly WeekRing[],
+  calls: readonly CallRecord[],
+): readonly TurnPass[] | null {
+  const ring = weeks.find((w) => w.week === week);
+  if (!ring) return null;
+  const records = ring.slots.flatMap((s) =>
+    s.callRecordId === null ? [] : [calls.find((c) => c.id === s.callRecordId)],
+  );
+  if (records.some((r) => r === undefined)) return null;
+  const kinds: readonly TurnPass[] = ['match', 'generous', 'skip', 'fallback'];
+  return records.flatMap((r) =>
+    r?.turnPasses
+      ? kinds.flatMap((kind) => Array.from({ length: r.turnPasses?.[kind] ?? 0 }, () => kind))
+      : [],
+  );
 }
 
 /**
@@ -201,6 +218,7 @@ function useStageUp(callId: string, earned: EarnedKeepsakes | null, preview: boo
   const { stage, firstLanguage, timezone, learner } = useLearner();
   const { t } = useLocale();
   const answered = useAnsweredStageUps();
+  const { calls } = useCalls();
   const now = useAppNow(timezone ?? undefined);
   const [phase, setPhase] = useState<StageUpPhase | 'done' | null>(null);
   const offer = useMemo(() => {
@@ -218,14 +236,17 @@ function useStageUp(callId: string, earned: EarnedKeepsakes | null, preview: boo
       call: { id: callId },
       stage,
       weeks: progress.weeks,
-      weekTurns: ring === null ? null : weekTurnsFor(ring),
+      weekTurns: ring === null ? null : weekTurnsFor(ring, progress.weeks, calls),
       answeredWeeks: answered.weeks,
     });
-  }, [preview, progress, stage, answered.weeks, earned, callId]);
+  }, [preview, progress, stage, answered.weeks, earned, callId, calls]);
   // Offered once: an answer keeps the screen on its phase even after the stage moves.
   useEffect(() => {
-    if (offer !== null && phase === null) setPhase('offer');
-  }, [offer, phase]);
+    if (offer !== null && phase === null) {
+      setPhase('offer');
+      if (!preview) track('stage_up_offered', { week: offer.week });
+    }
+  }, [offer, phase, preview]);
   const zone = timezone ?? 'Asia/Ho_Chi_Minh';
   const view =
     phase === null || phase === 'done'
@@ -244,6 +265,7 @@ function useStageUp(callId: string, earned: EarnedKeepsakes | null, preview: boo
     if (offer === null) return;
     setPhase(choice === 'take' ? 'taken' : 'stay');
     if (preview) return;
+    track('stage_up_answered', { week: offer.week, accepted: choice === 'take' });
     answered.answer(offer.week);
     void stageRequests().request(STAGE_UP_REQUESTS[choice]);
   };

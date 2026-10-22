@@ -142,6 +142,13 @@ export type ReplayFrame = z.infer<typeof ReplayFrame>;
 export const PaceFrame = z.object({ type: z.literal('pace'), seq: Seq, pace: Pace.nullable() });
 export type PaceFrame = z.infer<typeof PaceFrame>;
 
+/**
+ * "Bỏ qua": the learner moves on from the turn waiting for them (the listener says "That's okay!"
+ * and the scene goes on). The turn counts as skipped. An older call ignores it.
+ */
+export const SkipFrame = z.object({ type: z.literal('skip'), seq: Seq });
+export type SkipFrame = z.infer<typeof SkipFrame>;
+
 export const CALL_CLIENT_FRAME_TYPES = [
   'hello',
   'end_turn',
@@ -153,6 +160,7 @@ export const CALL_CLIENT_FRAME_TYPES = [
   'hangup',
   'replay',
   'pace',
+  'skip',
 ] as const;
 export type CallClientFrameType = (typeof CALL_CLIENT_FRAME_TYPES)[number];
 
@@ -167,6 +175,7 @@ const callClientFrames = z.discriminatedUnion('type', [
   HangupFrame,
   ReplayFrame,
   PaceFrame,
+  SkipFrame,
 ]);
 
 /** Any JSON frame the phone sends to the call; an unknown `type` parses as `unknown`. */

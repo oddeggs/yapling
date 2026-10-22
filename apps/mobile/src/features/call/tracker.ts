@@ -1,4 +1,4 @@
-import type { CallServerFrame, HeardWord, Stage } from '@yapling/contracts';
+import type { CallServerFrame, HeardWord, HintChoice, Stage } from '@yapling/contracts';
 import {
   findLine,
   stageValue,
@@ -54,6 +54,17 @@ export interface TimerState {
   readonly done: boolean;
 }
 
+/**
+ * A say-this card (the beginner path): one or two cards to read aloud, up for the whole turn, with
+ * the recorded line that says it. Keyed by its beat: the call sends the next turn's card as soon as
+ * a turn passes, before the praise lines and the next beat.
+ */
+export interface SayCard {
+  readonly beatId: string | null;
+  readonly choices: readonly HintChoice[];
+  readonly modelLineId: string | null;
+}
+
 export interface TrackerState {
   readonly beatId: string | null;
   /** Grows on every beat change (keys a timer's remount). */
@@ -62,6 +73,16 @@ export interface TrackerState {
   readonly recorded: Readonly<Record<number, string>>;
   readonly reactions: readonly number[];
   readonly hint: { readonly phrase: string; readonly gloss: string | null } | null;
+  /** The say-this cards sent so far for this beat and the next (the latest few). */
+  readonly cards: readonly SayCard[];
+  /** The card of a turn that passed: it ticks, and stays until the next turn's card. */
+  readonly passed: SayCard | null;
+  /** Learner turns heard with words on this beat: a card's tries ("Bỏ qua" after the first). */
+  readonly beatTries: number;
+  /** "Bỏ qua" was tapped on this beat: leaving it isn't a pass. */
+  readonly skipped: boolean;
+  /** The beat whose task card the learner put away ("OK"). */
+  readonly taskDone: string | null;
   readonly correction: { readonly original: string; readonly prompt: string } | null;
   /** "You fixed it yourself": when the learner's second try fixed it. */
   readonly fixedAt: number | null;
@@ -90,6 +111,11 @@ export const initialTracker: TrackerState = {
   recorded: {},
   reactions: [],
   hint: null,
+  cards: [],
+  passed: null,
+  beatTries: 0,
+  skipped: false,
+  taskDone: null,
   correction: null,
   fixedAt: null,
   meaning: null,
@@ -108,6 +134,10 @@ export const initialTracker: TrackerState = {
 export type TrackerEvent =
   | { readonly type: 'frame'; readonly frame: CallServerFrame; readonly now: number }
   | { readonly type: 'hint_dismissed' }
+  /** "Bỏ qua" tapped: the call moves the turn on. */
+  | { readonly type: 'skip_requested' }
+  /** The task card's "OK". */
+  | { readonly type: 'task_dismissed' }
   | { readonly type: 'meaning_requested'; readonly line: MeaningLine | null }
   | { readonly type: 'translation_shown' }
   | { readonly type: 'translation_hidden' }
@@ -148,6 +178,10 @@ export function reduceTracker(
       return onFrame(state, event.frame, event.now, ctx);
     case 'hint_dismissed':
       return { ...state, hint: null };
+    case 'skip_requested':
+      return { ...state, skipped: true };
+    case 'task_dismissed':
+      return { ...state, taskDone: state.beatId };
     case 'meaning_requested':
       return {
         ...state,
@@ -208,14 +242,32 @@ function onFrame(
       return onBeat(state, frame.beatId, ctx);
     case 'play_rec': {
       const reaction = findLine(frame.lineId)?.kind === 'reaction';
+      // The turn's praise plays: the card ticks.
+      const praised = answerOf(beatOf(ctx.scene, state.beatId))?.praise.includes(frame.lineId);
       return {
         ...state,
+        passed: praised ? (passedOf(state) ?? state.passed) : state.passed,
         recorded: { ...state.recorded, [frame.streamId]: frame.lineId },
         reactions: reaction ? [...state.reactions, frame.streamId] : state.reactions,
       };
     }
-    case 'hint':
-      return { ...state, hint: { phrase: frame.phrase, gloss: frame.gloss } };
+    case 'hint': {
+      if (!frame.persistent && !frame.choices) {
+        return { ...state, hint: { phrase: frame.phrase, gloss: frame.gloss } };
+      }
+      const card: SayCard = {
+        beatId: cardBeatOf(ctx.scene, state.beatId, frame.phrase, frame.modelLineId ?? null),
+        choices: frame.choices ?? [{ phrase: frame.phrase, gloss: frame.gloss }],
+        modelLineId: frame.modelLineId ?? null,
+      };
+      // The next turn's card while this beat waits: this turn passed.
+      const moved = card.beatId !== state.beatId;
+      return {
+        ...state,
+        cards: [...state.cards.filter((c) => c.beatId !== card.beatId), card].slice(-CARDS_KEPT),
+        passed: moved ? (passedOf(state) ?? state.passed) : state.passed,
+      };
+    }
     case 'heard': {
       const turn: HeardTurn = {
         beatId: state.beatId,
@@ -230,6 +282,7 @@ function onFrame(
       return {
         ...state,
         heard: [...state.heard, turn],
+        beatTries: state.beatTries + (frame.text.trim() === '' ? 0 : 1),
         lastHeardEmpty: frame.text.trim() === '',
         hint: null,
         timer,
@@ -282,10 +335,15 @@ function onFrame(
 function onBeat(state: TrackerState, beatId: string, ctx: TrackerContext): TrackerState {
   if (beatId === state.beatId) return state;
   const beat = beatOf(ctx.scene, beatId);
+  // The card of the turn left ticks if it passed, and stays through one beat change.
+  const passed = passedOf(state) ?? (state.passed?.beatId === state.beatId ? state.passed : null);
   const next: TrackerState = {
     ...state,
     beatId,
     beatSeq: state.beatSeq + 1,
+    passed,
+    beatTries: 0,
+    skipped: false,
     hint: null,
     correction: null,
     timer: null,
@@ -321,6 +379,55 @@ function onBeat(state: TrackerState, beatId: string, ctx: TrackerContext): Track
       // Shown by the screens that play those scenes, or by the answer's own timer.
       return next;
   }
+}
+
+/** How many say-this cards are kept: this beat's, the next one's and the last one. */
+const CARDS_KEPT = 3;
+
+/** The say-this card of the beat now, if the call sent one. */
+export const cardOf = (state: TrackerState): SayCard | null =>
+  state.cards.find((c) => c.beatId === state.beatId) ?? null;
+
+/** The card of the beat now if its turn passed: tried with words, not skipped. */
+function passedOf(state: TrackerState): SayCard | null {
+  if (state.beatTries === 0 || state.skipped) return null;
+  return cardOf(state);
+}
+
+const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** A card's written words as a pattern: the learner's name and `…` stand for any words. */
+const cardPattern = (en: string): RegExp =>
+  new RegExp(
+    `^${escape(en.trim())
+      .replace(/\\\{name\\\}/g, '.+?')
+      .replace(/…/g, '.*?')}$`,
+    'i',
+  );
+
+/**
+ * Which beat a card is for: the beat now, or the next one whose card reads the same (the call sends
+ * the next turn's card before its beat). The beat now when none matches.
+ */
+export function cardBeatOf(
+  scene: Scene,
+  beatId: string | null,
+  phrase: string,
+  modelLineId: string | null,
+): string | null {
+  const from = Math.max(
+    0,
+    scene.beats.findIndex((b) => b.id === beatId),
+  );
+  const ordered = [...scene.beats.slice(from), ...scene.beats.slice(0, from)];
+  for (const beat of ordered) {
+    const answer = answerOf(beat);
+    if (!answer) continue;
+    if (modelLineId !== null && answer.model !== null && answer.model !== modelLineId) continue;
+    const written = answer.choices[0]?.en ?? answer.exits.silent.hint?.en;
+    if (written !== undefined && cardPattern(written).test(phrase.trim())) return beat.id;
+  }
+  return beatId;
 }
 
 /** Whether a beat waits for the learner (a learner beat, or a line with an answer). */

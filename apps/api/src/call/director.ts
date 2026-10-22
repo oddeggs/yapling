@@ -279,7 +279,7 @@ const LAST_TRY_LEAD: Readonly<Record<NotYet, string>> = {
 const notYetText = (branch: Branch, kind: NotYet, asked: boolean): string => {
   if (branch.kind === 'react') return MOVE_ON[kind];
   if (branch.kind === 'merge' && branch.effect.purpose === 'fallback') {
-    return `${LAST_TRY_LEAD[kind]}This was their last try, so then: ${genDirection(branch.effect, false)}`;
+    return `${LAST_TRY_LEAD[kind]}This was their last try, so then your line does this, in your own words (a direction, never words to read out): ${genDirection(branch.effect, false)}`;
   }
   return asked ? STAY[kind] : `${STAY_UNASKED[kind]}${UNASKED_TAIL}`;
 };
@@ -418,7 +418,7 @@ function oneCaseRule(only: OneCase, said: string | null): string {
 /** The direction for a line the runner asks for on its own (a beat line, nudge or fallback). */
 export function lineDirection(effect: GenEffect, stage: Stage): string {
   return [
-    `Your next line as ${nameOf(effect.speaker)}, said straight to the learner. ${genDirection(effect)}`,
+    `Your next line as ${nameOf(effect.speaker)}, said straight to the learner, in your own words. What it does (a direction, never words to read out): ${genDirection(effect)}`,
     rules(effect.speaker, stage, effect.elicits, null),
   ].join('\n');
 }

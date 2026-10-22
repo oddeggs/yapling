@@ -13,6 +13,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useLastOpen, useSeen, useSession, type SeenMoment } from '../../data';
 import { useReturnState, type ReturnState } from '../knocks';
+import { stepHref } from '../onboarding/routes';
 import { BurrowHomeScreen } from './home-screen';
 import { useLinePlayer } from './line-player';
 import { burrowHomeModel, burrowVariant, type BurrowInput } from './model';
@@ -214,9 +215,11 @@ export function BurrowHome() {
     );
   }
 
-  // No learner on this phone any more (the test menu's reset): the first run again.
+  // No learner on this phone any more (the test menu's reset): the first run again. Straight to
+  // its first step: "/" is this screen's own path too (the home group's index), so redirecting
+  // there sent the burrow to itself, over and over.
   if (input === null && (session.status === 'signed_out' || session.status === 'awaiting_age'))
-    return <Redirect href="/" />;
+    return <Redirect href={stepHref('language')} />;
   if (input === null) return <View style={{ flex: 1, backgroundColor: colours.background }} />;
   // In the story, the Settling-in list still opens from a link, to replay a chapter.
   const storyList = settling !== null && preview === null ? list(settling.day) : null;

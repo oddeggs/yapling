@@ -1,4 +1,10 @@
-import { TimeZone, type EpochMs, type Progress, type WeekRing } from '@yapling/contracts';
+import {
+  TimeZone,
+  type EpochMs,
+  type LocalDate,
+  type Progress,
+  type WeekRing,
+} from '@yapling/contracts';
 import {
   addDays,
   dayIndexOf,
@@ -14,11 +20,15 @@ import {
  * The current week's ring, as the phone shows it between syncs: the day comes from the day clock
  * in the learner's timezone, so a slot whose day has come shows open even offline. Nothing is ever
  * taken back: open and done slots stay as the server last had them.
+ *
+ * The weeks count from the day the story starts (`storyStartedOn`, the letter under the café door):
+ * a Visitor settles in first, and their week 1 opens on the letter's day, not the install day. With
+ * no story start recorded, they count from the install day, as the server's `dayIndex` does.
  */
 
 export interface CurrentWeek {
   readonly week: number;
-  /** Days since install, the install day being day 1. */
+  /** Days since the story started (or the install, before it is recorded), that day being day 1. */
   readonly dayIndex: number;
   /** 1–7 within the week. */
   readonly dayOfWeek: number;
@@ -28,8 +38,16 @@ export interface CurrentWeek {
   readonly weeks: readonly WeekRing[];
 }
 
-export function currentWeek(progress: Progress, now: EpochMs, timezone: TimeZone): CurrentWeek {
-  const dayIndex = Math.max(progress.dayIndex, dayIndexOf(progress.installedOn, now, timezone));
+export function currentWeek(
+  progress: Progress,
+  now: EpochMs,
+  timezone: TimeZone,
+  storyStartedOn: LocalDate | null = null,
+): CurrentWeek {
+  const dayIndex =
+    storyStartedOn !== null
+      ? dayIndexOf(storyStartedOn, now, timezone)
+      : Math.max(progress.dayIndex, dayIndexOf(progress.installedOn, now, timezone));
   const weeks = ringWeeks(progress.weeks, dayIndex);
   const week = weekOfDay(dayIndex);
   const ring = weeks[week - 1] ?? { week, slots: [] };

@@ -17,6 +17,7 @@ import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { track } from '../../observability';
 import { GlassSheet, Press, Sticker, StickerButton, Txt, typeExtras, useKeyframes } from '../../ui';
 import { Face } from '../burrow/art';
 import { artCharacter, DotGrid } from './art';
@@ -311,7 +312,10 @@ export function VisitorAfterCallScreen({
               label={model.feel.tooHard}
               chosen={feel === 'slower' || feel === 'practise'}
               fill={colours.accent}
-              onPress={() => setSheet(true)}
+              onPress={() => {
+                setSheet(true);
+                track('too_hard_opened', { place: 'after_call', stage });
+              }}
             />
           </View>
           {reply ? <Reply key={reply} text={reply} /> : null}
@@ -336,9 +340,17 @@ export function VisitorAfterCallScreen({
       {sheet ? (
         <TooHardSheet
           stage={stage}
-          onClose={() => setSheet(false)}
+          onClose={() => {
+            setSheet(false);
+            track('too_hard_chosen', { place: 'after_call', stage, choice: 'closed' });
+          }}
           onChoose={(choice) => {
             setSheet(false);
+            track('too_hard_chosen', {
+              place: 'after_call',
+              stage,
+              choice: choice === 'slower' ? 'slower' : 'practise_with_linh',
+            });
             onFeel(choice);
           }}
         />

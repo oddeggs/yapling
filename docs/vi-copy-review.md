@@ -538,6 +538,34 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `call.mirror.pauses` | Pauses {pauses}/min | ngắt {pauses} lần/phút | Term | Starts lower-case ("ngắt"), unlike its neighbours |
 | `call.mirror.smoother` | Round three is visibly smoother! | Lượt thứ ba trôi chảy hơn hẳn! |  |  |
 | `call.mirror.flowMeans` | Flow = seconds without stopping. | Trôi chảy = số giây nói liền không dừng. |  |  |
+| `call.place.settling` | Settling in · {chapter}/{total} · {title} | Làm quen · {chapter}/{total} · {title} | New | New: the speaker pill's place line in a Settling-in call; the title is the chapter's English title, as on the after-call card |
+| `call.card.read` | READ ALOUD | ĐỌC TO | New | New: the kicker on a single say-this card |
+| `call.card.choose` | PICK · READ ALOUD | CHỌN · ĐỌC TO | New | New: the kicker on each of two cards |
+| `call.card.said` | YOU SAID | BẠN ĐÃ NÓI | New | New: the kicker once the turn passed (the card turns mint and ticks) |
+| `call.card.hear` | Hear this line | Nghe câu này | New | New: VoiceOver for the card's speaker button |
+| `call.task.tag` | HOW TO PLAY | CÁCH CHƠI | New | New: the tag on the dark task card |
+| `call.task.ok` | OK | OK | New | New: the task card's button |
+| `call.task.a11yOk` | Got it | Đã hiểu | New | New: VoiceOver for that button |
+| `call.replay.again` | Say again | Nói lại | New | New: the pill over the mic: the last line again |
+| `call.replay.slower` | Slower | Chậm thôi | New | New: the pill over the mic: the last line again, slower |
+| `call.replay.slowerOn` | Slower · on | Chậm thôi · đang bật | New | New: the same pill once "Nói chậm hơn" slowed the voices |
+| `call.replay.a11yAgain` | Hear the last line again | Nghe lại câu vừa rồi | New | New: VoiceOver for "Nói lại" |
+| `call.replay.a11ySlower` | Hear the last line again, more slowly | Nghe lại câu vừa rồi, chậm hơn | New | New: VoiceOver for "Chậm thôi" |
+| `call.skip` | Skip | Bỏ qua | New | New: the dashed pill after one try at a card |
+| `call.a11y.skip` | Skip this turn | Bỏ qua lượt này | New | New: VoiceOver for it |
+| `call.hintPill` | Hint | Gợi ý | New | New: the pill that asks for the hint card, Newcomer and up |
+| `call.a11y.hintPill` | Ask for a hint | Xin một gợi ý | New | New: VoiceOver for it |
+| `call.paceSlower` | Everyone will speak more slowly | Mọi người sẽ nói chậm hơn | New | New: the toast after "Nói chậm hơn" in a call |
+| `call.leave` | Leave | Rời đi | New | New: the call bar's way out in a Settling-in call |
+| `call.exit.title` | Leave the call? | Rời cuộc gọi? | New | New: the exit sheet's title |
+| `call.exit.where` | {place} · {time}. | {place} · {time}. | New | New: the exit sheet's line: the place and the minutes so far |
+| `call.exit.tooHard` | Too hard? | Khó quá? | New | New: the exit sheet's row |
+| `call.exit.tooHardSub` | Slower voices, or practise with Linh first | Nói chậm hơn, hoặc tập với Linh trước | New | New: under it |
+| `call.exit.stay` | Keep calling | Tiếp tục gọi | New | New: the exit sheet's primary button |
+| `call.exit.leave` | Leave | Rời đi | New | New: the exit sheet's quiet button |
+| `call.tooHard.slowerSub` | Stay in the call. Everyone will speak more slowly. | Ở lại cuộc gọi. Mọi người sẽ nói chậm hơn. | New | New: the "Khó quá" sheet opened in a call: "Nói chậm hơn" |
+| `call.tooHard.linhSub` | This scene keeps its place, right where you stopped. | Cảnh này được lưu lại, đúng chỗ bạn dừng. | New | New: the same sheet: "Tập với Linh trước" |
+| `call.tooHard.back` | Back to the call | Quay lại cuộc gọi | New | New: the same sheet's way back |
 
 ## Call error sheets (no connection, microphone off)
 

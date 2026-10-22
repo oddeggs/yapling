@@ -1,4 +1,6 @@
 import type { CharacterId } from '@yapling/contracts';
+import { SETTLING_SCENES, type SettlingSceneId } from '@yapling/domain';
+import type { Translate } from '@yapling/i18n';
 import type { Scene } from '@yapling/story';
 
 /*
@@ -11,8 +13,16 @@ import type { Scene } from '@yapling/story';
 export type CallSceneName = 'cafe' | 'bus' | 'office' | 'burrow' | 'burrow-day1';
 
 export type Backdrop =
-  /** Drawn sharp; `front` adds the layer over the main cast (the café counter, the bus dashboard). */
-  | { readonly kind: 'sharp'; readonly name: CallSceneName; readonly front: boolean }
+  /**
+   * Drawn sharp; `front` adds the layer over the main cast (the café counter, the bus dashboard);
+   * `top` lifts the picture (the burrow's door in view during Settling in).
+   */
+  | {
+      readonly kind: 'sharp';
+      readonly name: CallSceneName;
+      readonly front: boolean;
+      readonly top?: number;
+    }
   /** Softly blurred behind a roommate's call, as if seen from the phone. */
   | { readonly kind: 'blur'; readonly name: CallSceneName };
 
@@ -69,10 +79,17 @@ export interface LetterSpots {
 
 /** The call bar's way out, by scene. */
 export type ExitCopy =
-  'call.done.wrapUp' | 'call.done.hopOff' | 'common.done' | 'onboarding.unpack.done';
+  'call.done.wrapUp' | 'call.done.hopOff' | 'common.done' | 'onboarding.unpack.done' | 'call.leave';
 
 export type PlaceCopy =
   | { readonly key: 'onboarding.unpack.place'; readonly day: number }
+  /** "Làm quen · 1/6 · Hello". */
+  | {
+      readonly key: 'call.place.settling';
+      readonly chapter: number;
+      readonly total: number;
+      readonly title: string;
+    }
   | {
       readonly key:
         'call.place.cafe' | 'call.place.fromBurrow' | 'call.place.busStop' | 'call.place.onCall';
@@ -114,7 +131,81 @@ function neighbourOf(scene: Scene): CharacterId | null {
   return scene.cast.find((c) => c !== 'pip' && c !== 'office' && c !== 'mags') ?? null;
 }
 
+/** The speaker pill's place line. */
+export function placeText(place: PlaceCopy, t: Translate): string {
+  switch (place.key) {
+    case 'onboarding.unpack.place':
+      return t(place.key, { day: place.day });
+    case 'call.place.settling':
+      return t(place.key, { chapter: place.chapter, total: place.total, title: place.title });
+    case 'call.place.cafe':
+    case 'call.place.fromBurrow':
+    case 'call.place.busStop':
+    case 'call.place.onCall':
+      return t(place.key);
+  }
+}
+
+/**
+ * A Settling-in chapter, as its board draws it: Linh at the burrow door with the roommate by the
+ * boxes, Bea alone at the wheel of Bus 45, or Mei behind the café counter with the roommate peeking
+ * by the coffee machine. Every line's bubble sits up top; the roommate's is lower, on the right.
+ */
+function settlingLayout(scene: Scene, chapter: number): CallLayout {
+  const top = bubble(110, 16, 16);
+  const pipLow = bubble(252, 196, 16);
+  const base = {
+    place: {
+      key: 'call.place.settling',
+      chapter,
+      total: SETTLING_SCENES.length,
+      title: scene.title,
+    },
+    exit: 'call.leave',
+    episodeTag: null,
+    rounds: false,
+    letter: null,
+    castFront: [],
+  } as const;
+  switch (scene.place) {
+    case 'bus-45':
+      return {
+        ...base,
+        backdrop: { kind: 'sharp', name: 'bus', front: true },
+        cast: [at('bea', 180, 104, 246)],
+        bubbles: { bea: top, linh: top },
+        bubbleDefault: top,
+        pill: 'bea',
+      };
+    case 'lantern-cafe':
+      return {
+        ...base,
+        backdrop: { kind: 'sharp', name: 'cafe', front: true },
+        cast: [at('mei', 200, 30, 236), at('pip', 104, 268, 336)],
+        bubbles: { mei: top, pip: pipLow },
+        bubbleDefault: top,
+        pill: 'mei',
+      };
+    case 'burrow':
+    case 'hollowbrook-office':
+    case 'lantern-inn':
+    case 'town-square': {
+      const door = bubble(110, 16, 40);
+      return {
+        ...base,
+        backdrop: { kind: 'sharp', name: 'burrow-day1', front: false, top: -150 },
+        cast: [at('linh', 160, 16, 262), at('pip', 120, 252, 322)],
+        bubbles: { linh: door, pip: pipLow },
+        bubbleDefault: door,
+        pill: 'linh',
+      };
+    }
+  }
+}
+
 export function layoutFor(scene: Scene): CallLayout {
+  const chapter = SETTLING_SCENES.indexOf(scene.id as SettlingSceneId);
+  if (scene.kind === 'settling' && chapter >= 0) return settlingLayout(scene, chapter + 1);
   const neighbour = neighbourOf(scene);
   switch (scene.place) {
     case 'lantern-cafe': {

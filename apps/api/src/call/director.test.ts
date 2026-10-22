@@ -77,6 +77,9 @@ describe('the director', () => {
     if (!plan) throw new Error('no plan');
     const text = replyDirection(plan, 'newcomer', [], null);
     expect(text).toMatch(/\[question\][^\n]*last try[^\n]*no rush/i);
+    // The fallback is a direction to follow in the character's own words, never a line to read.
+    expect(text).toMatch(/last try[^\n]*never words to read out/i);
+    expect(text).not.toMatch(/Say that's okay|Then open the next box/);
   });
 
   it('reacts without a question when someone else speaks next', () => {

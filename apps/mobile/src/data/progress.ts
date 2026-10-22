@@ -75,7 +75,9 @@ export class ProgressRepo {
   async openRing(dayIndex: number) {
     const current = this.resource.data ?? (await this.refresh());
     if (current === null) return null;
-    const opened = (p: Progress) => [...ringWeeks(p.weeks, Math.max(dayIndex, p.dayIndex))];
+    // The day as the phone counts it (`currentWeek`): from the story's start, so a Visitor's week 1
+    // never opens on install days.
+    const opened = (p: Progress) => [...ringWeeks(p.weeks, dayIndex)];
     if (JSON.stringify(opened(current)) === JSON.stringify(current.weeks)) return null;
     return this.update((p) => ({ ...p, weeks: opened(p) }));
   }
