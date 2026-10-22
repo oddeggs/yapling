@@ -11,6 +11,8 @@ import { isStageAtLeast, ttsSpeedFactor } from './stages';
 
 /** The new voices each stage brings (Voice of Natterwick: everyone, mixed, natural speed). */
 export const NEW_VOICES_BY_STAGE: Readonly<Record<Stage, readonly CharacterId[]>> = {
+  // Visitor: Newcomer's voices until its own are set.
+  visitor: ['pip', 'linh', 'mei'],
   newcomer: ['pip', 'linh', 'mei'],
   neighbour: ['sol', 'bea', 'nell'],
   regular: ['arjun', 'dex'],
@@ -19,8 +21,9 @@ export const NEW_VOICES_BY_STAGE: Readonly<Record<Stage, readonly CharacterId[]>
 };
 
 /** Every voice a learner at this stage has met through the ladder. */
-export const voicesUpTo = (stage: Stage): readonly CharacterId[] =>
-  STAGES.filter((s) => isStageAtLeast(stage, s)).flatMap((s) => NEW_VOICES_BY_STAGE[s]);
+export const voicesUpTo = (stage: Stage): readonly CharacterId[] => [
+  ...new Set(STAGES.filter((s) => isStageAtLeast(stage, s)).flatMap((s) => NEW_VOICES_BY_STAGE[s])),
+];
 
 /** Move-ins arrive about one every two weeks. */
 export const MOVE_IN_EVERY_WEEKS = 2;

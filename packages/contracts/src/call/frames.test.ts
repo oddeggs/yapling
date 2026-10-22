@@ -6,7 +6,7 @@ import { describeSchemas } from '../schema-runner.test-data';
 import * as client from './client';
 import { CALL_CLIENT_FRAME_TYPES, CallClientFrame } from './client';
 import * as common from './common';
-import { parseFrame } from './common';
+import { parseFrame, tolerant } from './common';
 import * as server from './server';
 import { CALL_SERVER_FRAME_TYPES, CallServerFrame } from './server';
 
@@ -42,6 +42,11 @@ const playedRec = { type: 'played', seq: 47, streamId: 4, interrupted: true, lag
 const hangup = { type: 'hangup', seq: 48 };
 const speechStart = { type: 'speech', seq: 49, state: 'start', atMs: 1_200 };
 const speechEnd = { type: 'speech', seq: 50, state: 'end', atMs: 2_840 };
+const hangupTooHard = { type: 'hangup', seq: 51, reason: 'too_hard' };
+const replay = { type: 'replay', seq: 52, slower: false };
+const replaySlower = { type: 'replay', seq: 53, slower: true };
+const paceSlower = { type: 'pace', seq: 54, pace: 'slower' };
+const paceOwn = { type: 'pace', seq: 55, pace: null };
 
 const clientFrames = [
   hello,
@@ -58,6 +63,11 @@ const clientFrames = [
   speechStart,
   speechEnd,
   hangup,
+  hangupTooHard,
+  replay,
+  replaySlower,
+  paceSlower,
+  paceOwn,
 ];
 
 const ready = {
@@ -108,6 +118,23 @@ const playRec = { type: 'play_rec', seq: 8, streamId: 4, lineId: 's1-e1-03', cha
 const beat = { type: 'beat', seq: 9, beatId: 's1-e1.b02', progress: 0.25 };
 const hint = { type: 'hint', seq: 10, phrase: 'Could I get…?', gloss: 'Cho tôi…?' };
 const hintOther = { ...hint, gloss: null };
+const choiceTea = { phrase: 'Tea, please.', gloss: 'Cho mình trà.' };
+const choiceCoffee = { phrase: 'Coffee, please.', gloss: 'Cho mình cà phê.' };
+const hintChoices = {
+  ...hint,
+  phrase: choiceTea.phrase,
+  gloss: choiceTea.gloss,
+  choices: [choiceTea, choiceCoffee],
+  modelLineId: 's1-set5-03',
+  persistent: true,
+};
+const hintOneCard = {
+  ...hint,
+  phrase: 'Hi!',
+  gloss: 'Chào!',
+  choices: [{ phrase: 'Hi!', gloss: 'Chào!' }],
+  persistent: false,
+};
 const correction = {
   type: 'correction',
   seq: 11,
@@ -151,6 +178,8 @@ const serverFrames = [
   beat,
   hint,
   hintOther,
+  hintChoices,
+  hintOneCard,
   correction,
   resolved,
   meaning,
@@ -220,7 +249,30 @@ describeSchemas('call client frames', client, {
       { ...speechStart, seq: 0 },
     ],
   ],
-  HangupFrame: [[hangup], [{ type: 'hang_up', seq: 1 }]],
+  HangupReason: [['too_hard'], ['too_easy', 'bored']],
+  HangupFrame: [
+    [hangup, hangupTooHard],
+    [
+      { type: 'hang_up', seq: 1 },
+      { ...hangup, reason: 'bored' },
+      { ...hangup, reason: null },
+    ],
+  ],
+  ReplayFrame: [
+    [replay, replaySlower],
+    [
+      { type: 'replay', seq: 1 },
+      { ...replay, slower: 'yes' },
+      { ...replay, seq: 0 },
+    ],
+  ],
+  PaceFrame: [
+    [paceSlower, paceOwn, { ...paceSlower, pace: 'faster' }],
+    [
+      { type: 'pace', seq: 1 },
+      { ...paceSlower, pace: 'normal' },
+    ],
+  ],
   CallClientFrame: [
     clientFrames,
     [{ ...hello, stage: 'b1' }, { ...hold, seconds: 99 }, { seq: 1 }, 'hello', null],
@@ -292,7 +344,22 @@ describeSchemas('call server frames', server, {
       { ...beat, progress: -0.1 },
     ],
   ],
-  HintFrame: [[hint, hintOther], [{ ...hint, phrase: '' }]],
+  HintChoice: [
+    [choiceTea, { phrase: 'Yes.', gloss: null }],
+    [{ phrase: '', gloss: null }, { phrase: 'Yes.' }, { gloss: 'Có.' }],
+  ],
+  HintFrame: [
+    [hint, hintOther, hintChoices, hintOneCard, { ...hint, persistent: true }],
+    [
+      { ...hint, phrase: '' },
+      { ...hintChoices, choices: [] },
+      { ...hintChoices, choices: [choiceTea, choiceCoffee, choiceTea] },
+      { ...hintChoices, choices: [{ phrase: 'Tea, please.' }] },
+      { ...hintChoices, modelLineId: 'S1 SET5' },
+      { ...hintChoices, persistent: 'yes' },
+      { ...hintChoices, choices: null },
+    ],
+  ],
   CorrectionFrame: [[correction], [{ ...correction, prompt: '' }]],
   CorrectionResolvedFrame: [
     [resolved, { ...resolved, fixed: false }],
@@ -351,6 +418,34 @@ describe('the frame unions', () => {
     for (const frame of [...clientFrames, ...serverFrames]) {
       expect(frame.seq, frame.type).toBeGreaterThanOrEqual(1);
     }
+  });
+});
+
+describe('the beginner-path frames', () => {
+  it('leave the hint as it was for apps and calls that know only the phrase', () => {
+    expect(CallServerFrame.parse(hint)).toEqual(hint);
+    // An older app's hint schema drops the new fields and keeps the first card.
+    const older = server.HintFrame.pick({ type: true, seq: true, phrase: true, gloss: true });
+    expect(older.parse(hintChoices)).toEqual({
+      type: 'hint',
+      seq: hint.seq,
+      phrase: 'Tea, please.',
+      gloss: 'Cho mình trà.',
+    });
+  });
+
+  it('reach an older call as unknown frames it can ignore', () => {
+    const older = tolerant(
+      client.HangupFrame.pick({ type: true, seq: true }),
+      CALL_CLIENT_FRAME_TYPES.filter((t) => t !== 'replay' && t !== 'pace'),
+    );
+    expect(older.parse(replay)).toEqual({ type: 'unknown', received: 'replay' });
+    expect(older.parse(paceSlower)).toEqual({ type: 'unknown', received: 'pace' });
+    expect(older.parse(hangupTooHard)).toEqual({ type: 'hangup', seq: hangupTooHard.seq });
+  });
+
+  it('end a too-hard call with its own reason', () => {
+    expect(server.EndedFrame.parse({ ...ended, reason: 'too_hard' }).reason).toBe('too_hard');
   });
 });
 

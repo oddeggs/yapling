@@ -4,6 +4,7 @@ import {
   EpochMs,
   FirstLanguage,
   LIMITS,
+  LocalDate,
   LocalTime,
   Pace,
   RoommateSpecies,
@@ -45,6 +46,28 @@ const editable = {
   pace: Pace.nullable(),
 };
 
+// --- The beginner path: how the learner started, and when the story started. ---
+
+/**
+ * The onboarding answer to "Tiếng Anh của bạn bây giờ thế nào?": `visitor` ("Mình mới bắt đầu",
+ * Settling in with Linh, no placement call) or `placement` ("Mình nói được một chút", the placement
+ * call as before).
+ */
+export const START_PATHS = ['visitor', 'placement'] as const;
+export const StartPath = z.enum(START_PATHS);
+export type StartPath = z.infer<typeof StartPath>;
+
+const story = {
+  /**
+   * The learner's local day the story started (the letter under the café door), which week 1's
+   * days count from. Null until it is recorded: a Visitor still settling in, or a profile saved
+   * before it was kept (whose story started on the install day).
+   */
+  storyStartedOn: LocalDate.nullable(),
+  /** The onboarding path; null for a profile saved before the learner was asked. */
+  startPath: StartPath.nullable(),
+};
+
 /**
  * `GET /api/me/profile`. `stage` is the server's: placement sets it, and the learning model moves
  * it. `revision` grows on every change; the phone's cached copy loses to a higher one.
@@ -56,19 +79,28 @@ export const Profile = z.object({
   pace: Pace.nullable().default(null),
   stage: Stage,
   updatedAt: EpochMs,
+  /** Null for a profile (or a cached copy) from before these were kept. */
+  storyStartedOn: story.storyStartedOn.default(null),
+  startPath: story.startPath.default(null),
 });
 export type Profile = z.infer<typeof Profile>;
 
 /**
  * `PUT /api/me/profile`: the whole profile, at the end of onboarding. `pace` may be left out (the
- * residency card asks for it after the profile is saved): the pace the profile has is kept.
+ * residency card asks for it after the profile is saved): the pace the profile has is kept. So may
+ * `storyStartedOn` and `startPath` (older apps never send them): the profile's are kept.
  */
-export const ProfileInput = z.object({ ...editable, pace: Pace.nullable().optional() });
+export const ProfileInput = z.object({
+  ...editable,
+  pace: Pace.nullable().optional(),
+  storyStartedOn: story.storyStartedOn.optional(),
+  startPath: story.startPath.optional(),
+});
 export type ProfileInput = z.infer<typeof ProfileInput>;
 
-/** `PATCH /api/me/profile`: any editable fields, at least one. */
+/** `PATCH /api/me/profile`: any editable fields (or `storyStartedOn`, `startPath`), at least one. */
 export const ProfileUpdate = z
-  .object(editable)
+  .object({ ...editable, ...story })
   .partial()
   .refine((u) => Object.values(u).some((v) => v !== undefined), {
     message: 'Change at least one field',

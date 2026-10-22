@@ -122,12 +122,33 @@ export const BeatFrame = z.object({
 });
 export type BeatFrame = z.infer<typeof BeatFrame>;
 
-/** A phrase to try, with its gloss in the learner's first language (null for `other`). */
+// --- Say-this cards (beginner path): choices, a model line, a card that stays. ---
+
+/** One card the learner can read aloud, with its gloss (null for `other`). */
+export const HintChoice = z.object({ phrase: Phrase, gloss: Phrase.nullable() });
+export type HintChoice = z.infer<typeof HintChoice>;
+
+/** At most two cards side by side. */
+export const HINT_CHOICES_MAX = 2;
+
+/**
+ * A phrase to try, with its gloss in the learner's first language (null for `other`).
+ *
+ * Optional, left out by older calls (and ignored by older apps):
+ * - `choices`: one or two cards to read aloud instead of the single phrase (`phrase` is still the
+ *   first card's, for apps that show only one).
+ * - `modelLineId`: the recorded line that says the answer, for the card's tap-to-hear.
+ * - `persistent`: the card stays up for the whole turn, shown from the start, instead of sliding
+ *   away.
+ */
 export const HintFrame = z.object({
   type: z.literal('hint'),
   seq: Seq,
   phrase: Phrase,
   gloss: Phrase.nullable(),
+  choices: z.array(HintChoice).min(1).max(HINT_CHOICES_MAX).optional(),
+  modelLineId: Id.optional(),
+  persistent: z.boolean().optional(),
 });
 export type HintFrame = z.infer<typeof HintFrame>;
 
@@ -233,7 +254,10 @@ export const ErrorFrame = z.object({
 });
 export type ErrorFrame = z.infer<typeof ErrorFrame>;
 
-/** Why a call ended. `idle`: no speech for too long. `replaced`: another socket took the call. */
+/**
+ * Why a call ended. `idle`: no speech for too long. `replaced`: another socket took the call.
+ * `too_hard`: the learner left from the exit sheet's "Khó quá" (`hangup` with that reason).
+ */
 export const CALL_END_REASONS = [
   'hangup',
   'scene_complete',
@@ -242,6 +266,7 @@ export const CALL_END_REASONS = [
   'error',
   'idle',
   'replaced',
+  'too_hard',
 ] as const;
 export const CallEndReason = z.enum(CALL_END_REASONS);
 export type CallEndReason = z.infer<typeof CallEndReason>;

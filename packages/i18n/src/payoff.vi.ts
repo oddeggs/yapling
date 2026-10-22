@@ -8,6 +8,7 @@ export const payoffVi = {
   'payoff.afterCall.kind.real_week': 'Tuần thật',
   'payoff.afterCall.kind.practice': 'Luyện tập',
   'payoff.afterCall.kind.voicemail_reply': 'Trả lời tin nhắn thoại',
+  'payoff.afterCall.kind.settling': 'Làm quen',
   'payoff.afterCall.done': 'Xong rồi!',
   'payoff.afterCall.writing': '{name} đang ghi lại…',
   'payoff.afterCall.writingSub': 'Điều bạn làm tốt và các cụm từ sẽ hiện ở đây trong giây lát.',

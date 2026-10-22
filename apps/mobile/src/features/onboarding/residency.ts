@@ -1,5 +1,5 @@
 import {
-  STAGES,
+  RESIDENCY_STAGES,
   type CallRecord,
   type EpochMs,
   type Stage,
@@ -101,15 +101,17 @@ type MonthKey = Extract<StringKey, `common.monthShort.${string}`>;
 type CanDoKey = Extract<StringKey, `cando.${string}`>;
 
 export function residencyView(i: ResidencyInputs): ResidencyView {
-  const stageKey = `me.stage.${i.stage}` as StageKey;
+  // Visitor shows Newcomer's card until its own is designed; "Chặng N/5" counts from Newcomer.
+  const stage = i.stage === 'visitor' ? 'newcomer' : i.stage;
+  const stageKey = `me.stage.${stage}` as StageKey;
   const [, month = '1', day = '1'] = localDateOf(i.now, i.timezone).split('-');
   const monthName = i.tEn(`common.monthShort.${Number(month)}` as MonthKey);
   return {
     stageName: i.tEn(stageKey),
     stageLocal: i.t(stageKey),
     stageLine: i.t('onboarding.card.stage', {
-      stage: STAGES.indexOf(i.stage) + 1,
-      stages: STAGES.length,
+      stage: RESIDENCY_STAGES.indexOf(stage) + 1,
+      stages: RESIDENCY_STAGES.length,
     }),
     stampTown: i.t('onboarding.card.stampTown'),
     stampDate: `${monthName.toUpperCase()} ${Number(day)}`,

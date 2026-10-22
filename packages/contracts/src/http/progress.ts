@@ -180,6 +180,34 @@ export const WeekRing = z
   });
 export type WeekRing = z.infer<typeof WeekRing>;
 
+// --- Settling in (beginner path): the six short chapters with Linh before the story. ---
+
+/** Settling in has six chapters, 1 to 6. */
+export const SETTLING_CHAPTER_COUNT = 6;
+
+/**
+ * A Settling-in chapter finished for the first time, on the learner's local day (replays don't
+ * change it). The call record is null for a chapter marked done without its call.
+ */
+export const SettlingChapterDone = z.object({
+  chapter: z.int().min(1).max(SETTLING_CHAPTER_COUNT),
+  doneOn: LocalDate,
+  callRecordId: OpaqueId.nullable(),
+});
+export type SettlingChapterDone = z.infer<typeof SettlingChapterDone>;
+
+/** The chapters done, in the order they were finished: each chapter once, days never going back. */
+export const SettlingProgress = z
+  .array(SettlingChapterDone)
+  .max(SETTLING_CHAPTER_COUNT)
+  .refine((done) => new Set(done.map((d) => d.chapter)).size === done.length, {
+    message: 'Each chapter once',
+  })
+  .refine((done) => done.every((d, i) => i === 0 || (done[i - 1]?.doneOn ?? '') <= d.doneOn), {
+    message: 'Chapters in the order they were done',
+  });
+export type SettlingProgress = z.infer<typeof SettlingProgress>;
+
 /**
  * `GET /api/me/progress`: everything the burrow, the week view and the Me sheet show. `dayIndex`
  * counts days since install in the learner's timezone (the install day is day 1). `revision` grows
@@ -196,6 +224,8 @@ export const Progress = z
     keepsakes: z.array(Keepsake).max(500),
     /** Oldest first; the last is the current week. */
     weeks: z.array(WeekRing).max(520),
+    /** Settling-in chapters done; empty (and left out by older apps) when none. */
+    settlingChaptersDone: SettlingProgress.default([]),
   })
   .refine(
     (p) => p.errorTargets.filter((t) => t.status === 'active').length <= LIMITS.activeTargets,

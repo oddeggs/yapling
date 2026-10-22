@@ -122,10 +122,28 @@ export const ROOMMATE_SPECIES = ['redpanda', 'capybara', 'cat'] as const;
 export const RoommateSpecies = z.enum(ROOMMATE_SPECIES);
 export type RoommateSpecies = z.infer<typeof RoommateSpecies>;
 
-/** The five residency stages, Newcomer to Voice of Natterwick. */
-export const STAGES = ['newcomer', 'neighbour', 'regular', 'local', 'voice'] as const;
+/**
+ * The stages, lowest first: Visitor (settling in, before the story) and the five residency stages,
+ * Newcomer to Voice of Natterwick. A profile starts at Newcomer (`DEFAULT_STAGE`); Visitor is
+ * chosen or placed, never a default. Index arithmetic that means "the residency stages" counts from
+ * Newcomer (`RESIDENCY_STAGES`).
+ */
+export const STAGES = ['visitor', 'newcomer', 'neighbour', 'regular', 'local', 'voice'] as const;
 export const Stage = z.enum(STAGES);
 export type Stage = z.infer<typeof Stage>;
+
+/** Where every profile starts until placement or the learner moves it. */
+export const DEFAULT_STAGE = 'newcomer' satisfies Stage;
+
+/** The five numbered residency stages ("Chặng N/5"), Newcomer first; Visitor is not one. */
+export const RESIDENCY_STAGES = [
+  'newcomer',
+  'neighbour',
+  'regular',
+  'local',
+  'voice',
+] as const satisfies readonly Stage[];
+export type ResidencyStage = (typeof RESIDENCY_STAGES)[number];
 
 /** Life, Work or both. */
 export const TRACKS = ['life', 'work', 'both'] as const;
@@ -148,13 +166,17 @@ export const FIRST_LANGUAGES = ['vi', 'id', 'th', 'pt', 'es', 'ja', 'ko', 'tr', 
 export const FirstLanguage = z.enum(FIRST_LANGUAGES);
 export type FirstLanguage = z.infer<typeof FirstLanguage>;
 
-/** What a call is for. `voicemail_reply` answers a character's voicemail. */
+/**
+ * What a call is for. `voicemail_reply` answers a character's voicemail. `settling`: a Settling-in
+ * chapter with Linh, before the story starts.
+ */
 export const CALL_KINDS = [
   'placement',
   'episode',
   'real_week',
   'practice',
   'voicemail_reply',
+  'settling',
 ] as const;
 export const CallKind = z.enum(CALL_KINDS);
 export type CallKind = z.infer<typeof CallKind>;

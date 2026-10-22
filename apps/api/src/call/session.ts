@@ -234,6 +234,9 @@ export class CallSession {
       case 'hangup':
         void this.end('hangup');
         return;
+      // Again, slowly and a pace change are not handled yet: ignored, as an older call would.
+      case 'replay':
+      case 'pace':
       case 'hello':
       case 'unknown':
         return;

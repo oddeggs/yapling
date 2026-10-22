@@ -13,3 +13,4 @@ export * from './http/minutes';
 export * from './http/calls';
 export * from './http/push';
 export * from './http/account';
+export * from './http/stage';

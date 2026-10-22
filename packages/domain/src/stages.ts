@@ -1,8 +1,9 @@
 import { STAGES, type Stage } from '@yapling/contracts';
 
 /*
- * The five residency stages and how the town talks at each (the cast bible's stage speech
- * settings, the same for every character). CEFR stays inside: nothing here is ever shown as a level.
+ * The stages (Visitor, then the five residency stages) and how the town talks at each (the cast
+ * bible's stage speech settings, the same for every character). CEFR stays inside: nothing here is
+ * ever shown as a level.
  */
 
 export const stageIndex = (stage: Stage): number => STAGES.indexOf(stage);
@@ -10,9 +11,14 @@ export const stageIndex = (stage: Stage): number => STAGES.indexOf(stage);
 /** The stage after this one; the last stage stays where it is. */
 export const nextStage = (stage: Stage): Stage => STAGES[stageIndex(stage) + 1] ?? stage;
 
-/** The stage before this one; Newcomer stays where it is. */
-export const previousStage = (stage: Stage): Stage =>
-  STAGES[Math.max(0, stageIndex(stage) - 1)] ?? stage;
+/**
+ * The stage before this one; Newcomer stays where it is (Visitor is chosen or placed, never a step
+ * down), and so does Visitor.
+ */
+export const previousStage = (stage: Stage): Stage => {
+  const floor = Math.min(stageIndex(stage), stageIndex('newcomer'));
+  return STAGES[Math.max(floor, stageIndex(stage) - 1)] ?? stage;
+};
 
 /** True when `stage` is `atLeast` or later. */
 export const isStageAtLeast = (stage: Stage, atLeast: Stage): boolean =>
@@ -20,7 +26,7 @@ export const isStageAtLeast = (stage: Stage, atLeast: Stage): boolean =>
 
 /**
  * Pip's own English tracks one stage below the learner's, so the learner is always the more
- * capable speaker (Pip never drops below Newcomer).
+ * capable speaker (Pip never drops below Newcomer; a Visitor's Pip stays a Visitor).
  */
 export const pipStage = (learner: Stage): Stage => previousStage(learner);
 
@@ -70,6 +76,18 @@ const MAX_WORDS_PER_TURN = 25;
 
 /** The cast bible's stage speech settings table, row by row. */
 export const SPEECH_SETTINGS: Readonly<Record<Stage, SpeechSettings>> = {
+  // Visitor: Newcomer's values until its own row is set.
+  visitor: {
+    stage: 'visitor',
+    wordsPerMinute: 110,
+    sentenceLength: 'short_one_idea',
+    idioms: 'none',
+    interruptions: 'never',
+    hint: { kind: 'after_pause', pauseMs: 4_000 },
+    ttsSpeed: { min: 0.8, max: 0.8 },
+    maxWordsPerTurn: MAX_WORDS_PER_TURN,
+    phraseBreakSeconds: 0.35,
+  },
   newcomer: {
     stage: 'newcomer',
     wordsPerMinute: 110,

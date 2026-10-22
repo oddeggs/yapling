@@ -1,4 +1,4 @@
-import { STAGES } from '@yapling/contracts';
+import { RESIDENCY_STAGES, STAGES } from '@yapling/contracts';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 
@@ -55,9 +55,10 @@ describe('stage speech settings', () => {
   });
 
   it('gets faster, never slower, stage by stage; Hard mode only speeds up from Local', () => {
-    for (let i = 1; i < STAGES.length; i++) {
-      const before = SPEECH_SETTINGS[STAGES[i - 1]!];
-      const after = SPEECH_SETTINGS[STAGES[i]!];
+    // From Newcomer: Visitor has Newcomer's row until its own is set.
+    for (let i = 1; i < RESIDENCY_STAGES.length; i++) {
+      const before = SPEECH_SETTINGS[RESIDENCY_STAGES[i - 1]!];
+      const after = SPEECH_SETTINGS[RESIDENCY_STAGES[i]!];
       expect(after.wordsPerMinute).toBeGreaterThan(before.wordsPerMinute);
       expect(after.ttsSpeed.min).toBeGreaterThanOrEqual(before.ttsSpeed.min);
     }
@@ -101,6 +102,14 @@ describe('moving between stages', () => {
     expect(adjustStage('neighbour', 'too_hard')).toBe('newcomer');
     expect(isStageAtLeast('local', 'regular')).toBe(true);
     expect(isStageAtLeast('newcomer', 'neighbour')).toBe(false);
+  });
+
+  it('never steps down from Newcomer into Visitor, and keeps a Visitor where it is', () => {
+    expect(adjustStage('newcomer', 'too_hard')).toBe('newcomer');
+    expect(previousStage('visitor')).toBe('visitor');
+    expect(pipStage('visitor')).toBe('visitor');
+    expect(nextStage('visitor')).toBe('newcomer');
+    expect(isStageAtLeast('visitor', 'newcomer')).toBe(false);
   });
 
   it('keeps Pip one stage below the learner, never below Newcomer', () => {

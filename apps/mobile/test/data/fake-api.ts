@@ -46,6 +46,7 @@ export const emptyProgress = (revision = 1): Progress => ({
   canDos: [],
   keepsakes: [],
   weeks: [],
+  settlingChaptersDone: [],
 });
 
 let tokenCounter = 0;
