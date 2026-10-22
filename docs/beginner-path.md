@@ -313,7 +313,7 @@ Same story, same scenes, same recordings where possible; each hard turn gets a V
 | 5 · Keepsake | Pip's certificate | Linh hands over the Newcomer residency card, if the stage-up rule is met (section 2.2) |
 | 6 · Fix Pip's "Can I helping you?" | Frame after a pause | Card **"Can I help you?"** from the start |
 
-Episodes 2–6 are Release 2 content. **Their scripts need a Visitor row too** (the "How one scene scales by stage" table in `journey-and-story.md` §2.4 gains a line). Until they have one, a Visitor who stays past week 1 plays them at Newcomer with "slower" on.
+Episodes 2–6 are Release 1.2 content (`every-week-loop.md` §2.2 sets out each one's Visitor turns). **Their scripts need a Visitor row too** (the "How one scene scales by stage" table in `journey-and-story.md` §2.4 gains a line). Until they have one, a Visitor who stays past week 1 plays their Newcomer turns with the Visitor's speech settings: slow, short generated lines, but open questions, Newcomer-speed recordings and Newcomer timers.
 
 ---
 

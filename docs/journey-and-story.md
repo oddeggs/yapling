@@ -52,7 +52,7 @@ The weekly ring fills with **three calls**, and each has a different job:
 | **Real-week call** | Your life: Bring your homework, a calendar event, or "how did it go?" | Transfer to your real situations; Work-track relevance |
 | **Practice call** | A place drill: Pass it on (4/3/2), Teach the yapling, pronunciation pack, or an accent warm-up | Fluency, paraphrase, intelligibility |
 
-Between calls (free, low-pressure): Pip's voice stories (listening), neighbour postcards (accent listening), voice notes (output without live pressure). These keep the "something new every open" promise without costing live minutes.
+Between calls (free, low-pressure): Pip's voice stories (listening), neighbour postcards (accent listening), voice notes (output without live pressure). These keep the "something new every open" promise without costing live minutes. On the days between calls, **Pip's minute** (two card turns with recorded lines, no live minutes) gives a due phrase its next use. The week, day by day after week 1: [`every-week-loop.md`](every-week-loop.md).
 
 ### 1.4 Phrases: the chunk lifecycle
 
@@ -212,7 +212,7 @@ Ade arrives to restart the town's radio station. Each episode is a show segment:
 | Local | Fast, interrupts | Hold your ground, handle interruptions, summarise the deal |
 | Voice | Fast, emotional, changes his mind | De-escalate, reframe, close the deal and keep the relationship |
 
-Every episode script gets a Visitor row like this one: the turn becomes one or two cards, the character models the answer first, and lines stay under 8 words. Week 1's Visitor turns are written (`season-1-script.md`, Settling in); Episodes 2–6 get theirs in Release 2, and until then a Visitor plays them at Newcomer with "slower" on.
+Every episode script gets a Visitor row like this one: the turn becomes one or two cards, the character models the answer first, and lines stay under 8 words. Week 1's Visitor turns are written (`season-1-script.md`, Settling in); Episodes 2–6 get theirs in Release 1.2 ([`every-week-loop.md`](every-week-loop.md) §2.2), and until then a Visitor plays their Newcomer turns with the Visitor's speech settings.
 
 ### 2.5 What the AI generates vs. what's written
 
