@@ -10,6 +10,7 @@ import {
 } from '@yapling/theme';
 import { Canvas, Path, Skia } from '@shopify/react-native-skia';
 import { useEffect, useMemo, useRef } from 'react';
+import type { SharedValue } from 'react-native-reanimated';
 import { View, type AccessibilityActionEvent } from 'react-native';
 import { GestureDetector, useLongPressGesture } from 'react-native-gesture-handler';
 import Animated, {
@@ -33,8 +34,9 @@ import { useRelay } from './motion/relay';
  * Where the turn is:
  * - `idle`: nothing to say yet (between beats, the scene over).
  * - `speaking`: a character is talking; the mic waits, white and grey.
- * - `yourTurn`: the learner's turn; the mic is lilac and glows. Hold to talk.
- * - `listening`: the learner is holding it and talking; it swells and its bars move.
+ * - `yourTurn`: the learner's turn; the mic is lilac and glows. Hold to talk (hands-free: just talk).
+ * - `listening`: the learner is talking; it swells and its bars move (with their voice, when a
+ *   `level` is given).
  * - `paused`: "Chờ chút" is on; the mic waits until "Tiếp tục".
  */
 export type MicState = 'idle' | 'speaking' | 'yourTurn' | 'listening' | 'paused';
@@ -73,6 +75,13 @@ export interface MicButtonProps {
    * this long, so the learner learns to hold (under Reduce Motion it appears whole once reached).
    */
   readonly holdMs?: number;
+  /**
+   * Hands-free: the mic is a button, not a hold. A tap (or a VoiceOver double-tap) calls this;
+   * `onTalkStart` and `onTalkEnd` are not used.
+   */
+  readonly onTap?: () => void;
+  /** Hands-free: how loud the learner is, 0–1; the bars follow it while `listening`. */
+  readonly level?: SharedValue<number>;
 }
 
 /** The round mic in the call bar: hold to talk on your turn. */
@@ -82,6 +91,8 @@ export function MicButton({
   onTalkEnd,
   accessibilityLabel,
   holdMs,
+  onTap,
+  level,
 }: MicButtonProps) {
   const reduce = useReduceMotion();
   const ringFill = useSharedValue(0);
@@ -97,10 +108,15 @@ export function MicButton({
     swell.set(transitionTo(listening ? 1 : 0, motion.transitions.micPress));
   }, [listening, swell]);
 
-  const latest = useRef({ onTalkStart, onTalkEnd });
-  latest.current = { onTalkStart, onTalkEnd };
+  const latest = useRef({ onTalkStart, onTalkEnd, onTap });
+  latest.current = { onTalkStart, onTalkEnd, onTap };
   const holding = useRef(false);
   const start = useRelay(() => {
+    if (latest.current.onTap) {
+      haptics.play('tap');
+      latest.current.onTap();
+      return;
+    }
     if (holding.current) return;
     holding.current = true;
     haptics.play('tap');
@@ -143,7 +159,8 @@ export function MicButton({
   // VoiceOver can't hold: a double-tap starts talking and the next one stops.
   const onAction = (e: AccessibilityActionEvent) => {
     if (e.nativeEvent.actionName !== 'activate' || !live) return;
-    if (holding.current) end();
+    if (onTap) start();
+    else if (holding.current) end();
     else start();
   };
   const ringStyle = useAnimatedStyle(() => ({ opacity: ringFill.get() > 0 ? 1 : 0 }));
@@ -228,7 +245,13 @@ export function MicButton({
           }}
         >
           {[0, 1, 2].map((i) => (
-            <MicBar key={i} index={i} moving={listening && !reduce} live={live} />
+            <MicBar
+              key={i}
+              index={i}
+              moving={listening && !reduce}
+              live={live}
+              {...(level ? { level } : {})}
+            />
           ))}
         </View>
       </Animated.View>
@@ -236,16 +259,34 @@ export function MicButton({
   );
 }
 
-/** One of the mic's three bars: still, or bobbing while the learner talks, each a beat behind. */
-function MicBar({ index, moving, live }: { index: number; moving: boolean; live: boolean }) {
+/** How much each bar answers the voice: the middle one most. */
+const LEVEL_WEIGHT = [0.7, 1, 0.8] as const;
+
+/**
+ * One of the mic's three bars: still, or moving while the learner talks: with their voice when a
+ * level is given (a gentle meter), else bobbing, each a beat behind.
+ */
+function MicBar({
+  index,
+  moving,
+  live,
+  level,
+}: {
+  index: number;
+  moving: boolean;
+  live: boolean;
+  level?: SharedValue<number>;
+}) {
   const bars = motion.call.micBars;
   const staggered = useMemo(
     () => ({ ...bars, delayMs: bars.delayMs + index * (bars.staggerMs ?? 0) }),
     [bars, index],
   );
   const clock = useClock(staggered, { active: moving });
+  const weight = LEVEL_WEIGHT[index] ?? 1;
   const style = useAnimatedStyle(() => {
     if (!moving) return { transform: [{ scaleY: 1 }] };
+    if (level) return { transform: [{ scaleY: 0.45 + 0.75 * weight * level.get() }] };
     // The loop holds its first frame through its stagger delay, as CSS does with fill-mode none
     // (bars at rest), then bobs.
     const t = clock.get() - staggered.delayMs;

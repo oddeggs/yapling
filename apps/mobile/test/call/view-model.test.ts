@@ -128,9 +128,19 @@ describe('the mic', () => {
     expect(view(connected(), onRecBeat).mic).toBe('idle');
   });
 
-  it('listens while held, and listens on its own in hands-free', () => {
+  it('listens while held, and listens on its own in hands-free once the learner speaks', () => {
     expect(view(connected({ talkHeld: true }), onAnswerBeat).mic).toBe('listening');
-    expect(view(connected({}, 'hands_free'), onAnswerBeat).mic).toBe('listening');
+    expect(view(connected({}, 'hands_free'), onAnswerBeat).mic).toBe('yourTurn');
+    expect(view(connected({ learnerSpeaking: true }, 'hands_free'), onAnswerBeat).mic).toBe(
+      'listening',
+    );
+  });
+
+  it('says a hands-free turn with no words quietly, never with the tip to hold', () => {
+    const quiet = view(connected({ notice: 'not_heard' }, 'hands_free'), onAnswerBeat);
+    expect(quiet).toMatchObject({ tip: null, notHeardQuietly: true });
+    const held = view(connected({ notice: 'not_heard' }), onAnswerBeat);
+    expect(held).toMatchObject({ tip: 'not_heard', notHeardQuietly: false });
   });
 
   it('waits while "Chờ chút" is on', () => {

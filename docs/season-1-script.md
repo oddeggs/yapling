@@ -207,7 +207,7 @@ Same story, scenes and recordings. Each hard turn gets a Visitor version (`maxSt
 | 5 · Keepsake | Pip's certificate | Linh hands over the Newcomer residency card, if at least 70% of week-1 turns passed without the generous pass (`beginner-path.md` §2.2) | |
 | 6 · Fix Pip's "Can I helping you?" | Frame after a pause | Card **"Can I help you?"** (Mình giúp gì được cho bạn?) from the start | Pip nói sai. Đọc câu đúng cho Pip nhé. |
 
-**Later episodes.** Episodes 2–6 get a Visitor row in Release 2 (see `journey-and-story.md` §2.4). Until then a Visitor who stays past week 1 plays them at Newcomer with "slower" on.
+**Later episodes.** Episodes 2–6 get a Visitor row in Release 1.2 (see `every-week-loop.md` §2.2 and `journey-and-story.md` §2.4). Until then a Visitor who stays past week 1 plays their Newcomer turns with the Visitor's speech settings.
 
 ### Edits from the design draft (native-editor pass, 22 Oct 2026)
 

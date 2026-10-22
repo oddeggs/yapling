@@ -1,6 +1,6 @@
 import type { EndTurnFrame, HeardWord, HoldFrame, SpeechFrame, TurnMode } from '@yapling/contracts';
 
-import { Endpointer, holdFor, joinSegments, ENDPOINTING } from './endpointing';
+import { Endpointer, holdFor, joinSegments, ENDPOINTING, PATIENT_HOLD } from './endpointing';
 import type { SpokenLine } from './line';
 import { hasRealWords } from './real-words';
 import { SttSession } from './stt';
@@ -8,16 +8,24 @@ import { SttSession } from './stt';
 /*
  * The learner's side of turn-taking: mic audio into Scribe and the energy gate, segments joined
  * into one turn, the answer started speculatively and released after enough silence (or at once
- * on a hold-to-talk release), dropped when the learner speaks again before it reaches the phone.
+ * on a hold-to-talk release or a hands-free tap), dropped when the learner speaks again before it reaches the phone.
  * "Chờ chút" pauses all of it until the learner speaks or the hold runs out. While the scene is
  * listening and nobody speaks, the quiet is measured, from when the learner last stopped speaking,
  * for the long-quiet hint offer (silence never ends or counts as a turn); a pause inside a held
  * hold-to-talk turn is never quiet. A turn with no real words (noise, "um") is not a turn: it is
- * dropped unanswered, and a hold-to-talk release hears `notHeard`.
+ * dropped unanswered, and the phone hears `notHeard`.
  *
  * When the phone sends its own speech start and end (`speech` frames, from its echo-cancelled
- * mic), they decide when speech starts and ends; the energy gate stays as the fallback for a
- * phone that doesn't send them. Silence is still counted on the mic clock, from the phone's end.
+ * mic), they decide when speech starts and ends, and the answer waits the patient holds; the energy
+ * gate (with the spike's shorter holds) stays as the fallback for a phone that doesn't send them.
+ * Silence is still counted on the mic clock, from the phone's end. The phone streams only around
+ * speech (with a pre-roll, and a tail long enough for the holds), so idle quiet costs nothing; the
+ * long-quiet offer is timed on the wall clock when no audio comes.
+ *
+ * The learner can switch modes mid-call. A `speech` frame means the phone is listening hands-free;
+ * `end_turn` in hands-free is "I'm done": a held answer goes at once, or the words so far are
+ * committed and answered as soon as their text is back. A hold-to-talk release is the same thing,
+ * so a phone that went back to holding the mic is still answered.
  */
 
 /** The phone's speech flags, once it has sent any. */
@@ -43,7 +51,7 @@ export interface TurnHost {
   answer(text: string, speechEndAt: number, gated: boolean): SpokenLine | null;
   /** The learner was quiet for `ms` while the scene waited (the hint may be offered). */
   silence(ms: number): void;
-  /** A hold-to-talk release with no real words: not a turn, nothing answered. */
+  /** A turn with no real words: not a turn, nothing answered. */
   notHeard(): void;
   /** The thinking head tilt: the reply was released before any audio was ready. */
   released(line: SpokenLine): void;
@@ -71,10 +79,14 @@ export class LearnerTurn {
   private heldAt = 0;
   /** Words before this point on the mic clock belong to a dropped turn. */
   private wordsFrom = 0;
+  /** Mic audio arrived since the last commit. */
+  private uncommitted = false;
+  /** The learner said they're done: the text, when it's back, is answered at once. */
+  private answerNow = false;
 
   constructor(
     key: string,
-    private readonly mode: TurnMode,
+    private mode: TurnMode,
     private readonly host: TurnHost,
   ) {
     this.stt = new SttSession(key, {
@@ -141,6 +153,7 @@ export class LearnerTurn {
   mic(chunk: Uint8Array): void {
     // Hold-to-talk sends audio only while the button is held: a press is streaming.
     if (this.mode === 'hold_to_talk') this.heldAt = Date.now();
+    this.uncommitted = true;
     this.stt.audio(chunk);
     const events = this.endpointer.feed(chunk);
     // The phone's flags, when it sends them, decide; the energy gate is the fallback.
@@ -159,15 +172,24 @@ export class LearnerTurn {
     this.check();
   }
 
-  /** The phone's turn frames: a hold-to-talk release, "Chờ chút", its speech flags. */
+  /** The phone's turn frames: the end of a turn, "Chờ chút", its speech flags. */
   frame(frame: EndTurnFrame | HoldFrame | SpeechFrame): void {
     if (frame.type === 'end_turn') this.endTurn();
     else if (frame.type === 'hold') this.hold(frame.seconds);
     else this.speech(frame.state, frame.atMs);
   }
 
-  /** The phone's voice activity: speech started or ended at `atMs` on the mic clock. */
+  /** The turn mode in effect (the hello's, until the phone switches to hands-free). */
+  get turnMode(): TurnMode {
+    return this.mode;
+  }
+
+  /**
+   * The phone's voice activity: speech started or ended at `atMs` on the mic clock. Only a phone
+   * listening hands-free sends it, so it also switches the call to hands-free.
+   */
   speech(state: 'start' | 'end', atMs: number): void {
+    this.mode = 'hands_free';
     this.phone ??= { speaking: false, endMs: 0, committed: true };
     if (state === 'start') {
       if (!this.phone.speaking) this.speechStarted();
@@ -181,11 +203,40 @@ export class LearnerTurn {
     this.check();
   }
 
-  /** Hold-to-talk: the learner let go of the mic. */
+  /** The learner let go of the mic (hold-to-talk), or tapped it to say they're done (hands-free). */
   endTurn(): void {
-    if (this.mode !== 'hold_to_talk') return;
+    if (this.mode === 'hands_free') {
+      this.finishNow();
+      return;
+    }
     this.speechEndAt = Date.now();
     this.heldAt = 0;
+    this.endpointer.reset();
+    this.restartQuiet();
+    this.commit();
+  }
+
+  /** Hands-free "I'm done": the answer without the rest of the hold. */
+  private finishNow(): void {
+    const reply = this.reply;
+    if (reply) {
+      if (reply.isGated && !reply.isAborted) {
+        reply.release();
+        this.host.released(reply);
+      }
+      return;
+    }
+    // Nothing said since the last turn: nothing to finish.
+    if (!this.uncommitted && this.awaitingFinal === 0 && this.pending === '') return;
+    this.answerNow = true;
+    if (this.awaitingFinal !== 0) return; // the text is on its way
+    const phone = this.phone;
+    if (phone) {
+      if (phone.speaking) phone.endMs = this.endpointer.audioMs;
+      phone.speaking = false;
+      phone.committed = true;
+    }
+    this.speechEndAt = Date.now();
     this.endpointer.reset();
     this.restartQuiet();
     this.commit();
@@ -225,6 +276,7 @@ export class LearnerTurn {
 
   private commit(): void {
     this.awaitingFinal = Date.now();
+    this.uncommitted = false;
     this.stt.commit();
   }
 
@@ -242,17 +294,25 @@ export class LearnerTurn {
       this.dropReply();
     }
     if (text) this.pending = joinSegments(this.pending, text);
+    const now = this.answerNow;
+    this.answerNow = false;
     if (!hasRealWords(this.pending)) {
-      // Noise or "um" only: not a turn. The beat stays and nothing is answered.
+      // Noise or "um" only: not a turn. The beat stays, nothing is answered, and the phone shows
+      // it quietly (in hands-free a cough is not worth more).
       this.forgetTurn();
-      if (this.mode === 'hold_to_talk') this.host.notHeard();
+      this.host.notHeard();
       return;
     }
-    this.reply = this.host.answer(this.pending, this.speechEndAt, this.mode === 'hands_free');
+    this.reply = this.host.answer(
+      this.pending,
+      this.speechEndAt,
+      this.mode === 'hands_free' && !now,
+    );
   }
 
   /** Drops what was heard of a turn that wasn't one, its late word timings included. */
   private forgetTurn(): void {
+    this.answerNow = false;
     this.pending = '';
     this.words = [];
     this.wordsFrom = this.endpointer.audioMs;
@@ -296,7 +356,8 @@ export class LearnerTurn {
     const reply = this.reply;
     if (reply?.isGated && !reply.isAborted) {
       const quiet = !this.inSpeech() && !this.holding();
-      if (quiet && this.silence() >= holdFor(this.pending, ENDPOINTING)) {
+      const holds = this.phone === null ? ENDPOINTING : PATIENT_HOLD;
+      if (quiet && this.silence() >= holdFor(this.pending, holds)) {
         reply.release();
         this.host.released(reply);
       }

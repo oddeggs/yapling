@@ -56,6 +56,8 @@ export interface CallState {
   readonly wrappingUp: boolean;
   readonly playing: boolean;
   readonly learnerSpeaking: boolean;
+  /** Hands-free: the learner has spoken and the call still hears the pause after it. */
+  readonly turnOpen: boolean;
   readonly talkHeld: boolean;
   readonly awaitingReply: boolean;
   readonly serverThinking: boolean;
@@ -100,6 +102,7 @@ export const initialCallState = (turnMode: TurnMode): CallState => ({
   wrappingUp: false,
   playing: false,
   learnerSpeaking: false,
+  turnOpen: false,
   talkHeld: false,
   awaitingReply: false,
   serverThinking: false,
@@ -130,7 +133,9 @@ export function phaseOf(s: Omit<CallState, 'phase'> & { readonly phase?: CallPha
   if (!s.connected) return s.phase === 'idle' ? 'idle' : 'connecting';
   if (s.playing) return 'character_speaking';
   // Hold-to-talk listens only while the button is held: talking without holding sends nothing.
-  if (s.talkHeld || (s.learnerSpeaking && s.turnMode === 'hands_free')) return 'listening';
+  // Hands-free listens through the pause after speech too, until the call answers or it ends.
+  const handsFree = s.turnMode === 'hands_free' && (s.learnerSpeaking || s.turnOpen);
+  if (s.talkHeld || handsFree) return 'listening';
   if (s.serverThinking || s.awaitingReply) return 'thinking';
   return 'your_turn';
 }

@@ -56,6 +56,19 @@ export const callEn = {
   'call.mic.sceneComplete': 'Scene complete',
   /** Read for the mic button. */
   'call.a11y.mic': 'Hold to talk',
+  /** Hands-free: the mic is tapped once the learner is done, never held. */
+  'call.a11y.micHandsFree': "Tap when you're done",
+  /** The in-call switch between holding the mic and hands-free. */
+  'call.handsFree': 'Hands-free',
+  'call.a11y.handsFree': 'Hands-free: just talk, no holding. I answer when you pause.',
+  'call.handsFree.on': 'Hands-free: just talk, I answer when you pause',
+  'call.handsFree.off': 'Hold the mic while you talk',
+  /** Hands-free, the learner's turn: the call waits however long they think. */
+  'call.mic.handsFree': "Listening… I'll answer when you pause",
+  /** Hands-free, while the learner talks: the tap that ends the turn now. */
+  'call.mic.handsFreeTalking': "Listening… tap when you're done",
+  /** Hands-free, a turn with no words (a cough, an "um"): said quietly under the mic. */
+  'call.mic.handsFreeNotHeard': "Didn't catch that · say it again",
   /** Read for a character's bubble while the reply is on its way. */
   'call.a11y.thinking': '{name} is thinking',
   /** Read for a timer and a Pass it on round (shown as "60s"). */

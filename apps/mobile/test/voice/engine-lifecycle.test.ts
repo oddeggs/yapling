@@ -113,9 +113,12 @@ class TestSocket implements SocketLike {
   onmessage: ((ev: { data: unknown }) => void) | null = null;
   onclose: ((ev: { code?: number; reason?: string }) => void) | null = null;
   onerror: ((ev: unknown) => void) | null = null;
+  /** Binary frames sent (mic audio). */
+  binary = 0;
   send(data: string | ArrayBuffer | ArrayBufferView): void {
     if (typeof data === 'string' && data.startsWith('{'))
       this.sent.push(JSON.parse(data) as Record<string, unknown>);
+    else if (typeof data !== 'string') this.binary += 1;
   }
   close(): void {
     this.readyState = 3;
@@ -405,6 +408,68 @@ describe('a phone call or Siri', () => {
     await e.simulateInterruption('ended');
     expect(socket.sent.at(-1)).toMatchObject({ type: 'hold', seconds: 0 });
     expect(e.state.get()).toMatchObject({ interrupted: false, onHold: false });
+    await e.dispose();
+  });
+});
+
+describe('hands-free', () => {
+  /** The device mic's frames, as the engine hears them, 20 ms apart. */
+  function mic(e: VoiceEngine) {
+    let ms = 1_000;
+    const hear = e as unknown as {
+      onMicFrame(frame: Int16Array, endMs: number, source: 'device'): void;
+    };
+    return (count: number, level: number) => {
+      for (let i = 0; i < count; i++) {
+        ms += 20;
+        const frame = new Int16Array(320).map((_, j) => (j % 2 ? level : -level) + (j % 3));
+        hear.onMicFrame(frame, ms, 'device');
+      }
+    };
+  }
+
+  it('switches mid-call, sends nothing while the learner thinks, and ends the turn on a tap', async () => {
+    const { e, socket } = await liveCall();
+    e.setTurnMode('hands_free');
+    expect(e.state.get().turnMode).toBe('hands_free');
+    const feed = mic(e);
+    // A minute of thinking: nothing goes to the call.
+    feed(3_000, 2);
+    expect(socket.binary).toBe(0);
+    expect(socket.sent.filter((f) => f['type'] === 'speech')).toEqual([]);
+    // A tap before saying anything does nothing.
+    expect(e.endTurnNow()).toBe(false);
+    feed(20, 6_000);
+    expect(socket.sent.filter((f) => f['type'] === 'speech')).toMatchObject([{ state: 'start' }]);
+    expect(socket.binary).toBeGreaterThan(20);
+    expect(e.state.get()).toMatchObject({ phase: 'listening', learnerSpeaking: true });
+    // A pause to find the next word: still listening, still the learner's turn.
+    feed(50, 2);
+    expect(e.state.get()).toMatchObject({
+      phase: 'listening',
+      learnerSpeaking: false,
+      turnOpen: true,
+    });
+    expect(e.endTurnNow()).toBe(true);
+    expect(socket.sent.slice(-2)).toMatchObject([
+      { type: 'speech', state: 'end' },
+      { type: 'end_turn' },
+    ]);
+    // Quiet again: the gate is shut.
+    const sent = socket.binary;
+    feed(500, 2);
+    expect(socket.binary).toBe(sent);
+    expect(e.state.get()).toMatchObject({ phase: 'thinking', turnOpen: false });
+    await e.dispose();
+  });
+
+  it('shows a turn with no words quietly and takes it away when the learner speaks', async () => {
+    const { e, say } = await liveCall();
+    e.setTurnMode('hands_free');
+    say({ type: 'not_heard' });
+    expect(e.state.get()).toMatchObject({ phase: 'your_turn', notice: 'not_heard' });
+    mic(e)(20, 6_000);
+    expect(e.state.get().notice).toBeNull();
     await e.dispose();
   });
 });

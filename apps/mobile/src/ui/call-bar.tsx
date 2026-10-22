@@ -9,6 +9,7 @@ import {
   translucent,
 } from '@yapling/theme';
 import { View } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 
 import { useLocale } from './locale';
 import { MicButton, type MicState } from './mic-button';
@@ -33,6 +34,14 @@ export interface CallBarProps {
   readonly onTalkEnd?: () => void;
   /** Hold-to-talk: the shortest hold that is a turn, shown as a ring filling around the mic. */
   readonly holdMs?: number;
+  /** Hands-free: the mic is tapped to end the turn, never held (see `MicButton`). */
+  readonly onTap?: () => void;
+  /** Hands-free: the learner's voice level for the mic's bars. */
+  readonly level?: SharedValue<number>;
+  /** The line under the mic, in place of the one for its state (hands-free has its own words). */
+  readonly caption?: string;
+  /** The mic's VoiceOver label, in place of "Hold to talk". */
+  readonly micLabel?: string;
   readonly style?: ViewStyleProp;
 }
 
@@ -53,21 +62,27 @@ export function CallBar({
   onTalkStart,
   onTalkEnd,
   holdMs,
+  onTap,
+  level,
+  caption: captionOverride,
+  micLabel,
   style,
 }: CallBarProps) {
   const { t } = useLocale();
   const paused = mic === 'paused';
-  const caption = paused
-    ? t('call.mic.paused')
-    : mic === 'listening'
-      ? t('call.mic.listening')
-      : mic === 'yourTurn'
-        ? t('call.mic.yourTurn')
-        : mic === 'speaking' && speaker
-          ? t('call.mic.talking', { who: speaker })
-          : sceneDone
-            ? t('call.mic.sceneComplete')
-            : '';
+  const caption =
+    captionOverride ??
+    (paused
+      ? t('call.mic.paused')
+      : mic === 'listening'
+        ? t('call.mic.listening')
+        : mic === 'yourTurn'
+          ? t('call.mic.yourTurn')
+          : mic === 'speaking' && speaker
+            ? t('call.mic.talking', { who: speaker })
+            : sceneDone
+              ? t('call.mic.sceneComplete')
+              : '');
   return (
     <GlassView
       glass={glass.panel}
@@ -108,10 +123,12 @@ export function CallBar({
       <View style={{ alignItems: 'center', gap: 5 }}>
         <MicButton
           state={mic}
-          accessibilityLabel={t('call.a11y.mic')}
+          accessibilityLabel={micLabel ?? t('call.a11y.mic')}
           {...(onTalkStart ? { onTalkStart } : {})}
           {...(onTalkEnd ? { onTalkEnd } : {})}
           {...(holdMs ? { holdMs } : {})}
+          {...(onTap ? { onTap } : {})}
+          {...(level ? { level } : {})}
         />
         <Txt
           maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}

@@ -2,7 +2,7 @@
 
 Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here, except the beginner path's Vietnamese (Release 1.1), which comes first because Linh's spoken lines gate the recording.
 
-518 strings in 15 catalogues; 89 flagged.
+526 strings in 15 catalogues; 97 flagged.
 
 ## How to review
 
@@ -471,65 +471,73 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## Live calls: the call frame, captions, hints, the call bar, the fluency mirror
 
-`packages/i18n/src/call.vi.ts` · 42 strings
+`packages/i18n/src/call.vi.ts` · 50 strings
 
-| Key                             | English                                         | Tiếng Việt                                      | Flag                | Notes                                                                                                                           |
-| ------------------------------- | ----------------------------------------------- | ----------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `call.place.cafe`               | Lantern Café · behind the counter               | Quán Lantern · sau quầy                         |                     |                                                                                                                                 |
-| `call.place.fromBurrow`         | calling from the burrow                         | đang gọi từ hang                                |                     |                                                                                                                                 |
-| `call.place.busStop`            | Bus 45 stop                                     | Bến xe buýt 45                                  |                     |                                                                                                                                 |
-| `call.place.onCall`             | on a call                                       | đang gọi                                        |                     |                                                                                                                                 |
-| `call.calling`                  | Calling {who}                                   | Đang gọi {who}                                  |                     |                                                                                                                                 |
-| `call.callee.harbourLaneOffice` | Harbour Lane Office                             | Văn phòng Harbour Lane                          |                     |                                                                                                                                 |
-| `call.tapForMeaning`            | Tap for Vietnamese                              | Chạm để xem nghĩa                               |                     |                                                                                                                                 |
-| `call.whatDoesThatMean`         | What does that mean?                            | What does that mean?                            | English on purpose? | English on purpose: the question the learner learns to ask                                                                      |
-| `call.translating`              | Translating…                                    | Đang dịch…                                      | New                 | New: the gloss row while a tapped line is translated                                                                            |
-| `call.translateFailed`          | Couldn't translate it. Tap to try again         | Chưa dịch được. Chạm để thử lại nhé             | New                 | New: a tapped line whose translation didn't come                                                                                |
-| `call.noTranslation`            | No translation for this line                    | Câu này chưa có bản dịch                        | New                 | New: a tapped line with nothing to give                                                                                         |
-| `call.page`                     | {index}/{count}                                 | {index}/{count}                                 | New                 | New: the line's place in its turn, on the bubble                                                                                |
-| `call.a11y.page`                | Line {index} of {count}                         | Câu {index} trên {count}                        | New                 | New: VoiceOver for that place                                                                                                   |
-| `call.a11y.earlierLine`         | Earlier line                                    | Câu trước                                       | New                 | New: VoiceOver for the back arrow on the bubble                                                                                 |
-| `call.a11y.laterLine`           | Next line                                       | Câu sau                                         | New                 | New: VoiceOver for the on arrow on the bubble                                                                                   |
-| `call.history.title`            | What was said                                   | Những gì đã nói                                 | New                 | New: the title of the call's line list (shown in capitals)                                                                      |
-| `call.history.a11y.open`        | What was said. Read the call again              | Những gì đã nói. Xem lại cuộc gọi               | New                 | New: VoiceOver for the button that opens it                                                                                     |
-| `call.history.replay`           | Play again                                      | Nghe lại                                        | New                 | New: VoiceOver for a listed line's play button                                                                                  |
-| `call.whisper`                  | {name} whispers                                 | {name} thì thầm                                 |                     |                                                                                                                                 |
-| `call.showTranslation`          | Show translation                                | Xem bản dịch                                    |                     |                                                                                                                                 |
-| `call.hideTranslation`          | Hide translation                                | Ẩn bản dịch                                     |                     |                                                                                                                                 |
-| `call.you`                      | YOU                                             | BẠN                                             |                     |                                                                                                                                 |
-| `call.youHeard`                 | YOU · heard                                     | BẠN · nghe được                                 | Meaning             | "BẠN · nghe được" reads as "you can hear"; it means "what Pip heard you say". Consider "BẠN · Pip nghe được" or "BẠN · đã nghe" |
-| `call.hint`                     | HINT                                            | GỢI Ý                                           |                     |                                                                                                                                 |
-| `call.seconds`                  | {count}s                                        | {count}s                                        |                     |                                                                                                                                 |
-| `call.holdOn`                   | Hold on                                         | Chờ chút                                        |                     |                                                                                                                                 |
-| `call.ready`                    | Ready                                           | Tiếp tục                                        |                     |                                                                                                                                 |
-| `call.mic.paused`               | Paused · take your time                         | Tạm dừng · cứ từ từ                             |                     |                                                                                                                                 |
-| `call.mic.listening`            | Listening… let go when done                     | Đang nghe… thả ra khi xong                      |                     |                                                                                                                                 |
-| `call.mic.yourTurn`             | Your turn · hold to talk                        | Lượt của bạn · giữ để nói                       |                     |                                                                                                                                 |
-| `call.mic.talking`              | {who} is talking                                | {who} đang nói                                  |                     |                                                                                                                                 |
-| `call.mic.sceneComplete`        | Scene complete                                  | Hết cảnh                                        |                     |                                                                                                                                 |
-| `call.a11y.mic`                 | Hold to talk                                    | Giữ để nói                                      |                     |                                                                                                                                 |
-| `call.a11y.thinking`            | {name} is thinking                              | {name} đang nghĩ                                | New                 | New: VoiceOver for the thinking bubble                                                                                          |
-| `call.a11y.seconds`             | {count} seconds                                 | {count} giây                                    | New                 | New: VoiceOver for timers and rounds                                                                                            |
-| `call.a11y.letter`              | The letter. Tap to read it again                | Lá thư. Chạm để đọc lại                         | New                 | New: VoiceOver for the tucked letter in the call                                                                                |
-| `call.done.wrapUp`              | Wrap up                                         | Kết thúc cuộc gọi                               |                     |                                                                                                                                 |
-| `call.done.hopOff`              | Hop off                                         | Xuống xe                                        |                     |                                                                                                                                 |
-| `call.done.seasonMap`           | See the season map                              | Xem bản đồ mùa                                  |                     |                                                                                                                                 |
-| `call.didntCatch`               | Sorry, I didn't catch that. Say it another way? | Sorry, I didn't catch that. Say it another way? | English on purpose? | English on purpose: the character says it. New                                                                                  |
-| `call.tip.holdLonger`           | Hold the button while you talk                  | Giữ nút trong lúc nói nhé                       | New                 | New: the tip over the mic after a tap too short to be a turn                                                                    |
-| `call.tip.notHeard`             | I didn't catch that. Hold and try again.        | Mình chưa nghe rõ. Giữ nút và nói lại nhé.      | New                 | New: the tip over the mic after a hold with no words in it                                                                      |
-| `call.reconnecting`             | Reconnecting…                                   | Đang nối lại…                                   | New                 | New: the pill while the line drops and reconnects                                                                               |
-| `call.interrupted`              | Paused while you take that call                 | Tạm dừng trong lúc bạn nghe máy                 | New                 | New: the pill while a phone call or Siri has the audio                                                                          |
-| `call.fixedIt`                  | You fixed it yourself                           | Bạn tự sửa được rồi                             |                     |                                                                                                                                 |
-| `call.nowALeaf`                 | Now a leaf                                      | Đã thành lá                                     |                     |                                                                                                                                 |
-| `call.seedDropped`              | Dropped into the burrow as a seed packet        | Đã thêm vào hang thành gói hạt                  | Machine-like        | Awkward; consider "Đã thả vào hang thành một gói hạt"                                                                           |
-| `call.wordAdded`                | Added “{word}” to the burrow                    | Đã thêm “{word}” vào hang                       |                     |                                                                                                                                 |
-| `call.mirror.title`             | Fluency mirror                                  | Gương nói                                       | Term                | "Gương nói" for "Fluency mirror"; check against "trôi chảy"/"lưu loát" below                                                    |
-| `call.mirror.round`             | Round {round}                                   | Lượt {round}                                    | Term                | "Lượt" is also the learner's turn ("Lượt của bạn"); a round could be "Vòng", but "Vòng tuần" is the weekly ring. Decide         |
-| `call.mirror.flow`              | Flow {seconds}s                                 | Trôi chảy {seconds} giây†                       | Term                | Flow is "trôi chảy" here but "LƯU LOÁT" on the after-call receipt; pick one                                                     |
-| `call.mirror.pace`              | {wpm} wpm                                       | {wpm} từ/phút                                   |                     |                                                                                                                                 |
-| `call.mirror.pauses`            | Pauses {pauses}/min                             | ngắt {pauses} lần/phút                          | Term                | Starts lower-case ("ngắt"), unlike its neighbours                                                                               |
-| `call.mirror.smoother`          | Round three is visibly smoother!                | Lượt thứ ba trôi chảy hơn hẳn!                  |                     |                                                                                                                                 |
-| `call.mirror.flowMeans`         | Flow = seconds without stopping.                | Trôi chảy = số giây nói liền không dừng.        |                     |                                                                                                                                 |
+| Key | English | Tiếng Việt | Flag | Notes |
+|---|---|---|---|---|
+| `call.place.cafe` | Lantern Café · behind the counter | Quán Lantern · sau quầy |  |  |
+| `call.place.fromBurrow` | calling from the burrow | đang gọi từ hang |  |  |
+| `call.place.busStop` | Bus 45 stop | Bến xe buýt 45 |  |  |
+| `call.place.onCall` | on a call | đang gọi |  |  |
+| `call.calling` | Calling {who} | Đang gọi {who} |  |  |
+| `call.callee.harbourLaneOffice` | Harbour Lane Office | Văn phòng Harbour Lane |  |  |
+| `call.tapForMeaning` | Tap for Vietnamese | Chạm để xem nghĩa |  |  |
+| `call.whatDoesThatMean` | What does that mean? | What does that mean? | English on purpose? | English on purpose: the question the learner learns to ask |
+| `call.translating` | Translating… | Đang dịch… | New | New: the gloss row while a tapped line is translated |
+| `call.translateFailed` | Couldn't translate it. Tap to try again | Chưa dịch được. Chạm để thử lại nhé | New | New: a tapped line whose translation didn't come |
+| `call.noTranslation` | No translation for this line | Câu này chưa có bản dịch | New | New: a tapped line with nothing to give |
+| `call.page` | {index}/{count} | {index}/{count} | New | New: the line's place in its turn, on the bubble |
+| `call.a11y.page` | Line {index} of {count} | Câu {index} trên {count} | New | New: VoiceOver for that place |
+| `call.a11y.earlierLine` | Earlier line | Câu trước | New | New: VoiceOver for the back arrow on the bubble |
+| `call.a11y.laterLine` | Next line | Câu sau | New | New: VoiceOver for the on arrow on the bubble |
+| `call.history.title` | What was said | Những gì đã nói | New | New: the title of the call's line list (shown in capitals) |
+| `call.history.a11y.open` | What was said. Read the call again | Những gì đã nói. Xem lại cuộc gọi | New | New: VoiceOver for the button that opens it |
+| `call.history.replay` | Play again | Nghe lại | New | New: VoiceOver for a listed line's play button |
+| `call.whisper` | {name} whispers | {name} thì thầm |  |  |
+| `call.showTranslation` | Show translation | Xem bản dịch |  |  |
+| `call.hideTranslation` | Hide translation | Ẩn bản dịch |  |  |
+| `call.you` | YOU | BẠN |  |  |
+| `call.youHeard` | YOU · heard | BẠN · nghe được | Meaning | "BẠN · nghe được" reads as "you can hear"; it means "what Pip heard you say". Consider "BẠN · Pip nghe được" or "BẠN · đã nghe" |
+| `call.hint` | HINT | GỢI Ý |  |  |
+| `call.seconds` | {count}s | {count}s |  |  |
+| `call.holdOn` | Hold on | Chờ chút |  |  |
+| `call.ready` | Ready | Tiếp tục |  |  |
+| `call.mic.paused` | Paused · take your time | Tạm dừng · cứ từ từ |  |  |
+| `call.mic.listening` | Listening… let go when done | Đang nghe… thả ra khi xong |  |  |
+| `call.mic.yourTurn` | Your turn · hold to talk | Lượt của bạn · giữ để nói |  |  |
+| `call.mic.talking` | {who} is talking | {who} đang nói |  |  |
+| `call.mic.sceneComplete` | Scene complete | Hết cảnh |  |  |
+| `call.a11y.mic` | Hold to talk | Giữ để nói |  |  |
+| `call.a11y.micHandsFree` | Tap when you're done | Nói xong thì chạm | New | New: VoiceOver for the mic in hands-free (a tap ends the turn) |
+| `call.handsFree` | Hands-free | Rảnh tay | New | New: the in-call switch over the call bar (no holding the mic) |
+| `call.a11y.handsFree` | Hands-free: just talk, no holding. I answer when you pause. | Rảnh tay: cứ nói, không cần giữ nút. Bạn ngừng thì mình trả lời. | New | New: VoiceOver for that switch |
+| `call.handsFree.on` | Hands-free: just talk, I answer when you pause | Rảnh tay: cứ nói, bạn ngừng thì mình trả lời | New | New: the toast when hands-free is switched on |
+| `call.handsFree.off` | Hold the mic while you talk | Giữ nút trong lúc nói nhé | New | New: the toast when it is switched off (same words as the hold tip) |
+| `call.mic.handsFree` | Listening… I'll answer when you pause | Đang nghe… nói xong mình sẽ trả lời | New | New: under the mic on the learner's hands-free turn, however long they think |
+| `call.mic.handsFreeTalking` | Listening… tap when you're done | Đang nghe… nói xong thì chạm | New | New: under the mic while the learner talks hands-free |
+| `call.mic.handsFreeNotHeard` | Didn't catch that · say it again | Mình chưa nghe rõ · nói lại nhé | New | New: under the mic, quietly, after hands-free speech with no words (a cough, an "um") |
+| `call.a11y.thinking` | {name} is thinking | {name} đang nghĩ | New | New: VoiceOver for the thinking bubble |
+| `call.a11y.seconds` | {count} seconds | {count} giây | New | New: VoiceOver for timers and rounds |
+| `call.a11y.letter` | The letter. Tap to read it again | Lá thư. Chạm để đọc lại | New | New: VoiceOver for the tucked letter in the call |
+| `call.done.wrapUp` | Wrap up | Kết thúc cuộc gọi |  |  |
+| `call.done.hopOff` | Hop off | Xuống xe |  |  |
+| `call.done.seasonMap` | See the season map | Xem bản đồ mùa |  |  |
+| `call.didntCatch` | Sorry, I didn't catch that. Say it another way? | Sorry, I didn't catch that. Say it another way? | English on purpose? | English on purpose: the character says it. New |
+| `call.tip.holdLonger` | Hold the button while you talk | Giữ nút trong lúc nói nhé | New | New: the tip over the mic after a tap too short to be a turn |
+| `call.tip.notHeard` | I didn't catch that. Hold and try again. | Mình chưa nghe rõ. Giữ nút và nói lại nhé. | New | New: the tip over the mic after a hold with no words in it |
+| `call.reconnecting` | Reconnecting… | Đang nối lại… | New | New: the pill while the line drops and reconnects |
+| `call.interrupted` | Paused while you take that call | Tạm dừng trong lúc bạn nghe máy | New | New: the pill while a phone call or Siri has the audio |
+| `call.fixedIt` | You fixed it yourself | Bạn tự sửa được rồi |  |  |
+| `call.nowALeaf` | Now a leaf | Đã thành lá |  |  |
+| `call.seedDropped` | Dropped into the burrow as a seed packet | Đã thêm vào hang thành gói hạt | Machine-like | Awkward; consider "Đã thả vào hang thành một gói hạt" |
+| `call.wordAdded` | Added “{word}” to the burrow | Đã thêm “{word}” vào hang |  |  |
+| `call.mirror.title` | Fluency mirror | Gương nói | Term | "Gương nói" for "Fluency mirror"; check against "trôi chảy"/"lưu loát" below |
+| `call.mirror.round` | Round {round} | Lượt {round} | Term | "Lượt" is also the learner's turn ("Lượt của bạn"); a round could be "Vòng", but "Vòng tuần" is the weekly ring. Decide |
+| `call.mirror.flow` | Flow {seconds}s | Trôi chảy {seconds} giây† | Term | Flow is "trôi chảy" here but "LƯU LOÁT" on the after-call receipt; pick one |
+| `call.mirror.pace` | {wpm} wpm | {wpm} từ/phút |  |  |
+| `call.mirror.pauses` | Pauses {pauses}/min | ngắt {pauses} lần/phút | Term | Starts lower-case ("ngắt"), unlike its neighbours |
+| `call.mirror.smoother` | Round three is visibly smoother! | Lượt thứ ba trôi chảy hơn hẳn! |  |  |
+| `call.mirror.flowMeans` | Flow = seconds without stopping. | Trôi chảy = số giây nói liền không dừng. |  |  |
 
 ## Call error sheets (no connection, microphone off)
 

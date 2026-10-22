@@ -84,8 +84,10 @@ export interface CallView {
   /** What the learner said: the partial while talking, then the heard line. */
   readonly you: { readonly text: string; readonly heard: boolean } | null;
   readonly hint: { readonly phrase: string; readonly gloss: string | null } | null;
-  /** The retry tip, while it is the learner's turn again. */
+  /** The retry tip, while it is the learner's turn again (holding the mic). */
   readonly tip: CallTip | null;
+  /** Hands-free heard no words: said quietly under the mic, not as a tip. */
+  readonly notHeardQuietly: boolean;
   readonly meaningChip: boolean;
   readonly meaning: MeaningState | null;
   /** The correction's first beat: the character asked it back and waits for the second try. */
@@ -183,9 +185,11 @@ export function callView(input: CallViewInput): CallView {
           running: tracker.timer.started && learnerTalking,
         }
       : null;
+  const noticeShown = live && !call.playing ? call.notice : null;
+  const handsFree = call.turnMode === 'hands_free';
   const tip =
-    live && (call.notice === 'hold_longer' || call.notice === 'not_heard') && !call.playing
-      ? call.notice
+    !handsFree && (noticeShown === 'hold_longer' || noticeShown === 'not_heard')
+      ? noticeShown
       : null;
 
   const rounds = layout.rounds ? roundsOf(scene, stage) : [];
@@ -223,6 +227,7 @@ export function callView(input: CallViewInput): CallView {
     you,
     hint,
     tip,
+    notHeardQuietly: handsFree && noticeShown === 'not_heard',
     meaningChip,
     meaning: live ? tracker.meaning : null,
     correcting: live && tracker.correction !== null,
@@ -274,8 +279,8 @@ function micOf(call: CallState, live: boolean, waiting: boolean): MicState {
       return 'listening';
     case 'your_turn':
       // Only a beat that waits for the learner is their turn; between lines the mic rests.
-      if (!waiting) return 'idle';
-      return call.turnMode === 'hands_free' ? 'listening' : 'yourTurn';
+      // Hands-free glows the same while the learner thinks, and listens once they speak.
+      return waiting ? 'yourTurn' : 'idle';
     case 'idle':
     case 'connecting':
     case 'thinking':

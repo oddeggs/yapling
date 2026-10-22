@@ -10,6 +10,9 @@
  * - speech that resumes before the reply reached the phone drops the reply, and the segments are
  *   joined as one hesitant sentence.
  *
+ * The app's hands-free mode times speech by the phone's own flags and waits longer (`PATIENT_HOLD`):
+ * learners stop mid-sentence to find a word, and a tap on the mic ends the turn at once.
+ *
  * Silence is counted in audio time, so the rules hold however the phone chunks its audio.
  */
 
@@ -26,6 +29,16 @@ export const ENDPOINTING: EndpointConfig = {
   holdMs: 700,
   holdLongMs: 1_200,
   voicedRms: 400,
+};
+
+/**
+ * The holds when the phone times speech itself (the app's hands-free mode): 2 s after a phrase that
+ * could be finished, 3.5 s after a word a sentence rarely ends on. A learner who stops mid-sentence
+ * to think keeps the turn; one who wants an answer sooner taps the mic.
+ */
+export const PATIENT_HOLD: Pick<EndpointConfig, 'holdMs' | 'holdLongMs'> = {
+  holdMs: 2_000,
+  holdLongMs: 3_500,
 };
 
 /** Words a learner's sentence rarely ends on: a pause after them means "still thinking". */

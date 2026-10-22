@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { newGuest } from '../auth/testing/client';
 import { pcm, Phone } from '../../test/call/phone';
 import { control, Providers } from '../../test/call/providers';
+import { PATIENT_HOLD } from './endpointing';
 import { quietTiming } from './session';
 import { sttTiming } from './stt';
 
@@ -53,8 +54,10 @@ describe("the phone's speech flags", () => {
     phone.send({ type: 'speech', state: 'end', atMs: phone.micMs });
     phone.silence(500);
     await sleep(300);
-    // Committed (the reply is generating) but not spoken before 700 ms of silence.
+    // Committed (the reply is generating) but held through the patient pause.
     expect(providers.scribeCommits.length).toBeGreaterThan(0);
+    phone.silence(PATIENT_HOLD.holdMs - 700);
+    await sleep(500);
     expect(phone.frames.slice(from).filter((f) => f.type === 'say_start')).toHaveLength(0);
     phone.silence(300);
     const heard = await phone.next('heard', () => true, { from });
@@ -75,6 +78,150 @@ describe("the phone's speech flags", () => {
     await sleep(500);
     expect(providers.scribeCommits.length).toBe(commits);
     expect(phone.of('heard')).toHaveLength(0);
+    phone.close();
+  }, 20_000);
+});
+
+describe('hands-free, timed by the phone', () => {
+  /** The phone heard the learner say `ms` of speech (it streams only around speech). */
+  function say(phone: Phone, ms: number) {
+    phone.send({ type: 'speech', state: 'start', atMs: phone.micMs });
+    phone.mic(pcm(ms, true));
+    phone.send({ type: 'speech', state: 'end', atMs: phone.micMs });
+  }
+
+  it('never ends a turn on silence before the learner speaks: at most the one quiet offer', async () => {
+    quietTiming.offerMs = 1_500;
+    const { token } = await newGuest();
+    const phone = await Phone.call(token);
+    await listening(phone);
+    const from = phone.frames.length;
+    const requests = providers.claudeRequests.length;
+    // The phone sends nothing while the learner thinks.
+    await sleep(5_000);
+    const after = phone.frames.slice(from);
+    expect(after.filter((f) => f.type === 'hint').length).toBeLessThanOrEqual(1);
+    expect(
+      after.filter((f) => ['heard', 'not_heard', 'say_start', 'beat'].includes(f.type)),
+    ).toEqual([]);
+    expect(providers.scribeCommits).toHaveLength(0);
+    expect(providers.claudeRequests.length).toBe(requests);
+    phone.close();
+  }, 20_000);
+
+  it('keeps a long pause mid-sentence inside one turn', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token);
+    await listening(phone);
+    await sleep(200);
+    const from = phone.frames.length;
+    providers.speech.push("I'd like a coffee with", 'milk, please.');
+    say(phone, 1_200);
+    // Three seconds to find the word, after one a sentence rarely ends on.
+    phone.silence(1_000);
+    await sleep(400);
+    phone.silence(2_000);
+    await sleep(600);
+    expect(
+      phone.frames.slice(from).filter((f) => f.type === 'say_start' || f.type === 'heard'),
+    ).toEqual([]);
+    say(phone, 900);
+    phone.silence(PATIENT_HOLD.holdMs + 200);
+    const heard = await phone.next('heard', () => true, { from });
+    expect(heard.text).toBe("I'd like a coffee with... milk, please.");
+    expect(phone.of('heard').filter((h) => phone.frames.indexOf(h) >= from)).toHaveLength(1);
+    phone.close();
+  }, 20_000);
+
+  it('answers at once when the learner taps the mic, without waiting out the pause', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token);
+    await listening(phone);
+    await sleep(200);
+    const from = phone.frames.length;
+    providers.speech.push("What's wrong?");
+    say(phone, 1_000);
+    phone.silence(300);
+    await sleep(300);
+    phone.send({ type: 'end_turn' });
+    const heard = await phone.next('heard', () => true, { from, timeoutMs: 3_000 });
+    expect(heard.text).toBe("What's wrong?");
+    await phone.next('say_start', () => true, { from, timeoutMs: 3_000 });
+    phone.close();
+  }, 20_000);
+
+  it('answers a tap while the learner is still speaking', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token);
+    await listening(phone);
+    await sleep(200);
+    const from = phone.frames.length;
+    providers.speech.push("What's wrong?");
+    phone.send({ type: 'speech', state: 'start', atMs: phone.micMs });
+    phone.mic(pcm(1_000, true));
+    phone.send({ type: 'end_turn' });
+    const heard = await phone.next('heard', () => true, { from, timeoutMs: 3_000 });
+    expect(heard.text).toBe("What's wrong?");
+    phone.close();
+  }, 20_000);
+
+  it('ignores a tap with nothing said', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token);
+    await listening(phone);
+    await sleep(200);
+    const from = phone.frames.length;
+    phone.send({ type: 'end_turn' });
+    await sleep(800);
+    expect(providers.scribeCommits).toHaveLength(0);
+    expect(phone.frames.slice(from).filter((f) => f.type !== 'minutes')).toEqual([]);
+    phone.close();
+  }, 20_000);
+
+  it('hears no turn in speech with no real words, and says so', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token);
+    await listening(phone);
+    await sleep(200);
+    const from = phone.frames.length;
+    providers.speech.push('um');
+    say(phone, 600);
+    phone.silence(PATIENT_HOLD.holdLongMs + 200);
+    await phone.next('not_heard', () => true, { from });
+    await sleep(300);
+    expect(
+      phone.frames.slice(from).filter((f) => f.type === 'heard' || f.type === 'say_start'),
+    ).toEqual([]);
+    phone.close();
+  }, 20_000);
+
+  it('switches mid-call: a hold-to-talk call listens hands-free once the phone flags speech', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token, { turnMode: 'hold_to_talk' });
+    await listening(phone);
+    await sleep(200);
+    const from = phone.frames.length;
+    providers.speech.push("What's wrong?");
+    say(phone, 1_000);
+    phone.silence(PATIENT_HOLD.holdMs + 200);
+    const heard = await phone.next('heard', () => true, { from });
+    expect(heard.text).toBe("What's wrong?");
+    phone.close();
+  }, 20_000);
+
+  it('switches back: a press and release with no flags is still answered', async () => {
+    const { token } = await newGuest();
+    const phone = await Phone.call(token);
+    await listening(phone);
+    await sleep(200);
+    // One flagged turn makes the call hands-free on the phone's flags.
+    phone.send({ type: 'speech', state: 'end', atMs: phone.micMs });
+    const from = phone.frames.length;
+    providers.speech.push("What's wrong?");
+    phone.mic(pcm(1_000, true));
+    phone.send({ type: 'end_turn' });
+    const heard = await phone.next('heard', () => true, { from, timeoutMs: 3_000 });
+    expect(heard.text).toBe("What's wrong?");
     phone.close();
   }, 20_000);
 });

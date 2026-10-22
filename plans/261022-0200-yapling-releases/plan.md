@@ -9,7 +9,8 @@ Inputs: `docs/concept.md`, `docs/journey-and-story.md`, `docs/season-1-script.md
 |---|---|---|---|---|---|
 | 1 | Internal TestFlight (learner test) | **First Week** | The prototype's week, for real: live AI calls, recorded cast, the burrow changing day by day | Onboarding and placement call; burrow and week view; Episode 1 call with Mei; voice story and postcard; teach Pip; Pass it on; keepsake; voicemail; season map; the Plus paywall (sandbox); lock-screen knocks; Me sheet lite; safety and error states; a dev-only time-travel menu for test sessions | 5–8 Vietnamese professionals each run day 1–8 in a moderated session; the founder's checklist in `docs/prompts/claude-design-prototype.md` ("What we're testing") |
 | 1.1 | Over-the-air update to the TestFlight build | **Settling in** | A way in for true beginners: six short calls with Linh before the story, and an easier week 1 | The Visitor stage; the level question and a placement call that sets the stage; Settling-in Chapters 1–6; Visitor versions of week 1; "again" and "slowly" honoured in every call; "too hard" anywhere | 3 true beginners each finish Chapter 1 unaided and at least 2 finish Chapters 1–6 and the café call (measures in `docs/beginner-path.md` §9) |
-| 2 | **App Store launch (Vietnam)** | **Season One** | Six weeks of story and a reason to talk every day | Episodes 2–6 with Hank at every stage; real-week calls with Bring your homework (Dex); the full practice set; the level guide (checks every hand-written line); the content cache and share sheet in the store build; the library's first 30 scenes and 300 props (long lead, shown in Release 3); phrase lifecycle to bloom and fix graduation; the full Me sheet with the memory page; voicemail and voice notes; minutes resting, break reminder, crisis protocol; Sign in with Apple; Plus live; analytics; cost meters | Gates in `docs/concept.md` §15: D30 > 10%, ≥ 30 learner-talk minutes per weekly active, free → Plus ≥ 5% by day 30, AI cost ≤ 30% of net revenue |
+| 1.2 | Over-the-air update, carried by the next TestFlight build | **Every day, every week** | The learner keeps learning after week 1: a story every week and one short thing every day | Episodes 2–6 written in full and recorded, with a Visitor version of each and Hank at every stage; real-week and practice calls for weeks 2–6 (Dex's voice); Pip's stories, postcards and voicemails; Pip's minute (daily phrase practice, no live minutes); the festival week; rings, keepsakes, bloom and fix graduation, then and now; knocks after week 1; the level guide | On the simulator a Visitor and a Newcomer play days 8–49 with one thing every day and every ring filled; then 6 testers keep a weekly ring for 6 real weeks (`docs/every-week-loop.md`) |
+| 2 | **App Store launch (Vietnam)** | **Season One** | Six weeks of story and a reason to talk every day | Season One's loop from Release 1.2; Bring your homework (Dex) on the real-week calls; the content cache and share sheet in the store build; the library's first 30 scenes and 300 props (long lead, shown in Release 3); the full Me sheet with the memory page; voicemail and voice notes; minutes resting, break reminder, crisis protocol; Sign in with Apple; Plus live; analytics; cost meters | Gates in `docs/concept.md` §15: D30 > 10%, ≥ 30 learner-talk minutes per weekly active, free → Plus ≥ 5% by day 30, AI cost ≤ 30% of net revenue |
 | 3 | Update | **Town Weeks** | The town keeps living after Season One | The story engine (a shared town week per stage, a personal pass, the safety filter, a review page); the visual library (~100 scenes, ~1,000 props, each prop a word); the album with rarity and achievements; share cards and a shared town goal; accent move-ins with listening checkpoints (Arjun first); stage-up to Neighbour; the monthly time capsule; incoming calls with a Live Activity; widgets; the town map | Learners who finish Season One keep a weekly ring (≥ 60% of finishers fill a ring in the 4 weeks after); engine cost ≤ $0.15 per learner per month; zero unsafe items reach a learner; median Flow +20% by week 6; call answer rate ≥ 20% |
 | 4 | Update and Android build | **The Mystery Boat** | Season 2, Android, and the shop | Season 2 (six hand-written episodes) with the engine filling the weeks around it; the cosmetic shop (wearables for Pip's three species, burrow decor); opt-in friends boards; Android launch; Indonesia's Home Neighbour | Store rating, D30 holds on Android; shop revenue per payer offsets ≥ 50% of AI cost per payer with no drop in D30 |
 
@@ -169,7 +170,7 @@ The founder's brief: "a hand-free mode that user dont need to hold everytime wou
 
 1. **Hands-free, for everyone.** The engine already has a `hands_free` turn mode (reached only through a route parameter). Make it a real choice: a setting and an in-call switch, turn-taking that respects unlimited thinking time, gating so idle listening doesn't stream to Scribe, echo-safe while a character speaks, the "real words" rule, and Jev's again/slowly. Lane H1 below.
 2. **Release 1.1 to its gate:** the Visitor call server after the Jev judge merges, then the app lanes B2a–B2e, then Gate B2 on the simulator and an over-the-air update.
-3. **Every day, every week:** the learner keeps learning after week 1. Plan and build the Release 2 core loop (Episodes 2–6 compiled and recorded, the weekly ring after week 1, the daily practice set), the parts that don't need the App Store launch work.
+3. **Every day, every week:** the learner keeps learning after week 1. Planned as **Release 1.2** below (design: [`docs/every-week-loop.md`](../../docs/every-week-loop.md)): Episodes 2–6 compiled and recorded, the weekly ring after week 1, Pip's minute every day; the parts of Release 2 that don't need the App Store launch work.
 4. **A new TestFlight build** once the whole loop works on the simulator (needed anyway if hands-free or anything else touches native code), then over-the-air updates on top.
 
 | Lane | Owns | Does | Done when |
@@ -178,32 +179,101 @@ The founder's brief: "a hand-free mode that user dont need to hold everytime wou
 
 ---
 
+# Release 1.2 · Every day, every week
+
+Design: [`docs/every-week-loop.md`](../../docs/every-week-loop.md). After day 8 the app teaches one draft call a week and nothing else (section 1 of that doc). This release gives weeks 2–7 the shape week 1 has: each week one hand-written, recorded episode (Season One E2–E6, each with a Visitor version), one real-week call and one practice call to fill the ring, a recorded Pip story, a postcard and the voicemail; and every day **Pip's minute**, a one-minute card practice with recorded lines and no live minutes, that grows the learner's phrases on the days between calls. Then a festival week closes the season. Built in the shapes the story engine fills later (week slots, ring slots with scene ids, scenes from phrases), so Release 3 replaces content, not code.
+
+About 160 new recorded lines (about 10,000 characters, about 25,000 ElevenLabs credits with retakes and Dex's voice). No new art. No native change. Migrations: `0330–0349` (none expected). Concurrency stays at 6 lanes at most.
+
+**Running now** (23 Oct 2026): H1 hands-free, B2a Visitor onboarding, B2c the Settling-in call screen, B2e Settling-in knocks. That leaves two lane slots.
+
+| Can start | Lanes |
+|---|---|
+| **Now** (no simulator, nothing in flight owns their files) | D0a Script, D0b Level guide; D0d Learning model as soon as a slot frees |
+| After H1 and B2c merge (they switch on call kinds and own `features/call` and `call.*` copy) | D0c Contracts, D2e Call places. D1c may start on memory and the ring rule before then, staying out of `learner-turn.ts` and `endpointing.ts`; its daily-call parts wait for D0c |
+| After B2e merges (it owns `features/knocks`, `features/devmenu`) | D2d Knocks and test menu |
+
+## Wave D0: Script, rails, contracts · critical path 2 runs
+
+| Lane | Owns | Does | Runs | Done when |
+|---|---|---|---|---|
+| D0a Script | `docs/season-1-script.md`, `docs/cast-bible.md`, `docs/journey-and-story.md`, `docs/vi-copy-review.md`, `audio/season-1/lines.json` (text entries in `pending`) | Episodes 2–6 in full (every turn with a hint; Arjun's idea passed on by Nell); a Visitor version of each hard turn as `every-week-loop.md` §2.2 sets out (cards with Vietnamese, the model line first, at most 8 words, Visitor timers); Hank's opener at Visitor, Neighbour and Regular; the real-week and practice scenes for weeks 2–6 (§2.2's table, no pasted homework); Pip's stories for weeks 2–6 as recorded lines; postcards for weeks 3, 4 and 6; for every Season One and Settling-in phrase a Pip's-minute set-up line and, where it fits, a slightly-wrong line; the festival week; draft knock copy for weeks 2–7; Dex's Visitor and Newcomer rows in the cast bible | 2 | The founder approves the script; `yap_voice.py estimate` lists the pending lines; the Vietnamese review list (Visitor task cards first) is with the reviewer |
+| D0b Level guide (from Release 2's S0c) | `packages/domain/src/level-guide.ts`, `packages/domain/data/**` (word list), `packages/story/src/level-check.ts` and their tests | `LEVEL_GUIDE` per `story-engine.md` (a); `checkLevel(stage, lines)`; a test over every hand-written scene; the word list's licence recorded | 1 | Season One and Settling in pass, or the failures are listed for D0a; the licence is in the data folder |
+| D0c Contracts | `packages/contracts`; the mechanical rows the new kind breaks | `CallKind` gains `daily` (Pip's minute: never metered, never a ring slot); `PhraseProgress` gains `pipReusedAt` (optional, nullable) | 1 | Round-trip tests; `pnpm typecheck && pnpm test` green across the repo |
+| D0d Learning model | `packages/domain` (except D0b's files) | The story-week plan for week 2 on, read from an episode's `week` slots (what opens on days 1–7; ring slots open on the days of their scenes, `LATER_WEEK_SLOT_OPENS` as the fallback); the story week: the week of the next unfinished episode, never ahead of the calendar, with earlier open slots listed as waiting; ring slots tied to their scene (a call fills the open slot whose scene it is; a slot with no scene takes any call of its kind, oldest first); Pip's-minute choice (one due phrase from `duePhrases`, one reuse from `pickPipReuse`, none when nothing is due); knocks for weeks 2 on (new things only, at most one a day, quiet hours, 14 days ahead of the last open); the Visitor's Newcomer card at every full ring; after D0c, `daily` unmetered; the free weekly allowance as the founder sets it | 2 | Unit and property tests for each rule, including a learner who misses week 3 (Episode 3 waits, fills ring 3, and the season map agrees); every week-1 test unchanged |
+
+Gate D0: the founder has approved the script and made decisions 1–5 in `every-week-loop.md` §5; contracts frozen.
+
+## Wave D1: Engines · critical path 2 runs
+
+| Lane | Owns | Does | Runs | Done when |
+|---|---|---|---|---|
+| D1a Story | `packages/story` (except D0b's file) | The script as data: Episodes 2–6 final (`draft: false`), Visitor beats (`maxStage: 'visitor'`) and Newcomer-only beats (`minStage: 'newcomer'`); real-week and practice scenes for weeks 2–6; stories, postcards and voicemails as recorded beats; each episode's `week` slots for days 1–7; a `daily` scene kind and the Pip's-minute builder (a phrase, its set-up and wrong lines → a two-turn card scene); the festival week; checks that every week has its three ring scenes, every listening scene is recorded or `ui` only, and every Visitor character line is at most 8 words | 2 | Runner tests: every Episode 2–6 scene, real-week, practice and Pip's minute ends for each answer kind at Visitor, Newcomer and Regular; the level check passes; week-1 and Settling-in paths unchanged |
+| D1b Voice | `tools/voice`, `audio/season-1/lines/**`, `audio/cast-voices.json` | `estimate` and `credits` first; Dex's voice designed with a 3-take audition for the founder; Hank's three stage takes; after the founder's OK, render every pending line (Pip's stories and Pip's minute first if credits are short); `pace` on every Visitor line; `heard` on every take | 1 (after D0a and the founder's OK) | All lines rendered; every Visitor line at or under 100 wpm; credits used reported |
+| D1c Call server | `apps/api/src/call/**` (not `learner-turn.ts` or `endpointing.ts` until H1 merges), `apps/api/src/jobs/**`, `apps/api/src/user/**`, migrations `0330–0349` | Daily calls: unmetered, card-judged, no reply model and no summary job, the phrase uses written from the turn log as prompted uses; Pip's reuse recorded in progress; Dex speaks with his own voice (stand-in removed once D1b lands); the ring rule through the domain; live calls read the learner's memory items into the prompt (today the post-call job writes them and no call reads them), so real-week calls can use the learner's job and last week's news | 2 | Protocol suite under `wrangler dev` with recorded learner audio: Episodes 2–6 end `complete` at Visitor and Newcomer; a week-2 real-week call uses the learner's job from memory; a Pip's minute leaves minutes unchanged and sprouts a seed; Episode 3 played in week 4 fills ring 3; deployed to the dev Worker |
+| D1d App data | `apps/mobile/src/data/**` (not H1's turn-mode preference) | Moments seen by scene id (week 1's names map onto them); `useWeek` gives the story week and the slots still waiting from earlier weeks; a hook for whether Pip's minute has a phrase today | 1 | Store tests; a learner in week 4 with week 3's practice open reads both; week 1 reads as before |
+
+Merge order: D1a, D1c, D1d, then D1b whenever it's ready (until then unrecorded lines speak with the live voice).
+Gate D1: under `wrangler dev`, a scripted Newcomer and a scripted Visitor each play Episodes 2–6, their real-week and practice calls and five Pip's minutes; every scene ends `complete`; rings 2–6 fill.
+
+## Wave D2: The app · critical path 2 runs · ends in a TestFlight build
+
+| Lane | Owns | Screens and behaviour | Runs |
+|---|---|---|---|
+| D2a Burrow and week | `features/burrow`, `features/week`, `packages/i18n/src/{burrow,week}.*` | The days of weeks 2–7 from the story-week plan (one top card a day, never the same two days running; the day's thing, then the oldest waiting call); the Pip's-minute chip; week rows from their slot's scene, all three tappable, and a "still waiting" row; back after days away with Episodes 2–6's recaps; weeks 8 on as rings of replays. Designs: Journey board J1 (week) | 2 |
+| D2b Listening and season | `features/story`, `features/season`, `packages/i18n/src/{story,season}.*` | Stories, postcards and voicemails for weeks 2–7 (Vietnamese under each line at Visitor); the season map's dates from the story's start; replay any finished episode at today's stage; the festival week (Pip's season story, Mei's postcard, the boat). Designs: Town board T1 (recap), T2 (episode end), Home board H6 (voicemail) | 1 |
+| D2c Payoffs and Me | `features/payoff`, `features/me`, `packages/i18n/src/{payoff,me}.*` | After-call for Episodes 2–6 and a small Pip's-minute card (the phrase and its new state); bloom (L6) and fix graduation (L9); the week's wrap (ring, phrases grown, can-dos ticked, the next episode's day); then and now (week 1's Pass it on next to week 5's petition, and at the season's end); Linh's Newcomer card at every full ring for a Visitor; the season keepsake; can-dos across the season on the Me sheet | 2 |
+| D2d Knocks and test menu | `features/knocks`, `features/devmenu`, `packages/i18n/src/{knocks,devmenu}.*` | Knocks for weeks 2–7 from the domain plan; test menu: jump to week N day D, fill a week's ring, back after N days | 1 (after B2e merges) |
+| D2e Call places | `features/call/scene-layout.ts` and the place pieces, `packages/i18n/src/call.*` | The Inn and the Square with existing art (the square for Episode 6; the town until the Inn's set exists); Pip's-minute layout (the burrow, Pip, the cards); episode tags for 2–6; Dex on the real-week call | 1 (after H1 and B2c merge) |
+
+Done when (every lane): built from existing components, with new states logged in `docs/undesigned-states.md`; designed states match their renders side by side; every interaction works against the dev Worker; copy comes from i18n; VoiceOver labels set.
+Merge order: D2a, D2b, D2c, D2e, D2d.
+Gate D2: on the simulator, with the test menu, a Newcomer and a Visitor each play day 8 to day 49: every day offers one thing; rings 2–6 fill; phrases reach leaf and at least one blooms; the Visitor is offered Linh's card at ring 2; no screen or knock mentions anything missed. Then the new TestFlight build (step 4 of the autonomous run) and over-the-air updates on top.
+
+## Wave D3: Six real weeks · critical path 1 run
+
+| Lane | Owns | Does |
+|---|---|---|
+| D3a Test kit | `docs/learner-test.md` | A six-week diary study: 6 testers (3 Visitors, 3 Newcomers) on the build, a 10-minute check-in each week; measures: days a week with any activity, rings filled, Pip's minutes a week, phrases at leaf and bloom, Flow week 1 against week 5, "would you miss it?" (1–5); kill signal: fewer than half fill ring 3 |
+
+Gate D3 (founder): run it. What it finds refines Release 2.
+
+## What ships how (Release 1.2)
+
+| Change | Ships by |
+|---|---|
+| Story data, domain, screens, copy | EAS Update on channel `dev` (JS) |
+| About 160 new recorded lines (about 10–15 MB) | EAS Update, bundled through `@yapling/story`; Release 2's content cache serves them from R2 later by the same ids |
+| Call server, progress | Dev Worker deploy (no migration expected) |
+| A new build | Not needed by this release; it rides the TestFlight build the autonomous run makes anyway |
+
+---
+
 # Release 2 · Season One (App Store, Vietnam)
 
-Season One launches hand-written: Episodes 2–6 are scripted, recorded and checked like Episode 1. The engine isn't live yet. Release 2 lays three cheap foundations for it, so Release 3 can arrive server-side and over the air:
+Season One launches hand-written: Episodes 2–6 are scripted, recorded and checked like Episode 1. **That loop is built in Release 1.2** (the script, Visitor versions, recordings, the level guide, the ring after week 1, Pip's minute, bloom and fix graduation); Release 2 is the store and launch work on top of it. The engine isn't live yet. Release 2 lays the remaining cheap foundations for it, so Release 3 can arrive server-side and over the air:
 
-- the level guide, as data that also checks the hand-written episodes;
 - a content cache and the share sheet in the store build;
 - the visual library's first 30 scenes and 300 props, as a long-lead lane.
 
-The lanes below are refined after the learner test. Design for the engine pieces: [`docs/story-engine.md`](../../docs/story-engine.md). Migrations: `0400–0499`.
+(The third foundation, the level guide, moved to Release 1.2 as D0b.) The lanes below are refined after the learner test and the six-week study (gate D3). Design for the engine pieces: [`docs/story-engine.md`](../../docs/story-engine.md). Migrations: `0400–0499`.
 
 ## Wave S0: Script, contracts, level guide · critical path 2 runs
 
 | Lane | Owns | Does | Runs | Done when |
 |---|---|---|---|---|
 | S0a Contracts | `packages/contracts` | Bodies for Bring your homework (pasted text or a calendar event), memory edits with an `interests` list, voice notes, minutes resting, Apple sign-in linking; remote line audio (file URL and timing URL) so Episodes 2–6 can be served from R2 | 1 | Every new schema has a round-trip test; repo green |
-| S0b Script | `docs/season-1-script.md`, `docs/cast-bible.md`, `packages/story/src/season-1/**`, `audio/season-1/lines.json` (text entries) | Episodes 2–6 as typed data with a Visitor version of each hard turn (as `beginner-path.md` §7 does for week 1); Hank's opener at every stage speed; the between-call content; the real-week and practice catalogues, written by hand | 2 | Every Episode 2–6 scene ends for each answer kind at every stage; every line passes the level check (S0c) |
-| S0c Level guide | `packages/domain/src/level-guide.ts`, `packages/domain/data/**` (word list), `packages/story/src/level-check.ts` and their tests | `LEVEL_GUIDE` per `story-engine.md` (a): vocabulary bands, grammar, sentence and turn limits, learner turn length, task types; `checkLevel(stage, lines)`; a test running it over every hand-written scene. Records the word list's licence | 1 | Season One and Settling in pass, or the failures are listed for S0b; the licence is recorded in the data folder |
-| S0d Voice | `tools/voice`, `audio/season-1/lines/**` | `estimate`, Hank's stage takes auditioned, then Episodes 2–6 rendered (Visitor lines at 0.7 under the pace gate) | 1 (after S0b and the founder's OK) | All lines rendered; credits used reported |
+| S0b Script | `docs/season-1-script.md`, `packages/story/src/season-1/**`, `audio/season-1/lines.json` (text entries) | Episodes 2–6, their Visitor versions, Hank's takes, the between-call content and the real-week and practice scenes **moved to Release 1.2** (D0a, D1a). Left here: the Bring your homework variants of the real-week calls for S1a, and fixes from gate D3 | 1 | The homework variants end for each answer kind at every stage; the level check passes |
+| S0c Level guide | | **Moved to Release 1.2** (D0b) | | |
+| S0d Voice | `tools/voice`, `audio/season-1/lines/**` | Episodes 2–6 recorded in Release 1.2 (D1b). Left here: re-takes after the native-speaker accent review (founder gate before Release 2) | 1 | Every reviewed line re-rendered where asked; credits reported |
 
 ## Wave S1: Features · critical path 3 runs
 
 | Lane | Owns | Does | Runs | Done when |
 |---|---|---|---|---|
 | S1a Bring your homework | `apps/api/src/homework/**`, `features/homework`, migrations `0400–0419` | Paste a job post, agenda or email (or pick a calendar event); a real-week scene for Dex built from it; the pasted text screened first (crisis → safety flow, sensitive → no scene); one free trial, unlimited on Plus | 2 | Protocol test with a sample job post plays a full real-week call; a sensitive paste gives the kind check-in |
-| S1b Learning model | `packages/domain` (except S0c's files) | The phrase lifecycle to bloom; fix graduation and its celebration; "back after N days" for Episodes 2–6 | 1 | Unit tests for each rule |
-| S1c Me and memory | `features/me`, `apps/api/src/memory/**`, migrations `0420–0429` | The full Me sheet: can-dos, the memory page (view, edit, delete, plus an interests list the engine reads later), settings | 2 | Every memory item round-trips and deletes; renders match |
+| S1b Learning model | | **Moved to Release 1.2**: bloom and fix graduation shown (D2c), "back after N days" for Episodes 2–6 (D2a), the rules in D0d | | |
+| S1c Me and memory | `features/me`, `apps/api/src/memory/**`, migrations `0420–0429` | The full Me sheet (can-dos across the season arrive in Release 1.2): the memory page (view, edit, delete, plus an interests list the engine reads later), settings | 2 | Every memory item round-trips and deletes; renders match |
 | S1d Voicemail and voice notes | `features/voicenotes`, `apps/api/src/voicenotes/**`, migrations `0430–0439` | Voice notes on the free tier (batch STT), voicemail replies | 2 | A note records, sends and gets a reply; minutes unchanged |
 | S1e Guardrails | `apps/api/src/call/safety.ts`, `features/safety` | Minutes resting, the 3-hour break reminder, the crisis protocol end to end, AI disclosure cadence | 1 | Protocol tests for each |
 | S1f Accounts and Plus | `apps/api/src/auth/**`, `apps/api/src/purchases/**`, `features/plus`, migrations `0440–0449` | Sign in with Apple linking a guest; Plus live in production | 2 | Guest → Apple keeps progress; sandbox and production purchases verified |
@@ -328,6 +398,7 @@ Gate T1 (founder): the shop opens only if D30 > 10% has held since launch, after
 | Before wave 2f | RevenueCat project and the Plus products (monthly ₫149k, yearly ₫799k with ₫599k intro) in App Store Connect |
 | Before the learner test | ElevenLabs plan with enough credits for live calls (Creator has ~50k left this cycle); an Anthropic key for Yapling (reusing 6pm's for now) |
 | Before Release 1.1 wave B1 | Decisions 1–4 in `docs/beginner-path.md` §10 (Linh speaks Vietnamese; Settling-in calls free and the first week starting with the story; about 5,000 ElevenLabs credits; the Visitor name); native review of the 7 spoken Vietnamese lines |
+| Before Release 1.2 wave D1 | The Episodes 2–6 script approved; decisions 1–5 in `docs/every-week-loop.md` §5 (free minutes after week 1, about 25,000 ElevenLabs credits, Dex's voice now, Arjun off-mic, the festival week); Dex's audition; native review of the Visitor task cards |
 | Before Release 2 | yapling.app domain and trademark; native Vietnamese copy review; native-speaker review of every accent |
 | Before Release 2 wave S1 | The art spike's verdict on the library pipeline (`story-engine.md` (e)); the style check at 30 scenes and 300 props during S1i |
 | Before Release 3 wave M1 | Decisions 1–6 and 9 in `docs/story-engine.md` (the engine's shape, weekly review, festivals, about 70,000 ElevenLabs credits a month, the library at go-live, Jev, leaderboards); a TypeSafe key for Yapling if Jev is chosen |

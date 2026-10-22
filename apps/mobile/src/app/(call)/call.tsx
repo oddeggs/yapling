@@ -2,7 +2,7 @@ import { findScene } from '@yapling/story';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 
-import { getSessionToken, useProfile, useProgress, useWeek } from '../../data';
+import { getSessionToken, useProfile, useProgress, useTurnMode, useWeek } from '../../data';
 import { apiBase, clientVersion } from '../../data/config';
 import { CallScreen } from '../../features/call/call-screen';
 import { now } from '../../features/devmenu';
@@ -33,6 +33,7 @@ export default function CallRoute() {
   const router = useRouter();
   const { profile, status } = useProfile();
   const { meetPhrase, openRing } = useProgress();
+  const turnPref = useTurnMode();
   // The slot this call fills is open on the server too, before the call's record lands.
   const dayIndex = useWeek()?.dayIndex ?? null;
   useEffect(() => {
@@ -51,7 +52,8 @@ export default function CallRoute() {
     const timer = setTimeout(() => setWaited(true), PROFILE_WAIT_MS);
     return () => clearTimeout(timer);
   }, []);
-  const known = profile !== null || status === 'ready' || status === 'error' || waited;
+  const known =
+    (turnPref.loaded && (profile !== null || status === 'ready' || status === 'error')) || waited;
   // Once the call is on screen it stays: a profile refetch never unmounts it (that would hang up
   // and dial a second call).
   const [shown, setShown] = useState(false);
@@ -80,7 +82,14 @@ export default function CallRoute() {
           species: chosen.species,
         }
       }
-      turnMode={params.turn === 'hands' ? 'hands_free' : 'hold_to_talk'}
+      // The learner's choice; `turn=hands` or `turn=hold` (dev links, the voice lab) override it.
+      turnMode={
+        params.turn === 'hands'
+          ? 'hands_free'
+          : params.turn === 'hold'
+            ? 'hold_to_talk'
+            : turnPref.turnMode
+      }
       url={withAppClock(socketUrl(apiBase()), now())}
       clientVersion={clientVersion()}
       getToken={getSessionToken}
