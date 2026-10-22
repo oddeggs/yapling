@@ -1,6 +1,6 @@
 # Vietnamese copy review
 
-Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here.
+Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here, except the beginner path's Vietnamese (Release 1.1), which comes first because Linh's spoken lines gate the recording.
 
 466 strings in 15 catalogues; 77 flagged.
 
@@ -29,6 +29,221 @@ Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with 
 | A fix | "lỗi" | something lighter, the product never scolds |
 | Round (Pass it on) vs turn | both "Lượt" | decide; "Vòng" is taken by the weekly ring |
 | Not now | "Để sau", "Không phải bây giờ" | "Để sau" |
+
+## Settling in and the Visitor stage (Release 1.1) · review first
+
+The beginner path (`docs/beginner-path.md`; script in `docs/season-1-script.md`, "Settling in") adds Vietnamese that isn't in the i18n catalogues yet, so it is reviewed here, ahead of the catalogue rows below. **Section 1 gates the recording; review it first.** Sections 2–5 can follow while the app is built. Same register as the rest of the app: Linh and the cast say "mình", the learner is "bạn", soft endings with "nhé".
+
+7 spoken lines, 59 line glosses, 45 card glosses (plus 3 Pass it on cards that stay English), 16 task cards, 37 chrome drafts: 164 strings.
+
+### 1. Linh's spoken Vietnamese · review before recording
+
+Linh (the pangolin next door, from Vietnam) says these out loud in her designed voice. They are the only Vietnamese anyone in the cast speaks. Three of them are in the audition: open `audio/auditions-visitor/index.html` (ask the founder for the files if your copy has no audio) and listen to "Linh speaks Vietnamese".
+
+Two questions for each line:
+
+1. **Wording:** does it sound like a Vietnamese woman in her thirties talking warmly to a new neighbour? Fix anything that reads translated.
+2. **Voice** (the 3 auditioned lines): does she sound like a native speaker? Which region does she sound like? Any wrong tones, or a foreign accent? If she doesn't sound native, the founder's rule is that all 7 lines become text cards, so say so plainly.
+
+| Id | Tiếng Việt (spoken) | English meaning | When | In the audition | Flag | Notes |
+|---|---|---|---|---|---|---|
+| `s1-set1-02` | Chào bạn! Mình là Linh, ở nhà bên cạnh. Hồi mới xuống phà, mình cũng chưa nói được câu nào đâu. Giờ mình nói trước, bạn nói theo nhé. | Hi! I'm Linh, from next door. When I got off the ferry, I couldn't say a word either. Now I'll say it first, and you say it after me. | Chapter 1, at your door, the first thing a beginner hears from her | Yes | New | The longest line (29 syllables); "xuống phà" because everyone arrives in Natterwick by ferry |
+| `s1-set1-08` | Bạn vừa nói tiếng Anh rồi đó! Mai gặp lại nhé. | You just spoke English! See you tomorrow. | End of Chapter 1 | | New | |
+| `s1-set2-02` | Mình hỏi, bạn chọn một thẻ rồi đọc to lên nhé. | I'll ask; you pick a card and read it out loud. | Chapter 2, before the first two-card turn | | New | "Thẻ" is the card on screen; must match the call's chrome |
+| `s1-set3-01` | Mình chỉ bạn hai câu cứu nguy nhé. Không nghe kịp thì nói: Sorry? Again, please. Người ta nói nhanh quá thì nói: Slowly, please. Ở Natterwick, ai cũng sẵn lòng nói lại cho bạn. | Here are two lifesavers. If you didn't catch it, say: Sorry? Again, please. If people talk too fast, say: Slowly, please. In Natterwick, everyone's happy to say it again for you. | Chapter 3, the two phrases that always work | Yes | Term · English on purpose | "câu cứu nguy" (was "câu cứu cánh"); better word? The English phrases stay in English. Listen for how she switches into English and back, and for "Natterwick" (speech recognition heard "Natwick") |
+| `s1-set6-05` | Giỏi lắm! Bạn sẵn sàng rồi đó. Mai mình gặp nhau ở quán của Mei nhé. | Well done! You're ready. See you at Mei's café tomorrow. | End of Chapter 6, before the letter | | New | |
+| `s1-set-linh-together` | Mình nói cùng nhau nhé. | Let's say it together. | Any chapter, when the learner is stuck | | New | Or "Mình cùng nói nhé"? |
+| `s1-set-linh-english` | Bạn thử nói bằng tiếng Anh nhé, cứ đọc thẻ gợi ý là được. | Try it in English; just read the card. | After a Vietnamese answer, once per chapter | Yes | New | Must never sound like a telling-off |
+
+### 2. Glosses of the new English lines
+
+Shown under each recorded line when the learner taps it. The English is final (`audio/season-1/lines.json`, `pending`); suggest Vietnamese only.
+
+| Id | Who | English | Tiếng Việt | Flag | Notes |
+|---|---|---|---|---|---|
+| `s1-set1-01` | Linh | Hi! I'm Linh. | Chào bạn! Mình là Linh. |  |  |
+| `s1-set1-03` | Pip | Hi! Hi, Linh! | Chào! Chào Linh! |  |  |
+| `s1-set1-04` | Linh | I'm Linh. And you? | Mình là Linh. Còn bạn? |  |  |
+| `s1-set1-05` | Linh | {name}! Nice to meet you. | {name}! Rất vui được gặp bạn. |  | `{name}` is filled in by the app |
+| `s1-set1-06` | Pip | Nice to meet you, too! I'm Pip! | Mình cũng rất vui được gặp bạn! Mình là Pip! |  |  |
+| `s1-set1-07` | Linh | Bye! See you tomorrow. | Tạm biệt! Mai gặp nhé. |  |  |
+| `s1-set2-01` | Pip | So many boxes! Help, please! | Nhiều thùng quá! Giúp mình với! |  |  |
+| `s1-set2-03` | Linh | Is this your box? | Đây là thùng của bạn à? |  |  |
+| `s1-set2-04` | Linh | Books or clothes? | Sách hay quần áo? |  |  |
+| `s1-set2-05` | Pip | Tea? For you! | Trà nhé? Cho bạn đó! |  |  |
+| `s1-set2-06` | Linh | A gift for you. Here you go! | Quà cho bạn nè. Của bạn đây! | Register | "nè" leans southern; "nhé" or nothing is neutral |
+| `s1-set2-07` | Linh | You're welcome! | Không có gì! |  |  |
+| `s1-set2-08` | Pip | One box done! Thank you! | Xong một thùng! Cảm ơn bạn! |  |  |
+| `s1-set3-02` | Linh | Sorry? Again, please. | Xin lỗi? Nói lại giúp mình nhé. |  |  |
+| `s1-set3-03` | Linh | Slowly, please. | Nói chậm giúp mình nhé. |  |  |
+| `s1-set3-04` | Pip | Ooh, I found my snacks and my map and my notebook! | Ồ, mình tìm thấy đồ ăn vặt, bản đồ và sổ tay rồi! |  | Pip's deliberately fast line |
+| `s1-set3-05` | Pip | Snacks. Map. Notebook! | Đồ ăn vặt. Bản đồ. Sổ tay! |  |  |
+| `s1-set3-06` | Linh | See? It works. Every time. | Thấy chưa? Lần nào cũng được. |  |  |
+| `s1-set3-07` | Linh | Use them every day. Bye! | Dùng mỗi ngày nhé. Tạm biệt! |  |  |
+| `s1-set4-01` | Linh | This is the bus stop. | Đây là trạm xe buýt. |  |  |
+| `s1-set4-02` | Bea | Morning! This is Bus forty-five. | Chào buổi sáng! Đây là xe buýt số 45. |  |  |
+| `s1-set4-03` | Linh | Which bus? Forty-five or fifty? | Xe nào? Số 45 hay số 50? |  |  |
+| `s1-set4-04` | Bea | I leave at nine. | Chín giờ xe chạy nhé. |  |  |
+| `s1-set4-05` | Linh | What time? Nine or ten? | Mấy giờ? Chín giờ hay mười giờ? |  |  |
+| `s1-set4-06` | Bea | Tickets are two dollars each, love. | Mỗi vé hai đô nhé. | Term | "đô" for Natterwick's dollars; Bea's "love" is left out of the gloss on purpose |
+| `s1-set4-07` | Linh | How many tickets? One or two? | Mấy vé? Một hay hai? |  |  |
+| `s1-set4-08` | Bea | Two tickets. Here you go! | Hai vé. Của bạn đây! |  |  |
+| `s1-set4-09` | Bea | Lovely! Have a nice day! | Tuyệt! Chúc một ngày vui vẻ! |  |  |
+| `s1-set5-01` | Mei | Hi! Welcome to my café! | Chào! Chào mừng đến quán của mình! |  |  |
+| `s1-set5-02` | Mei | I'm Mei. Tea or coffee? | Mình là Mei. Trà hay cà phê? |  |  |
+| `s1-set5-03` | Mei | Kaya toast too? It's really good! | Thêm bánh mì nướng kaya không? Ngon lắm đó! | Term | "bánh mì nướng kaya" for kaya toast (Episode 1 glosses use "bánh mì kaya") |
+| `s1-set5-04` | Pip | Ask her: how much? | Hỏi Mei đi: bao nhiêu tiền? |  |  |
+| `s1-set5-05` | Mei | Three dollars, please. | Ba đô nhé. | Term | "đô" (see above) |
+| `s1-set5-06` | Mei | Thanks lah. Enjoy! | Cảm ơn nha. Ăn ngon nhé! | Register | "nha" leans southern; fine for Mei's casual voice? Mei's "lah" is left out of the gloss |
+| `s1-set5-07` | Mei | Okay. Back to work. | Thôi. Làm tiếp thôi. |  |  |
+| `s1-set5-08` | Pip | Mei looks tired. | Mei trông mệt quá. |  |  |
+| `s1-set6-01` | Pip | I'm writing a page about you! | Mình đang viết một trang về bạn! |  |  |
+| `s1-set6-02` | Linh | I'm from Vietnam. And you? | Mình đến từ Việt Nam. Còn bạn? |  |  |
+| `s1-set6-03` | Linh | I work at the library. And you? | Mình làm ở thư viện. Còn bạn? |  |  |
+| `s1-set6-04` | Pip | I like snacks! And you? | Mình thích đồ ăn vặt! Còn bạn? |  |  |
+| `s1-set6-06` | Pip | Look! A letter under Mei's door! | Nhìn kìa! Có lá thư dưới cửa quán Mei! |  |  |
+| `s1-set-linh-great` | Linh | Great! | Tuyệt! |  |  |
+| `s1-set-linh-yes` | Linh | Yes! | Đúng rồi! |  | Praise after a pass ("Yes, that's it!") |
+| `s1-set-pip-great` | Pip | Great! | Tuyệt! |  |  |
+| `s1-set-pip-yes` | Pip | Yes! | Đúng rồi! |  | Praise after a pass |
+| `s1-set-mei-great` | Mei | Great! | Tuyệt! |  |  |
+| `s1-set-bea-lovely` | Bea | Lovely! | Tuyệt quá! |  |  |
+| `s1-set-linh-okay` | Linh | Okay! | Được rồi! |  |  |
+| `s1-set-linh-again` | Linh | Again? | Nói lại nhé? |  |  |
+| `s1-set-mei-okay` | Mei | Okay! | Được rồi! |  |  |
+| `s1-set-bea-right` | Bea | Right! | Được rồi! |  | "Right!" here means "okay", not "correct" |
+| `s1-set-linh-slowly` | Linh | Sure. Slowly. | Được. Mình nói chậm nhé: |  |  |
+| `s1-set-pip-slowly` | Pip | Okay! Slowly. | Ừ! Nói chậm nhé: | Register | "Ừ" is casual; right for Pip? |
+| `s1-set-mei-slowly` | Mei | Sure, sure. | Được, được. |  |  |
+| `s1-set-bea-slowly` | Bea | Of course, love. | Tất nhiên rồi. |  |  |
+| `s1-set-linh-skip` | Linh | That's okay! | Không sao đâu! |  |  |
+| `s1-e1-visitor-rent` | Pip | Rent… is it bread? Or money? | "Rent"… là bánh mì à? Hay là tiền? |  |  |
+| `s1-e1-visitor-call` | Mei | Can you call them? Please? | Bạn gọi cho họ được không? Nhờ bạn nhé? |  |  |
+| `s1-e1-visitor-postcard` | Linh | Remember: Sorry? Again, please. It always works! | Nhớ nhé: Sorry? Again, please. Lúc nào cũng được! | English on purpose? | The phrase it teaches stays in English |
+
+### 3. Card and chip glosses
+
+The Vietnamese under each say-this card. Many repeat across chapters; each is reviewed once here.
+
+| English card | Tiếng Việt | Where | Flag | Notes |
+|---|---|---|---|---|
+| Hi! | Chào! | Ch 1, 5 | | |
+| Hello! | Xin chào! | Ch 5 | | |
+| I'm {name}. | Mình là {name}. | Ch 1 | | |
+| Nice to meet you, too. | Mình cũng rất vui được gặp bạn. | Ch 1 | | |
+| Bye! | Tạm biệt! | Ch 1 | | |
+| Yes. | Có. | Ch 2 | Meaning | To "Is this your box?" a Vietnamese speaker says "Đúng rồi" or "Phải"; "Có" is the generic gloss. One gloss per card, so pick the best general one |
+| No. | Không. | Ch 2 | | |
+| Books. | Sách. | Ch 2 | | |
+| Clothes. | Quần áo. | Ch 2 | | |
+| Yes, please. | Có, cảm ơn nhé. | Ch 2, 5 | Machine-like? | Accepting an offer politely; "Dạ có" is too deferential for peers |
+| No, thank you. | Thôi, cảm ơn nhé. | Ch 2, 5 | | |
+| Thank you! | Cảm ơn! | Ch 2, 3, 4, 5 | | |
+| Sorry? Again, please. | Xin lỗi? Nói lại giúp mình nhé. | Ch 3, 4 | | |
+| Slowly, please. | Nói chậm giúp mình nhé. | Ch 3 | | |
+| Forty-five. | Bốn mươi lăm. | Ch 4 | | |
+| Fifty. | Năm mươi. | Ch 4 | | |
+| Nine. | Chín giờ. | Ch 4 | | The card says "Nine."; the gloss adds "giờ" because it answers "What time?" |
+| Ten. | Mười giờ. | Ch 4 | | |
+| Two dollars. | Hai đô. | Ch 4 | Term | "đô" for the town's dollars |
+| Two, please. | Hai vé nhé. | Ch 4 | | |
+| One, please. | Một vé nhé. | Ch 4 | | |
+| Tea, please. | Cho mình trà nhé. | Ch 5 | | |
+| Coffee, please. | Cho mình cà phê nhé. | Ch 5 | | |
+| How much? | Bao nhiêu tiền? | Ch 5 | | |
+| Here you go. | Đây, gửi bạn. | Ch 5 | Machine-like? | Handing over money |
+| I'm from … | Mình đến từ … | Ch 6 | | |
+| I'm from Vietnam. | Mình đến từ Việt Nam. | Ch 6 (chip) | | |
+| I'm a student. | Mình là sinh viên. | Ch 6 | | |
+| I work in an office. | Mình làm văn phòng. | Ch 6 | | |
+| I like coffee. | Mình thích cà phê. | Ch 6 | | |
+| I like music. | Mình thích âm nhạc. | Ch 6 | | |
+| What's wrong? | Có chuyện gì vậy? | Week 1, day 2 | | |
+| It's money. | Là tiền. | Week 1, day 2 | | |
+| It's money for a home. | Là tiền thuê nhà. | Week 1, day 2 | | |
+| Yes, I can help. | Ừ, mình giúp được. | Week 1, day 2 | Register | "Ừ" to Mei, an older friend? Maybe "Được, mình giúp được" |
+| Okay! | Được! | Week 1, day 2 | | |
+| I'm {name}. (on the phone) | Tôi là {name}. | Week 1, day 2, the property office | Register | The only place the learner says "Tôi": to an office, "Mình" sounds too casual. Agree? |
+| I'm {name}. I'm calling for Mei. | Tôi là {name}. Tôi gọi giúp Mei. | Week 1, day 2 | Register | As above; "gọi thay cho Mei"? |
+| Thank you. Bye! | Cảm ơn. Tạm biệt! | Week 1, day 2 | | |
+| Go on Friday. | Thứ Sáu đi gặp họ nhé. | Week 1, day 2 | | |
+| I think you should go on Friday. | Mình nghĩ bạn nên đi vào thứ Sáu. | Week 1, day 2 | | |
+| Hi, I'm … | Chào, mình là … | Week 1, day 4 | | |
+| I'm a … / I work at … | Mình là … / Mình làm ở … | Week 1, day 4 | | |
+| Nice to meet you. | Rất vui được gặp bạn. | Week 1, day 4 | | |
+| Can I help you? | Mình giúp gì được cho bạn? | Week 1, day 6 | | |
+| Today I … | (none) | Week 1, day 5 | | Pass it on cards stay English only, by rule |
+| I went to … | (none) | Week 1, day 5 | | |
+| I'm … | (none) | Week 1, day 5 | | |
+
+### 4. Task cards in the calls
+
+Short Vietnamese instructions on a card at the start of a new kind of turn, where Linh isn't there to say it. If the 7 spoken lines become text cards, they join this list unchanged.
+
+| Where | Tiếng Việt | English meaning | Flag | Notes |
+|---|---|---|---|---|
+| Ch 4, before the first numbers | Nghe số, rồi chọn thẻ và đọc to. | Listen for the number, then pick a card and read it out loud. | | |
+| Ch 5, ordering | Chọn món trên thẻ rồi đọc to nhé. | Pick a drink on a card and read it out loud. | | |
+| Ch 6, about you | Nói về bạn: chọn thẻ, hoặc nói bằng từ của bạn. | About you: pick a card, or say it your own way. | | |
+| Week 1 day 2, what's wrong | Hỏi Mei có chuyện gì. Đọc thẻ nhé. | Ask Mei what's wrong. Read the card. | | |
+| Week 1 day 2, rent | Pip hỏi "rent" là gì. Chọn một thẻ. | Pip asks what "rent" is. Pick a card. | | |
+| Week 1 day 2, the favour | Mei nhờ bạn gọi điện. Nhận lời nhé. | Mei asks you to make a call. Say yes. | | |
+| Week 1 day 2, the office | Văn phòng hỏi ai đang gọi. Nói tên bạn. | The office asks who's calling. Say your name. | | |
+| Week 1 day 2, goodbye | Chào tạm biệt văn phòng. | Say goodbye to the office. | | |
+| Week 1 day 2, advice | Mei hỏi nên làm gì. Chọn một lời khuyên. | Mei asks what to do. Pick a piece of advice. | | |
+| Week 1 day 4, one at a time | Giới thiệu bản thân: từng câu một. | Introduce yourself, one sentence at a time. | | |
+| Week 1 day 4, all together | Giờ nói cả ba câu liền nhau nhé. | Now say all three together. | | |
+| Week 1 day 6, fix Pip | Pip nói sai. Đọc câu đúng cho Pip nhé. | Pip got it wrong. Read Pip the right sentence. | Register | "nói sai" is about Pip, not the learner; still too blunt? |
+| Any Visitor call, first card | Đọc to thẻ này nhé. | Read this card out loud. | | The cue if a learner reads silently (learner-test kill signal) |
+| Any Visitor call, hear it | Chạm để nghe. | Tap to hear it. | | |
+| Any Visitor call, two cards | Chọn một thẻ. | Pick one card. | | |
+| Any Visitor call, after a Vietnamese answer (text) | Thử nói bằng tiếng Anh nhé. | Try it in English. | | Used where Linh isn't in the scene |
+
+### 5. App chrome drafts
+
+Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the rest. The app lanes put these into the i18n catalogues (onboarding, burrow, call, payoff, me, knocks); review the wording here and the rows move into the sections below once they land.
+
+| Where | English | Tiếng Việt | Flag | Notes |
+|---|---|---|---|---|
+| Onboarding · level question | How's your English right now? | Tiếng Anh của bạn bây giờ thế nào? | | From the design |
+| Onboarding · chip 1 | I'm just starting | Mình mới bắt đầu | | |
+| Onboarding · chip 1 sub | Hellos, my name, a few words | Chào hỏi, nói tên, vài từ | | |
+| Onboarding · chip 2 | I can say a bit | Mình nói được một chút | | |
+| Onboarding · chip 2 sub | Introduce myself, order food | Giới thiệu bản thân, gọi món | | |
+| Residency card · stamp | Visitor | Khách mới đến | Term | The stage name (founder decision 4) |
+| Residency card · line | Linh will help you settle in first | Linh sẽ giúp bạn làm quen trước | | |
+| Residency card · primary | Get to know Linh | Làm quen với Linh | | |
+| Residency card · secondary | Go straight to the story | Vào thẳng truyện | | |
+| Can-do 1 | Say hello and your name | Chào hỏi và nói tên mình | | |
+| Can-do 2 | Answer yes or no politely | Trả lời có hoặc không một cách lịch sự | Machine-like? | |
+| Can-do 3 | Ask someone to say it again or slower | Nhờ người khác nói lại hoặc nói chậm hơn | | |
+| Can-do 4 | Understand a number, a time and a price | Nghe hiểu số, giờ và giá tiền | | |
+| Can-do 5 | Order one thing | Gọi một món | | |
+| Can-do 6 | Say where you're from and what you do | Nói mình từ đâu đến và làm nghề gì | | |
+| "Too hard" sheet · title | Too hard | Khó quá | | |
+| "Too hard" sheet · option 1 | Slower, please | Nói chậm hơn | | |
+| "Too hard" sheet · option 2 | Practise with Linh first | Tập với Linh trước | | |
+| "Too hard" sheet · body | Linh will practise with you in a few short visits. Mei's café will wait for you. | Linh sẽ tập cùng bạn vài buổi ngắn. Quán của Mei vẫn chờ bạn. | | From the design; never says "level", "down", "fail" or "beginner" |
+| Burrow · path name | Settling in | Làm quen | Term | Also the start of "Làm quen với Linh"; fine together? |
+| Burrow · after two chapters | Tomorrow | Để mai | | |
+| Burrow · keep going | Keep going | Làm tiếp | | |
+| Burrow · skip to the story | Start the story | Vào truyện luôn | | |
+| Call · replay pill | Again | Nói lại | | |
+| Call · slower pill | Slower | Chậm thôi | | |
+| Call · skip pill | Skip | Bỏ qua | | |
+| After-call · Visitor list | You said: | Bạn đã nói được: | | |
+| After-call · how was it | Just right / Too hard | Vừa / Khó quá | | |
+| Stage-up · stay | Stay a little longer | Ở lại thêm | | |
+| Me · replay Settling in | Settle in with Linh again | Làm quen lại với Linh | | |
+| Me · move up | Try it faster | Thử nhanh hơn | | |
+| Knock · Chapter 2 | Linh's here to help you unpack. | Linh qua phụ bạn dỡ thùng nè. | Register | "nè" leans southern |
+| Knock · Chapter 3 | Linh has two lifesavers to show you. | Linh có hai câu cứu nguy muốn chỉ bạn. | | |
+| Knock · Chapter 4 | Linh is waiting for you at the bus stop. | Linh đang đợi bạn ở bến xe buýt. | Term | From the design; "bến xe buýt" here, "trạm xe buýt" in the line gloss `s1-set4-01`: pick one |
+| Knock · Chapter 5 | Mei's café is open. Come for tea. | Quán của Mei mở cửa rồi. Ghé uống trà nhé. | | |
+| Knock · Chapter 6 | Pip is writing a page about you. | Pip đang viết một trang về bạn. | | |
+| Knock · the letter day | A letter came for Mei. | Mei vừa nhận được một lá thư. | | No guilt, no "you'll miss"; only an invitation |
+
+---
 
 ## Onboarding: splash, age and name, the AI explainer, roommate pick, placement call, residency card, notifications, Linh at the door
 

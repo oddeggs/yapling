@@ -1,6 +1,6 @@
 # Yapling — learning journey & storyline
 
-*v0.1 · 2026-10-21 · companion to `concept.md`. Evidence references point to `~/oddeggs/reports/Critter English app research.md`.*
+*v0.2 · 2026-10-22 · adds the Visitor stage and Settling in (Release 1.1, `beginner-path.md`) · companion to `concept.md`. Evidence references point to `~/oddeggs/reports/Critter English app research.md`.*
 
 The journey and the story are one system. **The curriculum decides what you need to say; the story decides why you're saying it.** The learner never sees a lesson list. They see a town that needs them.
 
@@ -8,19 +8,22 @@ The journey and the story are one system. **The curriculum decides what you need
 
 ## 1. The learning journey
 
-### 1.1 Five residency stages (CEFR inside, never shown as jargon)
+### 1.1 Five residency stages, and Visitor before them (CEFR inside, never shown as jargon)
 
-You don't "reach B1". You become more at home in Natterwick. Each stage changes how the town talks to you.
+You don't "reach B1". You become more at home in Natterwick. Each stage changes how the town talks to you. True beginners start one step earlier, as a **Visitor**: the card shows no stage number, and "Chặng N/5" counts from Newcomer.
 
 | Stage | CEFR | You can… (headline can-do) | Cast speed | Places open | Typical length |
 |---|---|---|---|---|---|
+| **Visitor** ("Khách mới đến") | A0–A1 | say hello and your name, answer yes or no, ask for "again" and "slowly", catch a number and a price, order one thing, say where you're from | 0.7×, ~85 wpm, 8 words a turn at most | Burrow, Bus Stop, Café (Settling in) | Settling in (3–6 days), then week 1 |
 | **1. Newcomer** | A2 | introduce yourself, order, ask for help, say what you did yesterday | 0.8× | Burrow, Café, Bus Stop | 3–5 weeks |
 | **2. Neighbour** | A2+ / B1 | keep small talk going, describe problems, follow simple instructions, give a 1-minute update | 0.9× | + Market Lane, Office, Inn | 6–8 weeks |
 | **3. Regular** | B1 / B1+ | explain your opinion with reasons, handle a standup, survive a structured interview, tell a story with a point | 1.0× | + Interview Room, Dock, Clinic | 8–10 weeks |
 | **4. Local** | B2 | disagree politely, negotiate, present for 3 minutes, handle fast speakers and interruptions | 1.0–1.1×, overlap allowed | + Library, Radio Tower | 10–14 weeks |
 | **5. Voice of Natterwick** | B2+ / C1 | persuade, run a meeting, host a radio segment, explain complex ideas simply | natural, accents mixed | everywhere, Hard mode default | ongoing |
 
-**Placement:** the one-minute first chat (onboarding O5) sets a starting stage from speech rate, length of runs, vocabulary range and task success. It's a starting guess; the first two weeks adjust it silently. Users can say "too easy" or "too hard" any time.
+**Placement:** onboarding first asks "Tiếng Anh của bạn bây giờ thế nào?". "Mình mới bắt đầu" makes the learner a Visitor with no placement call. "Mình nói được một chút" leads to the unpacking call (onboarding O5): a closed warm-up box, then three open boxes, and **Visitor if at most one of the three gets a fine answer**, otherwise Newcomer. It's a starting guess; the first two weeks adjust it silently. Users can say "too easy" or "too hard" any time; "too hard" at Newcomer offers "Tập với Linh trước" (become a Visitor and open Settling in) next to "Nói chậm hơn".
+
+**Visitor to Newcomer:** at the end of week 1 (day 5's keepsake) Linh hands over the Newcomer residency card if at least 70% of week-1 turns passed without the generous pass. The learner can say "Ở lại thêm" and stay. The Me sheet's "Thử nhanh hơn" moves up any time.
 
 **Two tracks, one town.** Life and Work share stages. A Work-track Neighbour spends more calls at the Office and Interview Room; a Life-track Neighbour more at the Café and Market. "Both" alternates.
 
@@ -30,6 +33,7 @@ Progress is shown as **things you can now do**, ticked by evidence from calls, n
 
 | Stage | Life | Work |
 |---|---|---|
+| Visitor | ☐ Say hello and your name · ☐ Answer yes or no politely · ☐ Ask someone to say it again or slower · ☐ Order one thing | ☐ Understand a number, a time and a price · ☐ Say where you're from and what you do |
 | Newcomer | ☐ Order and change your order · ☐ Say what you did at the weekend · ☐ Ask someone to repeat or slow down | ☐ Introduce yourself and your job · ☐ Say you don't understand, politely · ☐ Give your availability |
 | Neighbour | ☐ Keep small talk going for 2 minutes · ☐ Describe a problem to a shop or hotel · ☐ Understand directions | ☐ Give a 1-minute standup update · ☐ Ask a clarifying question in a meeting · ☐ Explain a delay |
 | Regular | ☐ Tell a story with a beginning, middle and end · ☐ Give an opinion with two reasons · ☐ Describe symptoms at a clinic | ☐ Answer "Tell me about yourself" in 90 seconds · ☐ Walk someone through a process · ☐ Push back on a deadline once, politely |
@@ -68,6 +72,7 @@ Each week seeds 3–5 lexical chunks ("Could we push that to Friday?"). Every ch
 
 | Stage | New voices | How they arrive |
 |---|---|---|
+| Visitor | Pip, Linh (your own accent, and she speaks your language at first), Bea and Mei in one short scene each | Settling in: Bea at the bus stop (Chapter 4), Mei at her café before the letter (Chapter 5) |
 | Newcomer | Pip, Linh (your own accent), Mei (Singapore) | Linh is already next door on day 1 |
 | Neighbour | Sol (Philippines), Bea (Britain), Nell (Australia) | Move-in events, one every ~2 weeks |
 | Regular | Arjun (India), Dex (USA) | Dex runs Bring your homework interviews; Arjun moves in |
@@ -119,10 +124,11 @@ Available everywhere, designed to fade, never a crutch:
 | App chrome, paywall, permissions, safety, billing, settings | Fully in the user's language | This is product UI, not learning content. Trust and consent must be understood |
 | Captions, Pip's lines, postcards, story text | English, tap a line or word → short L1 gloss below it | Tapped phrase becomes a seed packet (Met) in the chunk queue; no penalty |
 | Live calls | English only on screen | "What does that mean?" chip → Pip explains in simple English first (asking for clarification is itself a can-do); L1 one more tap away |
-| Post-call "Your fixes" | One-line explanation in L1 at Newcomer/Neighbour | English-first with L1 on tap from Regular |
+| Live calls at Visitor | The say-this card from the start, two choices, Vietnamese under each; a Vietnamese task card when a new kind of turn starts | "What does that mean?" answers in Vietnamese first. In Settling in, Linh says the task in Vietnamese out loud (Chapters 1, 2, 3 and 6), then text cards. "Nói lại" and "Chậm thôi" replay the last line, never as a try |
+| Post-call "Your fixes" | One-line explanation in L1 at Newcomer/Neighbour | English-first with L1 on tap from Regular. At Visitor there are no fixes: the card lists what the learner said ("Bạn đã nói được: …") |
 | Listening checkpoints, Pass it on | No L1 | These measure comprehension and fluency |
 
-**Fade by stage.** Newcomer: line-level glosses everywhere. Neighbour: line-level on tap. Regular: word-level, English definition first, L1 one tap deeper. Local and up: English definitions only unless the user turns L1 back on in settings. Reveal frequency is tracked as a signal for difficulty, never shown as a score.
+**Fade by stage.** Visitor: line-level glosses everywhere, Vietnamese on every card, meanings Vietnamese first, and spoken Vietnamese from Linh in Settling in. Newcomer: line-level glosses everywhere. Neighbour: line-level on tap. Regular: word-level, English definition first, L1 one tap deeper. Local and up: English definitions only unless the user turns L1 back on in settings. Reveal frequency is tracked as a signal for difficulty, never shown as a score.
 
 **Never:** a global "translate everything" toggle, auto L1 subtitles during listening, or translating the user's own speech back to them.
 
@@ -130,6 +136,7 @@ Available everywhere, designed to fade, never a crutch:
 
 | Week | Story | Real-week focus | Practice focus | Unlocks |
 |---|---|---|---|---|
+| 0 (Visitors) | Settling in: six short chapters with Linh, 3–6 days | Hello, yes/no, again/slowly, numbers, ordering, about me | (calls are unmetered; the first week's allowance starts with the story) | Bus Stop, Café; Bea and Mei met; the letter |
 | 1 | S1 E1 The Letter | Introduce yourself / your job | First Pass it on (90/60/45s) | Linh, Café, Bus Stop |
 | 2 | S1 E2 Help Wanted | Bring your homework: your CV or a job post | Interview chunks | Office, Interview Room, Sol |
 | 3 | S1 E3 Cheaper Beans | A real request you need to make | Polite pushback | Hank appears; Dex for real-week interviews |
@@ -198,11 +205,14 @@ Ade arrives to restart the town's radio station. Each episode is a show segment:
 
 | Stage | Hank's behaviour | Your task |
 |---|---|---|
+| Visitor | Slow, one short sentence, says what he wants first ("Ten percent off. Okay?") | Read one of two cards aloud: "Sorry, no." / "I'm sorry, we can't do that." Mei and Pip carry the rest of the scene |
 | Newcomer | Slow, clear, one request | Say no politely using one phrase ("I'm sorry, we can't do that") and offer one alternative |
 | Neighbour | Normal pace, two requests | Explain why, offer an alternative, confirm the agreement |
 | Regular | Normal pace, pushes back once | Negotiate a compromise with reasons |
 | Local | Fast, interrupts | Hold your ground, handle interruptions, summarise the deal |
 | Voice | Fast, emotional, changes his mind | De-escalate, reframe, close the deal and keep the relationship |
+
+Every episode script gets a Visitor row like this one: the turn becomes one or two cards, the character models the answer first, and lines stay under 8 words. Week 1's Visitor turns are written (`season-1-script.md`, Settling in); Episodes 2–6 get theirs in Release 2, and until then a Visitor plays them at Newcomer with "slower" on.
 
 ### 2.5 What the AI generates vs. what's written
 
