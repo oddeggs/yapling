@@ -1,11 +1,12 @@
 import type { TurnMode } from '@yapling/contracts';
 
 import { DEFAULT_MIC_CHUNK_MS, MIC_FRAME_MS, MicChunker } from './framing';
+import { HandsFreeGate, type GateOptions } from './hands-free';
 import type { VadEvent } from './vad';
 
 /*
- * Turn-taking on the phone. Hands-free streams the mic all the time and the call decides when the
- * learner is done. Hold-to-talk streams only while the mic button is held, starting with a short
+ * Turn-taking on the phone. Hands-free streams speech only, through the gate in `hands-free.ts`,
+ * and the call decides when the learner is done (a tap on the mic says so at once). Hold-to-talk streams only while the mic button is held, starting with a short
  * pre-roll (so the first syllable isn't lost to a late press) and, if the learner is still
  * speaking at release, a tail until they stop (never cut off mid-word); then `end_turn`.
  *
@@ -23,6 +24,8 @@ export type Release = 'turn' | 'tap';
 export interface TurnOutput {
   sendMic(pcm: Uint8Array): void;
   endTurn(): void;
+  /** Hands-free: the learner started or stopped speaking, `backMs` before the end of what was sent. */
+  speech?(state: 'start' | 'end', backMs: number): void;
 }
 
 export interface TurnOptions {
@@ -35,6 +38,8 @@ export interface TurnOptions {
   readonly minHoldMs?: number;
   /** The clock presses are timed on, in ms. */
   readonly now?: () => number;
+  /** Hands-free gating (pre-roll, tail, settle). */
+  readonly handsFree?: Omit<GateOptions, 'chunkMs'>;
 }
 
 export class TurnTaker {
@@ -50,6 +55,8 @@ export class TurnTaker {
   private early: Int16Array[] | null = null;
   /** Frames left in the tail after a release; -1 when not in a tail. */
   private tailLeft = -1;
+  /** Hands-free listening. */
+  readonly gate: HandsFreeGate;
 
   constructor(
     private modeNow: TurnMode,
@@ -61,25 +68,34 @@ export class TurnTaker {
     this.maxTailFrames = Math.round((options.maxTailMs ?? 600) / MIC_FRAME_MS);
     this.minHoldMs = options.minHoldMs ?? MIN_HOLD_MS;
     this.now = options.now ?? (() => performance.now());
+    this.gate = new HandsFreeGate(
+      {
+        sendMic: (pcm) => out.sendMic(pcm),
+        endTurn: () => out.endTurn(),
+        speech: (state, backMs) => out.speech?.(state, backMs),
+      },
+      { ...options.handsFree, chunkMs: options.chunkMs ?? DEFAULT_MIC_CHUNK_MS },
+    );
   }
 
   get mode(): TurnMode {
     return this.modeNow;
   }
 
-  /** True while the mic button is down or a release tail is still streaming. */
+  /** True while audio goes to the call: a held button or its tail, or hands-free speech. */
   get streaming(): boolean {
-    return this.modeNow === 'hands_free' || this.held || this.tailLeft >= 0;
+    if (this.modeNow === 'hands_free') return this.gate.streaming;
+    return this.held || this.tailLeft >= 0;
   }
 
   get isHeld(): boolean {
     return this.held;
   }
 
-  /** One 20 ms mic frame, with the VAD's view of it. */
-  frame(frame: Int16Array, speaking: boolean, event: VadEvent | null): void {
+  /** One 20 ms mic frame, with the VAD's view of it; `endMs` on the VAD's clock. */
+  frame(frame: Int16Array, speaking: boolean, event: VadEvent | null, endMs = 0): void {
     if (this.modeNow === 'hands_free') {
-      this.emit(frame);
+      this.gate.frame(frame, endMs, speaking, event);
       return;
     }
     if (this.held) {
@@ -133,8 +149,19 @@ export class TurnTaker {
     return 'turn';
   }
 
+  /** Hands-free: whether to listen (off while a character speaks). */
+  setListening(on: boolean): void {
+    this.gate.setListening(on);
+  }
+
+  /** Hands-free: the learner tapped the mic to say they're done. False when nothing was said. */
+  finish(): boolean {
+    return this.modeNow === 'hands_free' && this.gate.finish();
+  }
+
   /** Drops held audio (the socket went away or the call was interrupted). */
   reset(): void {
+    this.gate.reset();
     this.chunker.clear();
     this.preroll.length = 0;
     this.early = null;

@@ -25,6 +25,7 @@ import { createLipsync, type Lipsync } from './lipsync';
 import { CallPlayer, type LineInfo, type RecordedLineSource } from './player';
 import { storyRecordedLines } from './recorded-lines';
 import { ReplyWatcher } from './reply-watch';
+import { applyServerFrame } from './server-frames';
 import { SimulatedMic } from './simulated-mic';
 import { Store } from './store';
 import { LatencyMeter, TurnTaker } from './turns';
@@ -64,6 +65,9 @@ export { storyRecordedLines } from './recorded-lines';
 
 /** Streams the phone plays on its own are numbered above any the call uses. */
 const LOCAL_STREAM_BASE = 0xffff_0000;
+
+/** How often hands-free logs what it sent (dev diagnostics), in ms of mic heard. */
+const IDLE_LOG_MS = 15_000;
 
 /** How long the engine takes to settle on a new route before the graph is checked. */
 const ROUTE_SETTLE_MS = 300;
@@ -119,6 +123,7 @@ export class VoiceEngine {
           this.replies.on({ type: 'turn_ended', atMs: Date.now() });
           this.patch({ awaitingReply: true });
         },
+        speech: (state, backMs) => this.onGateSpeech(state, backMs),
       },
       {
         ...(options.micChunkMs === undefined ? {} : { chunkMs: options.micChunkMs }),
@@ -194,6 +199,7 @@ export class VoiceEngine {
         ended: (line, interrupted) => this.onLineEnded(line, interrupted),
         idle: () => {
           this.vad.setEchoGuard(false);
+          this.turns.setListening(true);
           this.patch({ playing: false });
         },
         failed: (line, reason) => this.log(`line ${line.streamId} failed: ${reason}`),
@@ -219,6 +225,27 @@ export class VoiceEngine {
   /** Starts mic capture (after the learner grants the permission mid-call). */
   startMic(): Promise<boolean> {
     return this.audio.startMic();
+  }
+
+  /**
+   * Hands-free: the learner tapped the mic to say they're done, so the call answers now instead
+   * of waiting out the pause. Nothing happens before they have said anything.
+   */
+  endTurnNow(): boolean {
+    if (this.turns.mode !== 'hands_free' || !this.turns.gate.inTurn) return false;
+    this.vad.forceEnd();
+    this.log('tapped: the turn ends now');
+    return this.turns.finish();
+  }
+
+  /** Switches between holding the mic and hands-free mid-call, finishing an answer under way. */
+  setTurnMode(mode: TurnMode): void {
+    if (mode === this.turns.mode) return;
+    if (this.turns.mode === 'hands_free') this.endTurnNow();
+    else if (this.turns.isHeld) this.releaseTalk();
+    this.turns.setMode(mode);
+    this.log(`turn mode ${mode}`);
+    this.patch({ turnMode: mode, talkHeld: false, learnerSpeaking: false, notice: null });
   }
 
   /** Hold-to-talk: the mic button went down. */
@@ -334,33 +361,40 @@ export class VoiceEngine {
     const s = this.state.get();
     if (s.interrupted || s.endReason) return;
     const r = this.vad.push(frame, endMs - MIC_FRAME_MS);
-    if (r.event?.type === 'speech_start') {
+    // Hands-free hears the learner through its gate (`onGateSpeech`), never the echo of a line.
+    const handsFree = this.turns.mode === 'hands_free';
+    if (!handsFree && r.event?.type === 'speech_start') {
       this.meter.speechStarted();
-      if (this.turns.mode === 'hands_free' || this.turns.isHeld) {
+      if (this.turns.isHeld) {
         this.replies.on({ type: 'settled' });
         this.patch({ learnerSpeaking: true, awaitingReply: false, onHold: false, notice: null });
       } else {
         // Hold-to-talk with the button up: nothing is sent, so nothing is answered or cleared.
         this.patch({ learnerSpeaking: true });
       }
-    } else if (r.event?.type === 'speech_end') {
+    } else if (!handsFree && r.event?.type === 'speech_end') {
       this.meter.speechEnded(r.event.atMs);
       this.patch({ learnerSpeaking: false });
     }
     if (!this.socket.ready) return;
-    const sentBefore = this.micSentMs;
-    this.turns.frame(frame, r.speaking, r.event);
-    // Hands-free: tell the call when the learner starts and stops, on its mic clock, so it times
-    // the turn by the phone's echo-cancelled VAD. Hold-to-talk turns end on release instead, so a
-    // pause while the button is held never ends the turn.
-    if (r.event && this.turns.mode === 'hands_free' && this.micSentMs > sentBefore) {
-      const atMs = Math.max(0, Math.round(this.micSentMs - (endMs - r.event.atMs)));
-      this.socket.send({
-        type: 'speech',
-        state: r.event.type === 'speech_start' ? 'start' : 'end',
-        atMs,
-      });
+    this.turns.frame(frame, r.speaking, r.event, endMs);
+    const { sentMs, heardMs } = this.turns.gate;
+    if (handsFree && heardMs % IDLE_LOG_MS === 0)
+      this.log(`hands-free mic: ${sentMs / 1000} s sent of ${heardMs / 1000} s heard`);
+  }
+
+  /** Hands-free: the gate heard the learner start or stop; the call hears it on its mic clock. */
+  private onGateSpeech(state: 'start' | 'end', backMs: number): void {
+    const atMs = Math.max(0, Math.round(this.micSentMs - backMs));
+    this.socket.send({ type: 'speech', state, atMs });
+    if (state === 'start') {
+      this.meter.speechStarted();
+      this.replies.on({ type: 'settled' });
+      this.patch({ learnerSpeaking: true, awaitingReply: false, onHold: false, notice: null });
+      return;
     }
+    this.meter.speechEnded(this.vad.lastVoicedMs ?? performance.now());
+    this.patch({ learnerSpeaking: false });
   }
 
   private onSocketStatus(status: SocketStatus): void {
@@ -423,81 +457,18 @@ export class VoiceEngine {
       this.early.push(frame);
       return;
     }
-    switch (frame.type) {
-      case 'say_start':
-        player?.startLive(frame.streamId, frame.character, frame.codec, frame.sampleRateHz);
-        break;
-      case 'alignment':
-        player?.pushAlignment(frame.streamId, frame.chars, frame.startMs, frame.endMs);
-        break;
-      case 'say_end':
-        player?.endLive(frame.streamId);
-        break;
-      case 'play_rec':
-        player?.playRecorded(frame.streamId, frame.lineId, frame.character);
-        break;
-      case 'partial':
-        this.patch({ learnerText: frame.text, learnerFinal: false });
-        break;
-      case 'not_heard':
-        // No real words in the turn: nothing is coming, the turn is the learner's again.
-        this.log('not heard: no words in the turn');
-        this.replies.on({ type: 'settled' });
-        this.patch({ awaitingReply: false, serverThinking: false, notice: 'not_heard' });
-        break;
-      case 'heard':
-        this.replies.on({ type: 'answering', atMs: Date.now() });
-        this.patch({ learnerText: frame.text, learnerFinal: true, awaitingReply: true });
-        break;
-      case 'beat':
-        this.patch({ beat: frame });
-        break;
-      case 'hint':
-        this.patch({ hint: frame });
-        break;
-      case 'correction':
-        this.patch({ correction: frame });
-        break;
-      case 'correction_resolved':
-        this.patch({ correction: null });
-        break;
-      case 'meaning':
-        this.patch({ meaning: frame });
-        break;
-      case 'minutes':
-        this.patch({ secondsLeft: frame.secondsLeft, wrappingUp: frame.wrappingUp });
-        break;
-      case 'safety':
-        this.patch({ safety: frame.kind, safetyResourcesKey: frame.resourcesKey });
-        break;
-      case 'thinking':
-        if (frame.state === 'start') this.replies.on({ type: 'answering', atMs: Date.now() });
-        this.patch({ serverThinking: frame.state === 'start' });
-        break;
-      case 'error':
-        this.log(`error ${frame.code}${frame.fatal ? ' (fatal)' : ''}`);
-        if (frame.fatal) {
-          this.patch({ error: frame.code });
-          if (this.socket.status === 'closed') void this.teardown();
-        } else {
-          // A reply (or the listening) failed: the turn is the learner's again.
-          this.patch({ warning: frame.code });
-          this.giveTurnBack();
-        }
-        break;
-      case 'ended':
+    applyServerFrame(frame, {
+      player,
+      replies: this.replies,
+      patch: (p) => this.patch(p),
+      log: (m) => this.log(m),
+      giveTurnBack: () => this.giveTurnBack(),
+      socketClosed: () => this.socket.status === 'closed',
+      ended: () => {
         if (this.hangupTimer) clearTimeout(this.hangupTimer);
-        this.patch({
-          endReason: frame.reason,
-          summaryPending: frame.summaryPending,
-          callRecordId: frame.callRecordId,
-        });
-        void this.teardown();
-        break;
-      case 'ready':
-      case 'unknown':
-        break;
-    }
+      },
+      teardown: () => void this.teardown(),
+    });
   }
 
   private onAudio(frame: AudioFrame): void {
@@ -532,6 +503,9 @@ export class VoiceEngine {
 
   private onLineAudible(line: LineInfo): void {
     this.vad.setEchoGuard(true);
+    // Hands-free listens only once the character has finished (no barge-in): their own voice on
+    // the speaker can't start a turn.
+    this.turns.setListening(false);
     this.replies.on({ type: 'settled' });
     const prev = this.state.get().caption;
     this.patch({
