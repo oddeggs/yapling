@@ -15,6 +15,7 @@ export const payoffEn = {
   'payoff.afterCall.kind.practice': 'Practice',
   'payoff.afterCall.kind.voicemail_reply': 'Voicemail reply',
   'payoff.afterCall.kind.settling': 'Settling in',
+  'payoff.afterCall.kind.daily': "Pip's minute",
   'payoff.afterCall.done': 'Done!',
   /** While the post-call feedback is still being written. */
   'payoff.afterCall.writing': '{name} is writing it down…',

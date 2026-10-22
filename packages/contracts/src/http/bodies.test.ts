@@ -322,8 +322,13 @@ describeSchemas('progress', progress, {
         usedOn: ['2026-10-23'],
         contexts: ['s1-e1'],
       },
+      // Pip's minute: when Pip last reused it slightly wrong, or never (null).
+      { ...bloomPhrase, pipReusedAt: at + 10 * day },
+      { ...seedPhrase, pipReusedAt: null },
     ],
     [
+      { ...bloomPhrase, pipReusedAt: -1 },
+      { ...bloomPhrase, pipReusedAt: '2026-10-23' },
       { ...bloomPhrase, usedOn: ['2026-10-26', '2026-10-23'] },
       { ...bloomPhrase, usedOn: ['2026-10-23', '2026-10-23'] },
       { ...bloomPhrase, usedOn: [] },

@@ -38,6 +38,11 @@ export const PhraseProgress = z
     lastUsedAt: EpochMs.nullable(),
     usedOn: z.array(LocalDate).max(LIMITS.usedDaysMax),
     contexts: z.array(Id).max(LIMITS.phraseContextsMax),
+    /**
+     * When Pip last said it slightly wrong in Pip's minute for the learner to fix, so it rests a
+     * week before Pip tries it again. Left out (an older app's body) or null: never.
+     */
+    pipReusedAt: EpochMs.nullable().optional(),
   })
   .refine((p) => isAscendingDays(p.usedOn), {
     message: 'Use days are distinct, oldest first',

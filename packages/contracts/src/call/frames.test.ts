@@ -26,6 +26,7 @@ const hello = {
 const helloResume = { ...hello, kind: 'voicemail_reply', sceneId: 's1-e1-vm', resumeToken: token };
 const placement = { ...hello, kind: 'placement', sceneId: 'placement', turnMode: 'hold_to_talk' };
 const helloSlower = { ...hello, pace: 'slower' };
+const helloDaily = { ...hello, kind: 'daily', sceneId: 's1-pm.can-i-help', stage: 'visitor' };
 
 const endTurn = { type: 'end_turn', seq: 40 };
 const hold = { type: 'hold', seq: 41, seconds: 10 };
@@ -205,7 +206,7 @@ describeSchemas('call common', common, {
 describeSchemas('call client frames', client, {
   TurnMode: [['hold_to_talk', 'hands_free'], ['push_to_talk']],
   HelloFrame: [
-    [hello, helloResume, placement, helloSlower, { ...hello, pace: null }],
+    [hello, helloResume, placement, helloSlower, { ...hello, pace: null }, helloDaily],
     [
       { ...hello, seq: 0 },
       { ...hello, token: 'short' },
