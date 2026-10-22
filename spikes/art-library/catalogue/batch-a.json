@@ -1,0 +1,568 @@
+[
+ {
+  "id": "pho-bowl",
+  "kind": "prop",
+  "word": "bowl of pho",
+  "headword": "bowl",
+  "pos": "noun",
+  "vi": "bát phở (miền Nam: tô phở)",
+  "category": "food-drink",
+  "cefr": "A2",
+  "places": [
+   "street",
+   "market",
+   "kitchen",
+   "cafe",
+   "home"
+  ],
+  "seasons": [
+   "any"
+  ],
+  "tod": [
+   "morning",
+   "afternoon",
+   "dusk",
+   "night"
+  ],
+  "size": "S",
+  "box": 60,
+  "anchor": [
+   30,
+   56
+  ],
+  "surfaces": [
+   "table",
+   "counter",
+   "stall"
+  ],
+  "variants": {
+   "v": [
+    "cyan",
+    "lilac",
+    "mint",
+    "coral",
+    "butter"
+   ],
+   "season": [],
+   "tod": []
+  },
+  "tags": [
+   "hot",
+   "noodles",
+   "soup",
+   "breakfast",
+   "vietnam",
+   "street-food",
+   "ordering"
+  ],
+  "fn": "s_prop",
+  "o": {
+   "id": "pho-bowl"
+  },
+  "status": "draft"
+ },
+ {
+  "id": "banh-mi",
+  "kind": "prop",
+  "word": "banh mi",
+  "headword": "sandwich",
+  "pos": "noun",
+  "vi": "bánh mì",
+  "category": "food-drink",
+  "cefr": "A1",
+  "places": [
+   "street",
+   "market",
+   "school",
+   "office",
+   "park"
+  ],
+  "seasons": [
+   "any"
+  ],
+  "tod": [
+   "morning",
+   "afternoon"
+  ],
+  "size": "S",
+  "box": 60,
+  "anchor": [
+   30,
+   56
+  ],
+  "surfaces": [
+   "table",
+   "counter",
+   "stall",
+   "hand"
+  ],
+  "variants": {
+   "v": [],
+   "season": [],
+   "tod": []
+  },
+  "tags": [
+   "bread",
+   "breakfast",
+   "takeaway",
+   "street-food",
+   "vietnam",
+   "spicy",
+   "ordering"
+  ],
+  "fn": "s_prop",
+  "o": {
+   "id": "banh-mi"
+  },
+  "status": "draft"
+ },
+ {
+  "id": "iced-coffee",
+  "kind": "prop",
+  "word": "iced milk coffee",
+  "headword": "coffee",
+  "pos": "noun",
+  "vi": "cà phê sữa đá",
+  "category": "food-drink",
+  "cefr": "A1",
+  "places": [
+   "cafe",
+   "street",
+   "office",
+   "home"
+  ],
+  "seasons": [
+   "any",
+   "summer"
+  ],
+  "tod": [
+   "morning",
+   "afternoon"
+  ],
+  "size": "S",
+  "box": 60,
+  "anchor": [
+   30,
+   56
+  ],
+  "surfaces": [
+   "table",
+   "counter",
+   "stall"
+  ],
+  "variants": {
+   "v": [],
+   "season": [],
+   "tod": []
+  },
+  "tags": [
+   "cold",
+   "drink",
+   "coffee",
+   "vietnam",
+   "phin",
+   "cafe",
+   "ordering",
+   "hot-weather"
+  ],
+  "fn": "s_prop",
+  "o": {
+   "id": "iced-coffee"
+  },
+  "status": "draft"
+ },
+ {
+  "id": "bubble-tea",
+  "kind": "prop",
+  "word": "bubble tea",
+  "headword": "tea",
+  "pos": "noun",
+  "vi": "trà sữa trân châu",
+  "category": "food-drink",
+  "cefr": "A1",
+  "places": [
+   "cafe",
+   "street",
+   "mall",
+   "school",
+   "park"
+  ],
+  "seasons": [
+   "any",
+   "summer"
+  ],
+  "tod": [
+   "afternoon",
+   "dusk"
+  ],
+  "size": "S",
+  "box": 60,
+  "anchor": [
+   30,
+   56
+  ],
+  "surfaces": [
+   "table",
+   "counter",
+   "hand"
+  ],
+  "variants": {
+   "v": [
+    "milk",
+    "lilac",
+    "mint",
+    "butter",
+    "coral",
+    "cyan"
+   ],
+   "season": [],
+   "tod": []
+  },
+  "tags": [
+   "drink",
+   "sweet",
+   "cold",
+   "friends",
+   "treat",
+   "ordering",
+   "flavour",
+   "colour"
+  ],
+  "fn": "s_prop",
+  "o": {
+   "id": "bubble-tea"
+  },
+  "status": "draft"
+ },
+ {
+  "id": "rice-cooker",
+  "kind": "prop",
+  "word": "rice cooker",
+  "headword": "cooker",
+  "pos": "noun",
+  "vi": "nồi cơm điện",
+  "category": "kitchen",
+  "cefr": "B1",
+  "places": [
+   "kitchen",
+   "home",
+   "dorm"
+  ],
+  "seasons": [
+   "any"
+  ],
+  "tod": [
+   "any"
+  ],
+  "size": "M",
+  "box": 96,
+  "anchor": [
+   48,
+   90
+  ],
+  "surfaces": [
+   "counter",
+   "table",
+   "floor"
+  ],
+  "variants": {
+   "v": [
+    "lilac",
+    "cyan",
+    "mint",
+    "butter",
+    "coral"
+   ],
+   "season": [],
+   "tod": []
+  },
+  "tags": [
+   "cooking",
+   "rice",
+   "family",
+   "dinner",
+   "appliance",
+   "home",
+   "steam"
+  ],
+  "fn": "s_prop",
+  "o": {
+   "id": "rice-cooker"
+  },
+  "status": "draft"
+ },
+ {
+  "id": "kettle",
+  "kind": "prop",
+  "word": "kettle",
+  "headword": "kettle",
+  "pos": "noun",
+  "vi": "ấm siêu tốc (ấm đun nước điện)",
+  "category": "kitchen",
+  "cefr": "B1",
+  "places": [
+   "kitchen",
+   "home",
+   "office",
+   "dorm",
+   "hotel"
+  ],
+  "seasons": [
+   "any"
+  ],
+  "tod": [
+   "any"
+  ],
+  "size": "M",
+  "box": 96,
+  "anchor": [
+   48,
+   90
+  ],
+  "surfaces": [
+   "counter",
+   "table",
+   "shelf"
+  ],
+  "variants": {
+   "v": [
+    "mint",
+    "lilac",
+    "cyan",
+    "butter",
+    "coral",
+    "white"
+   ],
+   "season": [],
+   "tod": []
+  },
+  "tags": [
+   "hot-water",
+   "tea",
+   "appliance",
+   "morning",
+   "home",
+   "boil"
+  ],
+  "fn": "s_prop",
+  "o": {
+   "id": "kettle"
+  },
+  "status": "draft"
+ },
+ {
+  "id": "chopsticks",
+  "kind": "prop",
+  "word": "chopsticks",
+  "headword": "chopsticks",
+  "pos": "noun",
+  "vi": "đôi đũa",
+  "category": "kitchen",
+  "cefr": "B1",
+  "places": [
+   "kitchen",
+   "home",
+   "street",
+   "market",
+   "restaurant"
+  ],
+  "seasons": [
+   "any"
+  ],
+  "tod": [
+   "any"
+  ],
+  "size": "S",
+  "box": 60,
+  "anchor": [
+   30,
+   56
+  ],
+  "surfaces": [
+   "table",
+   "counter"
+  ],
+  "variants": {
+   "v": [
+    "coral",
+    "lilac",
+    "cyan",
+    "mint",
+    "butter"
+   ],
+   "season": [],
+   "tod": []
+  },
+  "tags": [
+   "eating",
+   "table-manners",
+   "noodles",
+   "rice",
+   "family-meal",
+   "vietnam"
+  ],
+  "fn": "s_prop",
+  "o": {
+   "id": "chopsticks"
+  },
+  "status": "draft"
+ },
+ {
+  "id": "banh-chung",
+  "kind": "prop",
+  "word": "sticky rice cake",
+  "headword": "cake",
+  "pos": "noun",
+  "vi": "bánh chưng",
+  "category": "festival",
+  "cefr": "A1",
+  "places": [
+   "home",
+   "kitchen",
+   "market"
+  ],
+  "seasons": [
+   "tet"
+  ],
+  "tod": [
+   "any"
+  ],
+  "size": "S",
+  "box": 60,
+  "anchor": [
+   30,
+   56
+  ],
+  "surfaces": [
+   "table",
+   "shelf",
+   "counter",
+   "stall"
+  ],
+  "variants": {
+   "v": [],
+   "season": [],
+   "tod": []
+  },
+  "tags": [
+   "tet",
+   "lunar-new-year",
+   "family",
+   "tradition",
+   "food",
+   "gift",
+   "vietnam"
+  ],
+  "fn": "s_prop",
+  "o": {
+   "id": "banh-chung"
+  },
+  "status": "draft"
+ },
+ {
+  "id": "li-xi",
+  "kind": "prop",
+  "word": "lucky money envelope",
+  "headword": "envelope",
+  "pos": "noun",
+  "vi": "bao lì xì",
+  "category": "festival",
+  "cefr": "A2",
+  "places": [
+   "home",
+   "street",
+   "school"
+  ],
+  "seasons": [
+   "tet"
+  ],
+  "tod": [
+   "any"
+  ],
+  "size": "S",
+  "box": 60,
+  "anchor": [
+   30,
+   56
+  ],
+  "surfaces": [
+   "table",
+   "hand",
+   "shelf"
+  ],
+  "variants": {
+   "v": [],
+   "season": [],
+   "tod": []
+  },
+  "tags": [
+   "tet",
+   "lunar-new-year",
+   "money",
+   "gift",
+   "wishes",
+   "red",
+   "family",
+   "children"
+  ],
+  "fn": "s_prop",
+  "o": {
+   "id": "li-xi"
+  },
+  "status": "draft"
+ },
+ {
+  "id": "mooncake",
+  "kind": "prop",
+  "word": "mooncake",
+  "headword": "cake",
+  "pos": "noun",
+  "vi": "bánh trung thu",
+  "category": "festival",
+  "cefr": "A1",
+  "places": [
+   "home",
+   "market",
+   "cafe",
+   "street"
+  ],
+  "seasons": [
+   "mid-autumn"
+  ],
+  "tod": [
+   "dusk",
+   "night"
+  ],
+  "size": "S",
+  "box": 60,
+  "anchor": [
+   30,
+   56
+  ],
+  "surfaces": [
+   "table",
+   "counter",
+   "stall",
+   "shelf"
+  ],
+  "variants": {
+   "v": [],
+   "season": [],
+   "tod": []
+  },
+  "tags": [
+   "mid-autumn",
+   "festival",
+   "moon",
+   "sweet",
+   "gift",
+   "family",
+   "sharing"
+  ],
+  "fn": "s_prop",
+  "o": {
+   "id": "mooncake"
+  },
+  "status": "draft"
+ }
+]

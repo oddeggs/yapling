@@ -1,0 +1,419 @@
+[
+{
+"file": "scenes/market.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "market",
+"so": {},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/market-morning.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "market",
+"so": {
+"tod": "morning"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/market-dusk.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "market",
+"so": {
+"tod": "dusk"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/market-tet.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "market",
+"so": {
+"season": "tet"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/market-tet-dusk.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "market",
+"so": {
+"season": "tet",
+"tod": "dusk"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/market-back.png",
+"fn": "s_market",
+"w": 390,
+"h": 844,
+"o": {
+"t": 0
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/market-front.png",
+"fn": "s_market",
+"w": 390,
+"h": 844,
+"o": {
+"t": 0,
+"layer": "front"
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/park.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "park",
+"so": {},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/park-afternoon.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "park",
+"so": {
+"tod": "afternoon"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/park-night.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "park",
+"so": {
+"tod": "night"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/park-spring.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "park",
+"so": {
+"season": "spring",
+"tod": "afternoon"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/park-autumn.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "park",
+"so": {
+"season": "autumn"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/park-winter.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "park",
+"so": {
+"season": "winter",
+"tod": "night"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/park-winter-day.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "park",
+"so": {
+"season": "winter",
+"tod": "afternoon"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/platform.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "platform",
+"so": {},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/platform-clear.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "platform",
+"so": {
+"weather": "clear"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/platform-dusk.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "platform",
+"so": {
+"tod": "dusk"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/platform-night.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "platform",
+"so": {
+"tod": "night",
+"weather": "clear"
+},
+"props": []
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/platform-back.png",
+"fn": "s_platform",
+"w": 390,
+"h": 844,
+"o": {
+"t": 0
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/platform-front.png",
+"fn": "s_platform",
+"w": 390,
+"h": 844,
+"o": {
+"t": 0,
+"layer": "front"
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/market-anchors.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "market",
+"so": {},
+"props": [
+{
+"id": "teapot",
+"at": "counter-l",
+"s": 0.6
+},
+{
+"id": "teapot",
+"at": "counter-c",
+"s": 0.6
+},
+{
+"id": "teapot",
+"at": "counter-r",
+"s": 0.6
+},
+{
+"id": "teapot",
+"at": "ground-l"
+},
+{
+"id": "teapot",
+"at": "ground-r"
+}
+]
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/park-anchors.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "park",
+"so": {},
+"props": [
+{
+"id": "teapot",
+"at": "bench-l",
+"s": 0.6
+},
+{
+"id": "teapot",
+"at": "bench-r",
+"s": 0.6
+},
+{
+"id": "teapot",
+"at": "path-c"
+},
+{
+"id": "teapot",
+"at": "path-l"
+},
+{
+"id": "teapot",
+"at": "path-r"
+}
+]
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+},
+{
+"file": "scenes/platform-anchors.png",
+"fn": "s_place",
+"w": 390,
+"h": 844,
+"o": {
+"scene": "platform",
+"so": {},
+"props": [
+{
+"id": "teapot",
+"at": "bench-l",
+"s": 0.6
+},
+{
+"id": "teapot",
+"at": "bench-r",
+"s": 0.6
+},
+{
+"id": "teapot",
+"at": "floor-l"
+},
+{
+"id": "teapot",
+"at": "floor-c"
+},
+{
+"id": "teapot",
+"at": "floor-r"
+}
+]
+},
+"pad": 0,
+"scale": 2,
+"lint": false
+}
+]

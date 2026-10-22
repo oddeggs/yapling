@@ -1,0 +1,2 @@
+[{"file":"props/teapot.png","fn":"s_prop","w":96,"h":96,"o":{"id":"teapot"},"scale":3},
+ {"file":"props/teapot-lilac.png","fn":"s_prop","w":96,"h":96,"o":{"id":"teapot","v":"lilac"},"scale":3}]

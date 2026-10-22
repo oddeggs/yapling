@@ -1,0 +1,9 @@
+[{"file":"existing/scene-cafe.png","fn":"s_cafe","w":390,"h":844,"o":{"t":0},"pad":0,"lint":false},
+ {"file":"existing/obj-desk-mug-1.png","fn":"s_obj","w":60,"h":80,"o":{"t":0,"fam":"desk","kind":"mug","stage":1}},
+ {"file":"existing/obj-jar-2.png","fn":"s_obj","w":60,"h":80,"o":{"t":0,"fam":"jar","stage":2}},
+ {"file":"existing/obj-desk-stapler-1.png","fn":"s_obj","w":60,"h":80,"o":{"t":0,"fam":"desk","kind":"stapler","stage":1}},
+ {"file":"existing/obj-desk-headphones-1.png","fn":"s_obj","w":60,"h":80,"o":{"t":0,"fam":"desk","kind":"headphones","stage":1}},
+ {"file":"existing/obj-plant-2.png","fn":"s_obj","w":60,"h":80,"o":{"t":0,"fam":"plant","stage":2}},
+ {"file":"existing/obj-mail-1.png","fn":"s_obj","w":60,"h":80,"o":{"t":0,"fam":"mail","stage":1}},
+ {"file":"existing/obj-seed.png","fn":"s_obj","w":60,"h":80,"o":{"t":0,"fam":"seed","stage":0}}
+]

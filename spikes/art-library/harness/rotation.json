@@ -1,0 +1,20 @@
+{
+ "cafe": {"sets": {
+   "breakfast": [{"id":"bubble-tea","at":"counter-1"},{"id":"kettle","at":"counter-2","s":0.8},{"id":"banh-mi","at":"table-l"},{"id":"iced-coffee","at":"table-r"}],
+   "work day": [{"id":"laptop","at":"counter-2","s":0.8},{"id":"clipboard","at":"table-l"},{"id":"smartphone","at":"table-r"},{"id":"backpack","at":"floor-l","s":0.8}],
+   "Tết": [{"id":"watermelon","at":"counter-1"},{"id":"lotus","at":"counter-2","s":0.8},{"id":"banh-chung","at":"table-l"},{"id":"li-xi","at":"table-r"}]}},
+ "burrow": {"sets": {
+   "move-in day": [{"id":"suitcase","at":"floor-l"},{"id":"backpack","at":"floor-r","v":"lilac"},{"id":"cactus","at":"shelf-l1"},{"id":"passport","at":"shelf-r2"},{"id":"desk-lamp","at":"desk-1","s":0.8}],
+   "Mid-Autumn": [{"id":"star-lantern","at":"floor-l"},{"id":"mooncake","at":"shelf-l2"},{"id":"iced-coffee","at":"shelf-r1"},{"id":"chopsticks","at":"shelf-r3"},{"id":"electric-fan","at":"floor-r","s":0.9}],
+   "cosy": [{"id":"armchair","at":"floor-l","s":0.8},{"id":"monstera","at":"floor-r"},{"id":"t-shirt","at":"shelf-r2","s":0.6},{"id":"sneakers","at":"shelf-l2"},{"id":"rice-cooker","at":"desk-1","s":0.7}]}},
+ "market": {"sets": {
+   "morning shop": [{"id":"watermelon","at":"counter-l"},{"id":"banh-mi","at":"counter-c"},{"id":"iced-coffee","at":"counter-r"},{"id":"plastic-stool","at":"ground-l","v":"coral"},{"id":"plastic-stool","at":"ground-r","v":"cyan"}],
+   "street food": [{"id":"pho-bowl","at":"counter-l"},{"id":"chopsticks","at":"counter-c"},{"id":"bubble-tea","at":"counter-r","v":"mint"},{"id":"rice-cooker","at":"ground-l","s":0.9},{"id":"plastic-stool","at":"ground-r","v":"lilac"}]}},
+ "market:tet": {"so": {"t":0,"season":"tet"}, "sets": {
+   "Tết market": [{"id":"banh-chung","at":"counter-l"},{"id":"li-xi","at":"counter-c"},{"id":"watermelon","at":"counter-r"},{"id":"lotus","at":"ground-r"},{"id":"star-lantern","at":"ground-l"}]}},
+ "platform": {"so": {"t":0,"weather":"rain"}, "sets": {
+   "trip": [{"id":"suitcase","at":"floor-l"},{"id":"passport","at":"bench-l"},{"id":"smartphone","at":"bench-r"},{"id":"backpack","at":"floor-r","v":"mint"}],
+   "commute": [{"id":"laptop","at":"bench-l","s":0.6},{"id":"helmet","at":"floor-l","s":0.8},{"id":"iced-coffee","at":"bench-r"},{"id":"clipboard","at":"floor-r","s":1.2}]}},
+ "park": {"so": {"t":0,"season":"autumn"}, "sets": {
+   "picnic": [{"id":"banh-mi","at":"bench-l"},{"id":"bubble-tea","at":"bench-r"},{"id":"sneakers","at":"path-l"},{"id":"backpack","at":"path-r","s":0.8}]}}
+}

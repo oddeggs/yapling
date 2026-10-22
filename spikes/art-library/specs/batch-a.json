@@ -1,0 +1,17 @@
+[{"file":"props/pho-bowl.png","fn":"s_prop","w":60,"h":60,"o":{"id":"pho-bowl"},"scale":3},
+ {"file":"props/pho-bowl-lilac.png","fn":"s_prop","w":60,"h":60,"o":{"id":"pho-bowl","v":"lilac"},"scale":3},
+ {"file":"props/banh-mi.png","fn":"s_prop","w":60,"h":60,"o":{"id":"banh-mi"},"scale":3},
+ {"file":"props/iced-coffee.png","fn":"s_prop","w":60,"h":60,"o":{"id":"iced-coffee"},"scale":3},
+ {"file":"props/bubble-tea.png","fn":"s_prop","w":60,"h":60,"o":{"id":"bubble-tea"},"scale":3},
+ {"file":"props/bubble-tea-mint.png","fn":"s_prop","w":60,"h":60,"o":{"id":"bubble-tea","v":"mint"},"scale":3},
+ {"file":"props/bubble-tea-lilac.png","fn":"s_prop","w":60,"h":60,"o":{"id":"bubble-tea","v":"lilac"},"scale":3},
+ {"file":"props/rice-cooker.png","fn":"s_prop","w":96,"h":96,"o":{"id":"rice-cooker"},"scale":3},
+ {"file":"props/rice-cooker-cyan.png","fn":"s_prop","w":96,"h":96,"o":{"id":"rice-cooker","v":"cyan"},"scale":3},
+ {"file":"props/kettle.png","fn":"s_prop","w":96,"h":96,"o":{"id":"kettle"},"scale":3},
+ {"file":"props/kettle-white.png","fn":"s_prop","w":96,"h":96,"o":{"id":"kettle","v":"white"},"scale":3},
+ {"file":"props/chopsticks.png","fn":"s_prop","w":60,"h":60,"o":{"id":"chopsticks"},"scale":3},
+ {"file":"props/banh-chung.png","fn":"s_prop","w":60,"h":60,"o":{"id":"banh-chung"},"scale":3},
+ {"file":"props/li-xi.png","fn":"s_prop","w":60,"h":60,"o":{"id":"li-xi"},"scale":3},
+ {"file":"props/mooncake.png","fn":"s_prop","w":60,"h":60,"o":{"id":"mooncake"},"scale":3},
+ {"file":"props/small-45pt.png","fn":"s_prop","w":45,"h":45,"o":{"id":"pho-bowl"},"scale":1,"lint":false}
+]

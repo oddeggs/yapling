@@ -1,0 +1,53 @@
+[
+ {
+  "id": "market-stall", "kind": "scene", "name": "fruit stall at the market", "vi": "sạp trái cây ở chợ",
+  "place": "market", "indoor": false,
+  "tod": ["morning","afternoon","dusk"], "seasons": ["any","tet"], "weather": ["clear"],
+  "fn": "s_market", "front": "s_market (layer: front)",
+  "o": { "tod": "afternoon", "season": null, "awning": "lilac|cyan" },
+  "anchors": {
+   "counter-l": { "xy": [140, 513], "scale": 1, "surfaces": "counter", "sizes": ["S"] },
+   "counter-c": { "xy": [195, 513], "scale": 1, "surfaces": "counter", "sizes": ["S"] },
+   "counter-r": { "xy": [250, 513], "scale": 1, "surfaces": "counter", "sizes": ["S"] },
+   "ground-l":  { "xy": [62, 730],  "scale": 1, "surfaces": "ground",  "sizes": ["M"] },
+   "ground-r":  { "xy": [328, 730], "scale": 1, "surfaces": "ground",  "sizes": ["M"] }
+  },
+  "notes": "Critter stands behind the counter (top y 514); counter, crates and price tags are the front layer. ground-* slots sit under the call bar (y > 674).",
+  "tags": ["shopping","bargaining","numbers","prices","fruit","food","tet","market","weighing"],
+  "status": "draft"
+ },
+ {
+  "id": "park-bench", "kind": "scene", "name": "park bench", "vi": "ghế đá trong công viên",
+  "place": "park", "indoor": false,
+  "tod": ["afternoon","dusk","night"], "seasons": ["spring","summer","autumn","winter"], "weather": ["clear"],
+  "fn": "s_park", "front": null,
+  "o": { "tod": "dusk", "season": "summer" },
+  "anchors": {
+   "bench-l": { "xy": [112, 553], "scale": 1, "surfaces": "bench", "sizes": ["S"] },
+   "bench-r": { "xy": [278, 553], "scale": 1, "surfaces": "bench", "sizes": ["S"] },
+   "path-l":  { "xy": [70, 690],  "scale": 1, "surfaces": "ground", "sizes": ["M"] },
+   "path-c":  { "xy": [195, 700], "scale": 1, "surfaces": "ground", "sizes": ["M"] },
+   "path-r":  { "xy": [322, 690], "scale": 1, "surfaces": "ground", "sizes": ["M"] }
+  },
+  "notes": "Bench is centred behind the critter (back layer); its ends and armrests stay visible. Lamp lit at dusk/night, stars + moon at night; spring blossom, summer green, autumn warm canopy + leaves, winter bare tree + snow caps + flakes.",
+  "tags": ["relaxing","weekend","small talk","feelings","seasons","weather","walking","evening"],
+  "status": "draft"
+ },
+ {
+  "id": "train-platform", "kind": "scene", "name": "train platform in the rain", "vi": "sân ga tàu dưới mưa",
+  "place": "station", "indoor": false,
+  "tod": ["afternoon","dusk","night"], "seasons": ["any"], "weather": ["rain","clear"],
+  "fn": "s_platform", "front": "s_platform (layer: front: canopy posts)",
+  "o": { "tod": "afternoon", "weather": "rain" },
+  "anchors": {
+   "bench-l": { "xy": [60, 639],  "scale": 1, "surfaces": "bench", "sizes": ["S"] },
+   "bench-r": { "xy": [112, 639], "scale": 1, "surfaces": "bench", "sizes": ["S"] },
+   "floor-l": { "xy": [86, 740],  "scale": 1, "surfaces": "floor", "sizes": ["M","L"] },
+   "floor-c": { "xy": [195, 724], "scale": 1, "surfaces": "floor", "sizes": ["M","L"] },
+   "floor-r": { "xy": [316, 700], "scale": 1, "surfaces": "floor", "sizes": ["M","L"] }
+  },
+  "notes": "Train nose arrives from the right (x 270+), destination board and clock carry no text. Rain only falls beyond the platform edge (canopy hides it); drips and puddles on the platform.",
+  "tags": ["travel","commuting","directions","time","delays","weather","rain","tickets","waiting"],
+  "status": "draft"
+ }
+]

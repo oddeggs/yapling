@@ -1,0 +1,2 @@
+[{"file":"composites/test-cafe.png","fn":"s_place","w":390,"h":844,"o":{"scene":"cafe","props":[{"id":"teapot","at":"counter-2"},{"id":"teapot","at":"table-l","v":"lilac"},{"id":"teapot","at":"floor-r","v":"mint"}]},"pad":0,"scale":1,"lint":false},
+ {"file":"composites/test-burrow.png","fn":"s_place","w":390,"h":844,"o":{"scene":"burrow","props":[{"id":"teapot","at":"shelf-l2"},{"id":"teapot","at":"desk-1","v":"butter"},{"id":"teapot","at":"floor-l"}]},"pad":0,"scale":1,"lint":false}]

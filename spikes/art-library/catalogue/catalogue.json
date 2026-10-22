@@ -1,0 +1,3426 @@
+{
+ "schema": "yapling.library/0.1 (spike)",
+ "props": [
+  {
+   "id": "prop-pho-bowl",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "pho-bowl"
+    }
+   },
+   "word": "bowl of pho",
+   "headword": "bowl",
+   "pos": "noun",
+   "gloss": {
+    "vi": "bát phở (miền Nam: tô phở)",
+    "reviewed": false
+   },
+   "category": "food",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "jar",
+   "fits": {
+    "places": [
+     "street",
+     "market",
+     "kitchen",
+     "cafe",
+     "home"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "morning",
+     "afternoon",
+     "dusk",
+     "night"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "counter",
+    "stall"
+   ],
+   "variants": {
+    "v": [
+     "cyan",
+     "lilac",
+     "mint",
+     "coral",
+     "butter"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "hot",
+    "noodles",
+    "soup",
+    "breakfast",
+    "vietnam",
+    "street-food",
+    "ordering"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "A",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-banh-mi",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "banh-mi"
+    }
+   },
+   "word": "banh mi",
+   "headword": "sandwich",
+   "pos": "noun",
+   "gloss": {
+    "vi": "bánh mì",
+    "reviewed": false
+   },
+   "category": "food",
+   "cefr": "A1",
+   "cefrSource": "agent-estimate",
+   "stage": "visitor",
+   "burrowFamily": "jar",
+   "fits": {
+    "places": [
+     "street",
+     "market",
+     "school",
+     "office",
+     "park"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "morning",
+     "afternoon"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "counter",
+    "stall",
+    "hand"
+   ],
+   "variants": {
+    "v": [],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "bread",
+    "breakfast",
+    "takeaway",
+    "street-food",
+    "vietnam",
+    "spicy",
+    "ordering"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "A",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-iced-coffee",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "iced-coffee"
+    }
+   },
+   "word": "iced milk coffee",
+   "headword": "coffee",
+   "pos": "noun",
+   "gloss": {
+    "vi": "cà phê sữa đá",
+    "reviewed": false
+   },
+   "category": "drink",
+   "cefr": "A1",
+   "cefrSource": "agent-estimate",
+   "stage": "visitor",
+   "burrowFamily": "jar",
+   "fits": {
+    "places": [
+     "cafe",
+     "street",
+     "office",
+     "home"
+    ],
+    "seasons": [
+     "any",
+     "summer"
+    ],
+    "tod": [
+     "morning",
+     "afternoon"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "counter",
+    "stall"
+   ],
+   "variants": {
+    "v": [],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "cold",
+    "drink",
+    "coffee",
+    "vietnam",
+    "phin",
+    "cafe",
+    "ordering",
+    "hot-weather"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "A",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-bubble-tea",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "bubble-tea"
+    }
+   },
+   "word": "bubble tea",
+   "headword": "tea",
+   "pos": "noun",
+   "gloss": {
+    "vi": "trà sữa trân châu",
+    "reviewed": false
+   },
+   "category": "drink",
+   "cefr": "A1",
+   "cefrSource": "agent-estimate",
+   "stage": "visitor",
+   "burrowFamily": "jar",
+   "fits": {
+    "places": [
+     "cafe",
+     "street",
+     "mall",
+     "school",
+     "park"
+    ],
+    "seasons": [
+     "any",
+     "summer"
+    ],
+    "tod": [
+     "afternoon",
+     "dusk"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "counter",
+    "hand"
+   ],
+   "variants": {
+    "v": [
+     "milk",
+     "lilac",
+     "mint",
+     "butter",
+     "coral",
+     "cyan"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "drink",
+    "sweet",
+    "cold",
+    "friends",
+    "treat",
+    "ordering",
+    "flavour",
+    "colour"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "A",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-rice-cooker",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "rice-cooker"
+    }
+   },
+   "word": "rice cooker",
+   "headword": "cooker",
+   "pos": "noun",
+   "gloss": {
+    "vi": "nồi cơm điện",
+    "reviewed": false
+   },
+   "category": "home",
+   "cefr": "B1",
+   "cefrSource": "agent-estimate",
+   "stage": "neighbour",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "kitchen",
+     "home",
+     "dorm"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "counter",
+    "table",
+    "floor"
+   ],
+   "variants": {
+    "v": [
+     "lilac",
+     "cyan",
+     "mint",
+     "butter",
+     "coral"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "cooking",
+    "rice",
+    "family",
+    "dinner",
+    "appliance",
+    "home",
+    "steam"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "A",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-kettle",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "kettle"
+    }
+   },
+   "word": "kettle",
+   "headword": "kettle",
+   "pos": "noun",
+   "gloss": {
+    "vi": "ấm siêu tốc (ấm đun nước điện)",
+    "reviewed": false
+   },
+   "category": "home",
+   "cefr": "B1",
+   "cefrSource": "agent-estimate",
+   "stage": "neighbour",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "kitchen",
+     "home",
+     "office",
+     "dorm",
+     "hotel"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "counter",
+    "table",
+    "shelf"
+   ],
+   "variants": {
+    "v": [
+     "mint",
+     "lilac",
+     "cyan",
+     "butter",
+     "coral",
+     "white"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "hot-water",
+    "tea",
+    "appliance",
+    "morning",
+    "home",
+    "boil"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "A",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-chopsticks",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "chopsticks"
+    }
+   },
+   "word": "chopsticks",
+   "headword": "chopsticks",
+   "pos": "noun",
+   "gloss": {
+    "vi": "đôi đũa",
+    "reviewed": false
+   },
+   "category": "home",
+   "cefr": "B1",
+   "cefrSource": "agent-estimate",
+   "stage": "neighbour",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "kitchen",
+     "home",
+     "street",
+     "market",
+     "restaurant"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "counter"
+   ],
+   "variants": {
+    "v": [
+     "coral",
+     "lilac",
+     "cyan",
+     "mint",
+     "butter"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "eating",
+    "table-manners",
+    "noodles",
+    "rice",
+    "family-meal",
+    "vietnam"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "A",
+    "lead": "fix",
+    "afterFix": "pass",
+    "note": "off-centre pair on a blob of a rest -> redrawn centred, tips on a small rest"
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-banh-chung",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "banh-chung"
+    }
+   },
+   "word": "sticky rice cake",
+   "headword": "cake",
+   "pos": "noun",
+   "gloss": {
+    "vi": "bánh chưng",
+    "reviewed": false
+   },
+   "category": "festival",
+   "cefr": "A1",
+   "cefrSource": "agent-estimate",
+   "stage": "visitor",
+   "burrowFamily": "glowing",
+   "fits": {
+    "places": [
+     "home",
+     "kitchen",
+     "market"
+    ],
+    "seasons": [
+     "tet"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "shelf",
+    "counter",
+    "stall"
+   ],
+   "variants": {
+    "v": [],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "tet",
+    "lunar-new-year",
+    "family",
+    "tradition",
+    "food",
+    "gift",
+    "vietnam"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "A",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review",
+   "flags": [
+    "decision-3: a culture-holiday item; keep as an everyday word, never a festival theme"
+   ]
+  },
+  {
+   "id": "prop-li-xi",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "li-xi"
+    }
+   },
+   "word": "lucky money envelope",
+   "headword": "envelope",
+   "pos": "noun",
+   "gloss": {
+    "vi": "bao lì xì",
+    "reviewed": false
+   },
+   "category": "festival",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "glowing",
+   "fits": {
+    "places": [
+     "home",
+     "street",
+     "school"
+    ],
+    "seasons": [
+     "tet"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "hand",
+    "shelf"
+   ],
+   "variants": {
+    "v": [],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "tet",
+    "lunar-new-year",
+    "money",
+    "gift",
+    "wishes",
+    "red",
+    "family",
+    "children"
+   ],
+   "collect": {
+    "rarity": "limited",
+    "earnedBy": "Natterwick festival window only (decision 3), returns next year",
+    "window": "end-of-year-lights",
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "A",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review",
+   "flags": [
+    "decision-3: a culture-holiday item; keep as an everyday word, never a festival theme"
+   ]
+  },
+  {
+   "id": "prop-mooncake",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "mooncake"
+    }
+   },
+   "word": "mooncake",
+   "headword": "cake",
+   "pos": "noun",
+   "gloss": {
+    "vi": "bánh trung thu",
+    "reviewed": false
+   },
+   "category": "festival",
+   "cefr": "A1",
+   "cefrSource": "agent-estimate",
+   "stage": "visitor",
+   "burrowFamily": "glowing",
+   "fits": {
+    "places": [
+     "home",
+     "market",
+     "cafe",
+     "street"
+    ],
+    "seasons": [
+     "mid-autumn"
+    ],
+    "tod": [
+     "dusk",
+     "night"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "counter",
+    "stall",
+    "shelf"
+   ],
+   "variants": {
+    "v": [],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "mid-autumn",
+    "festival",
+    "moon",
+    "sweet",
+    "gift",
+    "family",
+    "sharing"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "A",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review",
+   "flags": [
+    "decision-3: a culture-holiday item; keep as an everyday word, never a festival theme"
+   ]
+  },
+  {
+   "id": "prop-laptop",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "laptop"
+    }
+   },
+   "word": "laptop",
+   "headword": "laptop",
+   "pos": "noun",
+   "gloss": {
+    "vi": "máy tính xách tay",
+    "reviewed": false
+   },
+   "category": "tools",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "office",
+     "home",
+     "cafe",
+     "school",
+     "library"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "table",
+    "counter"
+   ],
+   "variants": {
+    "v": [
+     "white",
+     "lilac",
+     "mint",
+     "butter"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "work",
+    "study",
+    "computer",
+    "email",
+    "online",
+    "meeting"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "B",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-desk-lamp",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "desk-lamp"
+    }
+   },
+   "word": "desk lamp",
+   "headword": "lamp",
+   "pos": "noun",
+   "gloss": {
+    "vi": "đèn bàn",
+    "reviewed": false
+   },
+   "category": "home",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "office",
+     "home",
+     "bedroom",
+     "library",
+     "school"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any",
+     "night"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "table",
+    "shelf",
+    "counter"
+   ],
+   "variants": {
+    "v": [
+     "lilac",
+     "cyan",
+     "mint",
+     "butter",
+     "coral",
+     "white"
+    ],
+    "season": [],
+    "tod": [
+     "night"
+    ]
+   },
+   "tags": [
+    "light",
+    "study",
+    "late",
+    "reading",
+    "homework",
+    "cosy"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "B",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-clipboard",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "clipboard"
+    }
+   },
+   "word": "clipboard",
+   "headword": "clipboard",
+   "pos": "noun",
+   "gloss": {
+    "vi": "bìa kẹp hồ sơ (bảng kẹp giấy)",
+    "reviewed": false
+   },
+   "category": "work",
+   "cefr": "B2",
+   "cefrSource": "agent-estimate",
+   "stage": "local",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "office",
+     "school",
+     "clinic",
+     "hospital",
+     "shop"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "counter",
+    "hand",
+    "wall"
+   ],
+   "variants": {
+    "v": [
+     "kraft",
+     "lilac",
+     "cyan",
+     "mint",
+     "butter"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "form",
+    "checklist",
+    "survey",
+    "work",
+    "interview",
+    "notes"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "B",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-smartphone",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "smartphone"
+    }
+   },
+   "word": "smartphone",
+   "headword": "smartphone",
+   "pos": "noun",
+   "gloss": {
+    "vi": "điện thoại thông minh",
+    "reviewed": false
+   },
+   "category": "tools",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "home",
+     "cafe",
+     "street",
+     "office",
+     "bus",
+     "school"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "hand",
+    "table",
+    "counter",
+    "bench"
+   ],
+   "variants": {
+    "v": [
+     "lilac",
+     "cyan",
+     "mint",
+     "butter",
+     "white",
+     "coral"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "message",
+    "chat",
+    "call",
+    "app",
+    "online",
+    "friends"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "B",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-electric-fan",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "electric-fan"
+    }
+   },
+   "word": "electric fan",
+   "headword": "fan",
+   "pos": "noun",
+   "gloss": {
+    "vi": "quạt điện (quạt bàn)",
+    "reviewed": false
+   },
+   "category": "home",
+   "cefr": "B1",
+   "cefrSource": "agent-estimate",
+   "stage": "neighbour",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "home",
+     "cafe",
+     "shop",
+     "office",
+     "bedroom",
+     "market"
+    ],
+    "seasons": [
+     "any",
+     "summer"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "floor",
+    "table",
+    "counter"
+   ],
+   "variants": {
+    "v": [
+     "cyan",
+     "lilac",
+     "mint",
+     "butter",
+     "white"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "hot",
+    "weather",
+    "summer",
+    "cool",
+    "vietnam",
+    "home"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "B",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-suitcase",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "suitcase"
+    }
+   },
+   "word": "suitcase",
+   "headword": "suitcase",
+   "pos": "noun",
+   "gloss": {
+    "vi": "va li",
+    "reviewed": false
+   },
+   "category": "travel",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "map-pin",
+   "fits": {
+    "places": [
+     "airport",
+     "hotel",
+     "station",
+     "home",
+     "bus-stop"
+    ],
+    "seasons": [
+     "any",
+     "tet"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "floor",
+    "ground"
+   ],
+   "variants": {
+    "v": [
+     "lilac",
+     "cyan",
+     "mint",
+     "butter",
+     "coral"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "trip",
+    "holiday",
+    "packing",
+    "luggage",
+    "check-in",
+    "going-home"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "B",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-backpack",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "backpack"
+    }
+   },
+   "word": "backpack",
+   "headword": "backpack",
+   "pos": "noun",
+   "gloss": {
+    "vi": "ba lô",
+    "reviewed": false
+   },
+   "category": "school",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "school",
+     "home",
+     "street",
+     "bus",
+     "station",
+     "park"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "floor",
+    "ground",
+    "bench"
+   ],
+   "variants": {
+    "v": [
+     "cyan",
+     "lilac",
+     "mint",
+     "butter",
+     "coral"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "school",
+    "student",
+    "travel",
+    "hiking",
+    "bag",
+    "packing"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "B",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-helmet",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "helmet"
+    }
+   },
+   "word": "helmet",
+   "headword": "helmet",
+   "pos": "noun",
+   "gloss": {
+    "vi": "mũ bảo hiểm (miền Nam: nón bảo hiểm)",
+    "reviewed": false
+   },
+   "category": "travel",
+   "cefr": "B1",
+   "cefrSource": "agent-estimate",
+   "stage": "neighbour",
+   "burrowFamily": "map-pin",
+   "fits": {
+    "places": [
+     "street",
+     "parking",
+     "home",
+     "cafe",
+     "market"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "floor",
+    "ground",
+    "bench",
+    "table"
+   ],
+   "variants": {
+    "v": [
+     "butter",
+     "lilac",
+     "cyan",
+     "mint",
+     "coral",
+     "white"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "motorbike",
+    "safety",
+    "traffic",
+    "commute",
+    "vietnam",
+    "road"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "B",
+    "lead": "fix",
+    "afterFix": "pass",
+    "note": "read as a food cloche (dome on a plate) -> plate removed, peak, U strap, rivets"
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-passport",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "passport"
+    }
+   },
+   "word": "passport",
+   "headword": "passport",
+   "pos": "noun",
+   "gloss": {
+    "vi": "hộ chiếu",
+    "reviewed": false
+   },
+   "category": "travel",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "map-pin",
+   "fits": {
+    "places": [
+     "airport",
+     "hotel",
+     "station",
+     "office",
+     "home"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "counter",
+    "hand"
+   ],
+   "variants": {
+    "v": [
+     "plum",
+     "coral",
+     "cyan",
+     "mint",
+     "lilac"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "travel",
+    "immigration",
+    "check-in",
+    "abroad",
+    "documents",
+    "visa"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "B",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-star-lantern",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "star-lantern"
+    }
+   },
+   "word": "star lantern",
+   "headword": "lantern",
+   "pos": "noun",
+   "gloss": {
+    "vi": "đèn ông sao",
+    "reviewed": false
+   },
+   "category": "festival",
+   "cefr": "B2",
+   "cefrSource": "agent-estimate",
+   "stage": "local",
+   "burrowFamily": "glowing",
+   "fits": {
+    "places": [
+     "street",
+     "home",
+     "park",
+     "school"
+    ],
+    "seasons": [
+     "mid-autumn"
+    ],
+    "tod": [
+     "any",
+     "dusk",
+     "night"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "hand",
+    "ground",
+    "wall"
+   ],
+   "variants": {
+    "v": [
+     "coral",
+     "butter",
+     "lilac",
+     "cyan",
+     "mint"
+    ],
+    "season": [],
+    "tod": [
+     "night"
+    ]
+   },
+   "tags": [
+    "mid-autumn",
+    "children",
+    "festival",
+    "moon",
+    "parade",
+    "vietnam",
+    "tradition"
+   ],
+   "collect": {
+    "rarity": "limited",
+    "earnedBy": "Natterwick festival window only (decision 3), returns next year",
+    "window": "lantern-night",
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "B",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review",
+   "flags": [
+    "decision-3: a culture-holiday item; keep as an everyday word, never a festival theme"
+   ]
+  },
+  {
+   "id": "prop-cactus",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "cactus"
+    }
+   },
+   "word": "cactus",
+   "headword": "cactus",
+   "pos": "noun",
+   "gloss": {
+    "vi": "cây xương rồng",
+    "reviewed": false
+   },
+   "category": "nature",
+   "cefr": "B1",
+   "cefrSource": "agent-estimate",
+   "stage": "neighbour",
+   "burrowFamily": "plant",
+   "fits": {
+    "places": [
+     "home",
+     "office",
+     "cafe",
+     "window",
+     "shop"
+    ],
+    "seasons": [
+     "any",
+     "spring"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "shelf",
+    "counter",
+    "window"
+   ],
+   "variants": {
+    "v": [
+     "coral",
+     "lilac",
+     "cyan",
+     "butter",
+     "white"
+    ],
+    "season": [
+     "spring"
+    ],
+    "tod": [],
+    "flower": [
+     true
+    ]
+   },
+   "tags": [
+    "plant",
+    "desk",
+    "pot",
+    "easy-care",
+    "dry",
+    "green",
+    "gift"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "C",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-lotus",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "lotus"
+    }
+   },
+   "word": "lotus",
+   "headword": "lotus",
+   "pos": "noun",
+   "gloss": {
+    "vi": "hoa sen",
+    "reviewed": false
+   },
+   "category": "nature",
+   "cefr": "C1",
+   "cefrSource": "agent-estimate",
+   "stage": "voice",
+   "burrowFamily": "plant",
+   "fits": {
+    "places": [
+     "home",
+     "temple",
+     "garden",
+     "cafe",
+     "pond"
+    ],
+    "seasons": [
+     "summer",
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "table",
+    "floor",
+    "ground",
+    "counter"
+   ],
+   "variants": {
+    "v": [
+     "cyan",
+     "lilac",
+     "mint",
+     "butter",
+     "coral",
+     "white"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "flower",
+    "vietnam",
+    "national-flower",
+    "water",
+    "calm",
+    "summer",
+    "culture"
+   ],
+   "collect": {
+    "rarity": "rare",
+    "earnedBy": "story milestone: bloom 25 phrases",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "C",
+    "lead": "fix",
+    "afterFix": "pass",
+    "note": "bowl glint sat on the outline as a grey dot -> removed"
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-monstera",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "monstera"
+    }
+   },
+   "word": "monstera",
+   "headword": "plant",
+   "pos": "noun",
+   "gloss": {
+    "vi": "cây trầu bà lá xẻ (monstera)",
+    "reviewed": false
+   },
+   "category": "home",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "home",
+     "office",
+     "cafe",
+     "shop"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "floor",
+    "table",
+    "counter",
+    "shelf"
+   ],
+   "variants": {
+    "v": [
+     "cyan",
+     "lilac",
+     "mint",
+     "butter",
+     "coral",
+     "white"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "houseplant",
+    "leaves",
+    "green",
+    "decor",
+    "cosy",
+    "care"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "C",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-watermelon",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "watermelon"
+    }
+   },
+   "word": "slice of watermelon",
+   "headword": "watermelon",
+   "pos": "noun",
+   "gloss": {
+    "vi": "miếng dưa hấu",
+    "reviewed": false
+   },
+   "category": "food",
+   "cefr": "A1",
+   "cefrSource": "agent-estimate",
+   "stage": "visitor",
+   "burrowFamily": "jar",
+   "fits": {
+    "places": [
+     "market",
+     "kitchen",
+     "home",
+     "street",
+     "beach"
+    ],
+    "seasons": [
+     "any",
+     "summer",
+     "tet"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "table",
+    "counter",
+    "stall",
+    "hand"
+   ],
+   "variants": {
+    "v": [
+     "coral",
+     "butter"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "fruit",
+    "summer",
+    "tet",
+    "sweet",
+    "snack",
+    "red",
+    "luck"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "C",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-non-la",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "non-la"
+    }
+   },
+   "word": "conical hat",
+   "headword": "hat",
+   "pos": "noun",
+   "gloss": {
+    "vi": "nón lá",
+    "reviewed": false
+   },
+   "category": "clothes",
+   "cefr": "A1",
+   "cefrSource": "agent-estimate",
+   "stage": "visitor",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "street",
+     "market",
+     "countryside",
+     "home",
+     "shop"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "wall",
+    "hand"
+   ],
+   "variants": {
+    "v": [
+     "lilac",
+     "cyan",
+     "coral",
+     "mint",
+     "butter"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "vietnam",
+    "culture",
+    "sun",
+    "rain",
+    "farmer",
+    "souvenir",
+    "traditional"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "C",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-sneakers",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "sneakers"
+    }
+   },
+   "word": "sneakers",
+   "headword": "sneaker",
+   "pos": "noun",
+   "gloss": {
+    "vi": "giày thể thao",
+    "reviewed": false
+   },
+   "category": "clothes",
+   "cefr": "B1",
+   "cefrSource": "agent-estimate",
+   "stage": "neighbour",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "home",
+     "shop",
+     "gym",
+     "park",
+     "street"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "S",
+   "box": 60,
+   "anchor": [
+    30,
+    56
+   ],
+   "surfaces": [
+    "floor",
+    "shelf",
+    "bench",
+    "ground"
+   ],
+   "variants": {
+    "v": [
+     "cyan",
+     "lilac",
+     "mint",
+     "butter",
+     "coral",
+     "white"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "shoes",
+    "sport",
+    "shopping",
+    "walking",
+    "pair",
+    "clothes",
+    "running"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "C",
+    "lead": "fix",
+    "afterFix": "pass",
+    "note": "overlapping pair muddled -> one clear shoe, partner peeking ahead"
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-t-shirt",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "t-shirt"
+    }
+   },
+   "word": "T-shirt",
+   "headword": "T-shirt",
+   "pos": "noun",
+   "gloss": {
+    "vi": "áo phông (miền Nam: áo thun)",
+    "reviewed": false
+   },
+   "category": "clothes",
+   "cefr": "A1",
+   "cefrSource": "agent-estimate",
+   "stage": "visitor",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "shop",
+     "home",
+     "market",
+     "laundry"
+    ],
+    "seasons": [
+     "any",
+     "summer"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "wall",
+    "table",
+    "counter",
+    "stall",
+    "bed"
+   ],
+   "variants": {
+    "v": [
+     "cyan",
+     "lilac",
+     "mint",
+     "butter",
+     "coral",
+     "white"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "clothes",
+    "shopping",
+    "colours",
+    "sizes",
+    "casual",
+    "laundry",
+    "gift"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "C",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-armchair",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "armchair"
+    }
+   },
+   "word": "armchair",
+   "headword": "armchair",
+   "pos": "noun",
+   "gloss": {
+    "vi": "ghế bành",
+    "reviewed": false
+   },
+   "category": "home",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "home",
+     "living-room",
+     "cafe",
+     "office",
+     "hotel"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "L",
+   "box": 160,
+   "anchor": [
+    80,
+    150
+   ],
+   "surfaces": [
+    "floor"
+   ],
+   "variants": {
+    "v": [
+     "lilac",
+     "cyan",
+     "mint",
+     "butter",
+     "coral",
+     "white"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "sit",
+    "relax",
+    "cosy",
+    "living-room",
+    "reading",
+    "rest"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "C",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-plastic-stool",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "plastic-stool"
+    }
+   },
+   "word": "plastic stool",
+   "headword": "stool",
+   "pos": "noun",
+   "gloss": {
+    "vi": "ghế nhựa",
+    "reviewed": false
+   },
+   "category": "home",
+   "cefr": "B1",
+   "cefrSource": "agent-estimate",
+   "stage": "neighbour",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "street",
+     "cafe",
+     "market",
+     "street-food",
+     "home"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "M",
+   "box": 96,
+   "anchor": [
+    48,
+    90
+   ],
+   "surfaces": [
+    "floor",
+    "ground"
+   ],
+   "variants": {
+    "v": [
+     "coral",
+     "cyan",
+     "lilac",
+     "mint",
+     "butter"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "vietnam",
+    "street-food",
+    "sit",
+    "sidewalk",
+    "pho",
+    "coffee",
+    "casual"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "C",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  },
+  {
+   "id": "prop-bookshelf",
+   "kind": "prop",
+   "gen": {
+    "fn": "s_prop",
+    "o": {
+     "id": "bookshelf"
+    }
+   },
+   "word": "bookshelf",
+   "headword": "bookshelf",
+   "pos": "noun",
+   "gloss": {
+    "vi": "giá sách (miền Nam: kệ sách)",
+    "reviewed": false
+   },
+   "category": "home",
+   "cefr": "A2",
+   "cefrSource": "agent-estimate",
+   "stage": "newcomer",
+   "burrowFamily": "desk",
+   "fits": {
+    "places": [
+     "home",
+     "office",
+     "library",
+     "school",
+     "cafe",
+     "bookshop"
+    ],
+    "seasons": [
+     "any"
+    ],
+    "tod": [
+     "any"
+    ],
+    "moods": []
+   },
+   "size": "L",
+   "box": 160,
+   "anchor": [
+    80,
+    150
+   ],
+   "surfaces": [
+    "floor"
+   ],
+   "variants": {
+    "v": [
+     "wood",
+     "white",
+     "lilac",
+     "cyan",
+     "mint",
+     "butter"
+    ],
+    "season": [],
+    "tod": []
+   },
+   "tags": [
+    "books",
+    "reading",
+    "study",
+    "library",
+    "room",
+    "furniture",
+    "quiet"
+   ],
+   "collect": {
+    "rarity": "common",
+    "earnedBy": "met in a story",
+    "window": null,
+    "sellable": false
+   },
+   "audio": {
+    "word": null
+   },
+   "review": {
+    "agentBatch": "C",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": ""
+   },
+   "status": "review"
+  }
+ ],
+ "scenes": [
+  {
+   "id": "set-lantern-cafe-counter",
+   "kind": "scene",
+   "existing": true,
+   "fn": "s_cafe",
+   "light": "cafeWarm wash (split out so props are lit too)",
+   "front": "s_cafeFront",
+   "place": "lantern-cafe",
+   "indoor": true,
+   "anchors": {
+    "counter-1": {
+     "xy": [
+      166,
+      410
+     ],
+     "sizes": [
+      "S",
+      "M"
+     ],
+     "surfaces": "counter"
+    },
+    "counter-2": {
+     "xy": [
+      224,
+      410
+     ],
+     "sizes": [
+      "S",
+      "M"
+     ],
+     "surfaces": "counter"
+    },
+    "counter-3": {
+     "xy": [
+      262,
+      410
+     ],
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "counter"
+    },
+    "table-l": {
+     "xy": [
+      70,
+      746
+     ],
+     "scale": 0.85,
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "table"
+    },
+    "table-r": {
+     "xy": [
+      322,
+      746
+     ],
+     "scale": 0.85,
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "table"
+    },
+    "floor-l": {
+     "xy": [
+      52,
+      690
+     ],
+     "sizes": [
+      "M"
+     ],
+     "surfaces": "floor"
+    },
+    "floor-r": {
+     "xy": [
+      340,
+      690
+     ],
+     "sizes": [
+      "M"
+     ],
+     "surfaces": "floor"
+    }
+   }
+  },
+  {
+   "id": "set-burrow",
+   "kind": "scene",
+   "existing": true,
+   "fn": "s_burrow2",
+   "place": "burrow",
+   "indoor": true,
+   "anchors": {
+    "shelf-l1": {
+     "xy": [
+      50,
+      398
+     ],
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "shelf"
+    },
+    "shelf-l2": {
+     "xy": [
+      100,
+      398
+     ],
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "shelf"
+    },
+    "shelf-l3": {
+     "xy": [
+      150,
+      398
+     ],
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "shelf"
+    },
+    "shelf-r1": {
+     "xy": [
+      246,
+      398
+     ],
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "shelf"
+    },
+    "shelf-r2": {
+     "xy": [
+      292,
+      398
+     ],
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "shelf"
+    },
+    "shelf-r3": {
+     "xy": [
+      338,
+      398
+     ],
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "shelf"
+    },
+    "sill": {
+     "xy": [
+      112,
+      316
+     ],
+     "scale": 0.9,
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "shelf"
+    },
+    "desk-1": {
+     "xy": [
+      104,
+      520
+     ],
+     "sizes": [
+      "S",
+      "M"
+     ],
+     "surfaces": "table"
+    },
+    "desk-2": {
+     "xy": [
+      142,
+      520
+     ],
+     "scale": 0.9,
+     "sizes": [
+      "S"
+     ],
+     "surfaces": "table"
+    },
+    "floor-l": {
+     "xy": [
+      70,
+      700
+     ],
+     "sizes": [
+      "M",
+      "L"
+     ],
+     "surfaces": "floor"
+    },
+    "floor-c": {
+     "xy": [
+      195,
+      742
+     ],
+     "sizes": [
+      "M"
+     ],
+     "surfaces": "floor"
+    },
+    "floor-r": {
+     "xy": [
+      250,
+      690
+     ],
+     "sizes": [
+      "M",
+      "L"
+     ],
+     "surfaces": "floor"
+    }
+   }
+  },
+  {
+   "id": "set-market-stall",
+   "kind": "scene",
+   "name": "fruit stall at the market",
+   "vi": "sạp trái cây ở chợ",
+   "place": "market",
+   "indoor": false,
+   "tod": [
+    "morning",
+    "afternoon",
+    "dusk"
+   ],
+   "seasons": [
+    "any",
+    "tet"
+   ],
+   "weather": [
+    "clear"
+   ],
+   "fn": "s_market",
+   "front": "s_market (layer: front)",
+   "o": {
+    "tod": "afternoon",
+    "season": null,
+    "awning": "lilac|cyan"
+   },
+   "anchors": {
+    "counter-l": {
+     "xy": [
+      140,
+      513
+     ],
+     "scale": 1,
+     "surfaces": "counter",
+     "sizes": [
+      "S"
+     ]
+    },
+    "counter-c": {
+     "xy": [
+      195,
+      513
+     ],
+     "scale": 1,
+     "surfaces": "counter",
+     "sizes": [
+      "S"
+     ]
+    },
+    "counter-r": {
+     "xy": [
+      250,
+      513
+     ],
+     "scale": 1,
+     "surfaces": "counter",
+     "sizes": [
+      "S"
+     ]
+    },
+    "ground-l": {
+     "xy": [
+      60,
+      700
+     ],
+     "scale": 1,
+     "surfaces": "ground",
+     "sizes": [
+      "M"
+     ],
+     "layer": "front"
+    },
+    "ground-r": {
+     "xy": [
+      330,
+      700
+     ],
+     "scale": 1,
+     "surfaces": "ground",
+     "sizes": [
+      "M"
+     ],
+     "layer": "front"
+    }
+   },
+   "notes": "Critter stands behind the counter (top y 514); counter, crates and price tags are the front layer. ground-* slots sit under the call bar (y > 674).",
+   "tags": [
+    "shopping",
+    "bargaining",
+    "numbers",
+    "prices",
+    "fruit",
+    "food",
+    "tet",
+    "market",
+    "weighing"
+   ],
+   "status": "review",
+   "review": {
+    "agentBatch": "scenes",
+    "lead": "pass",
+    "afterFix": "pass",
+    "note": "ground slots moved in front of the counter front layer; bulb glow 110 -> 46"
+   }
+  },
+  {
+   "id": "set-park-bench",
+   "kind": "scene",
+   "name": "park bench",
+   "vi": "ghế đá trong công viên",
+   "place": "park",
+   "indoor": false,
+   "tod": [
+    "afternoon",
+    "dusk",
+    "night"
+   ],
+   "seasons": [
+    "spring",
+    "summer",
+    "autumn",
+    "winter"
+   ],
+   "weather": [
+    "clear"
+   ],
+   "fn": "s_park",
+   "front": null,
+   "o": {
+    "tod": "dusk",
+    "season": "summer"
+   },
+   "anchors": {
+    "bench-l": {
+     "xy": [
+      112,
+      553
+     ],
+     "scale": 1,
+     "surfaces": "bench",
+     "sizes": [
+      "S"
+     ]
+    },
+    "bench-r": {
+     "xy": [
+      278,
+      553
+     ],
+     "scale": 1,
+     "surfaces": "bench",
+     "sizes": [
+      "S"
+     ]
+    },
+    "path-l": {
+     "xy": [
+      70,
+      690
+     ],
+     "scale": 1,
+     "surfaces": "ground",
+     "sizes": [
+      "M"
+     ]
+    },
+    "path-c": {
+     "xy": [
+      195,
+      700
+     ],
+     "scale": 1,
+     "surfaces": "ground",
+     "sizes": [
+      "M"
+     ]
+    },
+    "path-r": {
+     "xy": [
+      322,
+      690
+     ],
+     "scale": 1,
+     "surfaces": "ground",
+     "sizes": [
+      "M"
+     ]
+    }
+   },
+   "notes": "Bench is centred behind the critter (back layer); its ends and armrests stay visible. Lamp lit at dusk/night, stars + moon at night; spring blossom, summer green, autumn warm canopy + leaves, winter bare tree + snow caps + flakes.",
+   "tags": [
+    "relaxing",
+    "weekend",
+    "small talk",
+    "feelings",
+    "seasons",
+    "weather",
+    "walking",
+    "evening"
+   ],
+   "status": "review",
+   "review": {
+    "agentBatch": "scenes",
+    "lead": "fix",
+    "afterFix": "pass",
+    "note": "dusk/night lamp glow was a 130pt haze blob -> 44pt"
+   }
+  },
+  {
+   "id": "set-train-platform",
+   "kind": "scene",
+   "name": "train platform in the rain",
+   "vi": "sân ga tàu dưới mưa",
+   "place": "station",
+   "indoor": false,
+   "tod": [
+    "afternoon",
+    "dusk",
+    "night"
+   ],
+   "seasons": [
+    "any"
+   ],
+   "weather": [
+    "rain",
+    "clear"
+   ],
+   "fn": "s_platform",
+   "front": "s_platform (layer: front: canopy posts)",
+   "o": {
+    "tod": "afternoon",
+    "weather": "rain"
+   },
+   "anchors": {
+    "bench-l": {
+     "xy": [
+      60,
+      639
+     ],
+     "scale": 1,
+     "surfaces": "bench",
+     "sizes": [
+      "S"
+     ]
+    },
+    "bench-r": {
+     "xy": [
+      112,
+      639
+     ],
+     "scale": 1,
+     "surfaces": "bench",
+     "sizes": [
+      "S"
+     ]
+    },
+    "floor-l": {
+     "xy": [
+      86,
+      740
+     ],
+     "scale": 1,
+     "surfaces": "floor",
+     "sizes": [
+      "M",
+      "L"
+     ]
+    },
+    "floor-c": {
+     "xy": [
+      195,
+      724
+     ],
+     "scale": 1,
+     "surfaces": "floor",
+     "sizes": [
+      "M",
+      "L"
+     ]
+    },
+    "floor-r": {
+     "xy": [
+      316,
+      700
+     ],
+     "scale": 1,
+     "surfaces": "floor",
+     "sizes": [
+      "M",
+      "L"
+     ]
+    }
+   },
+   "notes": "Train nose arrives from the right (x 270+), destination board and clock carry no text. Rain only falls beyond the platform edge (canopy hides it); drips and puddles on the platform.",
+   "tags": [
+    "travel",
+    "commuting",
+    "directions",
+    "time",
+    "delays",
+    "weather",
+    "rain",
+    "tickets",
+    "waiting"
+   ],
+   "status": "review",
+   "review": {
+    "agentBatch": "scenes",
+    "lead": "fix",
+    "afterFix": "pass",
+    "note": "dusk/night canopy glows were haze blobs -> 54pt"
+   }
+  }
+ ],
+ "wearables": [
+  {
+   "id": "wear-scarf",
+   "kind": "wearable",
+   "gen": {
+    "fn": "s_wear",
+    "o": {
+     "wear": [
+      "scarf"
+     ]
+    }
+   },
+   "word": "scarf",
+   "gloss": {
+    "vi": "khăn quàng cổ",
+    "reviewed": false
+   },
+   "cefr": "A2",
+   "category": "clothes",
+   "slots": [
+    "neck"
+   ],
+   "excludes": "one item per slot; a head item hides the capybara orange",
+   "fits": {
+    "redpanda": "derived",
+    "capybara": "derived",
+    "cat": "derived"
+   },
+   "testedMoods": [
+    "happy",
+    "excited",
+    "think",
+    "shy",
+    "wave",
+    "laugh",
+    "listen",
+    "sleepy",
+    "proud"
+   ],
+   "collect": {
+    "rarity": null,
+    "sellable": true,
+    "priceVnd": 25000,
+    "inAlbum": false,
+    "onBoards": false,
+    "note": "bought: tappable for its word, never grows, never counts as learning",
+    "availability": "always"
+   },
+   "review": {
+    "lead": "pass",
+    "note": ""
+   },
+   "flags": [],
+   "status": "review"
+  },
+  {
+   "id": "wear-sun-hat",
+   "kind": "wearable",
+   "gen": {
+    "fn": "s_wear",
+    "o": {
+     "wear": [
+      "sun-hat"
+     ]
+    }
+   },
+   "word": "sun hat",
+   "gloss": {
+    "vi": "mũ rộng vành",
+    "reviewed": false
+   },
+   "cefr": "A2",
+   "category": "clothes",
+   "slots": [
+    "head"
+   ],
+   "excludes": "one item per slot; a head item hides the capybara orange",
+   "fits": {
+    "redpanda": "derived",
+    "capybara": "derived + hatK 1.06",
+    "cat": "derived + hatDy 2"
+   },
+   "testedMoods": [
+    "happy",
+    "excited",
+    "think",
+    "shy",
+    "wave",
+    "laugh",
+    "listen",
+    "sleepy",
+    "proud"
+   ],
+   "collect": {
+    "rarity": null,
+    "sellable": true,
+    "priceVnd": 25000,
+    "inAlbum": false,
+    "onBoards": false,
+    "note": "bought: tappable for its word, never grows, never counts as learning",
+    "availability": "always"
+   },
+   "review": {
+    "lead": "pass",
+    "note": ""
+   },
+   "flags": [],
+   "status": "review"
+  },
+  {
+   "id": "wear-necklace",
+   "kind": "wearable",
+   "gen": {
+    "fn": "s_wear",
+    "o": {
+     "wear": [
+      "necklace"
+     ]
+    }
+   },
+   "word": "necklace",
+   "gloss": {
+    "vi": "vòng cổ",
+    "reviewed": false
+   },
+   "cefr": "A2",
+   "category": "clothes",
+   "slots": [
+    "neck"
+   ],
+   "excludes": "one item per slot; a head item hides the capybara orange",
+   "fits": {
+    "redpanda": "derived",
+    "capybara": "derived",
+    "cat": "derived"
+   },
+   "testedMoods": [
+    "happy",
+    "excited",
+    "think",
+    "shy",
+    "wave",
+    "laugh",
+    "listen",
+    "sleepy",
+    "proud"
+   ],
+   "collect": {
+    "rarity": null,
+    "sellable": true,
+    "priceVnd": 25000,
+    "inAlbum": false,
+    "onBoards": false,
+    "note": "bought: tappable for its word, never grows, never counts as learning",
+    "availability": "always"
+   },
+   "review": {
+    "lead": "pass",
+    "note": ""
+   },
+   "flags": [],
+   "status": "review"
+  },
+  {
+   "id": "wear-glasses",
+   "kind": "wearable",
+   "gen": {
+    "fn": "s_wear",
+    "o": {
+     "wear": [
+      "glasses"
+     ]
+    }
+   },
+   "word": "glasses",
+   "gloss": {
+    "vi": "kính",
+    "reviewed": false
+   },
+   "cefr": "A1",
+   "category": "clothes",
+   "slots": [
+    "face"
+   ],
+   "excludes": "one item per slot; a head item hides the capybara orange",
+   "fits": {
+    "redpanda": "derived",
+    "capybara": "derived",
+    "cat": "derived"
+   },
+   "testedMoods": [
+    "happy",
+    "excited",
+    "think",
+    "shy",
+    "wave",
+    "laugh",
+    "listen",
+    "sleepy",
+    "proud"
+   ],
+   "collect": {
+    "rarity": null,
+    "sellable": true,
+    "priceVnd": 25000,
+    "inAlbum": false,
+    "onBoards": false,
+    "note": "bought: tappable for its word, never grows, never counts as learning",
+    "availability": "always"
+   },
+   "review": {
+    "lead": "pass",
+    "note": ""
+   },
+   "flags": [],
+   "status": "review"
+  },
+  {
+   "id": "wear-tet-top",
+   "kind": "wearable",
+   "gen": {
+    "fn": "s_wear",
+    "o": {
+     "wear": [
+      "tet-top"
+     ]
+    }
+   },
+   "word": "silk top (áo dài-inspired)",
+   "gloss": {
+    "vi": "áo lụa (cách điệu áo dài)",
+    "reviewed": false
+   },
+   "cefr": "B1",
+   "category": "clothes",
+   "slots": [
+    "torso",
+    "neck"
+   ],
+   "excludes": "one item per slot; a head item hides the capybara orange",
+   "fits": {
+    "redpanda": "derived",
+    "capybara": "derived + collar clears low mouth (my 156)",
+    "cat": "derived"
+   },
+   "testedMoods": [
+    "happy",
+    "excited",
+    "think",
+    "shy",
+    "wave",
+    "laugh",
+    "listen",
+    "sleepy",
+    "proud"
+   ],
+   "collect": {
+    "rarity": null,
+    "sellable": true,
+    "priceVnd": 49000,
+    "inAlbum": false,
+    "onBoards": false,
+    "note": "bought: tappable for its word, never grows, never counts as learning",
+    "availability": "seasonal: in the shop during end-of-year-lights, returns every year, no countdown shown"
+   },
+   "review": {
+    "lead": "fix",
+    "note": "reads as a sash: the bean body leaves little torso under the face"
+   },
+   "flags": [
+    "decision-3: áo dài reference; rename/retheme or drop"
+   ],
+   "status": "review"
+  },
+  {
+   "id": "wear-raincoat",
+   "kind": "wearable",
+   "gen": {
+    "fn": "s_wear",
+    "o": {
+     "wear": [
+      "raincoat"
+     ]
+    }
+   },
+   "word": "raincoat",
+   "gloss": {
+    "vi": "áo mưa",
+    "reviewed": false
+   },
+   "cefr": "A2",
+   "category": "clothes",
+   "slots": [
+    "torso",
+    "neck",
+    "head"
+   ],
+   "excludes": "one item per slot; a head item hides the capybara orange",
+   "fits": {
+    "redpanda": "derived",
+    "capybara": "derived + hatK 1.06",
+    "cat": "derived + hatDy 2"
+   },
+   "testedMoods": [
+    "happy",
+    "excited",
+    "think",
+    "shy",
+    "wave",
+    "laugh",
+    "listen",
+    "sleepy",
+    "proud"
+   ],
+   "collect": {
+    "rarity": null,
+    "sellable": true,
+    "priceVnd": 49000,
+    "inAlbum": false,
+    "onBoards": false,
+    "note": "bought: tappable for its word, never grows, never counts as learning",
+    "availability": "always"
+   },
+   "review": {
+    "lead": "pass",
+    "note": ""
+   },
+   "flags": [],
+   "status": "review"
+  }
+ ]
+}

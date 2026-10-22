@@ -1,0 +1,17 @@
+[{"file":"props/laptop.png","fn":"s_prop","w":96,"h":96,"o":{"id":"laptop"},"scale":3},
+ {"file":"props/laptop-lilac.png","fn":"s_prop","w":96,"h":96,"o":{"id":"laptop","v":"lilac"},"scale":3},
+ {"file":"props/desk-lamp.png","fn":"s_prop","w":96,"h":96,"o":{"id":"desk-lamp"},"scale":3},
+ {"file":"props/desk-lamp-night.png","fn":"s_prop","w":96,"h":96,"o":{"id":"desk-lamp","tod":"night"},"scale":3},
+ {"file":"props/clipboard.png","fn":"s_prop","w":60,"h":60,"o":{"id":"clipboard"},"scale":3},
+ {"file":"props/smartphone.png","fn":"s_prop","w":60,"h":60,"o":{"id":"smartphone"},"scale":3},
+ {"file":"props/electric-fan.png","fn":"s_prop","w":96,"h":96,"o":{"id":"electric-fan"},"scale":3},
+ {"file":"props/suitcase.png","fn":"s_prop","w":96,"h":96,"o":{"id":"suitcase"},"scale":3},
+ {"file":"props/suitcase-coral.png","fn":"s_prop","w":96,"h":96,"o":{"id":"suitcase","v":"coral"},"scale":3},
+ {"file":"props/backpack.png","fn":"s_prop","w":96,"h":96,"o":{"id":"backpack"},"scale":3},
+ {"file":"props/helmet.png","fn":"s_prop","w":96,"h":96,"o":{"id":"helmet"},"scale":3},
+ {"file":"props/helmet-cyan.png","fn":"s_prop","w":96,"h":96,"o":{"id":"helmet","v":"cyan"},"scale":3},
+ {"file":"props/passport.png","fn":"s_prop","w":60,"h":60,"o":{"id":"passport"},"scale":3},
+ {"file":"props/passport-coral.png","fn":"s_prop","w":60,"h":60,"o":{"id":"passport","v":"coral"},"scale":3},
+ {"file":"props/star-lantern.png","fn":"s_prop","w":96,"h":96,"o":{"id":"star-lantern"},"scale":3},
+ {"file":"props/star-lantern-night.png","fn":"s_prop","w":96,"h":96,"o":{"id":"star-lantern","tod":"night"},"scale":3}
+]
