@@ -31,6 +31,7 @@ beforeEach(() => {
     }
     if (direction.includes('what the learner just said')) {
       const c = lineCases.shift() ?? 'fine';
+      if (c === 'none') return `Mm, okay. First line, no case.${control({ outcome: 'fine' })}`;
       const safety = c === 'flagged' ? { safety: 'crisis' } : {};
       const outcome = c === 'flagged' ? 'fine' : c;
       return `[${outcome}] First line, for ${outcome.replace('_', ' ')}.${control({ outcome, ...safety })}`;
@@ -188,6 +189,17 @@ describe('Jev beside the reply', () => {
     phone.close();
   }, 20_000);
 
+  it('voices the line for Jev’s case when the reply did not say which case it took', async () => {
+    const log = vi.spyOn(console, 'log');
+    const { phone } = await call();
+    const from = await turn(phone, 'Tôi là kỹ sư.', { outcome: 'unclear' }, 'none');
+    expect(spoken(phone, from)).toEqual(['Second line, for unclear.']);
+    expect(judgeLogs(log)).toMatchObject([
+      { by: 'jev', outcome: 'unclear', lineCase: null, agree: null, switched: true },
+    ]);
+    phone.close();
+  }, 20_000);
+
   it('catches a target error the reply took as fine, and asks it back', async () => {
     const { phone } = await call('newcomer', ['past_ed']);
     providers.firstTokenDelayMs = 300;
@@ -263,6 +275,43 @@ describe('again and slowly', () => {
       phone.close();
     }, 20_000);
   }
+});
+
+describe('the recorded reaction', () => {
+  it('waits for Jev when the hold ends first, and never plays before a replay', async () => {
+    const { phone } = await call();
+    providers.firstTokenDelayMs = 900;
+    providers.jevDelayMs = 500;
+    providers.jev = () => ({ again: 'repeat', outcome: 'unclear' });
+    lineCases.push('unclear');
+    providers.speech.push('Sorry?');
+    const from = phone.frames.length;
+    // Released at once: the whole pause is in.
+    phone.speak(1_000, 1_000);
+    await phone.next('say_end', () => true, { from });
+    const reactions = phone.frames
+      .slice(from)
+      .filter((f) => f.type === 'play_rec' && f.lineId.startsWith('s1-react-'));
+    expect(reactions).toEqual([]);
+    phone.close();
+  }, 20_000);
+
+  it('plays once Jev has answered, before the reply', async () => {
+    const { phone } = await call();
+    providers.firstTokenDelayMs = 900;
+    providers.jevDelayMs = 300;
+    providers.jev = () => ({ outcome: 'fine' });
+    lineCases.push('fine');
+    providers.speech.push("What's wrong?");
+    const from = phone.frames.length;
+    phone.speak(1_000, 1_000);
+    const reaction = await phone.next('play_rec', (f) => f.lineId.startsWith('s1-react-'), {
+      from,
+    });
+    const say = await phone.next('say_start', () => true, { from });
+    expect(phone.frames.indexOf(reaction)).toBeLessThan(phone.frames.indexOf(say));
+    phone.close();
+  }, 20_000);
 });
 
 describe('the crisis screen', () => {

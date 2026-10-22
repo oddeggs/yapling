@@ -35,8 +35,9 @@ import { pickReaction } from './voices';
  *   line is said again (slower, with longer breaks, for "slowly"). It is not a try.
  * - a crisis: the line is dropped and the crisis hand-over runs.
  * - otherwise its case is compared with the case the line was written for (the line's leading
- *   `[case]` tag). Same runner event: nothing changes. Different: a second line, written for
- *   Jev's case only and started as soon as Jev answered, is voiced instead.
+ *   `[case]` tag). Same runner event: nothing changes. Different, or a line with no tag: a
+ *   second line, written for Jev's case only and started as soon as Jev answered, is voiced
+ *   instead.
  * When Jev is late or down, the line's own case stands, as before Jev.
  */
 
@@ -117,6 +118,8 @@ class Reply {
   learnerLine = -1;
   /** The line is the last character line said again: no outcome, no try. */
   replay: AgainAsk | null = null;
+  /** The hold ended before Jev answered: the recorded reaction waits for its answer. */
+  reactionDue = false;
   readonly judge: TurnJudge = {
     startedAt: Date.now(),
     abort: new AbortController(),
@@ -224,11 +227,18 @@ export class Replies {
   released(line: SpokenLine): void {
     const reply = this.reply;
     if (reply?.line !== line) return;
-    const reaction = reply.replay
-      ? null
-      : pickReaction(reply.speaker, line.text, this.host.data.turns);
-    if (reaction) this.sendReaction(reply.speaker, reaction.lineId);
+    // An "Ooh" before a replay or the crisis hand-over would be wrong: wait for Jev (≤ 800 ms).
+    if (reply.judge.status === 'pending') reply.reactionDue = true;
+    else this.react(reply);
     if (!line.committed) this.host.thinking(true);
+  }
+
+  /** The recorded reaction to the turn, unless no reply follows or it has started. */
+  private react(reply: Reply): void {
+    reply.reactionDue = false;
+    if (this.reply !== reply || reply.replay !== null || reply.committed) return;
+    const reaction = pickReaction(reply.speaker, reply.line.text, this.host.data.turns);
+    if (reaction) this.sendReaction(reply.speaker, reaction.lineId);
   }
 
   private sendReaction(character: CharacterId, lineId: string): void {
@@ -332,6 +342,7 @@ export class Replies {
     if (this.reply !== reply) return;
     if (judgement === null) {
       judge.status = 'failed';
+      if (reply.reactionDue) this.react(reply);
       return;
     }
     if (reply.committed) {
@@ -347,6 +358,7 @@ export class Replies {
       this.crisisNow(reply);
       return;
     }
+    if (reply.reactionDue) this.react(reply);
     // A second try after a correction prompt has one case only: the line's control decides it.
     if (reply.plan.correcting) return;
     if (judge.tag === undefined) judge.alt = this.altLine(reply, judgement);
@@ -365,14 +377,13 @@ export class Replies {
     const judgement = judge.judgement;
     if (judgement === null || judge.tag === undefined || judge.settled || reply.committed) return;
     judge.settled = true;
-    if (judge.tag === null) {
-      // The line didn't say which case it took: its control line decides, as before Jev.
-      this.dropAlt(reply);
-      return;
-    }
-    judge.agree = eventFor(plan, judge.tag) === eventFor(plan, judgement.outcome);
+    // A second try after a correction prompt has one case only: the line's control decides it.
+    if (plan.correcting) return;
+    // A line that didn't say which case it took may fit any: the line for Jev's case is voiced.
+    judge.agree =
+      judge.tag === null ? null : eventFor(plan, judge.tag) === eventFor(plan, judgement.outcome);
     judge.decided = true;
-    if (judge.agree) {
+    if (judge.agree === true) {
       this.dropAlt(reply);
       return;
     }
