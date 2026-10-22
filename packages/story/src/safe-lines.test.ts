@@ -26,7 +26,7 @@ const genOf = (effects: readonly SceneEffect[]): GenEffect => {
 
 describe('safe lines', () => {
   it('asks the beat again for a nudge', () => {
-    const nudge = genOf(reduceScene(E1, listening('agree-to-call'), { type: 'silent' }).effects);
+    const nudge = genOf(reduceScene(E1, listening('agree-to-call'), { type: 'unclear' }).effects);
     expect(nudge.purpose).toBe('nudge');
     expect(safeLineFor(nudge, 'Can you call them for me?')).toBe(
       'No rush. Can you call them for me?',
@@ -36,7 +36,7 @@ describe('safe lines', () => {
 
   it("says the words a fallback's direction quotes", () => {
     const fallback = genOf(
-      reduceScene(E1, listening('agree-to-call', 1), { type: 'silent' }).effects,
+      reduceScene(E1, listening('agree-to-call', 1), { type: 'unclear' }).effects,
     );
     expect(fallback.purpose).toBe('fallback');
     expect(safeLineFor(fallback, null)).toBe('We can do it!');

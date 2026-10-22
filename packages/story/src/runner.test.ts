@@ -65,9 +65,9 @@ describe('scene runner', () => {
     expect(moved.state).toMatchObject({ beatId: 'mei-deflects', phase: 'speaking' });
   });
 
-  it('hints after silence at Newcomer, twice, then moves on with the fallback line', () => {
+  it('hints after an unclear try at Newcomer, twice, then moves on with the fallback line', () => {
     const asking = driveTo(E1, 'newcomer', 'ask-whats-wrong');
-    const hinted = send(E1, asking, 'silent');
+    const hinted = send(E1, asking, 'unclear');
     expect(hinted.effects).toEqual([
       {
         type: 'hint',
@@ -78,9 +78,9 @@ describe('scene runner', () => {
         },
       },
     ]);
-    const again = send(E1, hinted, 'silent');
+    const again = send(E1, hinted, 'unclear');
     expect(types(again.effects)).toEqual(['hint']);
-    const fallback = send(E1, again, 'silent');
+    const fallback = send(E1, again, 'unclear');
     expect(fallback.state.phase).toBe('fallback');
     expect(fallback.effects).toEqual([
       expect.objectContaining({ type: 'gen', purpose: 'fallback', speaker: 'pip' }),
@@ -88,17 +88,52 @@ describe('scene runner', () => {
     expect(send(E1, fallback, 'gen_done').state.beatId).toBe('mei-deflects');
   });
 
-  it('nudges instead of hinting at Regular, but hints when asked', () => {
+  it('never moves, nudges or counts a try on silence, however long', () => {
+    for (const stage of ['newcomer', 'neighbour', 'regular', 'local', 'voice'] as const) {
+      const asking = driveTo(E1, stage, 'ask-whats-wrong');
+      const quiet = send(E1, asking, ...Array<'silent'>(50).fill('silent'));
+      expect(quiet.state).toMatchObject({
+        beatId: 'ask-whats-wrong',
+        phase: 'listening',
+        tries: 0,
+        asks: 0,
+      });
+      // The runner speaks no line for silence: nothing generated, nothing played.
+      let step = asking;
+      for (let n = 0; n < 50; n++) {
+        step = send(E1, step, 'silent');
+        expect(step.effects.filter((e) => e.type !== 'hint')).toEqual([]);
+      }
+    }
+  });
+
+  it('offers the hint once, silently, after a long quiet where the stage offers it', () => {
+    const asking = driveTo(E1, 'newcomer', 'ask-whats-wrong');
+    const offered = send(E1, asking, 'silent');
+    expect(types(offered.effects)).toEqual(['hint']);
+    expect(offered.state).toMatchObject({ tries: 0, hinted: true });
+    expect(send(E1, offered, 'silent').effects).toEqual([]);
+    // Asked for already: no offer on top.
+    const asked = send(E1, asking, 'hint_request');
+    expect(send(E1, asked, 'silent').effects).toEqual([]);
+    // Hints only when asked from Regular: a long quiet brings nothing at all.
+    expect(send(E1, driveTo(E1, 'regular', 'ask-whats-wrong'), 'silent').effects).toEqual([]);
+    // The next beat offers again.
+    const next = send(E1, offered, 'fine');
+    expect(next.state.hinted).toBe(false);
+  });
+
+  it('nudges instead of hinting at Regular after an unclear try, but hints when asked', () => {
     const asking = driveTo(E1, 'regular', 'ask-whats-wrong');
-    expect(send(E1, asking, 'silent').effects).toEqual([
+    expect(send(E1, asking, 'unclear').effects).toEqual([
       expect.objectContaining({ type: 'gen', purpose: 'nudge', speaker: 'mei' }),
     ]);
     expect(types(send(E1, asking, 'hint_request').effects)).toEqual(['hint']);
   });
 
-  it("shows the letter even when Mei's deflection meets only silence", () => {
+  it("shows the letter even when Mei's deflection meets only unclear tries", () => {
     const deflecting = send(E1, driveTo(E1, 'newcomer', 'mei-deflects'), 'gen_done');
-    const fallback = send(E1, deflecting, 'silent', 'silent', 'silent');
+    const fallback = send(E1, deflecting, 'unclear', 'unclear', 'unclear');
     expect(fallback.effects).toEqual([
       expect.objectContaining({ type: 'gen', purpose: 'fallback', speaker: 'mei' }),
     ]);
@@ -156,7 +191,7 @@ describe('scene runner', () => {
     expect(meaning?.known?.simple).toContain('Goes funny');
   });
 
-  it('counts asking more than the limit as a silence', () => {
+  it('counts asking more than the limit as a try', () => {
     const asking = driveTo(E1, 'newcomer', 'teach-rent');
     const asked = send(E1, asking, ...Array<'meaning_request'>(MAX_ASKS).fill('meaning_request'));
     expect(asked.state).toMatchObject({ asks: MAX_ASKS, tries: 0 });

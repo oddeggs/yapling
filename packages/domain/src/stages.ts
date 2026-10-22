@@ -37,8 +37,14 @@ export type IdiomUse = 'none' | 'rare_explained' | 'some' | 'natural';
 export type Interruptions = 'never' | 'rarely_gently' | 'yes_then_yield' | 'yes';
 
 /**
- * When a phrase hint slides up during a call. `after_pause`: on its own once the learner has been
- * silent for `pauseMs`. `on_request`: only when the learner asks.
+ * Thinking time is the learner's: silence never ends, moves or fails a turn. After this long a
+ * quiet learner may be offered the phrase hint once, silently, at the stages that offer it.
+ */
+export const LONG_QUIET_MS = 18_000;
+
+/**
+ * When a phrase hint slides up during a call. `after_pause`: offered once, on its own, after the
+ * learner has been quiet for `pauseMs` (the long quiet). `on_request`: only when the learner asks.
  */
 export type HintPolicy =
   { readonly kind: 'after_pause'; readonly pauseMs: number } | { readonly kind: 'on_request' };
@@ -76,7 +82,7 @@ export const SPEECH_SETTINGS: Readonly<Record<Stage, SpeechSettings>> = {
     sentenceLength: 'short_one_idea',
     idioms: 'none',
     interruptions: 'never',
-    hint: { kind: 'after_pause', pauseMs: 4_000 },
+    hint: { kind: 'after_pause', pauseMs: LONG_QUIET_MS },
     ttsSpeed: { min: 0.8, max: 0.8 },
     maxWordsPerTurn: MAX_WORDS_PER_TURN,
     phraseBreakSeconds: 0.35,
@@ -87,7 +93,7 @@ export const SPEECH_SETTINGS: Readonly<Record<Stage, SpeechSettings>> = {
     sentenceLength: 'one_or_two_ideas',
     idioms: 'rare_explained',
     interruptions: 'never',
-    hint: { kind: 'after_pause', pauseMs: 6_000 },
+    hint: { kind: 'after_pause', pauseMs: LONG_QUIET_MS },
     ttsSpeed: { min: 0.9, max: 0.9 },
     maxWordsPerTurn: MAX_WORDS_PER_TURN,
     phraseBreakSeconds: 0.2,
@@ -139,12 +145,12 @@ export const ttsSpeedFactor = (stage: Stage, mode: 'normal' | 'hard' = 'normal')
   return mode === 'hard' && isStageAtLeast(stage, 'local') ? max : min;
 };
 
-/** The hint policy for a stage (4 s Newcomer, 6 s Neighbour, on request after). */
+/** The hint policy for a stage (offered after the long quiet at Newcomer and Neighbour, on request after). */
 export const hintPolicy = (stage: Stage): HintPolicy => SPEECH_SETTINGS[stage].hint;
 
 /**
- * Whether a phrase hint shows now. A learner can always ask; at Newcomer and Neighbour it also
- * shows on its own after the stage's pause.
+ * Whether a phrase hint shows now. A learner can always ask; at Newcomer and Neighbour it is also
+ * offered on its own after the long quiet.
  */
 export const shouldShowHint = (stage: Stage, silenceMs: number, requested: boolean): boolean => {
   if (requested) return true;

@@ -10,15 +10,23 @@ import type { Answer, Beat, GlossedText, Meaning, Scene, UiSpec } from './types'
  * and the effects the director carries out. State is plain JSON, so a dropped call resumes on the
  * same beat (`resumeScene`).
  *
+ * Thinking time is the learner's: silence never ends, moves or fails a turn, never counts as a
+ * try and never brings a spoken nudge. A long quiet (`silent`) may offer the phrase hint once,
+ * silently, and nothing else.
+ *
  * Termination: rec and gen beats move on when their audio is done; an answer moves on when the
- * learner is fine, after one correction, when the timer ends, or after `maxTries` silences (the
- * fallback line); asking for hints or meanings more than `MAX_ASKS` times counts as a silence.
- * Beats only ever point forward (checked by `validateScene`), so every scene ends.
+ * learner is fine, after one correction, when the timer ends, or after `maxTries` real tries that
+ * didn't get there (unclear answers, hinted errors: the fallback line); asking for hints or
+ * meanings more than `MAX_ASKS` times counts as such a try. Beats only ever point forward (checked
+ * by `validateScene`), so every scene ends for a learner who keeps talking.
  */
 
 export type SceneEvent =
   | { readonly type: 'fine' }
   | { readonly type: 'target_error' }
+  /** The learner spoke, but not what the beat hoped (unclear, a question back, off topic). */
+  | { readonly type: 'unclear' }
+  /** A long quiet while the beat waits: never a try. */
   | { readonly type: 'silent' }
   | { readonly type: 'meaning_request' }
   | { readonly type: 'hint_request' }
@@ -43,7 +51,7 @@ export interface RunnerState {
   /** Null once the scene has ended. */
   readonly beatId: Id | null;
   readonly phase: Phase;
-  /** Silences and hinted errors on this beat. */
+  /** Unclear tries and hinted errors on this beat. */
   readonly tries: number;
   /** Hint and meaning requests on this beat. */
   readonly asks: number;
@@ -51,6 +59,11 @@ export interface RunnerState {
   readonly correcting: boolean;
   /** The written line spoken last, for "What does that mean?"; null after a generated line. */
   readonly lastLine: Id | null;
+  /**
+   * The phrase hint has shown on this beat (offered after a long quiet, asked for, or after a
+   * try), so a long quiet offers nothing more. Optional: states saved before it read as false.
+   */
+  readonly hinted?: boolean;
 }
 
 export type GenPurpose = 'line' | 'nudge' | 'fallback' | 'meaning';
@@ -91,7 +104,7 @@ export interface Step {
   readonly effects: readonly SceneEffect[];
 }
 
-/** Hint and meaning requests on one beat before the next one counts as a silence. */
+/** Hint and meaning requests on one beat before the next one counts as a try. */
 export const MAX_ASKS = 3;
 
 /** Directions are instructions to the character, never text about the learner it could echo. */
@@ -167,7 +180,15 @@ const timerEffects = (beat: Beat, stage: Stage): SceneEffect[] => {
 };
 
 const ended = (state: RunnerState): Step => ({
-  state: { ...state, beatId: null, phase: 'ended', tries: 0, asks: 0, correcting: false },
+  state: {
+    ...state,
+    beatId: null,
+    phase: 'ended',
+    tries: 0,
+    asks: 0,
+    correcting: false,
+    hinted: false,
+  },
   effects: [{ type: 'scene_end', reason: 'complete' }],
 });
 
@@ -183,7 +204,14 @@ const enter = (scene: Scene, state: RunnerState, first: Beat | null): Step => {
       beatId: beat.id,
       progress: progressOf(scene, state.stage, beat),
     });
-    const base = { ...state, beatId: beat.id, tries: 0, asks: 0, correcting: false };
+    const base = {
+      ...state,
+      beatId: beat.id,
+      tries: 0,
+      asks: 0,
+      correcting: false,
+      hinted: false,
+    };
     switch (beat.kind) {
       case 'ui':
         effects.push({ type: 'show_ui', beatId: beat.id, ui: beat.ui });
@@ -218,7 +246,7 @@ const enter = (scene: Scene, state: RunnerState, first: Beat | null): Step => {
 const advance = (scene: Scene, state: RunnerState, beat: Beat, to?: Id): Step =>
   enter(scene, state, nextBeat(scene, state.stage, beat, to));
 
-/** A silence or a hinted error: a hint (or a nudge), then the fallback after `maxTries`. */
+/** An unclear try or a hinted error: a hint (or a nudge), then the fallback after `maxTries`. */
 const tryAgain = (
   scene: Scene,
   state: RunnerState,
@@ -235,11 +263,26 @@ const tryAgain = (
     };
   }
   if (hint && (alwaysHint || STAGE_SPEECH[state.stage].hintsOnSilence)) {
-    return { state: { ...state, tries }, effects: [{ type: 'hint', beatId: beat.id, hint }] };
+    return {
+      state: { ...state, tries, hinted: true },
+      effects: [{ type: 'hint', beatId: beat.id, hint }],
+    };
   }
   return {
     state: { ...state, tries, lastLine: null },
     effects: [genEffect(beat, 'nudge', answer.listener, NUDGE_INTENT)],
+  };
+};
+
+/** A long quiet: the hint card, once and silently, where the stage offers it; else nothing. */
+const quietOffer = (state: RunnerState, beat: Beat, answer: Answer): Step => {
+  const { hint } = answer.exits.silent;
+  if (!hint || state.hinted === true || !STAGE_SPEECH[state.stage].hintsOnSilence) {
+    return { state, effects: [] };
+  }
+  return {
+    state: { ...state, hinted: true },
+    effects: [{ type: 'hint', beatId: beat.id, hint }],
   };
 };
 
@@ -272,14 +315,19 @@ const listen = (
               };
       }
       return stay;
-    case 'silent':
+    case 'unclear':
       return tryAgain(scene, state, beat, answer, false);
+    case 'silent':
+      return quietOffer(state, beat, answer);
     case 'hint_request': {
       const asks = state.asks + 1;
       if (asks > MAX_ASKS) return tryAgain(scene, { ...state, asks }, beat, answer, false);
       const { hint } = answer.exits.silent;
       return hint
-        ? { state: { ...state, asks }, effects: [{ type: 'hint', beatId: beat.id, hint }] }
+        ? {
+            state: { ...state, asks, hinted: true },
+            effects: [{ type: 'hint', beatId: beat.id, hint }],
+          }
         : {
             state: { ...state, asks, lastLine: null },
             effects: [genEffect(beat, 'nudge', answer.listener, NUDGE_INTENT)],
@@ -356,6 +404,7 @@ export const startScene = (scene: Scene, stage: Stage): Step =>
       asks: 0,
       correcting: false,
       lastLine: null,
+      hinted: false,
     },
     firstActiveFrom(scene, stage, 0),
   );
