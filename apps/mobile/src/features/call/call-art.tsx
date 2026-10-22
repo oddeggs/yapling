@@ -4,7 +4,6 @@ import { useArtRenderer } from '@yapling/art/native';
 import type { CharacterId } from '@yapling/contracts';
 import { colours } from '@yapling/theme';
 import { useMemo } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { CallSceneName } from './scene-layout';
 
@@ -26,7 +25,6 @@ export interface CritterFaceProps {
   readonly mood?: Mood;
   /** The circle's fill behind the face. */
   readonly fill?: string;
-  readonly style?: StyleProp<ViewStyle>;
 }
 
 /** A critter's face, as the prototype crops it (`s_face`). */
@@ -36,7 +34,6 @@ export function CritterFace({
   size,
   mood = 'happy',
   fill = colours.accentSoft,
-  style,
 }: CritterFaceProps) {
   const renderer = useArtRenderer();
   const who = artCharacter(character);
@@ -54,7 +51,7 @@ export function CritterFace({
   );
   if (!art) return null;
   return (
-    <Canvas style={[{ width: size, height: size }, style]}>
+    <Canvas style={{ width: size, height: size }}>
       <Picture picture={art.picture} />
     </Canvas>
   );

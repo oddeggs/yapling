@@ -102,7 +102,7 @@ export interface CallViewInput {
   readonly connectFailed: boolean;
 }
 
-/** Errors the screen shows as "no connection"; the rest end in the wrap-up. */
+/** Errors the screen shows as "no connection" (try again); the rest end the call kindly. */
 const NET_ERRORS = new Set([
   'no_connection',
   'stt_failed',
@@ -115,8 +115,11 @@ const NET_ERRORS = new Set([
 export function callView(input: CallViewInput): CallView {
   const { call, tracker, scene, layout, stage, firstLanguage, now } = input;
   const mode = modeOf(input);
+  // Minutes run out or an unknown scene: the call is over, kindly, with no error sheet.
   const sceneDone =
-    call.endReason !== null || call.error === 'minutes_exhausted' || call.phase === 'ended';
+    call.endReason !== null ||
+    call.phase === 'ended' ||
+    (call.error !== null && !NET_ERRORS.has(call.error));
   const live = mode === 'live' && !sceneDone;
   const beat = beatOf(scene, tracker.beatId);
   const waiting = expectsAnswer(scene, tracker.beatId);

@@ -91,6 +91,12 @@ describe('ringing and errors', () => {
     expect(v.mic).toBe('idle');
   });
 
+  it('ends without an error sheet when the call has no such scene', () => {
+    const v = view(connected({ error: 'unknown_scene' }), initialTracker);
+    expect(v.mode).toBe('live');
+    expect(v.sceneDone).toBe(true);
+  });
+
   it('counts the seconds while the scene wraps up', () => {
     const v = view(connected({ wrappingUp: true, secondsLeft: 48 }), initialTracker);
     expect(v.wrapUpSeconds).toBe(48);
