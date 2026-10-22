@@ -154,6 +154,8 @@ export function buildVisitorAfterCall(input: VisitorInput, t: Translate): Visito
   const ring = ringChange(progress?.weeks, call.id);
   const keepsakes = progress ? earnedKeepsakes(call, progress, learner) : null;
   const guide = CAST[GUIDE].name;
+  // A chapter left before its end isn't done: its box stays packed in the burrow.
+  const unfinished = chapter !== null && call.endReason !== 'scene_complete';
   return {
     state: 'visitor',
     kicker:
@@ -183,8 +185,9 @@ export function buildVisitorAfterCall(input: VisitorInput, t: Translate): Visito
         practise: t('payoff.visitor.replyPractise', { name: guide }),
       },
     },
-    box:
-      chapter !== null && title !== ''
+    box: unfinished
+      ? null
+      : chapter !== null && title !== ''
         ? t('payoff.visitor.box', { title })
         : ring !== null && ring.week === 1
           ? t('payoff.afterCall.boxUnpacked')
