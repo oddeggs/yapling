@@ -33,7 +33,7 @@ export const placementStage = (openBoxesFine: readonly boolean[]): 'visitor' | '
   return fine <= PLACEMENT_VISITOR_MAX_FINE ? 'visitor' : 'newcomer';
 };
 
-// --- Visitor to Newcomer: Linh's card at the end of week 1 ---
+// --- Visitor to Newcomer: Linh's card at the end of week 1, and at every full ring after ---
 
 /**
  * How one learner turn passed (the turn log's pass kind). `match`: passed on its own (the beat's
@@ -56,6 +56,28 @@ export const earnsNewcomerCard = (stage: Stage, weekOneTurns: readonly TurnPass[
   const matched = weekOneTurns.filter((t) => t === 'match').length;
   // Whole numbers, so exactly 70% passes.
   return matched * 100 >= weekOneTurns.length * STAGE_UP_MATCH_PERCENT;
+};
+
+/** What a full ring tells Linh, for the Newcomer card. */
+export interface FullRingForCard {
+  readonly stage: Stage;
+  /** The week whose ring a call just filled; null when the call filled no ring. */
+  readonly fullRingWeek: number | null;
+  /** How that week's learner turns passed. */
+  readonly ringTurns: readonly TurnPass[];
+  /** Weeks whose card the learner already answered (took it, or said "Ở lại thêm"). */
+  readonly answeredWeeks: readonly number[];
+}
+
+/**
+ * Linh offers a Visitor the Newcomer card at every full ring, not only week 1's, until it is
+ * taken: each ring whose week's turns meet the same rule as week 1's (`earnsNewcomerCard`), once
+ * per week. "Ở lại thêm" keeps the learner a Visitor and Linh asks again at the next full ring.
+ */
+export const newcomerCardAtRing = (input: FullRingForCard): { readonly week: number } | null => {
+  const week = input.fullRingWeek;
+  if (week === null || input.answeredWeeks.includes(week)) return null;
+  return earnsNewcomerCard(input.stage, input.ringTurns) ? { week } : null;
 };
 
 // --- The learner moving their own stage (`POST /api/me/stage`) ---

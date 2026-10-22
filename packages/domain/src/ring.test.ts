@@ -125,3 +125,47 @@ describe('the weekly ring', () => {
     );
   });
 });
+
+describe('ring slots and their scenes', () => {
+  const sceneFor = (week: number, kind: string) =>
+    week === 1 || kind !== 'episode' ? null : `s1-e${week}`;
+
+  it('fills the slot of the call’s own scene before an older slot with no scene', () => {
+    const weeks = ringWeeks([], 16, sceneFor);
+    const r = fillRingSlot(
+      weeks,
+      { kind: 'episode', callRecordId: 'c', doneAt: on(16), sceneId: 's1-e3' },
+      HCM,
+    );
+    expect(r.filled).toEqual({ week: 3, kind: 'episode' });
+    // Then a call with no slot of its own scene takes the oldest one with no scene.
+    const other = fillRingSlot(
+      r.weeks,
+      { kind: 'episode', callRecordId: 'd', doneAt: on(16), sceneId: 'teach-the-yapling' },
+      HCM,
+    );
+    expect(other.filled).toEqual({ week: 1, kind: 'episode' });
+    // And never another scene’s slot.
+    const none = fillRingSlot(
+      other.weeks,
+      { kind: 'episode', callRecordId: 'e', doneAt: on(16), sceneId: 's1-e5' },
+      HCM,
+    );
+    expect(none.filled).toBeNull();
+  });
+
+  it('opens slots on the days it is given, and an open slot learns its scene later', () => {
+    const weeks = ringWeeks(
+      [],
+      9,
+      () => null,
+      (week, kind) => (week === 2 && kind === 'episode' ? 9 : 99),
+    );
+    expect(statuses(weeks[1])).toEqual(['open', 'upcoming', 'upcoming']);
+    expect(weeks[1]?.slots[0]?.sceneId).toBeNull();
+    const learned = ringWeeks(weeks, 9, sceneFor, (week, kind) =>
+      week === 2 && kind === 'episode' ? 9 : 99,
+    );
+    expect(learned[1]?.slots[0]?.sceneId).toBe('s1-e2');
+  });
+});
