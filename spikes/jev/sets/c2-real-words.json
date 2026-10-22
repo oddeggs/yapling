@@ -1,0 +1,386 @@
+[
+ {
+  "id": "stt-ac01",
+  "said": "E-M-T-J.",
+  "label": "english",
+  "src": "stt:ac01 (en: I am teacher.)"
+ },
+ {
+  "id": "stt-ac02",
+  "said": "Sorry, again, please.",
+  "label": "english",
+  "src": "stt:ac02 (en: Sorry, again please.)"
+ },
+ {
+  "id": "stt-ac03",
+  "said": "Slowly, please.",
+  "label": "english",
+  "src": "stt:ac03 (en: Slowly, please.)"
+ },
+ {
+  "id": "stt-ac04",
+  "said": "The client.",
+  "label": "english",
+  "src": "stt:ac04 (en: Tea, please.)"
+ },
+ {
+  "id": "stt-ac05",
+  "said": "What wrong?",
+  "label": "english",
+  "src": "stt:ac05 (en: What's wrong?)"
+ },
+ {
+  "id": "stt-ac06",
+  "said": "He team will support go to the office on Friday.",
+  "label": "english",
+  "src": "stt:ac06 (en: I think you should go to the office on Friday.)"
+ },
+ {
+  "id": "stt-ac07",
+  "said": "US.",
+  "label": "english",
+  "src": "stt:ac07 (en: Yes.)"
+ },
+ {
+  "id": "stt-ac08",
+  "said": "Thank you.",
+  "label": "english",
+  "src": "stt:ac08 (en: Thank you.)"
+ },
+ {
+  "id": "stt-ac09",
+  "said": "Yeah, in a bank.",
+  "label": "english",
+  "src": "stt:ac09 (en: I work in a bank.)"
+ },
+ {
+  "id": "stt-ac10",
+  "said": "Taron.",
+  "label": "english",
+  "src": "stt:ac10 (en: Pardon?)"
+ },
+ {
+  "id": "stt-en01",
+  "said": "Um, I'm a nurse.",
+  "label": "english",
+  "src": "stt:en01 (en: Um, I'm a nurse.)"
+ },
+ {
+  "id": "stt-en02",
+  "said": "Can you say that again?",
+  "label": "english",
+  "src": "stt:en02 (en: Can you say that again?)"
+ },
+ {
+  "id": "stt-en03",
+  "said": "Too fast.",
+  "label": "english",
+  "src": "stt:en03 (en: Too fast.)"
+ },
+ {
+  "id": "stt-en04",
+  "said": "Ah, duh.",
+  "label": "noise",
+  "alsoOk": [
+   "english"
+  ],
+  "src": "stt:en04 (en: Uh, the.)"
+ },
+ {
+  "id": "stt-nz01",
+  "said": "",
+  "label": "noise",
+  "src": "stt:nz01 (noise)"
+ },
+ {
+  "id": "stt-nz02",
+  "said": "",
+  "label": "noise",
+  "src": "stt:nz02 (noise)"
+ },
+ {
+  "id": "stt-nz03",
+  "said": "",
+  "label": "noise",
+  "src": "stt:nz03 (noise)"
+ },
+ {
+  "id": "stt-nz04",
+  "said": "",
+  "label": "noise",
+  "src": "stt:nz04 (noise)"
+ },
+ {
+  "id": "stt-nz05",
+  "said": "Hmm.",
+  "label": "noise",
+  "src": "stt:nz05 (noise)"
+ },
+ {
+  "id": "stt-nz06",
+  "said": "Uh, uh.",
+  "label": "noise",
+  "src": "stt:nz06 (noise)"
+ },
+ {
+  "id": "stt-vi01",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi01 (vi: Tôi không biết.)"
+ },
+ {
+  "id": "stt-vi02",
+  "said": "Có chuyện gì vậy chị?",
+  "label": "vietnamese",
+  "src": "stt:vi02 (vi: Có chuyện gì vậy chị?)"
+ },
+ {
+  "id": "stt-vi03",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi03 (vi: Mình là giáo viên.)"
+ },
+ {
+  "id": "stt-vi04",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi04 (vi: Nói lại được không?)"
+ },
+ {
+  "id": "stt-vi05",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi05 (vi: Chậm thôi.)"
+ },
+ {
+  "id": "stt-vi06",
+  "said": "Dạ, cảm ơn.",
+  "label": "vietnamese",
+  "src": "stt:vi06 (vi: Dạ, cảm ơn.)"
+ },
+ {
+  "id": "stt-vi07",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi07 (vi: Ờ, để mình nghĩ đã.)"
+ },
+ {
+  "id": "stt-vi08",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi08 (vi: Tôi làm kế toán ở ngân hàng.)"
+ },
+ {
+  "id": "stt-vi09",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi09 (vi: Không hiểu.)"
+ },
+ {
+  "id": "stt-vi10",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi10 (vi: Bạn nói nhanh quá.)"
+ },
+ {
+  "id": "stt-vi11",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi11 (vi: Được, để mình gọi cho.)"
+ },
+ {
+  "id": "stt-vi12",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi12 (vi: Mình thích nghe nhạc.)"
+ },
+ {
+  "id": "stt-vi13",
+  "said": "",
+  "label": "noise",
+  "src": "stt:vi13 (vi: Vâng.)"
+ },
+ {
+  "id": "stt-vi14",
+  "said": "Oh.",
+  "label": "vietnamese",
+  "alsoOk": [
+   "noise"
+  ],
+  "src": "stt:vi14 (vi: Ừ.)"
+ },
+ {
+  "id": "w01",
+  "said": "Toi khong biet.",
+  "label": "vietnamese",
+  "src": "written"
+ },
+ {
+  "id": "w02",
+  "said": "Mình là teacher.",
+  "label": "english",
+  "alsoOk": [
+   "vietnamese"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "w03",
+  "said": "Dạ.",
+  "label": "vietnamese",
+  "src": "written"
+ },
+ {
+  "id": "w04",
+  "said": "ok ok",
+  "label": "english",
+  "src": "written"
+ },
+ {
+  "id": "w05",
+  "said": "No.",
+  "label": "english",
+  "src": "written"
+ },
+ {
+  "id": "w06",
+  "said": "you",
+  "label": "noise",
+  "alsoOk": [
+   "english"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "w07",
+  "said": "Thank you for watching.",
+  "label": "noise",
+  "alsoOk": [
+   "english"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "w08",
+  "said": "(background noise)",
+  "label": "noise",
+  "src": "written"
+ },
+ {
+  "id": "w09",
+  "said": "[laughs]",
+  "label": "noise",
+  "src": "written"
+ },
+ {
+  "id": "w10",
+  "said": "Mm-hmm.",
+  "label": "noise",
+  "alsoOk": [
+   "english"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "w11",
+  "said": "Ugh, the",
+  "label": "noise",
+  "src": "written"
+ },
+ {
+  "id": "w12",
+  "said": "Ơ kìa.",
+  "label": "vietnamese",
+  "src": "written"
+ },
+ {
+  "id": "w13",
+  "said": "Uh, I... I...",
+  "label": "english",
+  "alsoOk": [
+   "noise"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "w14",
+  "said": "Hello?",
+  "label": "english",
+  "src": "written"
+ },
+ {
+  "id": "w15",
+  "said": "Bánh mì.",
+  "label": "vietnamese",
+  "alsoOk": [
+   "english"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "w16",
+  "said": "Cam on.",
+  "label": "vietnamese",
+  "src": "written"
+ },
+ {
+  "id": "w17",
+  "said": "Sorry sorry",
+  "label": "english",
+  "src": "written"
+ },
+ {
+  "id": "w18",
+  "said": "Okay lah.",
+  "label": "english",
+  "src": "written"
+ },
+ {
+  "id": "w19",
+  "said": "Five.",
+  "label": "english",
+  "src": "written"
+ },
+ {
+  "id": "w20",
+  "said": "Ừm, không.",
+  "label": "vietnamese",
+  "src": "written"
+ },
+ {
+  "id": "w21",
+  "said": "Toy come bit.",
+  "label": "vietnamese",
+  "alsoOk": [
+   "english"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "w22",
+  "said": "Day la cai gi?",
+  "label": "vietnamese",
+  "src": "written"
+ },
+ {
+  "id": "w23",
+  "said": "I... um... job... teacher.",
+  "label": "english",
+  "src": "written"
+ },
+ {
+  "id": "w24",
+  "said": "Uh huh uh",
+  "label": "noise",
+  "src": "written"
+ },
+ {
+  "id": "w25",
+  "said": "So.",
+  "label": "noise",
+  "alsoOk": [
+   "english"
+  ],
+  "src": "written"
+ }
+]

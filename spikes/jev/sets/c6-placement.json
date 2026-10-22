@@ -1,0 +1,264 @@
+[
+ {
+  "id": "p01",
+  "beat": "ask-work",
+  "said": "Hello.",
+  "level": 0,
+  "usable": false,
+  "src": "real:call_9188"
+ },
+ {
+  "id": "p02",
+  "beat": "ask-free-time",
+  "said": "What do we do?",
+  "level": 0,
+  "usable": false,
+  "src": "real:call_9188"
+ },
+ {
+  "id": "p03",
+  "beat": "ask-goal",
+  "said": "What's your job?",
+  "level": 0,
+  "usable": false,
+  "src": "real:call_9188"
+ },
+ {
+  "id": "p04",
+  "beat": "ask-day",
+  "said": "Um, what's your name?",
+  "level": 0,
+  "usable": false,
+  "src": "real:call_9188"
+ },
+ {
+  "id": "p05",
+  "beat": "ask-work",
+  "said": "Accountant.",
+  "level": 1,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p06",
+  "beat": "ask-work",
+  "said": "Teacher.",
+  "level": 1,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p07",
+  "beat": "ask-work",
+  "said": "I am teacher.",
+  "level": 2,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p08",
+  "beat": "ask-work",
+  "said": "I work... in bank.",
+  "level": 2,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p09",
+  "beat": "ask-work",
+  "said": "Um, I'm a nurse.",
+  "level": 2,
+  "usable": true,
+  "src": "stt:en01"
+ },
+ {
+  "id": "p10",
+  "beat": "ask-work",
+  "said": "I'm a nurse at Cho Ray hospital. I work at night, it's hard but I like it.",
+  "level": 3,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p11",
+  "beat": "ask-work",
+  "said": "Tôi là kỹ sư.",
+  "level": 0,
+  "usable": false,
+  "src": "written"
+ },
+ {
+  "id": "p12",
+  "beat": "ask-work",
+  "said": "E-M-T-J.",
+  "level": 0,
+  "usable": false,
+  "src": "stt:ac01"
+ },
+ {
+  "id": "p13",
+  "beat": "ask-work",
+  "said": "Yeah, in a bank.",
+  "level": 2,
+  "usable": true,
+  "src": "stt:ac09"
+ },
+ {
+  "id": "p14",
+  "beat": "ask-work",
+  "said": "Work? Yes.",
+  "level": 0,
+  "usable": false,
+  "src": "written"
+ },
+ {
+  "id": "p15",
+  "beat": "ask-work",
+  "said": "I'm a student, I study IT at university in Saigon.",
+  "level": 3,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p16",
+  "beat": "ask-free-time",
+  "said": "Sleep.",
+  "level": 1,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p17",
+  "beat": "ask-free-time",
+  "said": "I like listen music.",
+  "level": 2,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p18",
+  "beat": "ask-free-time",
+  "said": "Play game and sleep.",
+  "level": 2,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p19",
+  "beat": "ask-free-time",
+  "said": "After work I usually go to the gym, then I cook dinner with my wife.",
+  "level": 3,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p20",
+  "beat": "ask-free-time",
+  "said": "Do you like coffee?",
+  "level": 0,
+  "usable": false,
+  "src": "written"
+ },
+ {
+  "id": "p21",
+  "beat": "ask-free-time",
+  "said": "Mình thích nghe nhạc.",
+  "level": 0,
+  "usable": false,
+  "src": "written"
+ },
+ {
+  "id": "p22",
+  "beat": "ask-free-time",
+  "said": "I don't know.",
+  "level": 0,
+  "usable": false,
+  "src": "written"
+ },
+ {
+  "id": "p23",
+  "beat": "ask-free-time",
+  "said": "Music.",
+  "level": 1,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p24",
+  "beat": "ask-goal",
+  "said": "Speaking.",
+  "level": 1,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p25",
+  "beat": "ask-goal",
+  "said": "Speaking. I want speak more good.",
+  "level": 2,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p26",
+  "beat": "ask-goal",
+  "said": "Listening and pronunciation.",
+  "level": 1,
+  "alsoLevel": [
+   2
+  ],
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p27",
+  "beat": "ask-goal",
+  "said": "Yes.",
+  "level": 0,
+  "usable": false,
+  "src": "written"
+ },
+ {
+  "id": "p28",
+  "beat": "ask-goal",
+  "said": "I want to speak with my customers, because my company works with Australia.",
+  "level": 3,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p29",
+  "beat": "ask-goal",
+  "said": "Sorry, again please?",
+  "level": 0,
+  "usable": false,
+  "src": "written"
+ },
+ {
+  "id": "p30",
+  "beat": "ask-goal",
+  "said": "Uh, the.",
+  "level": 0,
+  "usable": false,
+  "src": "written"
+ },
+ {
+  "id": "p31",
+  "beat": "ask-day",
+  "said": "In the morning I go to work, at night I cook.",
+  "level": 2,
+  "usable": true,
+  "src": "written"
+ },
+ {
+  "id": "p32",
+  "beat": "ask-day",
+  "said": "Normal.",
+  "level": 0,
+  "alsoLevel": [
+   1
+  ],
+  "usable": false,
+  "src": "written"
+ }
+]

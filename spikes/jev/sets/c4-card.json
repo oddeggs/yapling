@@ -1,0 +1,743 @@
+[
+ {
+  "id": "k01",
+  "cardA": "Tea, please.",
+  "cardB": "Coffee, please.",
+  "wordsA": [
+   "tea"
+  ],
+  "wordsB": [
+   "coffee"
+  ],
+  "said": "T please.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k02",
+  "cardA": "Tea, please.",
+  "cardB": "Coffee, please.",
+  "wordsA": [
+   "tea"
+  ],
+  "wordsB": [
+   "coffee"
+  ],
+  "said": "The client.",
+  "label": "a",
+  "src": "stt:ac04 (Tea, please.)",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k03",
+  "cardA": "Tea, please.",
+  "cardB": "Coffee, please.",
+  "wordsA": [
+   "tea"
+  ],
+  "wordsB": [
+   "coffee"
+  ],
+  "said": "Coffee piece.",
+  "label": "b",
+  "src": "written",
+  "wordMatch": "b"
+ },
+ {
+  "id": "k04",
+  "cardA": "Tea, please.",
+  "cardB": "Coffee, please.",
+  "wordsA": [
+   "tea"
+  ],
+  "wordsB": [
+   "coffee"
+  ],
+  "said": "Copy, please.",
+  "label": "b",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k05",
+  "cardA": "Tea, please.",
+  "cardB": "Coffee, please.",
+  "wordsA": [
+   "tea"
+  ],
+  "wordsB": [
+   "coffee"
+  ],
+  "said": "Trà.",
+  "label": "neither",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k06",
+  "cardA": "Tea, please.",
+  "cardB": "Coffee, please.",
+  "wordsA": [
+   "tea"
+  ],
+  "wordsB": [
+   "coffee"
+  ],
+  "said": "Milk, please.",
+  "label": "neither",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k07",
+  "cardA": "Tea, please.",
+  "cardB": "Coffee, please.",
+  "wordsA": [
+   "tea"
+  ],
+  "wordsB": [
+   "coffee"
+  ],
+  "said": "Tee, plea.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k08",
+  "cardA": "Nice to meet you, too.",
+  "cardB": null,
+  "wordsA": [
+   "nice",
+   "meet"
+  ],
+  "wordsB": null,
+  "said": "Nice to meat you too.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "a"
+ },
+ {
+  "id": "k09",
+  "cardA": "Nice to meet you, too.",
+  "cardB": null,
+  "wordsA": [
+   "nice",
+   "meet"
+  ],
+  "wordsB": null,
+  "said": "Nai to mit you.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k10",
+  "cardA": "Nice to meet you, too.",
+  "cardB": null,
+  "wordsA": [
+   "nice",
+   "meet"
+  ],
+  "wordsB": null,
+  "said": "Rất vui được gặp bạn.",
+  "label": "neither",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k11",
+  "cardA": "Bye!",
+  "cardB": null,
+  "wordsA": [
+   "bye",
+   "see you"
+  ],
+  "wordsB": null,
+  "said": "Bai!",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k12",
+  "cardA": "Bye!",
+  "cardB": null,
+  "wordsA": [
+   "bye",
+   "see you"
+  ],
+  "wordsB": null,
+  "said": "Buy.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k13",
+  "cardA": "Thank you!",
+  "cardB": null,
+  "wordsA": [
+   "thank",
+   "thanks"
+  ],
+  "wordsB": null,
+  "said": "Tank you.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k14",
+  "cardA": "Thank you!",
+  "cardB": null,
+  "wordsA": [
+   "thank",
+   "thanks"
+  ],
+  "wordsB": null,
+  "said": "Sank you!",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k15",
+  "cardA": "Thank you!",
+  "cardB": null,
+  "wordsA": [
+   "thank",
+   "thanks"
+  ],
+  "wordsB": null,
+  "said": "Cảm ơn.",
+  "label": "neither",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k16",
+  "cardA": "Forty-five.",
+  "cardB": "Fifty.",
+  "wordsA": [
+   "45",
+   "forty five",
+   "fortyfive"
+  ],
+  "wordsB": [
+   "50",
+   "fifty"
+  ],
+  "said": "Forty fife.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k17",
+  "cardA": "Forty-five.",
+  "cardB": "Fifty.",
+  "wordsA": [
+   "45",
+   "forty five",
+   "fortyfive"
+  ],
+  "wordsB": [
+   "50",
+   "fifty"
+  ],
+  "said": "For tea five.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k18",
+  "cardA": "Forty-five.",
+  "cardB": "Fifty.",
+  "wordsA": [
+   "45",
+   "forty five",
+   "fortyfive"
+  ],
+  "wordsB": [
+   "50",
+   "fifty"
+  ],
+  "said": "Fifteen.",
+  "label": "b",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k19",
+  "cardA": "Forty-five.",
+  "cardB": "Fifty.",
+  "wordsA": [
+   "45",
+   "forty five",
+   "fortyfive"
+  ],
+  "wordsB": [
+   "50",
+   "fifty"
+  ],
+  "said": "Fourteen five.",
+  "label": "a",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k20",
+  "cardA": "Nine.",
+  "cardB": "Ten.",
+  "wordsA": [
+   "9",
+   "nine"
+  ],
+  "wordsB": [
+   "10",
+   "ten"
+  ],
+  "said": "Night.",
+  "label": "a",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k21",
+  "cardA": "Nine.",
+  "cardB": "Ten.",
+  "wordsA": [
+   "9",
+   "nine"
+  ],
+  "wordsB": [
+   "10",
+   "ten"
+  ],
+  "said": "Tan.",
+  "label": "b",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k22",
+  "cardA": "Nine.",
+  "cardB": "Ten.",
+  "wordsA": [
+   "9",
+   "nine"
+  ],
+  "wordsB": [
+   "10",
+   "ten"
+  ],
+  "said": "Eleven.",
+  "label": "neither",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k23",
+  "cardA": "How much?",
+  "cardB": null,
+  "wordsA": [
+   "how much",
+   "much"
+  ],
+  "wordsB": null,
+  "said": "Hammer?",
+  "label": "a",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k24",
+  "cardA": "How much?",
+  "cardB": null,
+  "wordsA": [
+   "how much",
+   "much"
+  ],
+  "wordsB": null,
+  "said": "How mud?",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k25",
+  "cardA": "How much?",
+  "cardB": null,
+  "wordsA": [
+   "how much",
+   "much"
+  ],
+  "wordsB": null,
+  "said": "Bao nhiêu?",
+  "label": "neither",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k26",
+  "cardA": "Here you go.",
+  "cardB": "Thank you!",
+  "wordsA": [
+   "here you go",
+   "here"
+  ],
+  "wordsB": [
+   "thank",
+   "thanks"
+  ],
+  "said": "Hear you go.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k27",
+  "cardA": "Here you go.",
+  "cardB": "Thank you!",
+  "wordsA": [
+   "here you go",
+   "here"
+  ],
+  "wordsB": [
+   "thank",
+   "thanks"
+  ],
+  "said": "Hia yu go.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k28",
+  "cardA": "Books.",
+  "cardB": "Clothes.",
+  "wordsA": [
+   "book",
+   "books"
+  ],
+  "wordsB": [
+   "clothes",
+   "cloth"
+  ],
+  "said": "Box.",
+  "label": "a",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k29",
+  "cardA": "Books.",
+  "cardB": "Clothes.",
+  "wordsA": [
+   "book",
+   "books"
+  ],
+  "wordsB": [
+   "clothes",
+   "cloth"
+  ],
+  "said": "Close.",
+  "label": "b",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k30",
+  "cardA": "Books.",
+  "cardB": "Clothes.",
+  "wordsA": [
+   "book",
+   "books"
+  ],
+  "wordsB": [
+   "clothes",
+   "cloth"
+  ],
+  "said": "Shoes.",
+  "label": "neither",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k31",
+  "cardA": "Yes, please.",
+  "cardB": "No, thank you.",
+  "wordsA": [
+   "yes",
+   "please"
+  ],
+  "wordsB": [
+   "no",
+   "thank"
+  ],
+  "said": "Yet, pees.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k32",
+  "cardA": "Yes, please.",
+  "cardB": "No, thank you.",
+  "wordsA": [
+   "yes",
+   "please"
+  ],
+  "wordsB": [
+   "no",
+   "thank"
+  ],
+  "said": "No tank you.",
+  "label": "b",
+  "src": "written",
+  "wordMatch": "b"
+ },
+ {
+  "id": "k33",
+  "cardA": "Yes, please.",
+  "cardB": "No, thank you.",
+  "wordsA": [
+   "yes",
+   "please"
+  ],
+  "wordsB": [
+   "no",
+   "thank"
+  ],
+  "said": "Dạ không.",
+  "label": "neither",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k34",
+  "cardA": "Slowly, please.",
+  "cardB": null,
+  "wordsA": [
+   "slow",
+   "slowly"
+  ],
+  "wordsB": null,
+  "said": "Sorry, lee, plea.",
+  "label": "a",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k35",
+  "cardA": "Sorry? Again, please.",
+  "cardB": null,
+  "wordsA": [
+   "sorry",
+   "again",
+   "pardon",
+   "repeat"
+  ],
+  "wordsB": null,
+  "said": "Agen, plis.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k36",
+  "cardA": "I'm a student.",
+  "cardB": "I work in an office.",
+  "wordsA": [
+   "im a",
+   "i work",
+   "student"
+  ],
+  "wordsB": [
+   "im a",
+   "i work",
+   "office"
+  ],
+  "said": "I am study.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k37",
+  "cardA": "I'm a student.",
+  "cardB": "I work in an office.",
+  "wordsA": [
+   "im a",
+   "i work",
+   "student"
+  ],
+  "wordsB": [
+   "im a",
+   "i work",
+   "office"
+  ],
+  "said": "I work in off is.",
+  "label": "b",
+  "src": "written",
+  "wordMatch": "a"
+ },
+ {
+  "id": "k38",
+  "cardA": "I'm a student.",
+  "cardB": "I work in an office.",
+  "wordsA": [
+   "im a",
+   "i work",
+   "student"
+  ],
+  "wordsB": [
+   "im a",
+   "i work",
+   "office"
+  ],
+  "said": "I am a nurse.",
+  "label": "neither",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k39",
+  "cardA": "I like coffee.",
+  "cardB": "I like music.",
+  "wordsA": [
+   "like"
+  ],
+  "wordsB": [
+   "like"
+  ],
+  "said": "I lie coffee.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k40",
+  "cardA": "I like coffee.",
+  "cardB": "I like music.",
+  "wordsA": [
+   "like"
+  ],
+  "wordsB": [
+   "like"
+  ],
+  "said": "I love music.",
+  "label": "b",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k41",
+  "cardA": "I'm Lan.",
+  "cardB": null,
+  "wordsA": [
+   "im",
+   "i am",
+   "my name",
+   "lan"
+  ],
+  "wordsB": null,
+  "said": "I'm long.",
+  "label": "a",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written",
+  "wordMatch": "a"
+ },
+ {
+  "id": "k42",
+  "cardA": "Hi!",
+  "cardB": null,
+  "wordsA": [
+   "hi",
+   "hello",
+   "hey",
+   "high"
+  ],
+  "wordsB": null,
+  "said": "Hai!",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k43",
+  "cardA": "Hi!",
+  "cardB": null,
+  "wordsA": [
+   "hi",
+   "hello",
+   "hey",
+   "high"
+  ],
+  "wordsB": null,
+  "said": "Xin chào.",
+  "label": "neither",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k44",
+  "cardA": "Two, please.",
+  "cardB": "One, please.",
+  "wordsA": [
+   "2",
+   "two"
+  ],
+  "wordsB": [
+   "1",
+   "one"
+  ],
+  "said": "Too please.",
+  "label": "a",
+  "src": "written",
+  "wordMatch": "neither"
+ },
+ {
+  "id": "k45",
+  "cardA": "Two, please.",
+  "cardB": "One, please.",
+  "wordsA": [
+   "2",
+   "two"
+  ],
+  "wordsB": [
+   "1",
+   "one"
+  ],
+  "said": "Won, please.",
+  "label": "b",
+  "src": "written",
+  "wordMatch": "neither"
+ }
+]

@@ -1,0 +1,301 @@
+[
+ {
+  "id": "a01",
+  "line": "Ooh, I found my snacks and my map and my notebook!",
+  "said": "Sorry?",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a02",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "Sorry, can you repeat?",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a03",
+  "line": "Tickets are two dollars each, love.",
+  "said": "Pardon?",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a04",
+  "line": "Ooh, I found my snacks and my map and my notebook!",
+  "said": "Again, please.",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a05",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "What did you say?",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a06",
+  "line": "Okay. So… what do I do?",
+  "said": "Can you say that again?",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a07",
+  "line": "Tickets are two dollars each, love.",
+  "said": "Huh?",
+  "label": "repeat",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "a08",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "Sorry, I don't hear.",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a09",
+  "line": "Ooh, I found my snacks and my map and my notebook!",
+  "said": "One more time please.",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a10",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "Nói lại được không?",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a11",
+  "line": "Tickets are two dollars each, love.",
+  "said": "Repeat please",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a12",
+  "line": "Tickets are two dollars each, love.",
+  "said": "Taron.",
+  "label": "repeat",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "stt:ac10 (Pardon?)"
+ },
+ {
+  "id": "a13",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "What?",
+  "label": "repeat",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "a14",
+  "line": "Ooh, I found my snacks and my map and my notebook!",
+  "said": "Sorry, again, please.",
+  "label": "repeat",
+  "src": "stt:ac02"
+ },
+ {
+  "id": "a15",
+  "line": "Okay. So… what do I do?",
+  "said": "Excuse me?",
+  "label": "repeat",
+  "src": "written"
+ },
+ {
+  "id": "a16",
+  "line": "Ooh, I found my snacks and my map and my notebook!",
+  "said": "Slowly, please.",
+  "label": "slower",
+  "src": "stt:ac03"
+ },
+ {
+  "id": "a17",
+  "line": "Tickets are two dollars each, love.",
+  "said": "Too fast.",
+  "label": "slower",
+  "src": "stt:en03"
+ },
+ {
+  "id": "a18",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "Can you speak slower?",
+  "label": "slower",
+  "src": "written"
+ },
+ {
+  "id": "a19",
+  "line": "Okay. So… what do I do?",
+  "said": "Slow please",
+  "label": "slower",
+  "src": "written"
+ },
+ {
+  "id": "a20",
+  "line": "Ooh, I found my snacks and my map and my notebook!",
+  "said": "Chậm thôi.",
+  "label": "slower",
+  "src": "written"
+ },
+ {
+  "id": "a21",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "You speak very fast, I don't understand.",
+  "label": "slower",
+  "src": "written"
+ },
+ {
+  "id": "a22",
+  "line": "Tickets are two dollars each, love.",
+  "said": "Speak slow please",
+  "label": "slower",
+  "src": "written"
+ },
+ {
+  "id": "a23",
+  "line": "Ooh, I found my snacks and my map and my notebook!",
+  "said": "Bạn nói nhanh quá.",
+  "label": "slower",
+  "src": "written"
+ },
+ {
+  "id": "a24",
+  "line": "Tickets are two dollars each, love.",
+  "said": "Sorry, slowly please?",
+  "label": "slower",
+  "alsoOk": [
+   "repeat"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "a25",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "Slowly peace.",
+  "label": "slower",
+  "src": "written"
+ },
+ {
+  "id": "a26",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "I don't know.",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a27",
+  "line": "Okay. So… what do I do?",
+  "said": "What does rent mean?",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a28",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "Sorry, I'm late.",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a29",
+  "line": "Okay. So… what do I do?",
+  "said": "I'm sorry to hear that.",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a30",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "I go to the gym again and again.",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a31",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "I work slowly.",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a32",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "I am teacher.",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a33",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "Fast food. I work in fast food.",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a34",
+  "line": "Okay. So… what do I do?",
+  "said": "Sorry, I think you should go to the office.",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a35",
+  "line": "Okay. So… what do I do?",
+  "said": "Can you help me?",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a36",
+  "line": "Tickets are two dollars each, love.",
+  "said": "Two dollars.",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a37",
+  "line": "Ooh, this box says WORK. What do you do for work?",
+  "said": "I don't understand.",
+  "label": "neither",
+  "alsoOk": [
+   "repeat",
+   "slower"
+  ],
+  "src": "written"
+ },
+ {
+  "id": "a38",
+  "line": "Okay. So… what do I do?",
+  "said": "Again? Oh no, the rent again!",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a39",
+  "line": "Tickets are two dollars each, love.",
+  "said": "Yes, please.",
+  "label": "neither",
+  "src": "written"
+ },
+ {
+  "id": "a40",
+  "line": "Ooh, I found my snacks and my map and my notebook!",
+  "said": "Wow, slow down, Pip! Haha.",
+  "label": "slower",
+  "alsoOk": [
+   "neither"
+  ],
+  "src": "written"
+ }
+]
