@@ -70,6 +70,8 @@ Gate 1: on the simulator, a full Episode 1 call with Mei and Pip runs against th
 
 **Dev deploy** (22 Oct 2026): the dev API runs at `https://yapling-api-dev.bkdev98.workers.dev` (Worker `yapling-api-dev`, workers.dev). Resources in the founder's Cloudflare account: D1 `yapling-dev` (id in `apps/api/wrangler.jsonc`), R2 `yapling-blobs-dev`, Queues `yapling-jobs-dev` and its dead-letter queue `yapling-jobs-dlq-dev`; secrets `ANTHROPIC_API_KEY`, `ELEVENLABS_API_KEY`, `BETTER_AUTH_SECRET`. Deploy order: migrations (`wrangler d1 migrations apply yapling-dev --env dev --remote`), then the Worker (`wrangler deploy --env dev --var COMMIT_SHA:<sha>`), then any new secrets (`wrangler secret put <NAME> --env dev`). Smoke: health, guest session, profile, progress and minutes answer; a live Episode 1 call from this Mac (edge HKG, call object in US West) measured end of speech → recorded reaction 0.90 s and → first reply audio P50 1.47 s, P90 1.53 s over 6 answered turns, with the reply audio ready before the reaction ends in 5 of 6; the post-call summary was written.
 
+**TestFlight setup** (22 Oct 2026): App Store Connect app "Yapling Dev" **6825602448** (`studio.oddeggs.yapling.dev`, team YFND2EEW8S, SKU `yapling-dev`; the App ID has Sign in with Apple and Push enabled ahead of use, so builds run with `EXPO_NO_CAPABILITY_SYNC=1`). EAS: organization `yapling` (free plan), project `@yapling/yapling` `3a0b1da8-0906-4d5c-bba7-c4b639048e37`. Signing reuses the team's shared distribution certificate (serial `1341AC74…`, expires 18 Oct 2027, also used by Bricked and Kithfield) copied into the `yapling` org; EAS made the App Store profile. Submit uses the App Store Connect API key `76UJKRZ6A7` stored on EAS. Build and ship: `cd apps/mobile && EXPO_NO_CAPABILITY_SYNC=1 eas build -p ios --profile dev --auto-submit` (the `dev` profile points at the dev Worker). Build 3 was the pipeline check, built from main before the connecting pass.
+
 ## Wave 2: The first week · critical path 2 runs · ends in TestFlight build 1
 
 | Lane | Owns | Screens | Runs |
@@ -105,7 +107,7 @@ Planned in detail after the learner test. Waves: content (Episodes 2–6 scripts
 
 | When | What |
 |---|---|
-| Before wave 2's TestFlight | App Store Connect app record for `studio.oddeggs.yapling.dev`; which Apple team (the team is at its distribution-certificate limit; Bricked reuses Kithfield's) |
+| Before wave 2's TestFlight | Done 22 Oct 2026 (see TestFlight setup above) |
 | Before wave 2f | RevenueCat project and the Plus products (monthly ₫149k, yearly ₫799k with ₫599k intro) in App Store Connect |
 | Before the learner test | ElevenLabs plan with enough credits for live calls (Creator has ~50k left this cycle); an Anthropic key for Yapling (reusing 6pm's for now) |
 | Before Release 2 | yapling.app domain and trademark; native Vietnamese copy review; native-speaker review of every accent |
