@@ -278,3 +278,32 @@ describe('the call socket', () => {
     expect(sockets).toHaveLength(1);
   });
 });
+
+describe('coming back from the background', () => {
+  it('reconnects at once when the socket went quiet while the app was away', () => {
+    const { socket, sockets, statuses, last } = setup();
+    socket.open();
+    last().open();
+    last().receive(ready(1, 'resume-token-aaaaaaaa'));
+    jest.advanceTimersByTime(5_000);
+    expect(socket.checkAlive()).toBe(false);
+    // Away for longer than two pings, with nothing heard back.
+    jest.advanceTimersByTime(16_000);
+    expect(socket.checkAlive()).toBe(true);
+    expect(statuses.at(-1)).toBe('reconnecting');
+    jest.advanceTimersByTime(1_000);
+    expect(sockets).toHaveLength(2);
+    last().open();
+    expect(last().json()[0]).toMatchObject({ type: 'hello', resumeToken: 'resume-token-aaaaaaaa' });
+  });
+
+  it('leaves a closed call alone', () => {
+    const { socket, sockets, last } = setup();
+    socket.open();
+    last().open();
+    socket.close();
+    jest.advanceTimersByTime(60_000);
+    expect(socket.checkAlive()).toBe(false);
+    expect(sockets).toHaveLength(1);
+  });
+});

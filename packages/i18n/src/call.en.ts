@@ -44,6 +44,16 @@ export const callEn = {
   'call.done.hopOff': 'Hop off',
   'call.done.seasonMap': 'See the season map',
 
+  /**
+   * The character's bubble when a turn got no answer (nothing heard, or the reply failed). Said in
+   * English in every language, as the character says it.
+   */
+  'call.didntCatch': "Sorry, I didn't catch that. Say it another way?",
+  /** The pill while the line drops and the phone dials back in. */
+  'call.reconnecting': 'Reconnecting…',
+  /** The pill while a phone call or Siri has the audio. */
+  'call.interrupted': 'Paused while you take that call',
+
   'call.fixedIt': 'You fixed it yourself',
   'call.nowALeaf': 'Now a leaf',
   'call.seedDropped': 'Dropped into the burrow as a seed packet',

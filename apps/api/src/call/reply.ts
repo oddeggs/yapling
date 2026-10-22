@@ -20,6 +20,9 @@ import { pickReaction } from './voices';
  * a correction prompt, a hint, a fallback, or the crisis hand-over.
  */
 
+/** A hold-to-talk reply with no audio yet after this long shows the thinking head tilt. */
+export const SLOW_REPLY_MS = 600;
+
 /** The line now playing, waiting for the phone's `played`. */
 export interface Active {
   readonly streamId: number;
@@ -122,6 +125,13 @@ export class Replies {
     this.reply = reply;
     host.learner()?.closeWindow();
     line.start();
+    if (!gated) {
+      // Hold-to-talk answers at once: a slow reply tilts the head instead of leaving dead air.
+      const slow = setTimeout(() => {
+        if (this.reply === reply && !reply.committed && !line.isAborted) host.thinking(true);
+      }, SLOW_REPLY_MS);
+      void line.done.finally(() => clearTimeout(slow));
+    }
     const current = reply;
     void line.done.then((result) => this.done(current, result));
     return line;

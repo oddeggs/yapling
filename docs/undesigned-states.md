@@ -92,3 +92,14 @@ States built from existing components because the design does not show them.
 | Call | Meaning, translation open | The board's "Ẩn bản dịch" chip replaces "Xem bản dịch" and folds the translation away again; the whisper's ✕ closes it all |
 | Call | The letter | The prototype's "HARBOUR LANE OFFICE · NOTICE" kicker isn't in the story or a catalogue; the letter shows the story's own lines, sign-off included |
 | Call | Notebook, knock, dusk letter, postcard, voicemail and leaf beats | Not part of the live calls built here; the call shows nothing for them and carries on |
+
+## The call when things go wrong
+
+| Screen | State | Reason |
+|---|---|---|
+| Call | Turn with no answer ("didn't catch that", E3) | The board's E3 bubble ("Sorry, I didn't catch that. Say it another way?") with the listener confused, shown when the learner's turn gets no answer: nothing heard after a release, a failed reply (`stt_failed`, `llm_failed`, `tts_failed`), or no audio 6 s after the release (15 s once the call is thinking). The mic is the learner's again. "Type it" and "Say it in Tiếng Việt" are later releases and are left out |
+| Call | Slow reply (E4) | The call sends `thinking` 0.6 s into a hold-to-talk reply with no audio (it already did for hands-free); the existing thinking state shows. A reply with no progress for 10 s fails as `llm_failed`/`tts_failed` and becomes the E3 state above |
+| Call | Reconnecting mid-call | Replaces the row above: the phone pill (the letter scene's ringing pill) reads "Đang nối lại…" just above the call bar, the line that was playing stops, and the beat replays when the socket is back |
+| Call | A phone call or Siri | No design. The same pill reads "Tạm dừng trong lúc bạn nghe máy"; the call holds its turn detection meanwhile (no hints or nudges) and lets go when the audio comes back |
+| Call | Back from the background | No visible state: a socket that died while away reconnects at once (the reconnecting pill above), and the audio restarts if iOS stopped it |
+| Call | Audio can't start | The session is set up once more; if the audio still can't start, the no-connection sheet (E1) shows with "Thử gọi lại" rather than a silent call |

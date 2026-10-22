@@ -1,17 +1,16 @@
-import type {
-  AudioFrame,
-  CallServerFrame,
-  CharacterId,
-  MeaningSubject,
-  ReadyFrame,
-  TurnMode,
+import {
+  LIMITS,
+  type AudioFrame,
+  type CallServerFrame,
+  type CharacterId,
+  type MeaningSubject,
+  type ReadyFrame,
+  type TurnMode,
 } from '@yapling/contracts';
-import type { RecordedLineId } from '@yapling/story';
-import { RECORDED_LINE_ASSETS } from '@yapling/story/assets';
-import { AudioContext } from 'react-native-audio-api';
 
 import type { VoiceSessionStatus } from '../../modules/voice-session';
-import { CallAudioSession, micPermissionStatus, type SessionEvent } from './audio-session';
+import { micPermissionStatus, type SessionEvent } from './audio-session';
+import { CallAudio } from './call-audio';
 import {
   CallSocket,
   type HelloFields,
@@ -23,8 +22,10 @@ import {
 import { initialCallState, update, withLatency, type CallState } from './call-state';
 import { MIC_FRAME_MS } from './framing';
 import { createLipsync, type Lipsync } from './lipsync';
-import { MicCapture } from './mic';
 import { CallPlayer, type LineInfo, type RecordedLineSource } from './player';
+import { storyRecordedLines } from './recorded-lines';
+import { ReplyWatcher } from './reply-watch';
+import { SimulatedMic } from './simulated-mic';
 import { Store } from './store';
 import { LatencyMeter, TurnTaker } from './turns';
 import { Vad } from './vad';
@@ -57,40 +58,35 @@ export interface VoiceEngineOptions {
   readonly onLog?: (message: string) => void;
 }
 
+export { storyRecordedLines } from './recorded-lines';
+
 /** Streams the phone plays on its own are numbered above any the call uses. */
 const LOCAL_STREAM_BASE = 0xffff_0000;
 
 /** How long the engine takes to settle on a new route before the graph is checked. */
 const ROUTE_SETTLE_MS = 300;
 
-/** The sample rate of the playback graph: the TTS rate, so live audio needs no resampling. */
-const PLAYBACK_RATE_HZ = 24_000;
-
-const isRecordedLineId = (id: string): id is RecordedLineId => id in RECORDED_LINE_ASSETS;
-
-/** The story's recorded lines, bundled with the app. */
-export const storyRecordedLines: RecordedLineSource = (lineId) => {
-  if (!isRecordedLineId(lineId)) return null;
-  const asset = RECORDED_LINE_ASSETS[lineId];
-  return { audio: asset.audio(), timing: asset.timing() };
-};
-
 export class VoiceEngine {
   readonly state: Store<CallState>;
   readonly lipsync: Lipsync;
   private readonly socket: CallSocket;
-  private readonly session: CallAudioSession;
+  private readonly audio: CallAudio;
   private readonly vad = new Vad();
   private readonly turns: TurnTaker;
   private readonly meter = new LatencyMeter();
-  private context: AudioContext | null = null;
   private player: CallPlayer | null = null;
-  private mic: MicCapture | null = null;
-  private outputLatencyS = 0.02;
-  private simulated: { timer: ReturnType<typeof setInterval>; done: Promise<void> } | null = null;
-  private useDeviceMic = true;
+  private readonly simulated = new SimulatedMic({
+    frame: (frame, endMs) => this.onMicFrame(frame, endMs, 'simulated'),
+    press: () => this.pressTalk(),
+    release: () => this.releaseTalk(),
+  });
   private disposed = false;
   private hangupTimer: ReturnType<typeof setTimeout> | null = null;
+  private interruptionHold: ReturnType<typeof setInterval> | null = null;
+  private readonly replies = new ReplyWatcher(() => {
+    this.log('no answer to the turn: the learner tries again');
+    this.giveTurnBack(true);
+  });
   /** Live and recorded lines waiting for audio while playback isn't ready yet. */
   private early: CallServerFrame[] = [];
   private earlyAudio: AudioFrame[] = [];
@@ -103,7 +99,12 @@ export class VoiceEngine {
   constructor(private readonly options: VoiceEngineOptions) {
     this.state = new Store(initialCallState(options.hello.turnMode));
     this.lipsync = createLipsync();
-    this.session = new CallAudioSession((e) => void this.onSessionEvent(e));
+    this.audio = new CallAudio({
+      voiceProcessing: options.voiceProcessing ?? true,
+      onMicFrame: (frame, endMs) => this.onMicFrame(frame, endMs, 'device'),
+      onSessionEvent: (e) => void this.onSessionEvent(e),
+      log: (m) => this.log(m),
+    });
     this.turns = new TurnTaker(
       options.hello.turnMode,
       {
@@ -113,6 +114,7 @@ export class VoiceEngine {
         },
         endTurn: () => {
           this.socket.send({ type: 'end_turn' });
+          this.replies.on({ type: 'turn_ended', atMs: Date.now() });
           this.patch({ awaitingReply: true });
         },
       },
@@ -135,7 +137,7 @@ export class VoiceEngine {
 
   /** The device mic is capturing. */
   get micRunning(): boolean {
-    return this.mic?.isRunning ?? false;
+    return this.audio.micRunning;
   }
 
   get turnMode(): TurnMode {
@@ -173,19 +175,12 @@ export class VoiceEngine {
   }
 
   private async startAudio(): Promise<VoiceSessionStatus | null> {
-    await this.session.start();
-    const context = new AudioContext({ sampleRate: PLAYBACK_RATE_HZ });
-    this.context = context;
-    await context.resume();
-    // Echo cancellation goes on once the graph runs: the engine is rebuilt for this session with
-    // it, never put on an engine an earlier player (a story, the last call) left behind.
-    const status = this.session.enableVoiceProcessing(this.options.voiceProcessing ?? true);
-    this.refreshLatency();
+    const { context, status } = await this.audio.start();
     this.player ??= new CallPlayer({
       context,
       lipsync: this.lipsync,
       recorded: this.options.recorded ?? storyRecordedLines,
-      outputLatency: () => this.outputLatencyS,
+      outputLatency: () => this.audio.outputLatency,
       ...(this.options.visemeTrack ? { visemeTrack: this.options.visemeTrack } : {}),
       events: {
         scheduled: (line, audibleMs) => this.onLineScheduled(line, audibleMs),
@@ -205,54 +200,28 @@ export class VoiceEngine {
     for (const a of this.earlyAudio.splice(0)) this.onAudio(a);
     if ((await micPermissionStatus()) === 'granted') await this.startMic();
     else this.log('mic permission not granted: listening only');
-    // A failed mic start stops the engine; character audio must still play.
-    await this.restartGraphIfStopped();
     this.log(`audio up: ${this.debugAudio()}`);
     return status;
   }
 
-  /** Lets go of the call's audio: the graph, the mic and (when the call still holds it) the session. */
+  /** Lets go of the call's audio: the lines, the graph, the mic and (if still held) the session. */
   private async stopAudio(): Promise<void> {
     this.player?.dispose();
     this.player = null;
-    const ctx = this.context;
-    this.context = null;
-    if (ctx) await ctx.close().catch(() => undefined);
-    await this.mic?.stop().catch(() => undefined);
-    this.mic = null;
-    await this.session.stop();
-  }
-
-  /**
-   * The audio engine can stop while the graph still counts as running (a failed mic start, an
-   * interruption, a route change): suspending and resuming the graph starts the engine again.
-   */
-  private async restartGraphIfStopped(force = false): Promise<void> {
-    const ctx = this.context;
-    if (!ctx) return;
-    const status = this.session.status();
-    if (!force && (status === null || status.engineRunning)) return;
-    this.log('audio engine stopped: restarting the graph');
-    await ctx.suspend().catch(() => undefined);
-    await ctx.resume().catch(() => undefined);
+    await this.audio.stop();
   }
 
   /** Starts mic capture (after the learner grants the permission mid-call). */
-  async startMic(): Promise<boolean> {
-    this.mic ??= new MicCapture(
-      (frame, endMs) => this.onMicFrame(frame, endMs, 'device'),
-      (m) => this.log(`mic: ${m}`),
-    );
-    const ok = await this.mic.start();
-    this.log(`mic ${ok ? 'on' : 'failed'} at ${this.mic.deliveredRateHz || '?'} Hz`);
-    return ok;
+  startMic(): Promise<boolean> {
+    return this.audio.startMic();
   }
 
   /** Hold-to-talk: the mic button went down. */
   pressTalk(): void {
     if (this.turns.mode !== 'hold_to_talk') return;
     this.turns.press();
-    this.patch({ talkHeld: true, awaitingReply: false, onHold: false });
+    this.replies.on({ type: 'settled' });
+    this.patch({ talkHeld: true, awaitingReply: false, onHold: false, notice: null });
   }
 
   /** Hold-to-talk: the mic button came up; `end_turn` follows once the learner stops. */
@@ -291,6 +260,17 @@ export class VoiceEngine {
     }, 3_000);
   }
 
+  /**
+   * The app is back in the foreground (a live call keeps running in the background, but iOS may
+   * have dropped the socket or stopped the engine meanwhile): reconnect a dead socket at once and
+   * start the audio again if it stopped.
+   */
+  async foregrounded(): Promise<void> {
+    if (this.disposed || this.state.get().endReason !== null) return;
+    if (this.socket.checkAlive()) this.log('socket died in the background: reconnecting');
+    await this.audio.recheck();
+  }
+
   /** Releases everything (the call screen unmounted). */
   async dispose(): Promise<void> {
     if (this.disposed) return;
@@ -300,7 +280,7 @@ export class VoiceEngine {
 
   /** The session's current route and voice-processing state. */
   sessionStatus(): VoiceSessionStatus | null {
-    return this.session.status();
+    return this.audio.status();
   }
 
   /**
@@ -308,40 +288,11 @@ export class VoiceEngine {
    * socket) in place of the device mic, then quiet room noise until `stopSimulatedMic`.
    */
   simulateMic(samples: Float32Array, holdToTalk = false): Promise<void> {
-    this.stopSimulatedMic();
-    this.useDeviceMic = false;
-    const frame = (16_000 * MIC_FRAME_MS) / 1000;
-    let at = 0;
-    let next = performance.now();
-    let resolve: () => void = () => undefined;
-    const done = new Promise<void>((r) => (resolve = r));
-    if (holdToTalk) this.pressTalk();
-    const tick = () => {
-      while (performance.now() >= next) {
-        const chunk = new Int16Array(frame);
-        for (let i = 0; i < frame; i++) {
-          const s = at < samples.length ? (samples[at] ?? 0) : 0;
-          // About -60 dBFS of room noise under everything, as a real mic hears.
-          const noise = (Math.random() * 2 - 1) * 0.001;
-          chunk[i] = Math.round(Math.max(-1, Math.min(1, s + noise)) * 0x7fff);
-          at++;
-        }
-        next += MIC_FRAME_MS;
-        this.onMicFrame(chunk, performance.now(), 'simulated');
-        if (at >= samples.length && at - frame < samples.length) {
-          if (holdToTalk) this.releaseTalk();
-          resolve();
-        }
-      }
-    };
-    this.simulated = { timer: setInterval(tick, 10), done };
-    return done;
+    return this.simulated.play(samples, holdToTalk);
   }
 
   stopSimulatedMic(): void {
-    if (this.simulated) clearInterval(this.simulated.timer);
-    this.simulated = null;
-    this.useDeviceMic = true;
+    this.simulated.stop();
   }
 
   /**
@@ -358,8 +309,7 @@ export class VoiceEngine {
 
   /** Dev only: the audio clock and the lines waiting, for the lab. */
   debugAudio(): string {
-    const c = this.context;
-    return `ctx ${c ? `${c.currentTime.toFixed(2)} ${c.state}` : 'none'} · ${this.player?.debug() || 'no lines'} · ${JSON.stringify(this.session.status() ?? {})}`;
+    return `${this.audio.debug()} · ${this.player?.debug() || 'no lines'}`;
   }
 
   /** Dev only: runs the interruption path as if iOS had sent it. */
@@ -368,13 +318,14 @@ export class VoiceEngine {
   }
 
   private onMicFrame(frame: Int16Array, endMs: number, source: 'device' | 'simulated'): void {
-    if (source === 'device' && !this.useDeviceMic) return;
+    if (source === 'device' && this.simulated.running) return;
     const s = this.state.get();
     if (s.interrupted || s.endReason) return;
     const r = this.vad.push(frame, endMs - MIC_FRAME_MS);
     if (r.event?.type === 'speech_start') {
       this.meter.speechStarted();
-      this.patch({ learnerSpeaking: true, awaitingReply: false, onHold: false });
+      this.replies.on({ type: 'settled' });
+      this.patch({ learnerSpeaking: true, awaitingReply: false, onHold: false, notice: null });
     } else if (r.event?.type === 'speech_end') {
       this.meter.speechEnded(r.event.atMs);
       this.patch({ learnerSpeaking: false });
@@ -408,8 +359,19 @@ export class VoiceEngine {
         this.patch({ connected: true, reconnecting: false });
         break;
       case 'reconnecting':
+        // The call replays its beat when the socket is back: what was playing or awaited on the
+        // old socket will never finish, so nothing waits on it.
         this.turns.reset();
-        this.patch({ connected: false, reconnecting: true });
+        this.player?.stopAll();
+        this.replies.on({ type: 'settled' });
+        this.patch({
+          connected: false,
+          reconnecting: true,
+          awaitingReply: false,
+          serverThinking: false,
+          talkHeld: false,
+          learnerSpeaking: false,
+        });
         break;
       case 'lost':
         this.turns.reset();
@@ -461,6 +423,7 @@ export class VoiceEngine {
         this.patch({ learnerText: frame.text, learnerFinal: false });
         break;
       case 'heard':
+        this.replies.on({ type: 'answering', atMs: Date.now() });
         this.patch({ learnerText: frame.text, learnerFinal: true, awaitingReply: true });
         break;
       case 'beat':
@@ -485,12 +448,19 @@ export class VoiceEngine {
         this.patch({ safety: frame.kind, safetyResourcesKey: frame.resourcesKey });
         break;
       case 'thinking':
+        if (frame.state === 'start') this.replies.on({ type: 'answering', atMs: Date.now() });
         this.patch({ serverThinking: frame.state === 'start' });
         break;
       case 'error':
         this.log(`error ${frame.code}${frame.fatal ? ' (fatal)' : ''}`);
-        this.patch(frame.fatal ? { error: frame.code } : { warning: frame.code });
-        if (frame.fatal && this.socket.status === 'closed') void this.teardown();
+        if (frame.fatal) {
+          this.patch({ error: frame.code });
+          if (this.socket.status === 'closed') void this.teardown();
+        } else {
+          // A reply (or the listening) failed: the turn is the learner's again.
+          this.patch({ warning: frame.code });
+          this.giveTurnBack();
+        }
         break;
       case 'ended':
         if (this.hangupTimer) clearTimeout(this.hangupTimer);
@@ -515,6 +485,15 @@ export class VoiceEngine {
     this.player.pushAudio(frame.streamId, frame.seq, frame.payload);
   }
 
+  /** No answer is coming for the learner's turn: "didn't catch that", and their turn again. */
+  private giveTurnBack(overdue = false): void {
+    const s = this.state.get();
+    const waited = overdue || this.replies.waiting || s.awaitingReply || s.serverThinking;
+    this.replies.on({ type: 'settled' });
+    if (!waited || s.endReason !== null) return;
+    this.patch({ awaitingReply: false, serverThinking: false, notice: 'didnt_catch' });
+  }
+
   private onLineScheduled(line: LineInfo, audibleMs: number): void {
     this.log(
       `${line.kind} line ${line.streamId} heard in ${Math.round(audibleMs - performance.now())} ms`,
@@ -530,8 +509,10 @@ export class VoiceEngine {
 
   private onLineAudible(line: LineInfo): void {
     this.vad.setEchoGuard(true);
+    this.replies.on({ type: 'settled' });
     const prev = this.state.get().caption;
     this.patch({
+      notice: null,
       playing: true,
       awaitingReply: false,
       serverThinking: false,
@@ -570,9 +551,7 @@ export class VoiceEngine {
       // The audio engine rebuilds itself on a new route (AirPods in or out); give it a moment,
       // then make sure the graph and the mic run on the new one.
       setTimeout(() => {
-        if (this.disposed || !this.context) return;
-        this.refreshLatency();
-        void this.restartGraphIfStopped().then(() => this.mic?.ensureRunning());
+        if (!this.disposed) void this.audio.recheck();
       }, ROUTE_SETTLE_MS);
       return;
     }
@@ -580,31 +559,35 @@ export class VoiceEngine {
     if (e.phase === 'began') {
       this.turns.reset();
       this.player?.stopAll();
+      // A phone call or Siri can take minutes: the call waits instead of hinting and nudging.
+      this.socket.send({ type: 'hold', seconds: LIMITS.holdSecondsMax });
       this.patch({ interrupted: true, talkHeld: false, learnerSpeaking: false });
+      this.interruptionHold = setInterval(
+        () => this.socket.send({ type: 'hold', seconds: LIMITS.holdSecondsMax }),
+        (LIMITS.holdSecondsMax - 5) * 1_000,
+      );
       return;
     }
-    if (this.disposed || !this.context) return;
+    if (this.interruptionHold) clearInterval(this.interruptionHold);
+    this.interruptionHold = null;
+    if (this.disposed) return;
     try {
-      await this.session.resume();
-      // The engine stopped for the interruption while the graph still counts as running: start
-      // it again by suspending and resuming the graph.
-      await this.restartGraphIfStopped(true);
-      if (this.mic) await this.mic.ensureRunning();
-      this.refreshLatency();
+      // The engine stopped for the interruption while the graph still counts as running.
+      await this.audio.resumeAfterInterruption();
     } catch (err) {
       this.log(`resume failed: ${String(err)}`);
     }
-    this.patch({ interrupted: false });
-  }
-
-  private refreshLatency(): void {
-    this.outputLatencyS = this.session.outputLatencySeconds();
+    this.socket.send({ type: 'hold', seconds: 0 });
+    this.patch({ interrupted: false, onHold: false });
   }
 
   private async teardown(): Promise<void> {
     this.stopSimulatedMic();
+    if (this.interruptionHold) clearInterval(this.interruptionHold);
+    this.interruptionHold = null;
     if (this.hangupTimer) clearTimeout(this.hangupTimer);
     this.hangupTimer = null;
+    this.replies.on({ type: 'settled' });
     this.socket.close();
     await this.stopAudio();
   }

@@ -39,6 +39,13 @@ export interface LineTimings {
   done?: number;
 }
 
+/**
+ * A line that makes no progress (no model text, no audio) for `stallMs` has failed: the call
+ * says so (a non-fatal error) and goes on, instead of waiting on a provider that went quiet.
+ * Mutable for the tests.
+ */
+export const lineTiming = { stallMs: 10_000, checkMs: 500 };
+
 export interface LineResult {
   readonly streamId: number;
   /** The spoken text; empty when the line said nothing. */
@@ -90,6 +97,8 @@ export class SpokenLine {
   private splitter: ReplySplitter;
   private settle!: (result: LineResult) => void;
   readonly done: Promise<LineResult>;
+  private lastProgress = 0;
+  private stallCheck: ReturnType<typeof setInterval> | null = null;
 
   constructor(
     private readonly host: LineHost,
@@ -122,8 +131,28 @@ export class SpokenLine {
   }
 
   start(): this {
+    this.lastProgress = Date.now();
+    this.stallCheck = setInterval(() => this.checkStall(), lineTiming.checkMs);
     void this.run();
     return this;
+  }
+
+  /** The model or the voice went quiet mid-line: give up on it. */
+  private checkStall(): void {
+    if (this.finished || this.aborted || this.ttsDone) {
+      this.stopStallCheck();
+      return;
+    }
+    if (Date.now() - this.lastProgress < lineTiming.stallMs) return;
+    const kind = this.splitter.text === '' ? 'llm' : 'tts';
+    console.warn('call line stalled', { kind, streamId: this.streamId });
+    this.ctrl.abort();
+    this.fail(kind);
+  }
+
+  private stopStallCheck(): void {
+    if (this.stallCheck !== null) clearInterval(this.stallCheck);
+    this.stallCheck = null;
   }
 
   /** Lets held audio go to the phone. */
@@ -186,6 +215,7 @@ export class SpokenLine {
         );
         for await (const event of stream) {
           if (this.aborted) return;
+          this.lastProgress = Date.now();
           if (event.type === 'message_start') {
             const u = event.message.usage;
             this.usage.input += u.input_tokens;
@@ -225,6 +255,7 @@ export class SpokenLine {
 
   private onAudio(pcm: Uint8Array, alignment: MappedAlignment | null): void {
     if (this.aborted) return;
+    this.lastProgress = Date.now();
     this.timings.ttsFirstAudio ??= Date.now();
     if (this.gated) this.held.push({ pcm, alignment });
     else this.forward(pcm, alignment);
@@ -295,6 +326,7 @@ export class SpokenLine {
   }
 
   private resolve(): void {
+    this.stopStallCheck();
     this.settle({
       streamId: this.streamId,
       text: this.aborted ? '' : this.splitter.text,

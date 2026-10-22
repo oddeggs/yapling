@@ -5,7 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { newGuest } from '../auth/testing/client';
 import { readProgress } from '../progress';
 import { userObject } from '../user';
-import { Phone } from '../../test/call/phone';
+import { pcm, Phone } from '../../test/call/phone';
+import { lineTiming } from './line';
 import { control, Providers } from '../../test/call/providers';
 
 /*
@@ -457,4 +458,58 @@ describe('turn-taking', () => {
     await phone.next('say_start', () => true, { from });
     phone.close();
   }, 20_000);
+});
+
+describe('a slow or failed reply', () => {
+  afterEach(() => {
+    lineTiming.stallMs = 10_000;
+  });
+
+  /** Hold-to-talk: the learner presses, says it, and lets go. */
+  const holdAndSay = (phone: Phone, text: string) => {
+    providers.speech.push(text);
+    phone.mic(pcm(1_200, true));
+    phone.mic(pcm(200, false));
+    phone.send({ type: 'end_turn' });
+  };
+
+  it('tilts the head while a hold-to-talk reply is slow, then answers', async () => {
+    script();
+    const { token } = await newGuest();
+    const phone = await Phone.call(token, { turnMode: 'hold_to_talk' });
+    await beat(phone, 'ask-whats-wrong');
+    await sleep(200);
+    providers.firstTokenDelayMs = 1_500;
+    const from = phone.frames.length;
+    holdAndSay(phone, "What's wrong?");
+    const thinking = await phone.next('thinking', (t) => t.state === 'start', { from });
+    const start = await phone.next('say_start', () => true, { from });
+    expect(phone.frames.indexOf(thinking)).toBeLessThan(phone.frames.indexOf(start));
+    await phone.next('heard', () => true, { from });
+    phone.close();
+  }, 20_000);
+
+  it('says the reply failed when the model goes quiet, and lets the learner answer again', async () => {
+    script();
+    lineTiming.stallMs = 400;
+    const { token } = await newGuest();
+    const phone = await Phone.call(token, { turnMode: 'hold_to_talk' });
+    await beat(phone, 'ask-whats-wrong');
+    await sleep(200);
+    providers.firstTokenDelayMs = 15_000;
+    const from = phone.frames.length;
+    holdAndSay(phone, "What's wrong?");
+    expect(await phone.next('error', () => true, { from })).toMatchObject({
+      code: 'llm_failed',
+      fatal: false,
+    });
+    expect(phone.frames.slice(from).filter((f) => f.type === 'heard')).toHaveLength(0);
+    // The scene still waits on the same beat: the next try is answered.
+    providers.firstTokenDelayMs = 5;
+    const again = phone.frames.length;
+    holdAndSay(phone, "What's wrong?");
+    await phone.next('heard', () => true, { from: again });
+    await phone.next('say_end', () => true, { from: again });
+    phone.close();
+  }, 25_000);
 });

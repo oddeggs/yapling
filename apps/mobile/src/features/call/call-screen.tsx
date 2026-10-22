@@ -214,7 +214,10 @@ export function CallScreen({
   }, [meaningAbout]);
 
   // VoiceOver reads each line once it has been spoken.
-  const bubble = view.bubble;
+  // A turn with no answer: the character says it didn't catch that, and it's the learner's turn.
+  const bubble = view.bubble?.didntCatch
+    ? { ...view.bubble, text: t('call.didntCatch') }
+    : view.bubble;
   const spoken =
     bubble && !bubble.playing && !bubble.thinking ? `${bubble.streamId}:${bubble.text}` : null;
   useEffect(() => {
@@ -435,6 +438,13 @@ export function CallScreen({
           />
         ) : null}
         {view.you ? <YouCaption text={view.you.text} heard={view.you.heard} /> : null}
+        {view.paused ? (
+          <View style={{ alignItems: 'center' }} accessibilityLiveRegion="polite">
+            <PhonePill
+              label={t(view.paused === 'interrupted' ? 'call.interrupted' : 'call.reconnecting')}
+            />
+          </View>
+        ) : null}
         <CallBar
           mic={view.mic}
           {...(view.talking ? { speaker: nameOf(view.talking) } : {})}

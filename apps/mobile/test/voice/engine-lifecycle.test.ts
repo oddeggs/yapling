@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { ListenPlayer } from '../../src/features/story/listen-player';
 import { audioOwner, claimAudio, ownsAudio, releaseAudio } from '../../src/voice/audio-owner';
+import type { SocketLike } from '../../src/voice/call-socket';
 import { VoiceEngine } from '../../src/voice/engine';
 
 /*
@@ -102,25 +103,77 @@ const HELLO = {
   turnMode: 'hold_to_talk',
 } as const;
 
+/** A socket the test opens, feeds and drops; it keeps the JSON frames the phone sent. */
+class TestSocket implements SocketLike {
+  binaryType = 'blob';
+  readyState = 0;
+  sent: Record<string, unknown>[] = [];
+  onopen: ((ev: unknown) => void) | null = null;
+  onmessage: ((ev: { data: unknown }) => void) | null = null;
+  onclose: ((ev: { code?: number; reason?: string }) => void) | null = null;
+  onerror: ((ev: unknown) => void) | null = null;
+  send(data: string | ArrayBuffer | ArrayBufferView): void {
+    if (typeof data === 'string' && data.startsWith('{'))
+      this.sent.push(JSON.parse(data) as Record<string, unknown>);
+  }
+  close(): void {
+    this.readyState = 3;
+  }
+  open(): void {
+    this.readyState = 1;
+    this.onopen?.({});
+  }
+  receive(frame: Record<string, unknown>): void {
+    this.onmessage?.({ data: JSON.stringify(frame) });
+  }
+  drop(): void {
+    this.readyState = 3;
+    this.onclose?.({ code: 1006 });
+  }
+}
+
+let sockets: TestSocket[] = [];
+
 const engine = () =>
   new VoiceEngine({
     url: 'ws://call',
     hello: HELLO,
-    createSocket: () => ({
-      binaryType: 'arraybuffer',
-      readyState: 0,
-      send: () => undefined,
-      close: () => undefined,
-      onopen: null,
-      onmessage: null,
-      onclose: null,
-      onerror: null,
-    }),
+    createSocket: () => {
+      const s = new TestSocket();
+      sockets.push(s);
+      return s;
+    },
   });
+
+let serverSeq = 0;
+const READY = {
+  type: 'ready',
+  sessionId: 'call_1',
+  secondsLeft: 600,
+  recordedLineBaseUrl: null,
+  resumeToken: 'resume-token-aaaaaaaa',
+  resumed: false,
+};
+
+/** An engine with its audio up and its call answered. */
+async function liveCall() {
+  const e = engine();
+  e.connect();
+  const socket = sockets.at(-1)!;
+  socket.open();
+  socket.receive({ ...READY, seq: ++serverSeq });
+  await e.prepare();
+  return {
+    e,
+    socket,
+    say: (f: Record<string, unknown>) => socket.receive({ ...f, seq: ++serverSeq }),
+  };
+}
 
 const at = (entry: string) => mockLog.indexOf(entry);
 
 beforeEach(() => {
+  sockets = [];
   mockLog.length = 0;
   mockAudio.failResumes = 0;
   mockAudio.engineRunning = true;
@@ -171,12 +224,15 @@ describe('a call starting its audio', () => {
     await e.dispose();
   });
 
-  it('starts a stopped engine again by suspending and resuming the graph', async () => {
-    mockAudio.engineRunning = false;
+  it('starts a stopped engine again by suspending and resuming the graph on coming back', async () => {
     const e = engine();
     await e.prepare();
-    expect(at('context suspend')).toBeGreaterThan(at('voice processing on'));
-    expect(mockLog.lastIndexOf('context resume')).toBeGreaterThan(at('context suspend'));
+    mockLog.length = 0;
+    await e.foregrounded();
+    expect(mockLog).toEqual([]);
+    mockAudio.engineRunning = false;
+    await e.foregrounded();
+    expect(mockLog).toEqual(['context suspend', 'context resume']);
     await e.dispose();
   });
 
@@ -229,5 +285,85 @@ describe('a story and a call sharing the session', () => {
     expect(mockLog.slice(0, 3)).toEqual(['voice processing off', 'options playback', 'activate']);
     await story.dispose();
     expect(mockLog).toContain('deactivate');
+  });
+});
+
+describe('a turn that gets no answer', () => {
+  it('gives the turn back with "didn\'t catch that" when the reply fails', async () => {
+    const { e, say } = await liveCall();
+    e.pressTalk();
+    e.releaseTalk();
+    expect(e.state.get().phase).toBe('thinking');
+    say({ type: 'thinking', state: 'start' });
+    say({ type: 'error', code: 'llm_failed', fatal: false });
+    expect(e.state.get()).toMatchObject({
+      phase: 'your_turn',
+      awaitingReply: false,
+      serverThinking: false,
+      notice: 'didnt_catch',
+      warning: 'llm_failed',
+    });
+    // Speaking again clears it.
+    e.pressTalk();
+    expect(e.state.get().notice).toBeNull();
+    await e.dispose();
+  });
+
+  it('gives the turn back when nothing at all comes after the learner lets go', async () => {
+    jest.useFakeTimers();
+    const { e } = await liveCall();
+    e.pressTalk();
+    e.releaseTalk();
+    jest.advanceTimersByTime(5_000);
+    expect(e.state.get().phase).toBe('thinking');
+    jest.advanceTimersByTime(2_000);
+    expect(e.state.get()).toMatchObject({ phase: 'your_turn', notice: 'didnt_catch' });
+    jest.useRealTimers();
+    await e.dispose();
+  });
+
+  it('leaves a failed explanation without a notice when no turn was waiting', async () => {
+    const { e, say } = await liveCall();
+    say({ type: 'error', code: 'llm_failed', fatal: false });
+    expect(e.state.get().notice).toBeNull();
+    await e.dispose();
+  });
+});
+
+describe('a dropped line', () => {
+  it('stops waiting on the old socket and says it is reconnecting', async () => {
+    jest.useFakeTimers();
+    const { e, socket } = await liveCall();
+    e.pressTalk();
+    e.releaseTalk();
+    socket.drop();
+    expect(e.state.get()).toMatchObject({
+      connected: false,
+      reconnecting: true,
+      awaitingReply: false,
+      serverThinking: false,
+    });
+    jest.advanceTimersByTime(1_000);
+    const again = sockets.at(-1)!;
+    expect(again).not.toBe(socket);
+    again.open();
+    expect(again.sent[0]).toMatchObject({ type: 'hello', resumeToken: 'resume-token-aaaaaaaa' });
+    again.receive({ ...READY, resumed: true, seq: ++serverSeq });
+    expect(e.state.get()).toMatchObject({ connected: true, reconnecting: false });
+    jest.useRealTimers();
+    await e.dispose();
+  });
+});
+
+describe('a phone call or Siri', () => {
+  it('holds the scene while it lasts and lets go after', async () => {
+    const { e, socket } = await liveCall();
+    await e.simulateInterruption('began');
+    expect(socket.sent.at(-1)).toMatchObject({ type: 'hold' });
+    expect((socket.sent.at(-1)?.['seconds'] as number) > 0).toBe(true);
+    await e.simulateInterruption('ended');
+    expect(socket.sent.at(-1)).toMatchObject({ type: 'hold', seconds: 0 });
+    expect(e.state.get()).toMatchObject({ interrupted: false, onHold: false });
+    await e.dispose();
   });
 });

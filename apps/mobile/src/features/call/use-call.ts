@@ -157,6 +157,15 @@ export function useCall(setup: CallSetup) {
     };
   }, [mic, attempt, dispatch]);
 
+  // Back from the background mid-call: a socket iOS dropped reconnects at once, audio restarts.
+  useEffect(() => {
+    if (!engine) return undefined;
+    const sub = AppState.addEventListener('change', (s) => {
+      if (s === 'active') void engine.foregrounded();
+    });
+    return () => sub.remove();
+  }, [engine]);
+
   const state = useStore(engine?.state ?? idleStore);
   const track = useStore(tracker);
 
