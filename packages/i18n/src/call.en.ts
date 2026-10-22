@@ -23,6 +23,7 @@ export const callEn = {
   'call.whatDoesThatMean': 'What does that mean?',
   'call.whisper': '{name} whispers',
   'call.showTranslation': 'Show translation',
+  'call.hideTranslation': 'Hide translation',
   'call.you': 'YOU',
   'call.youHeard': 'YOU · heard',
   'call.hint': 'HINT',

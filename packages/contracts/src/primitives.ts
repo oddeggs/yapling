@@ -133,6 +133,14 @@ export const Track = z.enum(TRACKS);
 export type Track = z.infer<typeof Track>;
 
 /**
+ * The pace the learner asked for ("Too hard" / "Too easy" on the residency card): the town talks a
+ * little slower with hints sooner, or a little faster with hints later. None keeps the stage's.
+ */
+export const PACES = ['slower', 'faster'] as const;
+export const Pace = z.enum(PACES);
+export type Pace = z.infer<typeof Pace>;
+
+/**
  * The first languages offered at onboarding (ISO 639-1), plus `other`: Tiếng Việt, Bahasa
  * Indonesia, ไทย, Português, Español, 日本語, 한국어, Türkçe.
  */

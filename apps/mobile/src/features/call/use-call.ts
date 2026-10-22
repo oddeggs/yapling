@@ -2,6 +2,7 @@ import {
   LIMITS,
   type CallKind,
   type FirstLanguage,
+  type Pace,
   type Stage,
   type TurnMode,
 } from '@yapling/contracts';
@@ -29,6 +30,8 @@ export interface CallSetup {
   readonly kind: CallKind;
   readonly stage: Stage;
   readonly firstLanguage: FirstLanguage;
+  /** The pace the learner asked for; null for the stage's own. */
+  readonly pace: Pace | null;
   readonly turnMode: TurnMode;
   /** `wss://<api>/api/calls/socket`. */
   readonly url: string;
@@ -126,6 +129,7 @@ export function useCall(setup: CallSetup) {
           firstLanguage: s.firstLanguage,
           clientVersion: s.clientVersion,
           turnMode: s.turnMode,
+          pace: s.pace,
         },
         createSocket: tapSocket(webSocket, (frame) => {
           if (frame.type === 'beat') s.onLog?.(`beat ${frame.beatId}`);

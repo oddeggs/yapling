@@ -1,4 +1,6 @@
-import { useMinutes, useSession } from '../../data';
+import { useEffect } from 'react';
+
+import { useMinutes, useSeen, useSession } from '../../data';
 import { useRoommate } from '../../features/me';
 import { PaywallContainer } from '../../features/plus';
 
@@ -7,6 +9,9 @@ export default function PlusRoute() {
   const roommate = useRoommate();
   const { session } = useSession();
   const { refresh } = useMinutes();
+  // Seen once: the burrow's end-of-week card stops offering it as the day's one thing.
+  const { markSeen } = useSeen();
+  useEffect(() => void markSeen('plus_offer'), [markSeen]);
   return (
     <PaywallContainer
       roommateName={roommate.name}

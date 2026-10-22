@@ -14,7 +14,7 @@ export const errorsEn = {
   'errors.mic.kicker': 'MICROPHONE OFF',
   'errors.mic.title': '{name} can’t hear you yet',
   'errors.mic.body':
-    'The microphone is off for Yapling. Turn it on in Settings, or type to {name}.',
+    'The microphone is off for Yapling. Turn it on in Settings so {name} can hear you.',
   'errors.mic.openSettings': 'Open Settings',
   'errors.mic.type': 'Type instead',
 } as const satisfies EnCatalogue;

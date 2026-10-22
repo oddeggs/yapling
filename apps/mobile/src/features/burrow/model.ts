@@ -11,10 +11,10 @@ import type {
   WeekRing,
 } from '@yapling/contracts';
 import { ringWeeks, weekOfDay, type Welcome, type WeekOneUnlock } from '@yapling/domain';
-import { translator, type StringKey } from '@yapling/i18n';
-import { CAST } from '@yapling/story';
+import type { StringKey } from '@yapling/i18n';
 import type { Href } from 'expo-router';
 
+import { hungKeepsakes } from '../payoff/keepsake-model';
 import { copy, text, type Copy } from './copy';
 import { planFor } from './day-plan';
 import { timeOfDayAt } from './time-of-day';
@@ -205,46 +205,26 @@ export function shelvesFor(
   return { left: all.slice(0, SHELF_SLOTS), right: all.slice(SHELF_SLOTS, SHELF_SLOTS * 2) };
 }
 
-const en = translator('en');
-
-const castName = (id: CharacterId): string => CAST[id].name;
-
-const shortDate = (date: string): string => {
-  const [, m, d] = date.split('-').map(Number);
-  return `${en(`common.monthShort.${m ?? 1}` as 'common.monthShort.1')} ${d ?? 1}`;
-};
-
+/** The art's character for a keepsake's witness; a voice with no face has none. */
 const asArtCharacter = (id: CharacterId | null): Character | null =>
   id !== null && id !== 'mags' && id !== 'office' ? id : null;
 
 /**
- * The newest keepsake on the wall: a can-do certificate names its own can-do and witness; the
- * week's keepsake shows the can-do ticked that week.
+ * The newest keepsake on the wall, as the payoff drew it and hung it: the can-do in the learner's
+ * own words, signed by its witness on the day it was earned.
  */
 export function keepsakeFor(
-  keepsakes: readonly Keepsake[],
-  canDos: readonly CanDoProgress[],
-  learnerName: string,
+  progress: Pick<BurrowProgress, 'keepsakes' | 'canDos'>,
+  learner: { readonly name: string; readonly roommateName: string },
 ): HungKeepsake | null {
-  const latest = [...keepsakes].sort((a, b) => a.earnedOn.localeCompare(b.earnedOn)).at(-1);
-  if (latest === undefined) return null;
-  const ticked = canDos
-    .filter((c) => c.status === 'ticked' && c.tickedOn !== null && c.tickedOn <= latest.earnedOn)
-    .sort((a, b) => (a.tickedOn ?? '').localeCompare(b.tickedOn ?? ''));
-  const canDo =
-    latest.canDoId !== null ? canDos.find((c) => c.id === latest.canDoId) : ticked.at(-1);
-  if (canDo === undefined) return null;
-  const witness = latest.kind === 'can_do' ? (latest.signedBy ?? canDo.witness) : canDo.witness;
-  const witnessName = witness !== null ? castName(witness) : castName('pip');
+  const newest = hungKeepsakes(progress, learner).at(-1);
+  if (newest === undefined) return null;
   return {
-    id: latest.id,
-    heading: en('payoff.keepsake.canNow', { learner: learnerName }),
-    canDo: en(`cando.${canDo.id}` as 'cando.introduce-yourself-30s'),
-    witnessed: en('payoff.keepsake.witnessed', {
-      witness: witnessName,
-      date: shortDate(canDo.tickedOn ?? latest.earnedOn),
-    }),
-    witness: asArtCharacter(witness),
+    id: newest.id,
+    heading: newest.heading,
+    canDo: newest.canDo,
+    witnessed: newest.witnessed,
+    witness: asArtCharacter(newest.witness),
   };
 }
 
@@ -266,7 +246,10 @@ export function burrowHomeModel(input: BurrowInput): BurrowHomeModel {
     pipMood: plan.pipMood,
     shelves: shelvesFor(input.progress.phrases, input.seen),
     mailbox: mailboxFor(input.day, input.seen),
-    keepsake: keepsakeFor(input.progress.keepsakes, input.progress.canDos, input.learnerName),
+    keepsake: keepsakeFor(input.progress, {
+      name: input.learnerName,
+      roommateName: input.roommate.name,
+    }),
     delta: plan.delta,
     line: plan.line,
     action: plan.action,

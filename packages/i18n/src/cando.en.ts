@@ -18,4 +18,17 @@ export const candoEn = {
   'cando.pitch-45s': 'Give a 45-second pitch',
   'cando.speak-to-a-group': 'Speak in front of a group',
   'cando.make-a-case-take-a-question': 'Make a short case and answer a question',
+  /** The keepsake's own wording, in the learner's voice and the past ("Introduced myself…"). */
+  'cando.ask-whats-wrong.certificate': 'Asked someone what was wrong and offered help',
+  'cando.introduce-yourself-30s.certificate': 'Introduced myself in 30 seconds',
+  'cando.say-what-youre-good-at.certificate': 'Said what I’m good at',
+  'cando.tell-me-about-yourself.certificate': 'Answered “Tell me about yourself”',
+  'cando.say-no-politely.certificate': 'Said no politely',
+  'cando.push-back-offer-alternative.certificate': 'Pushed back once and offered an alternative',
+  'cando.agree-disagree-kindly.certificate': 'Agreed and disagreed kindly',
+  'cando.keep-a-meeting-moving.certificate': 'Kept a meeting moving and gave everyone a turn',
+  'cando.short-story-with-a-point.certificate': 'Told a short story with a point',
+  'cando.pitch-45s.certificate': 'Gave a 45-second pitch',
+  'cando.speak-to-a-group.certificate': 'Spoke in front of a group',
+  'cando.make-a-case-take-a-question.certificate': 'Made a short case and answered a question',
 } as const satisfies EnCatalogue;

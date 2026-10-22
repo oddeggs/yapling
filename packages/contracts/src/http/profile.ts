@@ -5,6 +5,7 @@ import {
   FirstLanguage,
   LIMITS,
   LocalTime,
+  Pace,
   RoommateSpecies,
   Stage,
   TimeZone,
@@ -40,6 +41,8 @@ const editable = {
   timezone: TimeZone,
   /** Whether the learner allowed notifications on the phone (mirrored for the server's plan). */
   notificationsAllowed: z.boolean(),
+  /** The pace the learner asked for; null for the stage's own. */
+  pace: Pace.nullable(),
 };
 
 /**
@@ -49,13 +52,18 @@ const editable = {
 export const Profile = z.object({
   revision: z.int().min(1),
   ...editable,
+  /** Null for a profile saved before the learner was asked (and a copy cached before then). */
+  pace: Pace.nullable().default(null),
   stage: Stage,
   updatedAt: EpochMs,
 });
 export type Profile = z.infer<typeof Profile>;
 
-/** `PUT /api/me/profile`: the whole profile, at the end of onboarding. */
-export const ProfileInput = z.object(editable);
+/**
+ * `PUT /api/me/profile`: the whole profile, at the end of onboarding. `pace` may be left out (the
+ * residency card asks for it after the profile is saved): the pace the profile has is kept.
+ */
+export const ProfileInput = z.object({ ...editable, pace: Pace.nullable().optional() });
 export type ProfileInput = z.infer<typeof ProfileInput>;
 
 /** `PATCH /api/me/profile`: any editable fields, at least one. */

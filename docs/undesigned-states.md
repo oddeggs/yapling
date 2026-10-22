@@ -22,6 +22,8 @@ States built from existing components because the design does not show them.
 | Burrow home | Seagull feather | The prototype's toast draws the feather as the first-stage plant; it stands on the shelf with that art and its name under it |
 | Burrow home | More than six phrases | The two shelves hold three each: the newest six phrases stand there (nothing leaves because of time) |
 | Burrow, Linh's knock, coming back | Status bar | Design review fix 5: the room is drawn below the status bar (lowered by the safe area less the prototype's 40-point bar); the band above is the scene's own top edge stretched, in the scene's light |
+| Linh's knock | The learner's reply | The scene plays on the phone, not as a live call: the knock, Linh's recorded welcome with its caption, then the café at dusk and "Chúc ngủ ngon" as the primary button. The mic rests (no turn nobody would hear) |
+| Coming back | Pip's line | The recap line (recorded) plays with its caption; Pip's own day 8 line has no recording and shows whole. "Về hang" turns primary once the line is done |
 | Coming back | Last button | "Kết thúc tuần" is prototype-only (design review fix 6); the button reads "Về hang" and the burrow then shows the next episode |
 | Coming back (day 8) | Next-episode card | Shown at once after days away; on a normal day 8 it rises after the learner's answer, as the prototype's beat does |
 | Coming back | No story yet to recap | Away before the first episode: Pip says its knock line "You're back? I kept your seat warm." (no recording, no gloss) and the card shows Episode 1 |
@@ -61,7 +63,7 @@ States built from existing components because the design does not show them.
 | Unpacking chat (before the call) | Microphone not asked yet | The hub's first chat: the day-one burrow with Pip waving, the "First chat · about a minute" pill, and the white "So Pip can hear you" card with "Allow microphone" before the system sheet. When iOS has already asked, the call opens at once |
 | Residency card | Back button | Left out: the placement call can't be taken back, and "Continue" is the only way on |
 | Residency card | Summary still being written | One frosted row with a spinner and "Pip is writing it down…" in place of the strengths; after a minute without a summary, the three general strengths show |
-| Residency card | Strengths from the call | The summary's wins are written in simple English, so they show in English under the chrome's title; the general strengths that fill the three are Pip's own line after unpacking, in the chrome's language |
+| Residency card | Strengths from the call | The summary's wins are written in the chrome's language (the English the learner said quoted as it is), under the chrome's title; the general strengths that fill the three are Pip's own line after unpacking, in the chrome's language |
 | Residency card | First aims | The can-do catalogue's titles ("Ask someone what's wrong and offer help"), not the prototype's shorter wording |
 | Notifications | Changing the quiet hours | A small "Change" chip under the quiet hours row opens two rows of choice chips: from 21:00, 22:00 or 23:00, until 07:00, 08:00 or 09:00 |
 | Notifications | Pip's phone | The art's critter has no phone pose yet: Pip is drawn excited, without the phone |
@@ -87,6 +89,6 @@ States built from existing components because the design does not show them.
 | Call | Reconnecting mid-call | No design. The mic rests and the last line stays; the call resumes the beat when the socket is back. After two minutes the no-connection sheet shows |
 | Call | No connection | Voice notes are a later release: the sheet keeps the kicker and title, drops the voice-note line and button, and "Thử gọi lại" becomes the primary button |
 | Call | Microphone off | Typing to the roommate is a later release: the sheet keeps "Mở Cài đặt" and drops "Nhắn chữ thay thế" |
-| Call | Meaning, translation open | The board's "Ẩn bản dịch" has no catalogue key; once revealed the translation stays until the whisper's ✕ closes it (as in the Week 1 prototype) |
+| Call | Meaning, translation open | The board's "Ẩn bản dịch" chip replaces "Xem bản dịch" and folds the translation away again; the whisper's ✕ closes it all |
 | Call | The letter | The prototype's "HARBOUR LANE OFFICE · NOTICE" kicker isn't in the story or a catalogue; the letter shows the story's own lines, sign-off included |
 | Call | Notebook, knock, dusk letter, postcard, voicemail and leaf beats | Not part of the live calls built here; the call shows nothing for them and carries on |

@@ -2,11 +2,11 @@ import { translator } from '@yapling/i18n';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 
-import { isDataError, useCall, useCalls, useProfile, useSession } from '../../data';
+import { isDataError, useCall, useCalls, useProfile, useSeen, useSession } from '../../data';
 import { deviceTimeZone } from '../../data/week';
 import { useLanguageOverride, useLocale, useToast } from '../../ui';
 import { micPermissionStatus, requestMicPermission } from '../../voice';
-import { Face } from '../burrow/art';
+import { Face } from '../burrow';
 import { requestKnockPermission } from '../knocks';
 import { AiExplainer } from '../safety';
 import { CardScreen } from './card-screen';
@@ -199,9 +199,12 @@ export function CardStep() {
   const params = useLocalSearchParams<{ callId?: string; preview?: string }>();
   const [state, dispatch] = useOnboarding();
   const fromCall = typeof params.callId === 'string' && params.callId !== '' ? params.callId : null;
+  const { markSeen } = useSeen();
   useEffect(() => {
     dispatch({ type: 'placed', callId: fromCall });
-  }, [fromCall, dispatch]);
+    // The placement chat is behind the learner: the burrow moves on to Linh's knock.
+    void markSeen('placement_chat');
+  }, [fromCall, dispatch, markSeen]);
   const preview = __DEV__ ? previewSummary(params.preview) : null;
   if (preview !== null) return <Card summary={preview} />;
   const callId = fromCall ?? state.placementCallId;
@@ -239,7 +242,7 @@ function Card({ summary }: { summary: PlacementSummary }) {
   const router = useRouter();
   const { t } = useLocale();
   const toast = useToast();
-  const { profile } = useProfile();
+  const { profile, updateProfile } = useProfile();
   const [state, dispatch] = useOnboarding();
   const species = profile?.roommate.species ?? state.species;
   const roommateName = profile?.roommate.name ?? nameOrPip(state.roommateName);
@@ -257,6 +260,8 @@ function Card({ summary }: { summary: PlacementSummary }) {
   );
   const adjust = (pace: Pace) => {
     dispatch({ type: 'adjustPace', pace });
+    // On the profile for every call's `hello` (queued while offline).
+    void updateProfile({ pace }).catch(() => undefined);
     toast({
       text: t(
         pace === 'faster' ? 'onboarding.card.adjustedFaster' : 'onboarding.card.adjustedSlower',

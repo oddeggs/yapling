@@ -9,7 +9,7 @@ export const errorsVi = {
   'errors.offline.retry': 'Thử gọi lại',
   'errors.mic.kicker': 'MICRO ĐANG TẮT',
   'errors.mic.title': '{name} chưa nghe được bạn',
-  'errors.mic.body': 'Micro đang tắt cho Yapling. Bật trong Cài đặt, hoặc nhắn chữ cho {name}.',
+  'errors.mic.body': 'Micro đang tắt cho Yapling. Bật trong Cài đặt để {name} nghe được bạn nhé.',
   'errors.mic.openSettings': 'Mở Cài đặt',
   'errors.mic.type': 'Nhắn chữ thay thế',
 } as const satisfies Translation<typeof errorsEn>;

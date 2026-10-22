@@ -12,6 +12,7 @@ export const callVi = {
   'call.whatDoesThatMean': 'What does that mean?',
   'call.whisper': '{name} thì thầm',
   'call.showTranslation': 'Xem bản dịch',
+  'call.hideTranslation': 'Ẩn bản dịch',
   'call.you': 'BẠN',
   'call.youHeard': 'BẠN · nghe được',
   'call.hint': 'GỢI Ý',

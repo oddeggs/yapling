@@ -1,5 +1,5 @@
 import { colours, layout } from '@yapling/theme';
-import { Redirect, useLocalSearchParams } from 'expo-router';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -30,6 +30,40 @@ export default function DataLab() {
 }
 
 function Lab() {
+  const session = useSession();
+  // No learner on this phone yet: the guest is made by onboarding's age check, nothing else.
+  if (session.session === null && ['awaiting_age', 'signed_out'].includes(session.status))
+    return <NoLearner status={session.status} />;
+  return <LabWithLearner />;
+}
+
+/** Before onboarding has made a guest: nothing to read or write yet. */
+function NoLearner({ status }: { status: string }) {
+  const insets = useSafeAreaInsets();
+  const router = useRouter();
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colours.background,
+        paddingTop: insets.top + 8,
+        paddingHorizontal: layout.marginScreen,
+        gap: 8,
+      }}
+    >
+      <Txt variant="screenTitle">data lab</Txt>
+      <Txt variant="note" colour={colours.text} testID="lab-session">{`session: ${status}`}</Txt>
+      <Txt variant="note" colour={colours.textMuted}>
+        No learner on this phone yet. Run onboarding first: its age check makes the guest.
+      </Txt>
+      <View style={{ flexDirection: 'row', marginTop: 12 }}>
+        <Chip label="Start onboarding" onPress={() => router.replace('/')} />
+      </View>
+    </View>
+  );
+}
+
+function LabWithLearner() {
   const insets = useSafeAreaInsets();
   const data = useData();
   const session = useSession();

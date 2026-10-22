@@ -2,6 +2,7 @@ import { randomUUID } from 'expo-crypto';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { AppState } from 'react-native';
 
+import type { AppClock } from './clock';
 import { apiBase, clientVersion } from './config';
 import { Data } from './data';
 import { secureStorage } from './secure-storage';
@@ -35,8 +36,21 @@ export function getSessionToken(): Promise<string> {
 
 const DataContext = createContext<Data | null>(null);
 
-export function DataProvider({ children, data }: { children: ReactNode; data?: Data }) {
-  const [value] = useState(() => data ?? appData());
+export function DataProvider({
+  children,
+  data,
+  clock,
+}: {
+  children: ReactNode;
+  data?: Data;
+  /** The app's clock (the test menu's in test builds); the phone's otherwise. */
+  clock?: AppClock;
+}) {
+  const [value] = useState(() => {
+    const made = data ?? appData();
+    if (clock) made.setClock(clock);
+    return made;
+  });
   useEffect(() => {
     void value.start();
     const sub = AppState.addEventListener('change', (state) => {

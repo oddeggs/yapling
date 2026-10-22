@@ -1,4 +1,4 @@
-import type { FirstLanguage, HelloFrame, Stage } from '@yapling/contracts';
+import type { FirstLanguage, HelloFrame, Pace, Stage } from '@yapling/contracts';
 import { duePhrases, fromPhraseProgress } from '@yapling/domain';
 import { findPhrase, type ErrorTargetBrief, type Scene } from '@yapling/story';
 
@@ -8,8 +8,8 @@ import { targetBrief } from './targets';
 
 /*
  * What the call knows about the learner when it starts: their name and timezone (profile), their
- * active error targets and the phrases due a chance (progress). The stage and first language come
- * from `hello`, which the app reads from the same profile.
+ * active error targets and the phrases due a chance (progress). The stage, first language and pace
+ * come from `hello`, which the app reads from the same profile.
  */
 
 export interface LearnerContext {
@@ -17,6 +17,8 @@ export interface LearnerContext {
   readonly timezone: string;
   readonly stage: Stage;
   readonly firstLanguage: FirstLanguage;
+  /** The pace the learner asked for; null (or missing in a call saved before) for the stage's. */
+  readonly pace?: Pace | null;
   /** The two active error targets, prompted in the call. */
   readonly targets: readonly ErrorTargetBrief[];
   /** Phrase ids and text to give chances to use. */
@@ -26,7 +28,7 @@ export interface LearnerContext {
 export async function loadLearner(
   env: Bindings,
   userId: string,
-  hello: Pick<HelloFrame, 'stage' | 'firstLanguage'>,
+  hello: Pick<HelloFrame, 'stage' | 'firstLanguage' | 'pace'>,
   scene: Scene,
   now: number,
 ): Promise<LearnerContext> {
@@ -55,6 +57,7 @@ export async function loadLearner(
     timezone,
     stage: hello.stage,
     firstLanguage: hello.firstLanguage,
+    pace: hello.pace ?? null,
     targets,
     duePhrases: [...due, ...sceneOwn].slice(0, 6),
   };

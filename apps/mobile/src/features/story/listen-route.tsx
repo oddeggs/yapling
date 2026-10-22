@@ -3,12 +3,13 @@ import { translator } from '@yapling/i18n';
 import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 
-import { BurrowArtProvider } from '../burrow/art-fonts';
 import { BURROW_ROUTES } from '../burrow/routes';
+import { useAppNow, useProgress, useSeen } from '../../data';
 import { useLocale } from '../../ui';
 import { useStoryLearner } from './learner';
 import { listenPlan } from './plan';
-import { markSeen } from './seen-store';
+import { momentsOfScenes } from './moments';
+import { phraseForSeed } from './seeds';
 import type { SeedEvent } from './story-model';
 import { StoryScreen } from './story-screen';
 import { useVoicemailCall } from './voicemail-call';
@@ -49,13 +50,13 @@ export function ListenRoute() {
   const sceneId = one(params, 'sceneId') ?? '';
   const scene = findScene(sceneId);
   return (
-    <BurrowArtProvider>
+    <>
       {scene?.kind === 'voicemail' ? (
         <VoicemailRoute scene={scene} params={params} />
       ) : (
         <StoryRoute sceneId={sceneId} params={params} />
       )}
-    </BurrowArtProvider>
+    </>
   );
 }
 
@@ -75,12 +76,18 @@ function StoryRoute({ sceneId, params }: { sceneId: string; params: Params }) {
     () => listenPlan(sceneId, learner.firstLanguage),
     [sceneId, learner.firstLanguage],
   );
-  const [postmark] = useState(() => postmarkDay(Date.now()));
-  const onSeed = useCallback((event: SeedEvent) => {
-    // The data layer has no phrase-met write for the phone yet: the integration records the seed
-    // (meetPhrase) here. Until then the event is the hand-off.
-    void event;
-  }, []);
+  // Stamped on the app's day (the test menu's, in the test builds).
+  const now = useAppNow(learner.timezone);
+  const [postmark] = useState(() => postmarkDay(now));
+  const { markSeen } = useSeen();
+  const { meetPhrase } = useProgress();
+  const onSeed = useCallback(
+    (event: SeedEvent) => {
+      const phrase = phraseForSeed({ phraseId: event.phraseId, text: event.phrase ?? event.text });
+      if (phrase) void meetPhrase(phrase).catch(() => undefined);
+    },
+    [meetPhrase],
+  );
   if (!plan) return null;
   const gift = GIFTS[sceneId];
   return (
@@ -92,7 +99,7 @@ function StoryRoute({ sceneId, params }: { sceneId: string; params: Params }) {
       gift={gift ? t(gift) : null}
       onSeed={onSeed}
       onFinish={() => {
-        markSeen(plan.scenes.map((s) => s.id));
+        void markSeen(...momentsOfScenes(plan.scenes.map((s) => s.id)));
         leave();
       }}
       onBack={leave}
@@ -104,6 +111,7 @@ function VoicemailRoute({ scene, params }: { scene: Scene; params: Params }) {
   const router = useRouter();
   const learner = useStoryLearner(params);
   const leave = useLeave();
+  const { markSeen } = useSeen();
   const sceneId = scene.id;
   const [attempt, setAttempt] = useState(0);
   const call = useVoicemailCall({
@@ -138,7 +146,7 @@ function VoicemailRoute({ scene, params }: { scene: Scene; params: Params }) {
       growth={growth}
       phrase={target?.en ?? ''}
       onSeasonMap={() => {
-        markSeen([sceneId]);
+        void markSeen(...momentsOfScenes([sceneId]));
         // In development the season map keeps the preview's day.
         const day = __DEV__ ? one(params, 'day') : undefined;
         router.replace(day ? (`/season?day=${day}&after=1` as Href) : BURROW_ROUTES.seasonMap);

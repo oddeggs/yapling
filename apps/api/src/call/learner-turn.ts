@@ -9,7 +9,8 @@ import { SttSession } from './stt';
  * into one turn, the answer started speculatively and released after enough silence (or at once
  * on a hold-to-talk release), dropped when the learner speaks again before it reaches the phone.
  * "Chờ chút" pauses all of it until the learner speaks or the hold runs out. While the scene is
- * listening and nobody speaks, the silence is measured for the stage's hint pause.
+ * listening and nobody speaks, the silence is measured for the stage's hint pause, from when the
+ * learner last stopped speaking; a pause inside a held hold-to-talk turn is never silence.
  *
  * When the phone sends its own speech start and end (`speech` frames, from its echo-cancelled
  * mic), they decide when speech starts and ends; the energy gate stays as the fallback for a
@@ -28,6 +29,8 @@ interface PhoneVad {
 /** Scribe's final text normally follows a commit within about 300 ms. */
 const FINAL_TIMEOUT_MS = 2_500;
 const TICK_MS = 250;
+/** A held turn whose mic chunks stopped this long ago is no longer streaming (a lost release). */
+const HELD_STALE_MS = 1_500;
 
 export interface TurnHost {
   /** The scene waits for the learner and nothing is playing. */
@@ -59,6 +62,8 @@ export class LearnerTurn {
   private tick: ReturnType<typeof setInterval> | null = null;
   private lastSpeechMs = 0;
   private phone: PhoneVad | null = null;
+  /** Hold-to-talk: when the last mic chunk of a press arrived; 0 once the turn was released. */
+  private heldAt = 0;
 
   constructor(
     key: string,
@@ -102,6 +107,12 @@ export class LearnerTurn {
     this.quietSince = { audioMs: this.endpointer.audioMs, wall: Date.now() };
   }
 
+  /** The learner stopped speaking at `endMs` on the mic clock: the quiet counts from there. */
+  private quietFrom(endMs: number): void {
+    const ago = Math.max(0, this.endpointer.audioMs - endMs);
+    this.quietSince = { audioMs: this.endpointer.audioMs - ago, wall: Date.now() - ago };
+  }
+
   /** The reply line finished or was dropped. */
   replyDone(line: SpokenLine): void {
     if (this.reply === line) this.reply = null;
@@ -113,12 +124,17 @@ export class LearnerTurn {
   }
 
   mic(chunk: Uint8Array): void {
+    // Hold-to-talk sends audio only while the button is held: a press is streaming.
+    if (this.mode === 'hold_to_talk') this.heldAt = Date.now();
     this.stt.audio(chunk);
     const events = this.endpointer.feed(chunk);
     // The phone's flags, when it sends them, decide; the energy gate is the fallback.
     for (const event of this.phone === null ? events : []) {
       if (event.type === 'speech_start') this.speechStarted();
-      else if (this.mode === 'hands_free') this.segmentEnded(event.speechEndMs);
+      else {
+        this.quietFrom(event.speechEndMs);
+        if (this.mode === 'hands_free') this.segmentEnded(event.speechEndMs);
+      }
     }
     const talked = this.endpointer.speechMs - this.lastSpeechMs;
     if (talked > 0) {
@@ -143,6 +159,7 @@ export class LearnerTurn {
       this.phone.speaking = true;
       this.phone.committed = false;
     } else {
+      if (this.phone.speaking) this.quietFrom(atMs);
       this.phone.speaking = false;
       this.phone.endMs = atMs;
     }
@@ -153,7 +170,9 @@ export class LearnerTurn {
   endTurn(): void {
     if (this.mode !== 'hold_to_talk') return;
     this.speechEndAt = Date.now();
+    this.heldAt = 0;
     this.endpointer.reset();
+    this.restartQuiet();
     this.commit();
   }
 
@@ -218,6 +237,15 @@ export class LearnerTurn {
     reply?.abort();
   }
 
+  /** Hold-to-talk: the button is down and its audio is still arriving. */
+  private pressStreaming(): boolean {
+    if (this.heldAt === 0) return false;
+    if (Date.now() - this.heldAt < HELD_STALE_MS) return true;
+    this.heldAt = 0;
+    this.restartQuiet();
+    return false;
+  }
+
   private holding(): boolean {
     if (this.holdUntil === 0) return false;
     if (Date.now() < this.holdUntil) return true;
@@ -248,7 +276,8 @@ export class LearnerTurn {
       return;
     }
     if (!this.windowOpen || reply !== null || this.awaitingFinal !== 0) return;
-    if (this.inSpeech() || this.holding() || this.pending !== '') return;
+    // A pause inside a held turn is the learner thinking, never silence to nudge.
+    if (this.inSpeech() || this.holding() || this.pressStreaming() || this.pending !== '') return;
     if (!this.host.accepting()) return;
     const quietMs = Math.max(
       this.endpointer.audioMs -

@@ -1,5 +1,12 @@
-import type { EpochMs, LocalDate, QuietHours, TimeZone } from '@yapling/contracts';
-import type { Season1EpisodeId } from '@yapling/domain';
+import type {
+  EpochMs,
+  LocalDate,
+  Profile,
+  Progress,
+  QuietHours,
+  TimeZone,
+} from '@yapling/contracts';
+import { SEASON_1_EPISODES, type Season1EpisodeId } from '@yapling/domain';
 
 /**
  * What the knocks need to know about the learner, from their profile and progress. The app's data
@@ -18,4 +25,29 @@ export interface KnockInputs {
   readonly completedEpisodes: readonly Season1EpisodeId[];
   /** The roommate's name, which titles its knocks and fills `{name}`. */
   readonly roommateName: string;
+}
+
+/** Week N's episode is Episode N: the episodes whose ring slot is done, in order. */
+export const completedEpisodesOf = (progress: Pick<Progress, 'weeks'>): Season1EpisodeId[] =>
+  progress.weeks.flatMap((week, i) => {
+    const id = SEASON_1_EPISODES[i];
+    return week.slots[0]?.status === 'done' && id !== undefined ? [id] : [];
+  });
+
+/** The knocks' inputs from the learner's profile, progress and last open; null without a profile. */
+export function knockInputsOf(
+  profile: Profile | null,
+  progress: Progress | null,
+  lastOpenedAt: EpochMs | null,
+): KnockInputs | null {
+  if (profile === null || progress === null) return null;
+  return {
+    installedOn: progress.installedOn,
+    timezone: profile.timezone,
+    quietHours: profile.quietHours,
+    notificationsAllowed: profile.notificationsAllowed,
+    lastOpenedAt,
+    completedEpisodes: completedEpisodesOf(progress),
+    roommateName: profile.roommate.name,
+  };
 }

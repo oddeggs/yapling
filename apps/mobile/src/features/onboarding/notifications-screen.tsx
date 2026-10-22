@@ -17,7 +17,6 @@ import {
   useKeyframes,
   useLocale,
 } from '../../ui';
-import { BurrowArtProvider } from '../burrow';
 import { BlurredScene, useScale } from './art';
 
 /*
@@ -61,7 +60,7 @@ export function NotificationsScreen({
   const [editing, setEditing] = useState(false);
   const range = t('common.timeRange', { from: quietHours.start, to: quietHours.end });
   return (
-    <BurrowArtProvider>
+    <>
       <View style={{ flex: 1, backgroundColor: colours.surfaceSunken }}>
         <BlurredScene fn="s_burrow2" blur={10} wash={translucent.paperWash} />
         <BackButton
@@ -124,7 +123,7 @@ export function NotificationsScreen({
           </View>
         </GlassSheet>
       </View>
-    </BurrowArtProvider>
+    </>
   );
 }
 

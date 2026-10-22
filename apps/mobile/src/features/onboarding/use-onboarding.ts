@@ -32,7 +32,7 @@ export function useOnboarding<S = OnboardingState>(
 }
 
 /**
- * The pace the learner asked for on the residency card ("Too easy" / "Too hard"), or null. For the
- * call's `hello` once the protocol carries it.
+ * The pace the learner asked for on the residency card ("Too easy" / "Too hard"), or null, before
+ * the profile has it.
  */
 export const pacePreference = (): Pace | null => onboardingStore().store.get().pace;

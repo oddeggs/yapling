@@ -1,11 +1,11 @@
-import { useFonts } from '@shopify/react-native-skia';
 import type { Mouth, PipSpecies } from '@yapling/art';
-import { ArtProvider, BurrowObject } from '@yapling/art/native';
+import { BurrowObject } from '@yapling/art/native';
 import {
   LIMITS,
   type CallEndReason,
   type CharacterId,
   type FirstLanguage,
+  type Pace,
   type Stage,
   type TurnMode,
 } from '@yapling/contracts';
@@ -50,6 +50,8 @@ import { callView } from './view-model';
 
 /** A phrase the learner opened (a line's gloss, a letter line, a meaning): a seed for the burrow. */
 export interface SeedDrop {
+  /** The story's phrase, when the tap is known to hold one. */
+  readonly phraseId?: string | null;
   readonly text: string;
   readonly gloss: string | null;
   readonly source: 'line' | 'letter' | 'meaning';
@@ -64,6 +66,8 @@ export interface CallScreenProps {
   readonly scene: Scene;
   readonly stage: Stage;
   readonly firstLanguage: FirstLanguage;
+  /** The pace the learner asked for on the residency card; null for the stage's own. */
+  readonly pace?: Pace | null;
   /** The roommate the learner picked. */
   readonly roommate: { readonly name: string; readonly species: PipSpecies };
   readonly turnMode: TurnMode;
@@ -86,31 +90,14 @@ const bubbleTone = (c: CharacterId): BubbleTone =>
 
 const clock = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 
-/** Lexend for the scenes' own lettering (the bus sign, the burrow's poster), as Metro assets. */
-/* eslint-disable @typescript-eslint/no-require-imports -- Metro bundles fonts only through require. */
-const LEXEND = [
-  require('../../../assets/fonts/Lexend-Bold.ttf') as number,
-  require('../../../assets/fonts/Lexend-ExtraBold.ttf') as number,
-  require('../../../assets/fonts/Lexend-Black.ttf') as number,
-];
-/* eslint-enable @typescript-eslint/no-require-imports */
-
 /** A fixed closed mouth for before the engine exists. */
 const restMouth = makeMutable<Mouth>('rest');
 
-export function CallScreen(props: CallScreenProps) {
-  const fonts = useFonts({ Lexend: LEXEND });
-  return (
-    <ArtProvider fonts={fonts}>
-      <CallScreenInner {...props} />
-    </ArtProvider>
-  );
-}
-
-function CallScreenInner({
+export function CallScreen({
   scene,
   stage,
   firstLanguage,
+  pace = null,
   roommate,
   turnMode,
   url,
@@ -137,6 +124,7 @@ function CallScreenInner({
     kind,
     stage,
     firstLanguage,
+    pace,
     turnMode,
     url,
     clientVersion,
@@ -433,6 +421,7 @@ function CallScreenInner({
             gloss={view.meaning.gloss}
             translated={view.meaning.phase === 'translated'}
             onReveal={() => dispatch({ type: 'translation_shown' })}
+            onHide={() => dispatch({ type: 'translation_hidden' })}
             onClose={() => dispatch({ type: 'meaning_closed' })}
           />
         ) : null}
