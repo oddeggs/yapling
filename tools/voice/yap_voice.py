@@ -245,7 +245,9 @@ def check_take(cache, key, text, mp3, lang):
     if not entry or entry.get("sha1") != digest:
         entry = {"sha1": digest, "heard": transcribe(mp3, lang)}
     entry["diff"] = word_diff(text, entry["heard"], lang)
-    entry["stray"] = [] if "[sighs]" in text else stray_sound(mp3)
+    entry["stray"] = stray_sound(mp3)
+    if NONVERBAL.search(text):  # a sigh, gasp or laugh the line asks for, before the words
+        entry["stray"] = [x for x in entry["stray"] if "before" not in x]
     cache[key] = entry
     return entry
 
@@ -369,7 +371,7 @@ def pace(args, default_max=100.0):
 DRIFT = {"linh", "mei", "pip", "bea", "natterwick", "lah", "kaya", "ooh", "dex", "sol", "nell", "mags",
          "hollowbrook", "shiok", "arjun"}
 SAME = {"ok": "okay", "cafe": "café", "practiced": "practised", "neighbor": "neighbour",
-        "favorite": "favourite", "color": "colour"}
+        "favorite": "favourite", "color": "colour", "harbor": "harbour", "practice": "practise"}
 # Words that sound the same (a story joke, a number word); compared by sound.
 SOUND = {"two": "to", "too": "to", "sync": "sink"}
 ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen " \
@@ -382,6 +384,8 @@ def number_words(n):
         return ONES[n]
     if n < 100:
         return TENS[n // 10] + ("" if n % 10 == 0 else " " + ONES[n % 10])
+    if n < 1000:
+        return ONES[n // 100] + " hundred" + ("" if n % 100 == 0 else " " + number_words(n % 100))
     return str(n)
 
 
@@ -389,6 +393,8 @@ def tokens(text, lang):
     text = unicodedata.normalize("NFC", plain(text)).lower().replace("’", "'")
     text = re.sub(r"\$(\d+)", r"\1 dollars", text)
     text = re.sub(r"\b(\d+):00\b", r"\1", text)
+    text = re.sub(r"(\d+)\s?%", r"\1 percent", text)
+    text = re.sub(r"\ba hundred\b", "one hundred", text)
     text = re.sub(r"\d+", lambda m: number_words(int(m.group())), text)
     words = re.findall(r"[^\W_]+(?:'[^\W_]+)*", text)
     if lang != "vi":
@@ -424,6 +430,9 @@ def spoken_span(timing):
         elif not inside and ch.isalnum():
             idx.append(i)
     return a["character_start_times_seconds"][idx[0]], a["character_end_times_seconds"][idx[-1]]
+
+
+NONVERBAL = re.compile(r"\[[^\]]*\b(sigh|gasp|laugh|chuckl|giggl|sob|cry|yawn|squeal)", re.I)
 
 
 def stray_sound(mp3):
