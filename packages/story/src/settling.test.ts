@@ -217,6 +217,39 @@ describe('Settling in', () => {
     expect(GENEROUS_AFTER).toBe(2);
   });
 
+  it('says “Okay!”, never praise, after the generous pass; praise stays for a match', () => {
+    const scene = getScene('s1-set1');
+    const asking = driveTo(scene, 'say-name');
+    const generous = send(scene, asking, 'unclear', 'unclear');
+    expect(generous.state.lastTurn).toEqual({ beatId: 'say-name', pass: 'generous' });
+    expect(generous.effects[0]).toMatchObject({
+      type: 'say',
+      speaker: 'linh',
+      lineId: 's1-set-linh-okay',
+    });
+    const praise = ['s1-set-linh-great', 's1-set-linh-yes'];
+    expect(generous.effects.some((e) => e.type === 'say' && praise.includes(e.lineId ?? ''))).toBe(
+      false,
+    );
+    const match = send(scene, asking, 'fine');
+    expect(match.effects[0]).toMatchObject({ type: 'say', speaker: 'linh' });
+    expect(praise).toContain(match.effects[0]?.type === 'say' ? match.effects[0].lineId : null);
+  });
+
+  it('has a listener with no recorded “Okay!” say it live, and a quiet turn stay quiet', () => {
+    const scene = getScene('s1-set2');
+    const pip = send(scene, driveTo(scene, 'tea-for-you'), 'unclear', 'unclear');
+    expect(pip.effects[0]).toMatchObject({
+      type: 'say',
+      speaker: 'pip',
+      text: 'Okay!',
+      lineId: null,
+    });
+    // Linh's own "Okay!" follows this turn as a line, so the generous pass adds nothing.
+    const quiet = send(scene, driveTo(scene, 'yes-or-no'), 'unclear', 'unclear');
+    expect(quiet.effects.filter((e) => e.type === 'say')).toEqual([]);
+  });
+
   it('has someone without a recorded “Again?” say it with the live voice', () => {
     const scene = getScene('s1-set5');
     const miss = send(scene, driveTo(scene, 'say-hi'), 'unclear');

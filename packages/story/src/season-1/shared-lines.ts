@@ -15,6 +15,8 @@ export interface SharedLines {
   readonly praise: Readonly<Partial<Record<CharacterId, readonly Id[]>>>;
   /** "Okay!" after a choice where any card is right, by listener. */
   readonly okay: Readonly<Partial<Record<CharacterId, readonly Id[]>>>;
+  /** "Okay!" in the live voice, for a listener with no recorded one (after a generous pass). */
+  readonly okayText: GlossedText;
   /** "Again?" after an English miss; the live voice says `againText` for anyone else. */
   readonly again: Readonly<Partial<Record<CharacterId, Id>>>;
   readonly againText: GlossedText;
@@ -41,6 +43,7 @@ export const S1_SHARED_LINES: SharedLines = {
     mei: ['s1-set-mei-okay'],
     bea: ['s1-set-bea-right'],
   },
+  okayText: glossed('Okay!', viDraft('Được rồi!')),
   again: { linh: 's1-set-linh-again' },
   againText: glossed('Again?', viDraft('Nói lại nhé?')),
   slowly: {
