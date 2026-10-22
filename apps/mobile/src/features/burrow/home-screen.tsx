@@ -11,7 +11,7 @@ import {
   type,
 } from '@yapling/theme';
 import type { Href } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -53,12 +53,38 @@ const PLACE = {
   card: { top: 120 },
   shelves: { top: 323, labels: 412, left: { x: 22, slot: 56 }, right: { x: 216, slot: 52 } },
   mailbox: { left: 236, top: 515, size: 56 },
-  pip: { left: 105, top: 560, size: 180 },
+  pip: { left: 105, top: 560, size: 180, highest: 430 },
   keepsake: { left: 150, top: 200, width: 104 },
   ring: { top: 604 },
 } as const;
 
 const titleType = { ...type.slotTitle, size: 16 };
+
+/** The bar's padding around its button (`GlassSheet` kind `bar`), set in from the screen's foot. */
+const BAR_PADDING = 14;
+
+/**
+ * Where Pip stands so its face stays above the bottom bar, in the prototype's units. A critter's
+ * art runs from about a fifth of its width below its box's top to 1.2 widths down; the face and
+ * most of the body (down to 0.95 of the width from the box's top) stay in sight. On a tall phone
+ * Pip stands where the design puts it; on a short one (iPhone SE) it rises off the rug, no higher
+ * than the shelves' labels, and is drawn a little smaller only if rising isn't enough.
+ */
+export function pipSpot(
+  stage: { readonly k: number; readonly drop: number },
+  barTop: number,
+): { readonly top: number; readonly size: number; readonly lift: number } {
+  const { top, size, highest } = PLACE.pip;
+  const k = stage.k;
+  const shown = 0.95;
+  // Bottom of what must show, in screen points, at the design's spot.
+  const over = stage.drop + (top + shown * size) * k - barTop;
+  if (over <= 0) return { top, size, lift: 0 };
+  const risen = Math.max(highest, top - over / k);
+  const room = (barTop - stage.drop) / k - risen;
+  const fitted = Math.min(size, room / shown);
+  return { top: risen, size: fitted, lift: (top - risen) * k };
+}
 
 /**
  * The burrow home: the room at the hour of day, the learner's phrases grown on its shelves, the
@@ -73,9 +99,14 @@ export function BurrowHomeScreen({
   onShown,
 }: BurrowHomeScreenProps) {
   const { t } = useLocale();
-  const { u, y, height } = useStage();
+  const stage = useStage();
+  const { u, y, height } = stage;
   const pip = model.roommate;
   const cardId = model.delta.id;
+  // The bar's top on screen, from its button's measured height; the full height without a bar.
+  const [barTop, setBarTop] = useState<number | null>(null);
+  const spot = pipSpot(stage, model.action ? (barTop ?? height) : height);
+  const ringTop = Math.min(y(PLACE.ring.top), (barTop ?? height) - 46 - 10);
   useEffect(() => {
     onShown?.(cardId);
     // Once per card: the callback's identity changes with every render of the route.
@@ -85,7 +116,15 @@ export function BurrowHomeScreen({
       scene={model.scene}
       timeOfDay={model.timeOfDay}
       species={pip.species}
-      cast={[{ character: 'pip', mood: model.pipMood, ...PLACE.pip }]}
+      cast={[
+        {
+          character: 'pip',
+          mood: model.pipMood,
+          left: PLACE.pip.left,
+          top: spot.top,
+          size: spot.size,
+        },
+      ]}
       room={
         <>
           <Shelf items={model.shelves.left} {...PLACE.shelves.left} />
@@ -120,7 +159,7 @@ export function BurrowHomeScreen({
             position: 'absolute',
             left: 120,
             right: layout.marginScreen,
-            bottom: height - y(570),
+            bottom: height - y(570) + spot.lift,
           }}
         />
       ) : null}
@@ -165,7 +204,7 @@ export function BurrowHomeScreen({
           haptic="tap"
           accessibilityRole="button"
           accessibilityLabel={`${t('week.title')}: ${t('burrow.ring', model.ring)}`}
-          style={{ position: 'absolute', left: layout.marginScreen, top: y(PLACE.ring.top) }}
+          style={{ position: 'absolute', left: layout.marginScreen, top: ringTop }}
         >
           <GlassView glass={glass.panel} radius={pill(46)} style={styles.ring}>
             <WeekRing filled={model.ring.done} size={30} />
@@ -176,10 +215,16 @@ export function BurrowHomeScreen({
 
       {model.action ? (
         <GlassSheet kind="bar">
-          <StickerButton
-            label={render(t, model.action.label)}
-            onPress={() => model.action && onNavigate?.(model.action.target)}
-          />
+          <View
+            onLayout={(e) =>
+              setBarTop(height - layout.sheetInset - 2 * BAR_PADDING - e.nativeEvent.layout.height)
+            }
+          >
+            <StickerButton
+              label={render(t, model.action.label)}
+              onPress={() => model.action && onNavigate?.(model.action.target)}
+            />
+          </View>
         </GlassSheet>
       ) : null}
     </BurrowBackdrop>
