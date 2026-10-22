@@ -5,6 +5,9 @@ import {
   type AudioBufferSourceNode,
 } from 'react-native-audio-api';
 
+import { SFX_ASSETS } from '@yapling/story/assets';
+import type { SfxId } from '@yapling/story';
+
 import { VoiceSession } from '../../../modules/voice-session';
 import { storyRecordedLines, trackFromTiming, localVisemeTrack } from '../../voice';
 import { claimAudio, ownsAudio, releaseAudio, type AudioClaim } from '../../voice/audio-owner';
@@ -140,6 +143,30 @@ export class ListenPlayer {
     this.lipsync.source.value = source;
     if (this.paused) await this.holdClock(context);
     this.ensureTimer();
+  }
+
+  /** A short sound (the voicemail's beep) over nothing else; no caption, no end event. */
+  async playSfx(id: SfxId): Promise<void> {
+    const context = this.context;
+    if (!context || this.paused) return;
+    await this.reclaim(context);
+    const key = `sfx:${id}`;
+    let p = this.decoded.get(key);
+    if (!p) {
+      p = context.decodeAudioData(SFX_ASSETS[id]());
+      this.decoded.set(key, p);
+    }
+    try {
+      const buffer = await p;
+      if (this.disposed) return;
+      const node = context.createBufferSource();
+      node.buffer = buffer;
+      node.connect(context.destination);
+      node.start(context.currentTime + LEAD_S);
+    } catch {
+      // A sound that can't play is only a sound.
+      this.decoded.delete(key);
+    }
   }
 
   /** "Chờ chút": the line stops where it is and the caption holds. */

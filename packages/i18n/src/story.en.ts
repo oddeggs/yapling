@@ -26,4 +26,33 @@ export const storyEn = {
   'story.voicemail.tryAgain': 'Try again',
   'story.a11y.waveform': 'Played {elapsed} of {duration}',
   'story.a11y.postcard': 'Postcard from {name}: {text}',
+  /** The pill over a postcard that comes alone, or a stack of them. */
+  'story.place.postcard': 'Postcard',
+  'story.place.postcards': { one: '{count} postcard', other: '{count} postcards' },
+  /** Under a line at Newcomer: the line has a meaning to open. */
+  'story.tapForMeaning': 'Tap for Vietnamese',
+  /** A recorded voicemail, as a postcard in the mailbox. */
+  'story.mailbox.tag': 'In your mailbox',
+  /** The address on the voicemail card, under the learner's name. */
+  'story.mailbox.address': 'The Burrow, Natterwick',
+  'story.mailbox.later': "Later · it'll wait in your mailbox",
+  'story.mailbox.a11y.play': 'Play the voicemail',
+  'story.mailbox.a11y.pause': 'Pause the voicemail',
+  'story.mailbox.a11y.card': 'Voicemail from {name}: {text}',
+  /** The title card at the end of an episode's week. */
+  'story.end.kicker': 'SEASON {season} · END OF EPISODE {episode}',
+  'story.end.nextEpisode': 'NEXT WEEK · EPISODE {episode}',
+  'story.end.nextWeek': 'NEXT WEEK',
+  'story.end.nextTitle': '{title}…',
+  /** When the next episode opens. Missed weeks never close: they wait. */
+  'story.end.outOn': 'Out {day} · missed weeks wait',
+  'story.end.readyNow': 'Ready now · missed weeks wait',
+  'story.end.backToTown': 'Back to town',
+  'story.end.a11y.next': 'Next week: {title}. {when}',
+  /** Pip's recap for a learner coming back, as a comic page. */
+  'story.recap.title': 'Previously\nin Natterwick',
+  'story.recap.badge': 'S{season} · E{episode}',
+  'story.recap.withVoices': '{name} reads it to you, with voices.',
+  'story.recap.go': "Let's go",
+  'story.recap.a11y.panel': 'Panel {n}: {text}',
 } as const satisfies EnCatalogue;
