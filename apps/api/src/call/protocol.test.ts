@@ -36,7 +36,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 function script(outcomes: Record<string, unknown>[] = []) {
   providers.reply = (request) => {
     const direction = JSON.stringify(request.messages.at(-1)?.content ?? '');
-    if (direction.includes('The learner just spoke')) {
+    if (direction.includes('what the learner just said')) {
       const c = outcomes.shift() ?? { outcome: 'fine', phrasesUsed: [] };
       const line = c['outcome'] === 'target_error' ? 'You go… yesterday?' : 'Oh, thank you! Okay.';
       return `${line}${control(c)}`;

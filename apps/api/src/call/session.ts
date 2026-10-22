@@ -8,7 +8,10 @@ import { speechSettings, WRAP_UP_SECONDS } from '@yapling/domain';
 import {
   findLine,
   glossFor,
+  lastQuestion,
   plainCaption,
+  SAFE_WRAP_UP,
+  safeLineFor,
   STAGE_SPEECH,
   type Scene,
   type SceneEffect,
@@ -27,6 +30,7 @@ import { Meter } from './meter';
 import { Replies, type Active } from './reply';
 import { AI_DISCLOSURE_EVERY_MS, BREAK_REMINDER_AFTER_MS, crisisResourcesKey } from './safety';
 import type { TtsVoice } from './tts';
+import { logGuardedLine } from './turn-log';
 import type { CharacterLine } from './transcript';
 import { paceSilenceMs, stageVoice, VoicePool } from './voice-pool';
 
@@ -259,6 +263,8 @@ export class CallSession {
 
   private pump(): void {
     if (this.ended || this.active !== null || this.replies.busy || this.data.crisis) return;
+    // No phone, no lines: nothing is generated or spoken until a phone resumes the call.
+    if (!this.frames.attached) return;
     if (this.data.wrapping && !this.data.wrapStarted && this.linesPlayed > 0) {
       this.queue = [];
       this.data.wrapStarted = true;
@@ -268,7 +274,7 @@ export class CallSession {
         speaker,
         this.modelSource(speaker, wrapUpDirection(speaker, this.data.learner.stage)),
         null,
-        'minutes_exhausted',
+        { endAfter: 'minutes_exhausted', safeLine: SAFE_WRAP_UP },
       );
       return;
     }
@@ -290,6 +296,7 @@ export class CallSession {
             item.speaker,
             this.modelSource(item.speaker, lineDirection(item, this.data.learner.stage)),
             'gen_done',
+            { safeLine: safeLineFor(item, this.lastAsked(item.speaker)) },
           );
           return;
         case 'say':
@@ -331,8 +338,7 @@ export class CallSession {
         effect.character,
         { kind: 'text', text: plainCaption(effect.text) },
         'rec_played',
-        null,
-        effect.beatId,
+        { beatId: effect.beatId },
       );
       return;
     }
@@ -371,14 +377,28 @@ export class CallSession {
     };
   }
 
+  /** The speaker's last question in the call, for a safe nudge to ask again. */
+  private lastAsked(speaker: CharacterId): string | null {
+    for (let i = this.data.transcript.length - 1; i >= 0; i--) {
+      const line = this.data.transcript[i];
+      if (line?.speaker === speaker) return lastQuestion(line.text);
+    }
+    return null;
+  }
+
   /** A line from the model or written text, not waiting on the learner. */
   private startLine(
     speaker: CharacterId,
     source: LineSource,
     after: Active['after'],
-    endAfter: CallEndReason | null = null,
-    beatId: string | null = null,
+    extra: {
+      readonly endAfter?: CallEndReason;
+      readonly beatId?: string;
+      readonly safeLine?: string;
+    } = {},
   ): void {
+    const endAfter = extra.endAfter ?? null;
+    const beatId = extra.beatId ?? null;
     const line = new SpokenLine(this.lineHost(), {
       speaker,
       voice: this.voice(speaker),
@@ -387,6 +407,7 @@ export class CallSession {
       maxWords: speechSettings(this.data.learner.stage).maxWordsPerTurn,
       afterReaction: false,
       onFirstAudio: () => this.thinking(false),
+      ...(extra.safeLine ? { safeLine: extra.safeLine } : {}),
     });
     const active = this.newActive(line.streamId, after);
     active.endAfter = endAfter;
@@ -398,6 +419,7 @@ export class CallSession {
       clearTimeout(thinkingTimer);
       this.thinking(false);
       this.addUsage(line);
+      logGuardedLine(this.data.meta.callId, beatId ?? this.director.state.beatId, result);
       if (this.active !== active) return;
       if (result.failed !== null && result.text === '') {
         this.frames.send({

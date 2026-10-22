@@ -11,3 +11,4 @@ export { S1_E1, S1_E1_LETTER, SEASON_1 } from './season-1';
 export type { S1PhraseId } from './season-1';
 export * from './validate';
 export * from './persona';
+export * from './safe-lines';

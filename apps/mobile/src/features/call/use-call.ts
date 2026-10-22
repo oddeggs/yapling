@@ -15,6 +15,7 @@ import type { SocketLike } from '../../voice/call-socket';
 import { initialCallState, type CallState } from '../../voice/call-state';
 import { micPermissionStatus, requestMicPermission } from '../../voice/audio-session';
 import { VoiceEngine } from '../../voice/engine';
+import { releaseLine, takeLine } from '../../voice/live-line';
 import { Store, useStore } from '../../voice/store';
 import { artVisemeTrack } from '../../voice/visemes';
 import { tapSocket } from './frame-tap';
@@ -23,7 +24,8 @@ import { initialTracker, reduceTracker, type TrackerEvent, type TrackerState } f
 /*
  * One live call's machinery for the screen: the microphone permission first, then the session
  * token and the socket (opened while the screen rings), the voice engine with the art package's
- * mouths, and the tracker fed from the socket's frames. Retrying builds everything again.
+ * mouths, and the tracker fed from the socket's frames. Retrying builds everything again; the
+ * phone holds one live call at a time (`takeLine`).
  */
 
 export interface CallSetup {
@@ -96,8 +98,10 @@ export function useCall(setup: CallSetup) {
     const check = async (ask: boolean) => {
       let status = await micPermissionStatus();
       if (status === 'undetermined' && ask) status = await requestMicPermission();
+      // A check that comes back undecided never takes a granted mic away: that would rebuild
+      // the call and open a second one.
       if (alive)
-        setMic(status === 'denied' ? 'denied' : status === 'granted' ? 'granted' : 'checking');
+        setMic((was) => (status === 'denied' ? 'denied' : status === 'granted' ? 'granted' : was));
     };
     void check(true);
     const sub = AppState.addEventListener('change', (s) => {
@@ -150,6 +154,8 @@ export function useCall(setup: CallSetup) {
         preloadLines: [...openingLines(s.scene), ...reactionLines(s.scene)],
         ...(s.onLog ? { onLog: s.onLog } : {}),
       });
+      // One live call on the phone: an engine still holding the line lets it go.
+      takeLine(built);
       setEngine(built);
       // The socket opens while the phone rings; the audio graph comes up alongside.
       built.connect();
@@ -162,6 +168,7 @@ export function useCall(setup: CallSetup) {
     return () => {
       cancelled = true;
       clearTimeout(timer);
+      if (built) releaseLine(built);
       void built?.dispose();
       setEngine(null);
     };
@@ -178,6 +185,12 @@ export function useCall(setup: CallSetup) {
 
   const state = useStore(engine?.state ?? idleStore);
   const track = useStore(tracker);
+
+  // A call that connects after the ring timed out is a call: the try-again sheet goes, so the
+  // learner isn't asked to start a second one.
+  useEffect(() => {
+    if (state.connected) setConnectFailed(false);
+  }, [state.connected]);
 
   // The tracker hears when the learner starts talking (hints hide, a round's timer starts).
   const talking = state.learnerSpeaking || state.talkHeld;

@@ -52,6 +52,14 @@ describe('the reply splitter', () => {
     );
     expect(spoken).toBe('That is great. I love boxes.');
     expect(control).toContain('fine');
+    // A reply may end on its question, past the two sentences.
+    expect(stream('My name is Pip. I am a red panda. What do you do?', 4).spoken).toBe(
+      'My name is Pip. I am a red panda. What do you do?',
+    );
+    // A short exclamation doesn't use up a sentence: the question after it is kept.
+    expect(stream('Hi! Oh, hello Khanh! What is your job? Tell me.', 4).spoken).toBe(
+      'Hi! Oh, hello Khanh! What is your job?',
+    );
   });
 
   it('cuts a long sentence at the next clause end past the word limit', () => {
@@ -72,7 +80,8 @@ describe('the reply splitter', () => {
   });
 
   it('removes markup the voice would read out', () => {
-    expect(stream('*smiles* That is **great**!', 3).spoken).toBe('smiles That is great!');
+    expect(stream('*smiles* That is **great**!', 3).spoken).toBe('That is great!');
+    expect(stream('That is **great**!', 3).spoken).toBe('That is great!');
   });
 
   it('reads a missing or broken control line as a fine turn', () => {

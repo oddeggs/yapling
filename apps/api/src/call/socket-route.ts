@@ -51,6 +51,7 @@ async function callObjectFor(env: Bindings, first: string): Promise<DurableObjec
 function relay(env: Bindings, phone: WebSocket, country: string, clockOffset: number): void {
   let call: WebSocket | null = null;
   let connecting = false;
+  let phoneGone = false;
   const pending: (string | ArrayBuffer)[] = [];
   const closeBoth = (code: number, reason: string) => {
     for (const ws of [phone, call]) {
@@ -84,6 +85,11 @@ function relay(env: Bindings, phone: WebSocket, country: string, clockOffset: nu
         if (!ws) throw new Error(`call object answered ${response.status}`);
         ws.accept();
         ws.binaryType = 'arraybuffer';
+        if (phoneGone) {
+          // The phone left while the call object was reached: it never hears this call.
+          ws.close(1000, 'gone');
+          return;
+        }
         ws.addEventListener('message', (e) => {
           try {
             phone.send(e.data as string | ArrayBuffer);
@@ -101,6 +107,7 @@ function relay(env: Bindings, phone: WebSocket, country: string, clockOffset: nu
     })();
   });
   phone.addEventListener('close', (e) => {
+    phoneGone = true;
     try {
       call?.close(e.code === 1005 ? 1000 : e.code, e.reason);
     } catch {

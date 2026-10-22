@@ -15,6 +15,8 @@
     "dev": {
       "name": "yapling-api-dev",
       "workers_dev": true,
+      // Workers Logs for the dev Worker only: every call logs one structured line per turn.
+      "observability": { "enabled": true, "head_sampling_rate": 1 },
       // COMMIT_SHA is overridden at deploy time (`--var COMMIT_SHA:<sha>`).
       "vars": { "ENVIRONMENT": "dev", "COMMIT_SHA": "local" },
       "durable_objects": {

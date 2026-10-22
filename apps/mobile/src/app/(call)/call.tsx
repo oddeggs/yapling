@@ -51,7 +51,14 @@ export default function CallRoute() {
     const timer = setTimeout(() => setWaited(true), PROFILE_WAIT_MS);
     return () => clearTimeout(timer);
   }, []);
-  const ready = profile !== null || status === 'ready' || status === 'error' || waited;
+  const known = profile !== null || status === 'ready' || status === 'error' || waited;
+  // Once the call is on screen it stays: a profile refetch never unmounts it (that would hang up
+  // and dial a second call).
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    if (known) setShown(true);
+  }, [known]);
+  const ready = known || shown;
 
   const fixtures = useMemo(
     () => (__DEV__ && params.fixtures ? params.fixtures.split(',').filter(Boolean) : null),

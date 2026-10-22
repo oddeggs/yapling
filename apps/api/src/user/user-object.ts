@@ -21,6 +21,9 @@ import { UserStorage, type ScheduledPush } from './storage';
 /** The learner object's clock; tests move it. */
 export const userClock = { now: (): number => Date.now() };
 
+/** The call object of the learner's live call. */
+const LIVE_CALL_KEY = 'live_call';
+
 /** The ledger rules in force: `@yapling/domain`'s canonical ledger. */
 const rules: LedgerRules = domainLedgerRules;
 
@@ -49,6 +52,8 @@ interface QuietFacts {
  * - `schedule(kind, at, payload)` / `cancel(id)`: a voicemail or incoming call for later. The
  *   alarm hands each due one to the `jobs` queue, unless it falls in the learner's quiet hours,
  *   when it waits for them to end.
+ * - `claimCall(objectId)` / `releaseCall(objectId)`: the learner's one live call. A new call
+ *   claims the line and is told which call object it replaces, so that one ends.
  * - `erase()`: account deletion clears everything.
  */
 export class UserDO extends DurableObject<Bindings> {
@@ -160,6 +165,27 @@ export class UserDO extends DurableObject<Bindings> {
     const cancelled = this.store.cancel(id);
     await this.armAlarm();
     return cancelled;
+  }
+
+  /**
+   * A new call takes the learner's line. Returns the call object of the live call it replaces
+   * (to be ended), or null when there was none.
+   */
+  async claimCall(objectId: string): Promise<string | null> {
+    const id = z
+      .string()
+      .regex(/^[0-9a-f]{64}$/)
+      .parse(objectId);
+    const previous = (await this.ctx.storage.get<string>(LIVE_CALL_KEY)) ?? null;
+    await this.ctx.storage.put(LIVE_CALL_KEY, id);
+    return previous !== null && previous !== id ? previous : null;
+  }
+
+  /** A call ended: the line is free, unless a newer call holds it already. */
+  async releaseCall(objectId: string): Promise<void> {
+    if ((await this.ctx.storage.get<string>(LIVE_CALL_KEY)) === objectId) {
+      await this.ctx.storage.delete(LIVE_CALL_KEY);
+    }
   }
 
   /** What waits to be sent, soonest first. */

@@ -1,6 +1,6 @@
 import type { CallEndReason, CharacterId } from '@yapling/contracts';
 import { speechSettings } from '@yapling/domain';
-import type { Scene, SceneEffect } from '@yapling/story';
+import { SAFE_REPLY, type Scene, type SceneEffect } from '@yapling/story';
 
 import { NO_CONTROL, type Control } from './control';
 import { addSample } from './costs';
@@ -11,7 +11,8 @@ import type { LearnerTurn } from './learner-turn';
 import { SpokenLine, type LineHost, type LineResult } from './line';
 import { HEDGE, messagesFor, systemFor, turnParams } from './llm';
 import type { TtsVoice } from './tts';
-import { isLearnerLine, type LearnerLine } from './transcript';
+import { isLearnerLine, type LearnerLine, type TranscriptLine } from './transcript';
+import { logTurn } from './turn-log';
 import { pickReaction } from './voices';
 
 /*
@@ -66,6 +67,8 @@ interface Reply {
   committed: boolean;
   control: Control | null;
   applied: boolean;
+  /** The runner event the outcome was applied as, for the turn's log line. */
+  event: string | null;
   learnerLine: number;
 }
 
@@ -100,7 +103,14 @@ export class Replies {
     const { data } = host;
     const stage = data.learner.stage;
     const reaction = pickReaction(plan.speaker, text, data.turns);
-    const direction = replyDirection(plan, stage, data.learner.targets, reaction?.text ?? null);
+    const direction = replyDirection(
+      plan,
+      stage,
+      data.learner.targets,
+      reaction?.text ?? null,
+      promptLine(data.transcript, plan.speaker),
+      text,
+    );
     const pending = this.learnerLine(text, [], plan.beatId);
     const system = systemFor(plan.speaker, host.scene, data.learner);
     const messages = messagesFor(plan.speaker, [...data.transcript, pending], direction);
@@ -112,6 +122,7 @@ export class Replies {
       gated,
       maxWords: speechSettings(stage).maxWordsPerTurn,
       afterReaction: reaction !== null,
+      safeLine: SAFE_REPLY,
       onFirstAudio: () => reply && this.committed(reply),
       onControl: (control) => {
         if (!reply) return;
@@ -126,6 +137,7 @@ export class Replies {
       committed: false,
       control: null,
       applied: false,
+      event: null,
       learnerLine: -1,
     };
     this.reply = reply;
@@ -249,7 +261,9 @@ export class Replies {
         fixed: control.outcome === 'fine',
       });
     }
-    const applied = host.director.apply(plan, control.outcome);
+    // A line that came out as narration said only a safe word: the runner's own next line follows.
+    const applied = host.director.apply(plan, control.outcome, { merge: !reply.line.replaced });
+    reply.event = applied.event;
     const valid = new Set([...plan.answer.phrases, ...scene.phrases]);
     const canDo =
       control.canDo !== null &&
@@ -307,6 +321,16 @@ export class Replies {
       this.apply(reply);
     }
     this.reply = null;
+    logTurn({
+      callId: host.data.meta.callId,
+      turn: host.data.turns,
+      beatId: reply.plan.beatId,
+      outcome: (reply.control ?? result.control).outcome,
+      applied: reply.event,
+      result,
+      timings: reply.line.timings,
+      speechEndAt: reply.speechEndAt,
+    });
     if (result.text) host.pushCharacterLine(reply.plan.speaker, result.text, reply.plan.beatId);
     if (this.correction && result.text) {
       host.frames().send({
@@ -328,4 +352,14 @@ export class Replies {
       host.pump();
     }
   }
+}
+
+/** The character line the learner is answering, when the listener said it (their question). */
+function promptLine(transcript: readonly TranscriptLine[], speaker: CharacterId): string | null {
+  for (let i = transcript.length - 1; i >= 0; i--) {
+    const line = transcript[i];
+    if (line === undefined || isLearnerLine(line)) continue;
+    return line.speaker === speaker ? line.text.slice(0, 300) : null;
+  }
+  return null;
 }
