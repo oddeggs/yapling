@@ -128,6 +128,7 @@ const crisis = { type: 'safety', seq: 15, kind: 'crisis', resourcesKey: 'crisis.
 const breakReminder = { type: 'safety', seq: 16, kind: 'break_reminder', resourcesKey: null };
 const disclosure = { type: 'safety', seq: 17, kind: 'ai_disclosure', resourcesKey: null };
 const thinking = { type: 'thinking', seq: 18, state: 'start' };
+const notHeard = { type: 'not_heard', seq: 21 };
 const error = { type: 'error', seq: 19, code: 'tts_failed', fatal: false };
 const ended = {
   type: 'ended',
@@ -143,6 +144,7 @@ const serverFrames = [
   partial,
   heard,
   heardSilent,
+  notHeard,
   sayStart,
   sayStartMp3,
   alignment,
@@ -312,6 +314,7 @@ describeSchemas('call server frames', server, {
     ],
   ],
   ThinkingFrame: [[thinking], [{ ...thinking, state: 'on' }]],
+  NotHeardFrame: [[notHeard], [{ type: 'not_heard' }, { ...notHeard, seq: 0 }]],
   CallErrorCode: [[...server.CALL_ERROR_CODES], ['rate_limited']],
   ErrorFrame: [
     [error, { ...error, code: 'unauthorized', fatal: true }],
