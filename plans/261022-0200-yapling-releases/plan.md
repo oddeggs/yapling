@@ -92,7 +92,7 @@ Gate 2: TestFlight build 1 ("Yapling Dev") installs on a phone and plays day 1 t
 | Lane | Does |
 |---|---|
 | 3a Instrumentation | PostHog funnel (install → placement → first call → ring full → day 8), Sentry, per-call cost logging and a small cost page in the dev menu |
-| 3b Test kit | `docs/learner-test.md`: the session script, tasks per day, questions, what to watch; consent copy for recording; a reset and seed flow per tester |
+| 3b Test kit | [`docs/learner-test.md`](../../docs/learner-test.md): the session script, tasks per day, questions, what to watch; consent copy for recording; a reset and seed flow per tester |
 | 3c Hardening | Audit of the call path (latency, reconnect, audio session), accessibility pass, copy review list for a native Vietnamese reviewer |
 
 Gate 3 (founder): run the 5–8 learner sessions.
