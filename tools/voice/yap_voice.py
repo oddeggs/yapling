@@ -368,7 +368,10 @@ def pace(args, default_max=100.0):
 # Speech-to-text check: names may come back spelled another way; every other word must match.
 DRIFT = {"linh", "mei", "pip", "bea", "natterwick", "lah", "kaya", "ooh", "dex", "sol", "nell", "mags",
          "hollowbrook", "shiok", "arjun"}
-SAME = {"ok": "okay", "cafe": "café"}
+SAME = {"ok": "okay", "cafe": "café", "practiced": "practised", "neighbor": "neighbour",
+        "favorite": "favourite", "color": "colour"}
+# Words that sound the same (a story joke, a number word); compared by sound.
+SOUND = {"two": "to", "too": "to", "sync": "sink"}
 ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen " \
        "fifteen sixteen seventeen eighteen nineteen".split()
 TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()
@@ -385,6 +388,7 @@ def number_words(n):
 def tokens(text, lang):
     text = unicodedata.normalize("NFC", plain(text)).lower().replace("’", "'")
     text = re.sub(r"\$(\d+)", r"\1 dollars", text)
+    text = re.sub(r"\b(\d+):00\b", r"\1", text)
     text = re.sub(r"\d+", lambda m: number_words(int(m.group())), text)
     words = re.findall(r"[^\W_]+(?:'[^\W_]+)*", text)
     if lang != "vi":
@@ -404,6 +408,9 @@ def word_diff(expected, heard, lang):
         want, got = a[i1:i2], b[j1:j2]
         if want and all(w.split("'")[0] in DRIFT for w in want) and len(got) <= len(want):
             continue
+        if "".join(SOUND.get(w, w).replace("'", "") for w in want) == \
+                "".join(SOUND.get(w, w).replace("'", "") for w in got):
+            continue  # "street light" / "streetlight", "f's" / "fs", "two" / "to"
         out.append(f"{' '.join(want) or '∅'} -> {' '.join(got) or '∅'}")
     return out
 
