@@ -4,9 +4,13 @@ import {
   Pace,
   QuietHours,
   RoommateSpecies,
+  StageRequest,
+  StartPath,
+  type LocalDate,
   type Profile,
   type ProfileInput,
   type ProfileUpdate,
+  type Stage,
   type TimeZone,
   type Track,
 } from '@yapling/contracts';
@@ -16,15 +20,17 @@ import { z } from 'zod';
 
 /*
  * The first run as a small state machine: the ferry (first language, then the learner's name and
- * the age check, which makes the guest session), the AI disclosure, the roommate, the placement
- * call, the residency card and notifications. Screens dispatch events; the state is kept on the
- * phone so a relaunch resumes where the learner left off.
+ * the age check, which makes the guest session), the AI disclosure, the level question, the
+ * roommate, the placement call (only for "Mình nói được một chút"), the residency card and
+ * notifications. Screens dispatch events; the state is kept on the phone so a relaunch resumes
+ * where the learner left off.
  */
 
 export const ONBOARDING_STEPS = [
   'language',
   'age',
   'ai',
+  'level',
   'pick',
   'unpack',
   'card',
@@ -59,6 +65,17 @@ export const OnboardingState = z.object({
   pace: Pace.nullable(),
   /** The placement call, once it ended with one (its summary fills the residency card). */
   placementCallId: z.string().nullable(),
+  /**
+   * The level question's answer: `visitor` ("Mình mới bắt đầu", Settling in with Linh) or
+   * `placement` ("Mình nói được một chút", the placement call). Null until answered (and in a
+   * state saved before the question existed).
+   */
+  startPath: StartPath.nullable().default(null),
+  /**
+   * A stage the learner chose that the server hasn't taken yet (offline, or an API without the
+   * route): the screens already show it, and it is sent again until the server answers.
+   */
+  pendingStage: StageRequest.nullable().default(null),
 });
 export type OnboardingState = z.infer<typeof OnboardingState>;
 
@@ -73,6 +90,8 @@ export const INITIAL_ONBOARDING: OnboardingState = {
   quietHours: DEFAULT_QUIET_HOURS,
   pace: null,
   placementCallId: null,
+  startPath: null,
+  pendingStage: null,
 };
 
 export type OnboardingEvent =
@@ -83,12 +102,18 @@ export type OnboardingEvent =
   /** The guest session exists: only after the age check. */
   | { readonly type: 'guestStarted' }
   | { readonly type: 'aiUnderstood' }
+  | { readonly type: 'chooseStartPath'; readonly path: StartPath }
+  | { readonly type: 'levelDone' }
   | { readonly type: 'chooseSpecies'; readonly species: RoommateSpecies }
   | { readonly type: 'setRoommateName'; readonly name: string }
   /** The profile was saved. */
   | { readonly type: 'movedIn' }
   | { readonly type: 'placed'; readonly callId: string | null }
   | { readonly type: 'adjustPace'; readonly pace: Pace }
+  /** The learner moved their own stage (the level question, "Tập với Linh trước", "Vào truyện"). */
+  | { readonly type: 'stageRequested'; readonly request: StageRequest }
+  /** The server took the pending stage, or refused it for good. */
+  | { readonly type: 'stageSettled'; readonly request: StageRequest }
   | { readonly type: 'cardDone' }
   | { readonly type: 'setQuietOn'; readonly on: boolean }
   | { readonly type: 'setQuietHours'; readonly hours: QuietHours }
@@ -118,6 +143,24 @@ export const canStepOff = (s: OnboardingState): boolean =>
 export const canMoveIn = (s: OnboardingState): boolean =>
   canStepOff(s) && nameIssue(s.roommateName) === null;
 
+/** Where moving in leads: the placement call, or straight to the Visitor's residency card. */
+export const afterMoveIn = (s: OnboardingState): 'unpack' | 'card' =>
+  s.startPath === 'visitor' ? 'card' : 'unpack';
+
+/** The stage request the level question's answer makes once the profile exists, if any. */
+export const levelStageRequest = (path: StartPath | null): StageRequest | null =>
+  path === 'visitor' ? { to: 'visitor', reason: 'self_select' } : null;
+
+/**
+ * The stage the screens show: the one the learner just chose while the server hasn't taken it,
+ * else the profile's, else what the level question implies (before the profile exists).
+ */
+export function shownStage(s: OnboardingState, profileStage: Stage | null): Stage {
+  if (s.pendingStage !== null) return s.pendingStage.to;
+  if (profileStage !== null) return profileStage;
+  return s.startPath === 'visitor' ? 'visitor' : 'newcomer';
+}
+
 export function onboardingReducer(state: OnboardingState, event: OnboardingEvent): OnboardingState {
   switch (event.type) {
     case 'chooseLanguage':
@@ -132,19 +175,32 @@ export function onboardingReducer(state: OnboardingState, event: OnboardingEvent
       // The age gate: no way past the ferry without the check and a name.
       return canStepOff(state) ? reach(state, 'ai') : state;
     case 'aiUnderstood':
-      return stepIndex(state.step) >= stepIndex('ai') ? reach(state, 'pick') : state;
+      return stepIndex(state.step) >= stepIndex('ai') ? reach(state, 'level') : state;
+    case 'chooseStartPath':
+      return { ...state, startPath: event.path };
+    case 'levelDone':
+      return stepIndex(state.step) >= stepIndex('level') && state.startPath !== null
+        ? reach(state, 'pick')
+        : state;
     case 'chooseSpecies':
       return { ...state, species: event.species };
     case 'setRoommateName':
       return { ...state, roommateName: event.name };
     case 'movedIn':
-      return canMoveIn(state) ? reach(state, 'unpack') : state;
+      return canMoveIn(state) ? reach(state, afterMoveIn(state)) : state;
     case 'placed':
       return stepIndex(state.step) >= stepIndex('unpack')
         ? { ...reach(state, 'card'), placementCallId: event.callId ?? state.placementCallId }
         : state;
     case 'adjustPace':
       return { ...state, pace: event.pace };
+    case 'stageRequested':
+      return { ...state, pendingStage: event.request };
+    case 'stageSettled':
+      // Only the request that was sent: a newer choice made meanwhile stays pending.
+      return sameRequest(state.pendingStage, event.request)
+        ? { ...state, pendingStage: null }
+        : state;
     case 'cardDone':
       return stepIndex(state.step) >= stepIndex('card') ? reach(state, 'notifications') : state;
     case 'setQuietOn':
@@ -158,12 +214,22 @@ export function onboardingReducer(state: OnboardingState, event: OnboardingEvent
   }
 }
 
+const sameRequest = (a: StageRequest | null, b: StageRequest) =>
+  a !== null && a.to === b.to && a.reason === b.reason;
+
 /** The chrome's language for the learner's first language (English chrome for the others). */
 export const chromeLanguageOf = (firstLanguage: FirstLanguage): ChromeLocale =>
   chromeLocale(firstLanguage);
 
-/** The whole profile, saved when the learner moves in. */
-export function profileInputOf(s: OnboardingState, timezone: TimeZone): ProfileInput {
+/**
+ * The whole profile, saved when the learner moves in. `today` is the learner's local day: the
+ * placement path's story starts on it; a Visitor's waits for the letter after Settling in.
+ */
+export function profileInputOf(
+  s: OnboardingState,
+  timezone: TimeZone,
+  today: LocalDate,
+): ProfileInput {
   return {
     displayName: s.displayName.trim(),
     firstLanguage: s.firstLanguage,
@@ -174,6 +240,12 @@ export function profileInputOf(s: OnboardingState, timezone: TimeZone): ProfileI
     // Asked in context later, after the residency card.
     notificationsAllowed: false,
     pace: s.pace,
+    ...(s.startPath === null
+      ? {}
+      : {
+          startPath: s.startPath,
+          storyStartedOn: s.startPath === 'placement' ? today : null,
+        }),
   };
 }
 
@@ -219,7 +291,8 @@ export function launchTarget(i: LaunchInputs): LaunchTarget {
     return at(i.step === 'language' ? 'language' : 'age');
   }
   if (!i.profileSettled) return WAIT;
-  // A session and no profile: up to the roommate, where the profile is saved.
-  if (i.step === 'language' || i.step === 'age') return at('ai');
-  return at(i.step === 'ai' ? 'ai' : 'pick');
+  // A session and no profile: up to the roommate, where the profile is saved. (The roommate
+  // step sends a learner who hasn't answered the level question back to it.)
+  if (i.step === 'language' || i.step === 'age' || i.step === 'ai') return at('ai');
+  return at(i.step === 'level' ? 'level' : 'pick');
 }

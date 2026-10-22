@@ -65,6 +65,14 @@ States built from existing components because the design does not show them.
 | Residency card | Summary still being written | One frosted row with a spinner and "Pip is writing it down…" in place of the strengths; after a minute without a summary, the three general strengths show |
 | Residency card | Strengths from the call | The summary's wins are written in the chrome's language (the English the learner said quoted as it is), under the chrome's title; the general strengths that fill the three are Pip's own line after unpacking, in the chrome's language |
 | Residency card | First aims | The can-do catalogue's titles ("Ask someone what's wrong and offer help"), not the prototype's shorter wording |
+| Level question | Short screens (iPhone SE) | The design's positions move up by what the shorter status bar saves; what doesn't fit in the sheet scrolls above "Tiếp tục", which stays put |
+| Level question | English chrome | Linh's line shows in English without the Vietnamese meaning under it (meanings are written in Vietnamese only); the same for the Visitor card's can-dos |
+| Level question | No back button | As the design: the learner changes their answer on the screen; the roommate step's back button comes back here |
+| Visitor residency card | Short screens (iPhone SE) | As the level question: moved up, the can-dos scroll above the two buttons |
+| Visitor residency card | After "Tập với Linh trước" on the Newcomer card | The card turns into the Visitor's (no placement-call strengths), with "Làm quen với Linh" / "Vào thẳng truyện" |
+| Visitor residency card | A stage the server hasn't taken yet | The card shows the chosen stage at once; the choice is sent again when the app opens or comes back to the foreground, and dropped if the server refuses it |
+| "Khó quá" sheet on the residency card | Copy for the card | The design draws the sheet over a call. On the card: "Nói chậm hơn" says everyone will talk slower with more hints (the pace the card's old chip set), "Tập với Linh trước" says six short calls come before the story, and the way out is "Quay lại thẻ cư trú" |
+| Visitor's first evening | Before Settling in's first call | The day-one burrow with Pip and a chip "Linh đang gõ cửa · 2–3 phút", with the microphone pre-prompt when iOS hasn't asked yet; then the call. No door scene and no letter at dusk |
 | Notifications | Changing the quiet hours | A small "Change" chip under the quiet hours row opens two rows of choice chips: from 21:00, 22:00 or 23:00, until 07:00, 08:00 or 09:00 |
 | Notifications | Pip's phone | The art's critter has no phone pose yet: Pip is drawn excited, without the phone |
 | Voice story | Before Pip reaches a line | The design shows the story's lines all at once. Each line of the story appears as Pip starts it, first line from the start; once the story has played they all stay |

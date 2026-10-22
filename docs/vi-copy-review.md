@@ -247,7 +247,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## Onboarding: splash, age and name, the AI explainer, roommate pick, placement call, residency card, notifications, Linh at the door
 
-`packages/i18n/src/onboarding.vi.ts` · 65 strings
+`packages/i18n/src/onboarding.vi.ts` · 105 strings
 
 | Key | English | Tiếng Việt | Flag | Notes |
 |---|---|---|---|---|
@@ -316,6 +316,46 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `onboarding.notifications.later` | Not now | Để sau |  |  |
 | `onboarding.door.place` | At the door | Ở cửa nhà |  |  |
 | `onboarding.door.done` | Good night | Chúc ngủ ngon |  |  |
+| `onboarding.level.kicker` | BEFORE YOU MOVE IN | TRƯỚC KHI DỌN VÀO | New | From the design |
+| `onboarding.level.title` | How’s your English right now? | Tiếng Anh của bạn bây giờ thế nào? | New | From the design |
+| `onboarding.level.sub` | Pick the one closest to you. You can change it any time. | Chọn câu gần với bạn nhất. Đổi lại lúc nào cũng được. | New | From the design |
+| `onboarding.level.visitor` | I’m just starting | Mình mới bắt đầu | New | From the design |
+| `onboarding.level.visitorSub` | hellos, my name, a few words | chào hỏi, nói tên, vài từ | New | From the design |
+| `onboarding.level.placement` | I can say a bit | Mình nói được một chút | New | From the design |
+| `onboarding.level.placementSub` | introduce myself, order food | giới thiệu bản thân, gọi món | New | From the design |
+| `onboarding.level.visitorNote` | Linh will help you settle in first: six short calls, 2–3 minutes each. | Linh sẽ giúp bạn làm quen trước: sáu cuộc gọi ngắn, mỗi cuộc 2–3 phút. | New | From the design |
+| `onboarding.level.placementNote` | You’ll go straight into the story. To settle in with Linh, open Me. | Bạn sẽ vào thẳng truyện. Muốn làm quen với Linh thì mở mục Tôi. | New | From the design |
+| `onboarding.level.step` | Step {step} of {steps} | Bước {step} trên {steps} | New | VoiceOver only |
+| `onboarding.level.linh.ask` | No quiz, promise! It just helps me help you. | Không phải bài kiểm tra đâu! Chỉ để mình giúp bạn. | New | Linh's line, shown under her English as its meaning |
+| `onboarding.level.linh.visitor` | Great! I’ll help you settle in first. | Tuyệt! Mình sẽ giúp bạn làm quen trước. | New | Linh's line, shown under her English as its meaning |
+| `onboarding.level.linh.placement` | Nice! I’m right next door if you need me. | Hay quá! Cần gì thì mình ở ngay nhà bên. | New | Linh's line, shown under her English as its meaning |
+| `onboarding.visitor.stage` | Visitor | Visitor | New, English on purpose? | English on purpose? The stage name stays English on the card (founder decision 4); the Vietnamese name is the line under it |
+| `onboarding.visitor.stageSub` | Just arrived | Khách mới đến | New | From the design |
+| `onboarding.visitor.welcome` | Linh will help you settle in first | Linh sẽ giúp bạn làm quen trước | New | From the design |
+| `onboarding.visitor.stamp` | WELCOME | KHÁCH | New | From the design |
+| `onboarding.visitor.aimsTitle` | YOU’LL DO THESE FIRST | BẠN SẼ LÀM ĐƯỢC TRƯỚC TIÊN | New | From the design |
+| `onboarding.visitor.aim.hello` | Say hello and your name | Chào và nói tên mình | New | The meaning under the English can-do, from the design (the draft above has "Chào hỏi và nói tên mình") |
+| `onboarding.visitor.aim.again` | Ask someone to say it again | Nhờ người khác nói lại | New | The meaning under the English can-do |
+| `onboarding.visitor.chip` | SETTLING IN | LÀM QUEN | New | From the design |
+| `onboarding.visitor.how` | 6 short calls with Linh, 2–3 minutes each. No clock, no score. | 6 cuộc gọi ngắn với Linh, 2–3 phút mỗi cuộc. Không bấm giờ, không chấm điểm. | New | From the design |
+| `onboarding.visitor.start` | Settle in with Linh | Làm quen với Linh | New | From the design |
+| `onboarding.visitor.skip` | Go straight to the story | Vào thẳng truyện | New | From the design |
+| `onboarding.visitor.confirm.title` | Straight to the story? | Vào thẳng truyện nhé? | New | From the design |
+| `onboarding.visitor.confirm.body` | The story moves a little faster. In every call you can still tap {again} or {slower}. | Truyện sẽ nhanh hơn một chút. Trong mọi cuộc gọi, bạn vẫn có thể bấm {again} hoặc {slower}. | New | {again} and {slower} are the call's pill names below, shown in bold |
+| `onboarding.visitor.confirm.again` | Again | Nói lại | New | From the design |
+| `onboarding.visitor.confirm.slower` | Slower | Chậm thôi | New | From the design |
+| `onboarding.visitor.confirm.linh` | Linh’s still next door. Open Me › Settle in with Linh again any time. | Linh vẫn ở nhà bên. Mở mục Tôi › Làm quen lại với Linh bất cứ lúc nào. | New | From the design |
+| `onboarding.visitor.confirm.go` | Start the story | Vào truyện | New | From the design |
+| `onboarding.visitor.confirm.stay` | Settle in with Linh first | Làm quen với Linh trước | New | From the design |
+| `onboarding.tooHard.title` | Too hard | Khó quá | New |  |
+| `onboarding.tooHard.sub` | That’s okay. Pick what suits you. | Không sao cả. Chọn cách bạn thích. | New |  |
+| `onboarding.tooHard.slower` | Slower, please | Nói chậm hơn | New |  |
+| `onboarding.tooHard.slowerSub` | Everyone will talk slower and give more hints. | Mọi người sẽ nói chậm hơn và gợi ý nhiều hơn. | New | New: the residency card's version of the call sheet's "Ở lại cuộc gọi…" |
+| `onboarding.tooHard.linh` | Practise with Linh first | Tập với Linh trước | New |  |
+| `onboarding.tooHard.linhSub` | Six short calls with Linh, then the story. | Sáu cuộc gọi ngắn với Linh, rồi mới vào truyện. | New | New: the residency card's version of "Cảnh này được lưu lại…" |
+| `onboarding.tooHard.note` | Linh will practise with you in a few short visits. Mei’s café will wait for you. | Linh sẽ tập cùng bạn vài buổi ngắn. Quán của Mei vẫn chờ bạn. | New |  |
+| `onboarding.tooHard.back` | Back to my card | Quay lại thẻ cư trú | New | New: the card's version of "Quay lại cuộc gọi" |
+| `onboarding.knock.chip` | Linh is at the door · 2–3 minutes | Linh đang gõ cửa · 2–3 phút | New | New: the chip over the burrow before a Visitor's first call |
 
 ## The burrow (home), day by day
 

@@ -4,13 +4,16 @@ import { findScene } from '@yapling/story';
 
 import {
   INITIAL_ONBOARDING,
+  afterMoveIn,
   canStepOff,
   chromeLanguageOf,
   launchTarget,
+  levelStageRequest,
   nameIssue,
   notificationsUpdateOf,
   onboardingReducer,
   profileInputOf,
+  shownStage,
   type LaunchInputs,
   type OnboardingEvent,
   type OnboardingState,
@@ -86,7 +89,7 @@ describe('moving in', () => {
       { type: 'chooseSpecies', species: 'capybara' },
       { type: 'setRoommateName', name: ' Bao ' },
     ]);
-    const input = profileInputOf(state, 'Asia/Jakarta');
+    const input = profileInputOf(state, 'Asia/Jakarta', '2026-10-23');
     expect(input).toEqual({
       displayName: 'Lan',
       firstLanguage: 'id',
@@ -101,7 +104,7 @@ describe('moving in', () => {
   });
 
   it('defaults to the red panda called Pip', () => {
-    const input = profileInputOf(run(throughTheFerry), 'Asia/Ho_Chi_Minh');
+    const input = profileInputOf(run(throughTheFerry), 'Asia/Ho_Chi_Minh', '2026-10-23');
     expect(input.roommate).toEqual({ species: 'redpanda', name: 'Pip' });
   });
 
@@ -109,6 +112,8 @@ describe('moving in', () => {
     const state = run([
       ...throughTheFerry,
       { type: 'aiUnderstood' },
+      { type: 'chooseStartPath', path: 'placement' },
+      { type: 'levelDone' },
       { type: 'setRoommateName', name: '' },
       { type: 'movedIn' },
     ]);
@@ -117,6 +122,101 @@ describe('moving in', () => {
 
   it('runs the placement call as the prologue’s unpacking scene', () => {
     expect(findScene(PLACEMENT_SCENE_ID)?.kind).toBe('placement');
+  });
+});
+
+describe('the level question', () => {
+  const atLevel = run([...throughTheFerry, { type: 'aiUnderstood' }]);
+
+  it('comes after the AI disclosure and before the roommate', () => {
+    expect(atLevel.step).toBe('level');
+    expect(run([{ type: 'levelDone' }], atLevel).step).toBe('level');
+    const picked = run(
+      [{ type: 'chooseStartPath', path: 'placement' }, { type: 'levelDone' }],
+      atLevel,
+    );
+    expect(picked).toMatchObject({ step: 'pick', startPath: 'placement' });
+  });
+
+  it('lets the learner change their answer before going on', () => {
+    const state = run(
+      [
+        { type: 'chooseStartPath', path: 'visitor' },
+        { type: 'chooseStartPath', path: 'placement' },
+      ],
+      atLevel,
+    );
+    expect(state.startPath).toBe('placement');
+  });
+
+  it('“Mình mới bắt đầu” skips the placement call: straight to the Visitor’s card', () => {
+    const state = run(
+      [{ type: 'chooseStartPath', path: 'visitor' }, { type: 'levelDone' }, { type: 'movedIn' }],
+      atLevel,
+    );
+    expect(afterMoveIn(state)).toBe('card');
+    expect(state.step).toBe('card');
+    expect(levelStageRequest('visitor')).toEqual({ to: 'visitor', reason: 'self_select' });
+  });
+
+  it('“Mình nói được một chút” plays the placement call as before', () => {
+    const state = run(
+      [{ type: 'chooseStartPath', path: 'placement' }, { type: 'levelDone' }, { type: 'movedIn' }],
+      atLevel,
+    );
+    expect(state.step).toBe('unpack');
+    expect(levelStageRequest('placement')).toBeNull();
+  });
+
+  it('saves the path, and starts the story today only on the placement path', () => {
+    const visitor = run([{ type: 'chooseStartPath', path: 'visitor' }], atLevel);
+    const placement = run([{ type: 'chooseStartPath', path: 'placement' }], atLevel);
+    const v = profileInputOf(visitor, 'Asia/Ho_Chi_Minh', '2026-10-23');
+    const p = profileInputOf(placement, 'Asia/Ho_Chi_Minh', '2026-10-23');
+    expect(v).toMatchObject({ startPath: 'visitor', storyStartedOn: null });
+    expect(p).toMatchObject({ startPath: 'placement', storyStartedOn: '2026-10-23' });
+    expect(ProfileInput.safeParse(v).success).toBe(true);
+    expect(ProfileInput.safeParse(p).success).toBe(true);
+  });
+});
+
+describe('the stage the screens show', () => {
+  const visitor = run([
+    ...throughTheFerry,
+    { type: 'aiUnderstood' },
+    { type: 'chooseStartPath', path: 'visitor' },
+  ]);
+
+  it('follows the level question until the profile has a stage', () => {
+    expect(shownStage(visitor, null)).toBe('visitor');
+    expect(shownStage(INITIAL_ONBOARDING, null)).toBe('newcomer');
+    expect(shownStage(INITIAL_ONBOARDING, 'visitor')).toBe('visitor');
+  });
+
+  it('shows a choice the server hasn’t taken yet, and the server’s once it has', () => {
+    const pending = run(
+      [{ type: 'stageRequested', request: { to: 'visitor', reason: 'self_select' } }],
+      visitor,
+    );
+    expect(shownStage(pending, 'newcomer')).toBe('visitor');
+    const settled = run(
+      [{ type: 'stageSettled', request: { to: 'visitor', reason: 'self_select' } }],
+      pending,
+    );
+    expect(settled.pendingStage).toBeNull();
+    expect(shownStage(settled, 'newcomer')).toBe('newcomer');
+  });
+
+  it('keeps a newer choice made while an older one was being sent', () => {
+    const state = run(
+      [
+        { type: 'stageRequested', request: { to: 'visitor', reason: 'too_hard' } },
+        { type: 'stageRequested', request: { to: 'newcomer', reason: 'self_select' } },
+        { type: 'stageSettled', request: { to: 'visitor', reason: 'too_hard' } },
+      ],
+      visitor,
+    );
+    expect(state.pendingStage).toEqual({ to: 'newcomer', reason: 'self_select' });
   });
 });
 
@@ -230,6 +330,10 @@ describe('where an open of the app goes', () => {
       kind: 'onboarding',
       step: 'ai',
     });
+    expect(launchTarget({ ...ready, profileSettled: true, step: 'level' })).toEqual({
+      kind: 'onboarding',
+      step: 'level',
+    });
   });
 
   it('without a session, the age check comes again', () => {
@@ -251,6 +355,17 @@ describe('the onboarding store', () => {
 
     const relaunched = createOnboardingStore(storage);
     expect(relaunched.store.get()).toMatchObject({ firstLanguage: 'ko', step: 'ai' });
+  });
+
+  it('reads a state saved before the level question existed', () => {
+    const old = JSON.stringify({
+      ...INITIAL_ONBOARDING,
+      startPath: undefined,
+      pendingStage: undefined,
+      step: 'pick',
+    });
+    const store = createOnboardingStore({ get: () => old, set: () => undefined });
+    expect(store.store.get()).toMatchObject({ step: 'pick', startPath: null, pendingStage: null });
   });
 
   it('starts again from a value it can’t read', () => {

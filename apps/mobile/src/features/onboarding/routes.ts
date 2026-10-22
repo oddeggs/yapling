@@ -1,3 +1,4 @@
+import { settlingSceneId } from '@yapling/domain';
 import type { Href } from 'expo-router';
 
 import type { OnboardingStep } from './flow';
@@ -15,6 +16,7 @@ export const ONBOARDING_ROUTES = {
   language: '/onboarding',
   age: '/onboarding/age',
   ai: '/onboarding/ai',
+  level: '/onboarding/level',
   pick: '/onboarding/pick',
   unpack: '/onboarding/unpack',
   card: '/onboarding/card',
@@ -42,6 +44,26 @@ export const placementCallHref = (fixtures?: string): Href => ({
     ...(fixtures !== undefined ? { fixtures } : {}),
   },
 });
+
+/**
+ * A Visitor's first evening after onboarding: Linh at the door (the microphone asked first when
+ * iOS hasn't asked yet), then Settling in's first chapter as a live call.
+ */
+export const KNOCK_ROUTE = '/onboarding/knock';
+
+/** Settling in's first chapter: Linh's knock, "Hello". */
+export const FIRST_CHAPTER_SCENE_ID = settlingSceneId(1);
+
+/**
+ * Linh's knock as a live call. No `next`: when it ends the call screen shows its own after-call
+ * card, which goes on to the burrow.
+ */
+export const firstChapterHref = (fixtures?: string): Href => ({
+  pathname: CALL_ROUTE,
+  params: { scene: FIRST_CHAPTER_SCENE_ID, ...(fixtures !== undefined ? { fixtures } : {}) },
+});
+
+export const knockHref = (): Href => href(KNOCK_ROUTE);
 
 export const stepHref = (step: Exclude<OnboardingStep, 'done'>): Href =>
   href(ONBOARDING_ROUTES[step]);

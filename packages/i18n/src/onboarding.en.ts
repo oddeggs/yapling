@@ -38,6 +38,66 @@ export const onboardingEn = {
     'They are not doctors, therapists or lawyers. When it matters, they point you to real people.',
   'onboarding.ai.cta': 'Got it',
 
+  /**
+   * The level question, between the AI disclosure and the roommate. Linh's lines are English with
+   * their Vietnamese meaning under them (the `.vi` entry is the meaning).
+   */
+  'onboarding.level.kicker': 'BEFORE YOU MOVE IN',
+  'onboarding.level.title': 'How’s your English right now?',
+  'onboarding.level.sub': 'Pick the one closest to you. You can change it any time.',
+  'onboarding.level.visitor': 'I’m just starting',
+  'onboarding.level.visitorSub': 'hellos, my name, a few words',
+  'onboarding.level.placement': 'I can say a bit',
+  'onboarding.level.placementSub': 'introduce myself, order food',
+  'onboarding.level.visitorNote':
+    'Linh will help you settle in first: six short calls, 2–3 minutes each.',
+  'onboarding.level.placementNote':
+    'You’ll go straight into the story. To settle in with Linh, open Me.',
+  /** VoiceOver for the progress dots. */
+  'onboarding.level.step': 'Step {step} of {steps}',
+  'onboarding.level.linh.ask': 'No quiz, promise! It just helps me help you.',
+  'onboarding.level.linh.visitor': 'Great! I’ll help you settle in first.',
+  'onboarding.level.linh.placement': 'Nice! I’m right next door if you need me.',
+
+  /** The Visitor's residency card: the same card with a different stamp, no stage number. */
+  'onboarding.visitor.stage': 'Visitor',
+  'onboarding.visitor.stageSub': 'Just arrived',
+  'onboarding.visitor.welcome': 'Linh will help you settle in first',
+  /** The stamp's middle line, between VISITOR and the date. */
+  'onboarding.visitor.stamp': 'WELCOME',
+  'onboarding.visitor.aimsTitle': 'YOU’LL DO THESE FIRST',
+  /** The two first can-dos, English with their Vietnamese meaning (the `.vi` entry). */
+  'onboarding.visitor.aim.hello': 'Say hello and your name',
+  'onboarding.visitor.aim.again': 'Ask someone to say it again',
+  'onboarding.visitor.chip': 'SETTLING IN',
+  'onboarding.visitor.how': '6 short calls with Linh, 2–3 minutes each. No clock, no score.',
+  'onboarding.visitor.start': 'Settle in with Linh',
+  'onboarding.visitor.skip': 'Go straight to the story',
+  /** "Go straight to the story?": `{again}` and `{slower}` are the call's pills, in bold. */
+  'onboarding.visitor.confirm.title': 'Straight to the story?',
+  'onboarding.visitor.confirm.body':
+    'The story moves a little faster. In every call you can still tap {again} or {slower}.',
+  'onboarding.visitor.confirm.again': 'Again',
+  'onboarding.visitor.confirm.slower': 'Slower',
+  'onboarding.visitor.confirm.linh':
+    'Linh’s still next door. Open Me › Settle in with Linh again any time.',
+  'onboarding.visitor.confirm.go': 'Start the story',
+  'onboarding.visitor.confirm.stay': 'Settle in with Linh first',
+
+  /** "Too hard" on the residency card: slower voices, or Settling in with Linh first. */
+  'onboarding.tooHard.title': 'Too hard',
+  'onboarding.tooHard.sub': 'That’s okay. Pick what suits you.',
+  'onboarding.tooHard.slower': 'Slower, please',
+  'onboarding.tooHard.slowerSub': 'Everyone will talk slower and give more hints.',
+  'onboarding.tooHard.linh': 'Practise with Linh first',
+  'onboarding.tooHard.linhSub': 'Six short calls with Linh, then the story.',
+  'onboarding.tooHard.note':
+    'Linh will practise with you in a few short visits. Mei’s café will wait for you.',
+  'onboarding.tooHard.back': 'Back to my card',
+
+  /** A Visitor's first evening: Linh at the door, before Settling in's first call. */
+  'onboarding.knock.chip': 'Linh is at the door · 2–3 minutes',
+
   'onboarding.pick.title': 'Who’s your roommate?',
   'onboarding.pick.redPanda': 'Red panda',
   'onboarding.pick.capybara': 'Capybara',
