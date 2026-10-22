@@ -59,6 +59,38 @@ export const burrowEn = {
   'burrow.a11y.keepsake': 'Keepsake on the wall: {canDo}',
   'burrow.a11y.object': '{phrase}: {stage}',
 
+  /**
+   * From week 2: the card and button for each day's thing (the new episode, Pip's story and the
+   * post, the real-week and practice calls, the voicemail, Pip's minute, the week's wrap), and for
+   * a day with nothing new. `{who}` and `{from}` are a character's name. Nothing here mentions a
+   * day the learner didn't come: what is waiting simply waits.
+   */
+  'burrow.later.replay': 'Play Episode {episode} again',
+  'burrow.later.realWeek': 'A real-week call with {who}',
+  'burrow.later.practice': 'Practice with {who}',
+  'burrow.later.story': '{name} has a story for you',
+  'burrow.later.storySub': 'Tap a line to see what it means',
+  'burrow.later.storyPost': 'And there’s post in the mailbox',
+  'burrow.later.postcard': 'Post in the mailbox',
+  'burrow.later.voicemail': '{from} left you a voicemail',
+  'burrow.later.voicemailSub': 'Something’s happening in Natterwick',
+  'burrow.later.pipsMinute': 'A minute with {name}',
+  'burrow.later.pipsMinuteSub': 'One of your phrases, in a small moment',
+  'burrow.later.wrap': 'Week {week}, wrapped up',
+  'burrow.later.wrapFull': 'The ring is full. A keepsake is on the wall',
+  'burrow.later.wrapSub': 'See what grew this week',
+  'burrow.later.kicker.waiting': 'WAITING FOR YOU',
+  'burrow.later.waitingSub': 'Whenever you’re ready',
+  'burrow.later.phrases': 'Your phrases are growing',
+  'burrow.later.phrasesSub': 'See them on this week’s page',
+  'burrow.later.quiet': 'A quiet day with {name}',
+  'burrow.later.quietSub': 'Everything is right where you left it',
+  'burrow.later.action.postcard': 'Read the post',
+  'burrow.later.action.pipsMinute': 'Start · about a minute',
+  /** The small chip for Pip's minute on a day it isn't the card or the button. */
+  'burrow.chip.pipsMinute': 'A minute with {name}',
+  'burrow.chip.a11y.pipsMinute': 'A minute with {name}: one of your phrases. No live minutes used.',
+
   /** Coming back on day 8: the scene's last button goes home to the next episode. */
   'burrow.back.done': 'Back to the burrow',
 

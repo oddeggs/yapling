@@ -24,4 +24,13 @@ export const weekEn = {
   'week.phrasesTitle': 'THIS WEEK’S PHRASES',
   'week.seedNote': 'Seed packets: heard, not said yet. Say them to sprout.',
   'week.cta': 'Go to the café with {name}',
+  /** A call still open from an earlier week: it waits, it never expires. */
+  'week.waiting.tag': 'Week {week} · waiting for you',
+  'week.waiting.when': 'Ready',
+  'week.waiting.a11y': 'Waiting for you from week {week}: {title}. Tap to start.',
+  /** A done call can be played again; it doesn't change the ring. */
+  'week.slot.again': 'Again',
+  'week.slot.a11y.again': 'Done. Tap to play it again',
+  /** A week with no episode of its own: its calls replay the season's. */
+  'week.slot.replay': 'Replay',
 } as const satisfies EnCatalogue;
