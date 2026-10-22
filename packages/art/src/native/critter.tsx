@@ -1,6 +1,6 @@
 import { Canvas, Group, Picture } from '@shopify/react-native-skia';
-import { useMemo } from 'react';
 import type { ComponentProps } from 'react';
+import { PixelRatio } from 'react-native';
 import {
   isSharedValue,
   useDerivedValue,
@@ -12,6 +12,7 @@ import {
 import { speciesOf, type Character, type Mood, type Mouth, type PipSpecies } from '../critter';
 import { blinkingAt, critterIdle, idleHash, idleTransformAt } from '../motion';
 import { useArtRenderer } from './context';
+import { useCritterPictures } from './pictures';
 
 /** The canvas's own style type (React Native's `ViewStyle` can widen past what Skia accepts). */
 type CanvasStyle = ComponentProps<typeof Canvas>['style'];
@@ -49,9 +50,11 @@ export function CritterArt({
 }: CritterArtProps) {
   const renderer = useArtRenderer();
   const species = speciesOf(character, pip);
-  const pics = useMemo(
-    () => renderer.critter({ species, mood, size }),
-    [renderer, species, mood, size],
+  // A moving critter's outline is cached as pixels at the screen's density.
+  const pics = useCritterPictures(
+    renderer,
+    { species, mood, size },
+    animated ? PixelRatio.get() : 0,
   );
   const hash = idleHash(`${species}${size}`);
   const { idle, talking, r } = critterIdle(mood, hash);

@@ -175,3 +175,41 @@ export function rigOps(rig: CritterRig): (readonly Op[])[] {
 }
 
 export type { Point };
+
+/** Lets go of a rig's pictures and outline pixels at once (an evicted entry nothing draws). */
+export function disposeRig(r: RigPictures): void {
+  const outlines = [
+    r.outline.body,
+    r.outline.tail,
+    ...r.outline.feet,
+    ...(r.outline.ears ?? []),
+    ...r.outline.paws,
+    r.outline.nose,
+    r.outline.top,
+  ];
+  for (const o of outlines) {
+    o?.picture.dispose?.();
+    o?.image?.dispose?.();
+  }
+  const eyes = (r.eyes ?? []).flatMap((e) => [e.white, e.pupil, e.ring, e.lid, e.cheek, e.closed]);
+  const pictures = [
+    r.ground,
+    r.tail,
+    ...r.feet,
+    ...(r.ears ?? []),
+    r.body,
+    r.belly,
+    r.markings,
+    r.clothes,
+    r.late,
+    r.stroke,
+    ...r.paws,
+    r.blush,
+    ...eyes,
+    ...r.brows,
+    r.nose,
+    ...Object.values(r.mouths),
+    r.top,
+  ];
+  for (const p of pictures) p?.dispose?.();
+}
