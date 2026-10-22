@@ -45,7 +45,7 @@ export interface TimerState {
   readonly beatId: string;
   /** Seconds for this round at the learner's stage. */
   readonly total: number;
-  /** The learner started speaking: the ring counts down. */
+  /** The learner started speaking: the ring counts down while they talk. */
   readonly started: boolean;
   /** It reached zero, or the turn was heard. */
   readonly done: boolean;
@@ -231,6 +231,7 @@ function onFrame(
         : state;
     case 'ready':
     case 'partial':
+    case 'not_heard':
     case 'alignment':
     case 'say_end':
     case 'minutes':

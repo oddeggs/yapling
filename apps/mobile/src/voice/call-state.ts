@@ -43,6 +43,8 @@ export interface LatencySample {
   readonly lagMs: number;
 }
 
+export type CallNotice = 'didnt_catch' | 'hold_longer' | 'not_heard';
+
 export interface CallState {
   readonly phase: CallPhase;
   readonly turnMode: TurnMode;
@@ -76,10 +78,12 @@ export interface CallState {
   /** The last non-fatal error (a failed reply the call recovers from). */
   readonly warning: CallErrorCode | null;
   /**
-   * The learner's turn got no answer (nothing heard, or the reply failed): the character says it
-   * didn't catch that, and it is the learner's turn again. Cleared when anyone speaks.
+   * Why the learner has the turn back with nothing answered, cleared by the next press or line:
+   * - `didnt_catch`: no answer came (the reply failed): the character says it didn't catch that.
+   * - `hold_longer`: a tap shorter than a turn, sent nowhere: the tip to hold while talking.
+   * - `not_heard`: a hold with no real words in it: the tip to hold and say it again.
    */
-  readonly notice: 'didnt_catch' | null;
+  readonly notice: CallNotice | null;
   readonly endReason: CallEndReason | null;
   readonly summaryPending: boolean;
   readonly callRecordId: string | null;
@@ -125,7 +129,8 @@ export function phaseOf(s: Omit<CallState, 'phase'> & { readonly phase?: CallPha
   if (s.error !== null) return 'error';
   if (!s.connected) return s.phase === 'idle' ? 'idle' : 'connecting';
   if (s.playing) return 'character_speaking';
-  if (s.talkHeld || s.learnerSpeaking) return 'listening';
+  // Hold-to-talk listens only while the button is held: talking without holding sends nothing.
+  if (s.talkHeld || (s.learnerSpeaking && s.turnMode === 'hands_free')) return 'listening';
   if (s.serverThinking || s.awaitingReply) return 'thinking';
   return 'your_turn';
 }

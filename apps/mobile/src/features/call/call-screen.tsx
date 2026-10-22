@@ -18,12 +18,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CallBar } from '../../ui/call-bar';
 import { MeaningChip } from '../../ui/chip';
+import { haptics } from '../../ui/haptics';
 import { useLocale } from '../../ui/locale';
 import { SpeakerPill } from '../../ui/speaker-pill';
 import { SpeechBubble, type BubbleTone } from '../../ui/speech-bubble';
 import { useToast } from '../../ui/toast';
 import { useCallAnalytics } from '../../observability';
 import { useLipsyncClock, type Lipsync } from '../../voice/lipsync';
+import { MIN_HOLD_MS } from '../../voice/turns';
 import { BubbleCaption } from './bubble-caption';
 import { CritterFace } from './call-art';
 import {
@@ -37,6 +39,7 @@ import {
 import { CallErrorSheet } from './call-errors';
 import { CallLetter } from './call-letter';
 import { CallStage } from './call-stage';
+import { CallTip } from './call-tip';
 import { useDevMic } from './dev-mic';
 import { bandOf } from './letter-place';
 import { CallTimer, MirrorCard, RoundsStrip } from './pass-it-on';
@@ -232,6 +235,21 @@ export function CallScreen({
         AccessibilityInfo.announceForAccessibility(`${nameOf(bubble.speaker)}: ${bubble.text}`);
     });
   }, [spoken]);
+
+  // A tap too short to be a turn, or a hold with no words: a light tap and the tip, read out.
+  const tipText =
+    view.tip === 'hold_longer'
+      ? t('call.tip.holdLonger')
+      : view.tip === 'not_heard'
+        ? t('call.tip.notHeard')
+        : null;
+  useEffect(() => {
+    if (tipText === null) return;
+    haptics.play('tap');
+    void AccessibilityInfo.isScreenReaderEnabled().then((on) => {
+      if (on) AccessibilityInfo.announceForAccessibility(tipText);
+    });
+  }, [tipText]);
 
   const learnerTurn =
     view.mic === 'yourTurn' || (view.mic === 'listening' && state.phase === 'your_turn');
@@ -458,6 +476,13 @@ export function CallScreen({
           />
         ) : null}
         {view.you ? <YouCaption text={view.you.text} heard={view.you.heard} /> : null}
+        {tipText !== null ? (
+          <CallTip
+            key={view.tip}
+            text={tipText}
+            art={<CritterFace character="pip" species={roommate.species} size={30} />}
+          />
+        ) : null}
         {view.paused ? (
           <View style={{ alignItems: 'center' }} accessibilityLiveRegion="polite">
             <PhonePill
@@ -474,6 +499,7 @@ export function CallScreen({
           onExit={exit}
           onTalkStart={() => engine?.pressTalk()}
           onTalkEnd={() => engine?.releaseTalk()}
+          {...(turnMode === 'hold_to_talk' ? { holdMs: MIN_HOLD_MS } : {})}
         />
       </View>
     </View>

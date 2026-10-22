@@ -1,12 +1,13 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { LatencyMeter, TurnTaker } from '../../src/voice/turns';
+import { LatencyMeter, MIN_HOLD_MS, TurnTaker } from '../../src/voice/turns';
 
 const frame = (v: number) => new Int16Array(320).fill(v);
 
-function setup(mode: 'hands_free' | 'hold_to_talk') {
+function setup(mode: 'hands_free' | 'hold_to_talk', minHoldMs = 0) {
   const sent: number[][] = [];
   let endTurns = 0;
+  const clock = { ms: 0 };
   const t = new TurnTaker(
     mode,
     {
@@ -18,9 +19,9 @@ function setup(mode: 'hands_free' | 'hold_to_talk') {
       },
       endTurn: () => endTurns++,
     },
-    { chunkMs: 20, prerollMs: 60, maxTailMs: 100 },
+    { chunkMs: 20, prerollMs: 60, maxTailMs: 100, minHoldMs, now: () => clock.ms },
   );
-  return { t, sent, endTurns: () => endTurns };
+  return { t, sent, clock, endTurns: () => endTurns };
 }
 
 describe('turn-taking', () => {
@@ -73,6 +74,77 @@ describe('turn-taking', () => {
     t.reset();
     t.press();
     expect(sent).toEqual([]);
+  });
+});
+
+describe('the shortest turn', () => {
+  /** Holds for `ms`, one frame every 20 ms, then lets go. */
+  const hold = (h: ReturnType<typeof setup>, ms: number, speaking = false) => {
+    h.t.press();
+    for (let at = 20; at <= ms; at += 20) {
+      h.clock.ms += 20;
+      h.t.frame(frame(at / 20), speaking, null);
+    }
+    return h.t.release(false);
+  };
+
+  it('is a two-second hold', () => {
+    expect(MIN_HOLD_MS).toBe(2_000);
+  });
+
+  it('drops a tap unsent: no audio, no end_turn', () => {
+    const h = setup('hold_to_talk', MIN_HOLD_MS);
+    [1, 2, 3].forEach((v) => h.t.frame(frame(v), false, null));
+    expect(hold(h, 500, true)).toBe('tap');
+    expect(hold(h, MIN_HOLD_MS - 20)).toBe('tap');
+    expect(h.sent).toEqual([]);
+    expect(h.endTurns()).toBe(0);
+    // Nothing of the taps leaks into the next turn.
+    h.t.frame(frame(99), false, null);
+    expect(h.sent).toEqual([]);
+  });
+
+  it('holds the audio back until two seconds, then sends it all, pre-roll first', () => {
+    const h = setup('hold_to_talk', MIN_HOLD_MS);
+    [7, 8, 9].forEach((v) => h.t.frame(frame(v), false, null));
+    h.t.press();
+    for (let i = 1; i < 100; i++) {
+      h.clock.ms += 20;
+      h.t.frame(frame(i), true, null);
+    }
+    expect(h.sent).toEqual([]);
+    h.clock.ms += 20;
+    h.t.frame(frame(100), true, null);
+    expect(h.sent.map((c) => c[0])).toEqual([
+      7,
+      8,
+      9,
+      ...Array.from({ length: 100 }, (_, i) => i + 1),
+    ]);
+    h.clock.ms += 20;
+    h.t.frame(frame(101), true, null);
+    expect(h.sent.at(-1)).toEqual([101]);
+    expect(h.t.release(false)).toBe('turn');
+    expect(h.endTurns()).toBe(1);
+  });
+
+  it('sends a two-second hold released before its next frame as a turn', () => {
+    const h = setup('hold_to_talk', MIN_HOLD_MS);
+    h.t.press();
+    h.clock.ms += 20;
+    h.t.frame(frame(1), true, null);
+    h.clock.ms = MIN_HOLD_MS + 5;
+    expect(h.t.release(false)).toBe('turn');
+    expect(h.sent.map((c) => c[0])).toEqual([1]);
+    expect(h.endTurns()).toBe(1);
+  });
+
+  it('never applies hands-free', () => {
+    const h = setup('hands_free', MIN_HOLD_MS);
+    h.t.press();
+    expect(h.t.release(false)).toBeNull();
+    h.t.frame(frame(1), true, null);
+    expect(h.sent).toEqual([[1]]);
   });
 });
 

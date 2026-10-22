@@ -4,6 +4,7 @@ import { ListenPlayer } from '../../src/features/story/listen-player';
 import { audioOwner, claimAudio, ownsAudio, releaseAudio } from '../../src/voice/audio-owner';
 import type { SocketLike } from '../../src/voice/call-socket';
 import { VoiceEngine } from '../../src/voice/engine';
+import { MIN_HOLD_MS } from '../../src/voice/turns';
 
 /*
  * The shared audio session across a story, a call and the next call: the order the call sets the
@@ -134,10 +135,14 @@ class TestSocket implements SocketLike {
 
 let sockets: TestSocket[] = [];
 
+/** The clock mic presses are timed on. */
+const turnClock = { ms: 0 };
+
 const engine = () =>
   new VoiceEngine({
     url: 'ws://call',
     hello: HELLO,
+    now: () => turnClock.ms,
     createSocket: () => {
       const s = new TestSocket();
       sockets.push(s);
@@ -288,11 +293,17 @@ describe('a story and a call sharing the session', () => {
   });
 });
 
+/** A press held for `ms` on the turn clock, then let go. */
+function holdTalk(e: VoiceEngine, ms = MIN_HOLD_MS + 100) {
+  e.pressTalk();
+  turnClock.ms += ms;
+  e.releaseTalk();
+}
+
 describe('a turn that gets no answer', () => {
   it('gives the turn back with "didn\'t catch that" when the reply fails', async () => {
     const { e, say } = await liveCall();
-    e.pressTalk();
-    e.releaseTalk();
+    holdTalk(e);
     expect(e.state.get().phase).toBe('thinking');
     say({ type: 'thinking', state: 'start' });
     say({ type: 'error', code: 'llm_failed', fatal: false });
@@ -312,13 +323,43 @@ describe('a turn that gets no answer', () => {
   it('gives the turn back when nothing at all comes after the learner lets go', async () => {
     jest.useFakeTimers();
     const { e } = await liveCall();
-    e.pressTalk();
-    e.releaseTalk();
+    holdTalk(e);
     jest.advanceTimersByTime(5_000);
     expect(e.state.get().phase).toBe('thinking');
     jest.advanceTimersByTime(2_000);
     expect(e.state.get()).toMatchObject({ phase: 'your_turn', notice: 'didnt_catch' });
     jest.useRealTimers();
+    await e.dispose();
+  });
+
+  it('sends nothing for a tap shorter than a turn, and shows the tip to hold', async () => {
+    const { e, socket } = await liveCall();
+    const before = socket.sent.length;
+    holdTalk(e, 500);
+    expect(socket.sent.slice(before).filter((f) => f['type'] === 'end_turn')).toEqual([]);
+    expect(e.state.get()).toMatchObject({
+      phase: 'your_turn',
+      talkHeld: false,
+      awaitingReply: false,
+      notice: 'hold_longer',
+    });
+    // The next press takes the tip away; a long enough hold is a turn.
+    holdTalk(e);
+    expect(socket.sent.at(-1)).toMatchObject({ type: 'end_turn' });
+    expect(e.state.get()).toMatchObject({ phase: 'thinking', notice: null });
+    await e.dispose();
+  });
+
+  it('gives the turn back with the retry tip when the call heard no words', async () => {
+    const { e, say } = await liveCall();
+    holdTalk(e);
+    expect(e.state.get().phase).toBe('thinking');
+    say({ type: 'not_heard' });
+    expect(e.state.get()).toMatchObject({
+      phase: 'your_turn',
+      awaitingReply: false,
+      notice: 'not_heard',
+    });
     await e.dispose();
   });
 

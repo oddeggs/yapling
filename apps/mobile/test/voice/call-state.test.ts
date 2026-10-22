@@ -20,6 +20,14 @@ describe('the call phase', () => {
     expect(s.phase).toBe('your_turn');
   });
 
+  it('listens in hold-to-talk only while the button is held', () => {
+    let s = update(initialCallState('hold_to_talk'), { phase: 'connecting', connected: true });
+    s = update(s, { learnerSpeaking: true });
+    expect(s.phase).toBe('your_turn');
+    s = update(s, { talkHeld: true });
+    expect(s.phase).toBe('listening');
+  });
+
   it('shows connecting while reconnecting, and the held mic as listening', () => {
     let s = update(initialCallState('hold_to_talk'), { phase: 'connecting', connected: true });
     s = update(s, { talkHeld: true });

@@ -7,7 +7,9 @@ import type { VoiceEngine } from '../../voice/engine';
  * Development builds only, for simulators on a Mac with no microphone: recorded learner answers
  * (`?fixtures=<url>,<url>`) are fed through the engine's mic path, one per learner turn, in place
  * of a voice; between them the mic hears quiet room noise. `silent` in the list lets a turn pass
- * with nothing said (the hint, then the nudge). Release builds never run this.
+ * with nothing said: the call waits (offering the hint once after a long quiet) until the next
+ * turn starts, from a press on the mic. Hold-to-talk holds the mic for the fixture's length, so a
+ * fixture shorter than the shortest turn is a tap. Release builds never run this.
  */
 
 /** A pause before the "learner" answers, as a person would take. */
