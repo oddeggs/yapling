@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   earnsNewcomerCard,
+  newcomerCardAtRing,
   placementSkipsLastBox,
   placementStage,
   resolveStageRequest,
@@ -123,5 +124,46 @@ describe('stage requests', () => {
     expect(ask('newcomer', 'neighbour', 'stage_up')).toBeNull();
     expect(ask('visitor', 'visitor', 'stay')).toBe('visitor');
     expect(ask('visitor', 'newcomer', 'stay')).toBeNull();
+  });
+});
+
+describe('Linh’s card at every full ring', () => {
+  const good: readonly TurnPass[] = ['match', 'match', 'match', 'generous'];
+  const weak: readonly TurnPass[] = ['match', 'generous', 'skip', 'fallback'];
+  const offer = (fullRingWeek: number | null, ringTurns = good, answeredWeeks: number[] = []) =>
+    newcomerCardAtRing({ stage: 'visitor', fullRingWeek, ringTurns, answeredWeeks });
+
+  it('offers a Visitor the card at any week’s full ring that meets the rule', () => {
+    expect(offer(1)).toEqual({ week: 1 });
+    expect(offer(2)).toEqual({ week: 2 });
+    expect(offer(5)).toEqual({ week: 5 });
+    expect(offer(3, weak)).toBeNull();
+  });
+
+  it('asks again at the next ring after “Ở lại thêm”, once per week, and never a Newcomer', () => {
+    expect(offer(2, good, [1])).toEqual({ week: 2 });
+    expect(offer(2, good, [1, 2])).toBeNull();
+    expect(offer(null)).toBeNull();
+    expect(
+      newcomerCardAtRing({
+        stage: 'newcomer',
+        fullRingWeek: 2,
+        ringTurns: good,
+        answeredWeeks: [],
+      }),
+    ).toBeNull();
+  });
+
+  it('follows the week-1 rule for every week', () => {
+    const pass = fc.constantFrom<TurnPass>('match', 'generous', 'skip', 'fallback');
+    fc.assert(
+      fc.property(
+        fc.array(pass, { maxLength: 30 }),
+        fc.integer({ min: 1, max: 12 }),
+        (turns, week) => {
+          expect(offer(week, turns) !== null).toBe(earnsNewcomerCard('visitor', turns));
+        },
+      ),
+    );
   });
 });
