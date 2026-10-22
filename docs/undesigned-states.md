@@ -22,6 +22,8 @@ States built from existing components because the design does not show them.
 | Burrow home | Seagull feather | The prototype's toast draws the feather as the first-stage plant; it stands on the shelf with that art and its name under it |
 | Burrow home | More than six phrases | The two shelves hold three each: the newest six phrases stand there (nothing leaves because of time) |
 | Burrow, Linh's knock, coming back | Status bar | Design review fix 5: the room is drawn below the status bar (lowered by the safe area less the prototype's 40-point bar); the band above is the scene's own top edge stretched, in the scene's light |
+| Linh's knock | The learner's reply | The scene plays on the phone, not as a live call: the knock, Linh's recorded welcome with its caption, then the café at dusk and "Chúc ngủ ngon" as the primary button. The mic rests (no turn nobody would hear) |
+| Coming back | Pip's line | The recap line (recorded) plays with its caption; Pip's own day 8 line has no recording and shows whole. "Về hang" turns primary once the line is done |
 | Coming back | Last button | "Kết thúc tuần" is prototype-only (design review fix 6); the button reads "Về hang" and the burrow then shows the next episode |
 | Coming back (day 8) | Next-episode card | Shown at once after days away; on a normal day 8 it rises after the learner's answer, as the prototype's beat does |
 | Coming back | No story yet to recap | Away before the first episode: Pip says its knock line "You're back? I kept your seat warm." (no recording, no gloss) and the card shows Episode 1 |
