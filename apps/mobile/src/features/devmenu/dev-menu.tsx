@@ -33,6 +33,7 @@ import { CostPage } from './cost-page';
 import { useResetLocalData } from './dev-menu-host';
 import { devStorage } from './dev-storage';
 import { KnockPreview } from './knock-preview';
+import { menuShown } from './menu-once';
 import { SettlingSection } from './settling-section';
 import { createVisitor, seedOf } from './settling-tools';
 import { dayOf, deviceTimeZone, settlingOf, testLearnerOf } from './test-learner';
@@ -91,6 +92,8 @@ export function DevMenu() {
   const [note, setNote] = useState<string | null>(null);
   const [page, setPage] = useState<'menu' | 'cost'>('menu');
   const opened = useRef(false);
+  // While it is up, the build label and the three-finger tap open no second copy.
+  useEffect(() => menuShown(), []);
   useEffect(() => {
     if (opened.current) return;
     opened.current = true;
