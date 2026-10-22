@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R6 · A Settling-in call</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yglow{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 8px rgba(239,163,244,.45)}50%{box-shadow:0 4px 0 #17131C,0 0 0 18px rgba(239,163,244,.12)}}
+@keyframes ybar{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes ysoft{0%{background:#FFFFFF}100%{background:#D7F7E2}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#EFA3F4;border:2px solid #17131C"></span>Yapling · Round 6 · Calls · 4</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">A <span style="background:#EFA3F4;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">Settling-in</span> call</div>
+      <div style="font-size:17px;font-weight:700;max-width:1000px;line-height:1.35;color:#3E3646">The usual call layout. The character always speaks first, then you read a card aloud. The card is there from the start, with its Vietnamese in the hand-written font. "Nói lại" and "Chậm thôi" sit above the mic in every call. "Bỏ qua" only shows after one try.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R6 Burrow.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ Burrow</a>
+      <a href="Yapling R6 Flow.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Flow strip</a>
+      <a href="Yapling R6 Hold.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · Hold-to-talk ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ cs }}" as="c" hint-placeholder-count="6">
+      <div data-screen-label="{{ c.id }} Settling-in call" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ c.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ c.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F9DAFB;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;left:0;right:0;top:{{ c.bgY }};height:844px">{{ c.bg }}</div>
+          <sc-for list="{{ c.cast }}" as="m" hint-placeholder-count="2"><div style="position:absolute;left:{{ m.left }};top:{{ m.top }}">{{ m.el }}</div></sc-for>
+          <div style="position:absolute;inset:0;pointer-events:none">{{ c.front }}</div>
+
+          <div style="position:absolute;top:58px;left:62px;right:14px;display:flex;align-items:center;gap:8px;z-index:4">
+            <div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 5px;border-radius:20px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);min-width:0"><span style="width:30px;height:30px;border-radius:15px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ c.topFace }}</span><span style="font-size:14px;font-weight:800">{{ c.who }}</span><span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800;white-space:nowrap">AI</span><span style="font-size:12px;font-weight:600;color:#5D5366;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.sub }}</span></div>
+          </div>
+
+          <div style="position:absolute;top:110px;left:16px;right:{{ c.bubR }};display:flex;flex-direction:column;gap:3px;padding:11px 15px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;z-index:4">
+            <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800">{{ c.who }}<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px;white-space:nowrap">AI</span></span>
+            <span style="font-size:18px;font-weight:700;line-height:1.32">{{ c.line }}</span>
+            <sc-if value="{{ c.showVi }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Kithfield Hand',cursive;font-size:18px;line-height:1.25;color:#5B4A8C;border-top:2px dashed rgba(23,19,28,.2);padding-top:4px">{{ c.lineVi }}</span></sc-if>
+            <sc-if value="{{ c.tapHint }}" hint-placeholder-val="{{ true }}"><span style="font-size:11px;font-weight:700;opacity:.6">Chạm để xem nghĩa</span></sc-if>
+          </div>
+
+          <sc-if value="{{ c.hasPip }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:252px;left:196px;right:16px;display:flex;flex-direction:column;gap:2px;padding:9px 13px;border-radius:20px 20px 6px 20px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;z-index:4;animation:ypop .5s .2s ease-out both">
+              <span style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800">Pip<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px;white-space:nowrap">AI</span></span>
+              <span style="font-size:17px;font-weight:800;line-height:1.3">{{ c.pipSays }}</span>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;z-index:6">
+            <sc-if value="{{ c.hasTask }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 10px 10px 12px;border-radius:20px;background:#17131C;color:#FFFFFF;box-shadow:0 6px 0 #EFA3F4;animation:yup .45s ease-out both">
+                <span style="font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 7px;border-radius:7px;background:#FFE48A;color:#17131C;flex:none;white-space:nowrap">CÁCH CHƠI</span>
+                <span style="font-size:15px;font-weight:700;line-height:1.3;flex:1">{{ c.task }}</span>
+                <button style="height:36px;padding:0 14px;border-radius:18px;border:none;background:#FFFFFF;color:#17131C;font:800 13px Lexend,sans-serif;cursor:pointer;flex:none">OK</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ c.hasYou }}" hint-placeholder-val="{{ false }}">
+              <div style="align-self:flex-end;max-width:300px;padding:9px 14px;border-radius:20px 20px 6px 20px;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.95);box-shadow:0 8px 22px rgba(46,20,70,.14)"><span style="display:block;font-size:10.5px;font-weight:800;letter-spacing:.05em;color:#5D5366">BẠN · NGHE ĐƯỢC</span><span style="font-size:16.5px;font-weight:700;line-height:1.35">{{ c.you }}</span></div>
+            </sc-if>
+            <div style="display:grid;grid-template-columns:{{ c.cols }};gap:8px">
+              <sc-for list="{{ c.cards }}" as="k" hint-placeholder-count="1">
+                <div style="position:relative;display:flex;flex-direction:column;gap:3px;padding:10px 10px 12px 14px;border-radius:22px;background:{{ k.bg }};border:3px solid #17131C;box-shadow:0 5px 0 #17131C;box-sizing:border-box;animation:{{ k.anim }}">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:6px"><span style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#5D5366">{{ k.kick }}</span><button aria-label="Nghe câu này" style="width:32px;height:32px;border-radius:16px;border:2px solid #17131C;background:#FFFFFF;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer;padding:0"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#17131C" stroke="#17131C" stroke-width="1.5" stroke-linejoin="round"></path><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="#17131C" stroke-width="2.2" stroke-linecap="round"></path></svg></button></div>
+                  <span style="font-size:{{ k.fs }};font-weight:800;letter-spacing:-0.02em;line-height:1.25">{{ k.en }}</span>
+                  <span style="font-family:'Kithfield Hand',cursive;font-size:17px;line-height:1.22;color:#5B4A8C">{{ k.vi }}</span>
+                  <sc-if value="{{ k.passed }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-12px;right:-8px;width:32px;height:32px;border-radius:16px;background:#5FD98A;border:2.5px solid #17131C;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;box-sizing:border-box;animation:ypop .5s .3s ease-out both">✓</span></sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;justify-content:center;gap:8px">
+              <button style="display:flex;align-items:center;gap:6px;height:38px;padding:0 14px 0 11px;border-radius:19px;border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.72);backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 1px 0 #fff,0 6px 16px rgba(46,20,70,.14);font:800 13px Lexend,sans-serif;color:#17131C;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v5h5" fill="none" stroke="#17131C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>Nói lại</button>
+              <button style="display:flex;align-items:center;gap:6px;height:38px;padding:0 14px 0 11px;border-radius:19px;border:1px solid rgba(255,255,255,.95);background:{{ c.slowBg }};backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 1px 0 #fff,0 6px 16px rgba(46,20,70,.14);font:800 13px Lexend,sans-serif;color:#17131C;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 17a8.5 8.5 0 0 1 17 0" fill="none" stroke="#17131C" stroke-width="2.6" stroke-linecap="round"></path><path d="M12 17L7.5 11.5" fill="none" stroke="#17131C" stroke-width="2.6" stroke-linecap="round"></path></svg>Chậm thôi</button>
+              <sc-if value="{{ c.skip }}" hint-placeholder-val="{{ false }}"><button style="height:38px;padding:0 14px;border-radius:19px;border:1.5px dashed rgba(23,19,28,.3);background:rgba(255,255,255,.35);font:700 13px Lexend,sans-serif;color:#3E3646;cursor:pointer;animation:yin .4s ease-out both">Bỏ qua</button></sc-if>
+            </div>
+            <div style="height:104px;border-radius:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <button style="height:50px;width:96px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 14px Lexend,sans-serif;cursor:pointer">Chờ chút</button>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+                <button aria-label="Giữ để nói" style="width:72px;height:72px;border-radius:50%;background:{{ c.mic.bg }};border:3px solid {{ c.mic.bd }};animation:{{ c.mic.anim }};display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box;cursor:pointer"><span style="width:5px;height:26px;border-radius:3px;background:{{ c.mic.bar }};animation:{{ c.mic.barA }}"></span><span style="width:5px;height:26px;border-radius:3px;background:{{ c.mic.bar }};animation:{{ c.mic.barA }};animation-delay:.15s"></span><span style="width:5px;height:26px;border-radius:3px;background:{{ c.mic.bar }};animation:{{ c.mic.barA }};animation-delay:.3s"></span></button>
+                <span style="font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap">{{ c.mic.label }}</span>
+              </div>
+              <button style="height:50px;width:96px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 14px Lexend,sans-serif;cursor:pointer">Rời đi</button>
+            </div>
+          </div>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const WHO={linh:['Linh','pangolin','#CFF0FD'],mei:['Mei','otter','#FFE9C2'],bea:['Bea','bulldog','#D7F7E2']};
+const SCN={
+  door:{sub:'Làm quen · 1/6 · Hello',cast:[['linh',160,16,262],['pip',120,252,322]],bubR:'40px'},
+  cafe:{sub:"Làm quen · 5/6 · Mei's café",cast:[['mei',200,30,236],['pip',104,268,336]],bubR:'16px'},
+  bus:{sub:'Làm quen · 4/6 · Bus 45',cast:[['bea',180,104,246]],bubR:'16px'}
+};
+const CS=[
+  {id:'C1',label:'Chapter 1 · Linh first, then the task card',scn:'door',spk:'linh',line:"Hi! I'm Linh, from next door.",lineVi:'Chào! Mình là Linh, nhà bên cạnh.',task:'Linh nói trước. Rồi bạn đọc to thẻ bên dưới.',cards:[['Hi, Linh!','Chào Linh!']],mic:'turn'},
+  {id:'C2',label:'A passed turn · the card ticks, Pip copies you',scn:'door',spk:'linh',line:"Hi! I'm Linh, from next door.",lineVi:'Chào! Mình là Linh, nhà bên cạnh.',cards:[['Hi, Linh!','Chào Linh!']],passed:true,you:'Hi, Linh!',pip:'Hi! Hi, Linh!',mic:'pip',moods:{linh:'happy',pip:'excited'}},
+  {id:'C3',label:'Turn 2 · the say-this card, from the start',scn:'door',spk:'linh',line:'Nice to meet you, Lan!',lineVi:'Rất vui được gặp bạn, Lan!',showVi:true,cards:[['Nice to meet you, too.','Mình cũng rất vui được gặp bạn.']],mic:'turn'},
+  {id:'C4',label:'After one try · "Bỏ qua" appears',scn:'door',spk:'linh',line:'Nice to meet you, Lan!',lineVi:'Rất vui được gặp bạn, Lan!',cards:[['Nice to meet you, too.','Mình cũng rất vui được gặp bạn.']],you:'Nice to… meet…',skip:true,mic:'turn',moods:{linh:'listen',pip:'listen'}},
+  {id:'C5',label:"Two cards · chapter 5, Mei's café",scn:'cafe',spk:'mei',line:'Tea or coffee, Lan?',lineVi:'Trà hay cà phê, Lan?',cards:[['Tea, please.','Cho mình trà.'],['Coffee, please.','Cho mình cà phê.']],mic:'turn'},
+  {id:'C6',label:'A new kind of task · chapter 4, Bus 45',scn:'bus',spk:'bea',line:"Hop on, love! This is bus forty-five.",lineVi:'Lên xe đi cháu! Đây là xe bốn mươi lăm.',task:'Nghe số, rồi chọn thẻ và đọc to.',cards:[['Thanks! Bus 45.','Cảm ơn! Xe 45.'],['Thanks! Bus 54.','Cảm ơn! Xe 54.']],mic:'turn',slow:true}
+];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {cs:[]};
+    const {b1,b2,b3}=K.blinkers(this.state.bt), bl=[b1,b2,b3];
+    const scene=k=>k==='cafe'?K.sc('cafeWarm',390,844,{t:K.tk(250)}):k==='bus'?K.sc('bus',390,844,{}):K.h(K.Cv,{fn:'s_burrowDay1',w:390,hh:844,o:{t:K.tk(250)}});
+    const front=k=>k==='cafe'?K.sc('cafeFront',390,844,{}):k==='bus'?K.sc('bus',390,844,{layer:'front'}):null;
+    const MIC={turn:{bg:'#EFA3F4',bd:'#17131C',anim:'yglow 1.6s ease-in-out infinite',bar:'#17131C',barA:'none',label:'Lượt của bạn · giữ để nói'},
+      pip:{bg:'#FFFFFF',bd:'#D3CCDC',anim:'none',bar:'#D3CCDC',barA:'none',label:'Pip đang nói'}};
+    return {
+      cs:CS.map((s,si)=>{ const S=SCN[s.scn], w=WHO[s.spk], two=s.cards.length>1;
+        return {id:s.id,label:s.label,bg:scene(s.scn),bgY:s.scn==='door'?'-150px':'0px',front:front(s.scn),sub:S.sub,bubR:S.bubR,who:w[0],topFace:K.fc(w[1],30,'happy',w[2]),
+          line:s.line,lineVi:s.lineVi,showVi:!!s.showVi,tapHint:!s.showVi,hasTask:!!s.task,task:s.task||'',hasYou:!!s.you,you:s.you||'',hasPip:!!s.pip,pipSays:s.pip||'',skip:!!s.skip,
+          slowBg:'rgba(255,255,255,.72)',cols:two?'1fr 1fr':'1fr',mic:MIC[s.mic],
+          cards:s.cards.map(([en,vi])=>({en,vi,passed:!!s.passed,kick:s.passed?'BẠN ĐÃ NÓI':two?'CHỌN · ĐỌC TO':'ĐỌC TO',bg:s.passed?'#D7F7E2':'#FFFFFF',anim:s.passed?'ysoft .6s .2s ease-out both':'none',fs:two?'17px':'22px'})),
+          cast:S.cast.map(([who,size,left,top],i)=>({left:left+'px',top:top+'px',el:K.cr(who==='pip'?'redpanda':WHO[who][1],{size,mood:(s.moods&&s.moods[who])||(who===s.spk?'happy':'listen'),blink:bl[(si+i)%3],k:'c'+si+who})}))}; })
+    };
+  }
+}
+</script>
+</body>
+</html>

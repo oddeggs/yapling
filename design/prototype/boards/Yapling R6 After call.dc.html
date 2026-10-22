@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R6 · Visitor after-call card</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes ytype{0%{letter-spacing:-0.2em;opacity:0}60%{letter-spacing:-0.04em;opacity:1}100%{letter-spacing:-0.06em}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#FFE48A;border:2px solid #17131C"></span>Yapling · Round 6 · Settling in · 9</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">What you <span style="background:#5FD98A;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">said</span>, as stickers</div>
+      <div style="font-size:17px;font-weight:700;max-width:900px;line-height:1.35;color:#3E3646">The Visitor after-call card. Your own sentences come back as stickers, with the chapter's seed packet and a one-tap "Vừa sức / Khó quá". No score and no fixes.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R6 Burrow.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ Burrow</a>
+      <a href="Yapling R6 Flow.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Flow strip</a>
+      <a href="Yapling R6 Stage up.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · Stage-up ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ as }}" as="a" hint-placeholder-count="3">
+      <div data-screen-label="{{ a.id }} After-call card" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ a.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ a.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFF7EE;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+
+          <div style="position:absolute;top:96px;left:22px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700;color:#5D5366">Làm quen · 1/6 · Hello</span><span style="font-size:54px;font-weight:900;letter-spacing:-0.06em;line-height:1.15;animation:ytype 1s ease-out both">Xong rồi!</span></div>
+          <div style="position:absolute;top:84px;right:22px;width:84px;height:84px;border-radius:24px;overflow:hidden;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;transform:rotate(6deg);box-sizing:border-box;animation:ypop .6s .3s ease-out both">{{ linhSticker }}</div>
+
+          <div style="position:absolute;top:196px;left:16px;right:16px;display:flex;flex-direction:column;gap:12px">
+            <span style="font-size:13px;font-weight:800">Bạn đã nói được:</span>
+            <div style="display:flex;flex-wrap:wrap;gap:14px 12px;padding:4px 4px 0">
+              <span style="padding:8px 14px;border-radius:14px;background:#EFA3F4;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;font-size:24px;font-weight:900;letter-spacing:-0.04em;rotate:-5deg;animation:ypop .5s .2s ease-out both">Hi!</span>
+              <span style="padding:8px 14px;border-radius:14px;background:#CFF0FD;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;font-size:24px;font-weight:900;letter-spacing:-0.04em;rotate:4deg;animation:ypop .5s .45s ease-out both">I'm Lan.</span>
+              <span style="padding:8px 14px;border-radius:14px;background:#D7F7E2;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;font-size:24px;font-weight:900;letter-spacing:-0.04em;rotate:-2deg;animation:ypop .5s .7s ease-out both">Nice to meet you, too.</span>
+            </div>
+          </div>
+
+          <div style="position:absolute;top:398px;left:16px;right:16px;display:flex;align-items:center;gap:12px;padding:12px 14px 12px 10px;border-radius:20px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;animation:yin .4s .9s ease-out both">
+            <div style="width:54px;height:72px;flex:none">{{ seed }}</div>
+            <div style="display:flex;flex-direction:column;gap:2px;flex:1"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">GÓI HẠT · CHƯƠNG 1</span><span style="font-size:17px;font-weight:800;line-height:1.25">Nice to meet you</span><span style="font-family:'Kithfield Hand',cursive;font-size:16px;line-height:1.22;color:#5B4A8C">Rất vui được gặp bạn</span><span style="font-size:12px;font-weight:600;color:#5D5366;margin-top:2px">Nói lại vào hôm khác để nó nảy mầm.</span></div>
+          </div>
+
+          <div style="position:absolute;top:530px;left:16px;right:16px;display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:13px;font-weight:800;padding-left:4px">Cuộc gọi này thế nào?</span>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+              <button style="height:50px;border-radius:25px;border:{{ a.ok.bd }};background:{{ a.ok.bg }};box-shadow:{{ a.ok.sh }};font:800 16px Lexend,sans-serif;color:#17131C;cursor:pointer">Vừa sức</button>
+              <button style="height:50px;border-radius:25px;border:{{ a.hard.bd }};background:{{ a.hard.bg }};box-shadow:{{ a.hard.sh }};font:800 16px Lexend,sans-serif;color:#17131C;cursor:pointer">Khó quá</button>
+            </div>
+            <sc-if value="{{ a.hasReply }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;padding:2px 4px;animation:yin .3s ease-out both"><span style="width:28px;height:28px;border-radius:14px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ linhFace }}</span><span style="font-family:'Kithfield Hand',cursive;font-size:18px;line-height:1.22">{{ a.reply }}</span></div></sc-if>
+          </div>
+
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+            <div style="display:flex;align-items:center;gap:10px;padding:0 6px"><span style="position:relative;width:46px;height:38px;border-radius:4px;background:#F2CFA8;border:2.5px solid #17131C;box-sizing:border-box;flex:none"><span style="position:absolute;top:-10px;left:-4px;width:24px;height:10px;background:#E6BE93;border:2.5px solid #17131C;border-radius:2px;transform:rotate(-24deg);transform-origin:100% 100%"></span></span><span style="font-size:14px;font-weight:700;flex:1">Thùng "Hello" đã được dỡ trong hang</span></div>
+            <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Về hang</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const AS=[
+  {id:'A1',label:'Chapter 1 done · nothing picked yet',pick:0},
+  {id:'A2',label:'Tapped "Vừa sức"',pick:1,reply:'Tuyệt! Linh sẽ giữ nhịp này nhé.'},
+  {id:'A3',label:'Tapped "Khó quá"',pick:2,reply:'Lần sau Linh nói chậm hơn, từng bước một.'}
+];
+class Component extends DCLogic {
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {as:[]};
+    const chip=(on,c)=>on?{bg:c,bd:'3px solid #17131C',sh:'0 4px 0 #17131C'}:{bg:'#FFFFFF',bd:'1.5px solid rgba(23,19,28,.16)',sh:'none'};
+    return {
+      linhSticker:K.fc('pangolin',84,'happy','#CFF0FD'), linhFace:K.fc('pangolin',28,'happy','#D7F7E2'), seed:K.obj('seed',0,'acs',54),
+      as:AS.map(s=>({id:s.id,label:s.label,ok:chip(s.pick===1,'#5FD98A'),hard:chip(s.pick===2,'#EFA3F4'),hasReply:!!s.reply,reply:s.reply||''}))
+    };
+  }
+}
+</script>
+</body>
+</html>

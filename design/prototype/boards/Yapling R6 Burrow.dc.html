@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R6 · The burrow during Settling in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes ysp{0%{transform:scale(0) rotate(0);opacity:0}40%{transform:scale(1.2) rotate(20deg);opacity:1}100%{transform:scale(.8) rotate(45deg);opacity:0}}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yletter{0%{transform:translate(-40px,-4px) rotate(-8deg);opacity:0}20%{opacity:1}70%{transform:translate(18px,0) rotate(0)}100%{transform:translate(30px,0) rotate(0);opacity:0}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#FFE48A;border:2px solid #17131C"></span>Yapling · Round 6 · Settling in · 3</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">The room <span style="background:#FFE48A;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">fills</span> as you learn</div>
+      <div style="font-size:17px;font-weight:700;max-width:960px;line-height:1.35;color:#3E3646">The day-one burrow, still in boxes. Each finished chapter unpacks one box onto a shelf. After two chapters in a day the card suggests a rest. After chapter 6 it's dusk, and the letter goes under Mei's café door.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R6 Visitor card.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ Visitor card</a>
+      <a href="Yapling R6 Flow.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Flow strip</a>
+      <a href="Yapling R6 Call.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · The call ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ bs }}" as="b" hint-placeholder-count="4">
+      <div data-screen-label="{{ b.id }} Burrow" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ b.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ b.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F9DAFB;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ b.scene }}</div>
+          <div style="position:absolute;inset:0;background:{{ b.tint }}"></div>
+
+          <div style="position:absolute;left:18px;top:400px;width:190px;height:10px;border-radius:3px;background:#F2CFA8;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;box-sizing:border-box;z-index:1"></div>
+          <div style="position:absolute;left:262px;top:196px;width:112px;height:10px;border-radius:3px;background:#F2CFA8;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;box-sizing:border-box;z-index:1"></div>
+          <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="2"><div style="position:absolute;left:{{ it.x }};top:{{ it.y }};width:44px;height:59px;z-index:1;transform-origin:50% 100%;animation:{{ it.anim }}">{{ it.el }}<sc-if value="{{ it.fresh }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-14px;left:28px;font-size:20px;color:#EFA3F4;animation:ysp 1.2s ease-out infinite">✦</span><span style="position:absolute;top:-4px;left:-8px;font-size:14px;color:#22BFF2;animation:ysp 1.2s .4s ease-out infinite">✦</span></sc-if></div></sc-for>
+
+          <sc-for list="{{ b.boxes }}" as="x" hint-placeholder-count="5"><div style="position:absolute;left:{{ x.x }};top:{{ x.y }};width:76px;height:54px;border-radius:4px;background:#F2CFA8;border:3px solid #17131C;box-shadow:3px 4px 0 #17131C;box-sizing:border-box;transform:rotate({{ x.r }});z-index:2"><span style="position:absolute;left:29px;top:-3px;width:12px;height:20px;background:#FFFDF6;border-left:2px solid #17131C;border-right:2px solid #17131C"></span><span style="position:absolute;left:0;right:0;bottom:3px;text-align:center;font-family:'Kithfield Hand',cursive;font-size:15px;line-height:1.15">{{ x.t }}</span></div></sc-for>
+
+          <div style="position:absolute;left:24px;top:464px;z-index:3">{{ b.pip }}</div>
+
+          <sc-if value="{{ b.dusk }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:96px;left:44px;width:302px;height:226px;border-radius:151px 151px 10px 10px;border:6px solid #17131C;overflow:hidden;box-shadow:0 8px 0 #17131C;z-index:5;animation:ypop .6s ease-out both;background:#3B3160">
+              <div style="position:absolute;left:1px;top:6px;opacity:.85;filter:hue-rotate(-20deg) brightness(.62) saturate(1.3)">{{ duskArt }}</div>
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(239,163,244,.35),rgba(43,30,80,.35))"></div>
+              <div style="position:absolute;left:136px;top:162px;width:46px;height:12px;background:#FFFDF6;border:2px solid #17131C;border-radius:2px;animation:yletter 3.2s 1s ease-in-out infinite"></div>
+              <div style="position:absolute;left:0;right:0;top:108px;height:6px;background:#17131C"></div><div style="position:absolute;top:0;bottom:0;left:145px;width:6px;background:#17131C"></div>
+            </div>
+            <div style="position:absolute;top:440px;left:150px;right:16px;display:flex;flex-direction:column;gap:3px;padding:11px 14px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;z-index:5;animation:yin .4s .6s ease-out both">
+              <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800">Pip<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px;white-space:nowrap">AI</span></span>
+              <span style="font-size:16px;font-weight:700;line-height:1.32">Look! Someone's pushing a letter under the café door…</span>
+              <span style="font-family:'Kithfield Hand',cursive;font-size:16px;line-height:1.25;color:#5B4A8C;border-top:2px dashed rgba(23,19,28,.2);padding-top:4px">Nhìn kìa! Có ai đang nhét thư dưới cửa quán…</span>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;top:58px;left:14px;display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 5px;border-radius:20px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:6"><span style="width:30px;height:30px;border-radius:15px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ pipFace }}</span><span style="font-size:14px;font-weight:800">Hang của bạn</span><span style="font-size:12px;font-weight:600;color:#5D5366;white-space:nowrap">{{ b.when }}</span></div>
+
+          <sc-if value="{{ b.card }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:16px;border-radius:40px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.66);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:6;animation:yup .5s cubic-bezier(.2,.9,.25,1) both">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:62px;height:62px;flex:none;border-radius:18px;overflow:hidden;border:3px solid #17131C;box-shadow:2px 4px 0 #17131C;transform:rotate(-5deg);box-sizing:border-box">{{ linhSticker }}</div>
+                <div style="display:flex;flex-direction:column;gap:1px;flex:1;min-width:0"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">{{ b.kicker }}</span><span style="font-size:24px;font-weight:800;letter-spacing:-0.04em;line-height:1.2">{{ b.title }}</span><span style="font-size:13px;font-weight:600;color:#3E3646;line-height:1.3">{{ b.sub }}</span></div>
+                <button aria-label="Danh sách Làm quen" style="width:46px;height:46px;flex:none;border-radius:23px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11" fill="none" stroke="#17131C" stroke-width="2.5" stroke-linecap="round"></path><circle cx="4.5" cy="6" r="1.6" fill="#17131C"></circle><circle cx="4.5" cy="12" r="1.6" fill="#17131C"></circle><circle cx="4.5" cy="18" r="1.6" fill="#17131C"></circle></svg></button>
+              </div>
+              <div style="display:flex;gap:5px"><sc-for list="{{ b.segs }}" as="s" hint-placeholder-count="6"><span style="flex:1;height:9px;border-radius:5px;background:{{ s.bg }};border:2px solid #17131C;box-sizing:border-box"></span></sc-for></div>
+              <sc-if value="{{ b.one }}" hint-placeholder-val="{{ true }}">
+                <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">{{ b.cta }}</button>
+              </sc-if>
+              <sc-if value="{{ b.two }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:10px">
+                  <button style="flex:1.4;height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Để mai</button>
+                  <button style="flex:1;height:56px;border-radius:28px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.85);color:#17131C;font:800 16px Lexend,sans-serif;cursor:pointer">Làm tiếp</button>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ b.list }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:rgba(23,19,28,.26);z-index:8"></div>
+            <div style="position:absolute;left:6px;right:6px;top:236px;bottom:0;border-radius:40px 40px 0 0;padding:10px 14px 20px;box-sizing:border-box;display:flex;flex-direction:column;gap:8px;background:rgba(251,250,253,.94);backdrop-filter:blur(30px) saturate(1.8);-webkit-backdrop-filter:blur(30px) saturate(1.8);border:1px solid rgba(255,255,255,.95);box-shadow:inset 0 1.5px 0 #fff,0 -10px 30px rgba(46,20,70,.16);z-index:9;animation:yup .45s cubic-bezier(.2,.9,.25,1) both">
+              <div style="align-self:center;width:40px;height:5px;border-radius:3px;background:#D3CCDC"></div>
+              <div style="display:flex;align-items:baseline;gap:8px;padding:0 6px"><span style="font-size:26px;font-weight:800;letter-spacing:-0.045em">Làm quen</span><span style="font-size:13px;font-weight:700;color:#5D5366">Settling in · 3/6</span></div>
+              <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 8px 6px 6px;border-radius:18px;background:{{ c.rowBg }};border:{{ c.rowBd }};box-sizing:border-box">
+                  <span style="width:30px;height:30px;border-radius:15px;background:{{ c.nBg }};border:2.5px {{ c.nStyle }} #17131C;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box">{{ c.n }}</span>
+                  <span style="width:34px;height:34px;border-radius:17px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none;opacity:{{ c.op }}">{{ c.face }}</span>
+                  <span style="display:flex;flex-direction:column;flex:1;min-width:0;opacity:{{ c.op }}"><span style="font-size:15.5px;font-weight:800;line-height:1.25">{{ c.en }}</span><span style="font-family:'Kithfield Hand',cursive;font-size:15px;line-height:1.22;color:#5B4A8C">{{ c.vi }}</span></span>
+                  <sc-if value="{{ c.done }}" hint-placeholder-val="{{ false }}"><button style="display:flex;align-items:center;gap:5px;height:34px;padding:0 11px 0 9px;border-radius:17px;border:1.5px solid rgba(23,19,28,.14);background:#FFFFFF;font:800 12.5px Lexend,sans-serif;color:#17131C;cursor:pointer;white-space:nowrap"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v5h5" fill="none" stroke="#17131C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>Chơi lại</button></sc-if>
+                  <sc-if value="{{ c.now }}" hint-placeholder-val="{{ false }}"><button style="height:36px;padding:0 14px;border-radius:18px;border:2.5px solid #17131C;background:#EFA3F4;box-shadow:0 3px 0 #17131C;font:800 13px Lexend,sans-serif;color:#17131C;cursor:pointer;white-space:nowrap">Tiếp</button></sc-if>
+                  <sc-if value="{{ c.todo }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:700;color:#5D5366;white-space:nowrap;padding-right:4px">2–3 phút</span></sc-if>
+                </div>
+              </sc-for>
+              <button style="margin-top:auto;height:52px;border-radius:26px;border:1.5px solid rgba(23,19,28,.14);background:#FFFFFF;color:#17131C;font:800 15px Lexend,sans-serif;cursor:pointer">Vào truyện luôn</button>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:10"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:11"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:11"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CH=[['Hello','Chào hỏi','pangolin'],['Boxes','Dỡ thùng','pangolin'],['Again, please','Nói lại nhé','pangolin'],['Bus 45','Xe buýt 45 · với Bea','bulldog'],["Mei's café",'Quán của Mei','otter'],['About me','Về mình','pangolin']];
+const BOXPOS=[[292,438,'4deg'],[214,438,'-3deg'],[282,492,'-2deg'],[204,492,'3deg'],[274,546,'2deg'],[196,546,'-2deg']];
+const SLOT=[[22,342],[68,342],[114,342],[160,342],[268,138],[320,138]];
+const ITEM=[['plant',1,{}],['jar',1,{fill:'#FFD66B'}],['desk',1,{kind:'mug'}],['mail',1,{}],['desk',1,{kind:'notes'}],['plant',2,{lid:'#EFA3F4'}]];
+const BS=[
+  {id:'B1',label:'Chapter 1 done · one box unpacked',done:1,fresh:0,when:'Ngày 1 · chiều',kicker:'LÀM QUEN · 2/6',title:'Boxes',sub:'Linh mang thùng sang giúp bạn dọn.',one:true,cta:'Gặp Linh · 3 phút',card:true,mood:'happy'},
+  {id:'B2',label:'Two chapters today · suggest a rest',done:3,fresh:2,when:'Ngày 2 · tối',kicker:'LÀM QUEN · 4/6 · NGÀY MAI?',title:'Bus 45',sub:'Hôm nay bạn xong hai chương rồi. Nghỉ chút nhé?',two:true,card:true,mood:'sleepy'},
+  {id:'B3',label:'The Settling-in list · replay any',done:3,fresh:-1,when:'Ngày 3 · sáng',list:true,mood:'happy'},
+  {id:'B4',label:'After chapter 6 · dusk, the letter',done:6,fresh:5,when:'Ngày 4 · hoàng hôn',dusk:true,mood:'surprised',tod:'evening',card:true,one:true,kicker:'LÀM QUEN · XONG 6/6',title:'Settled in!',sub:'Hang đã đầy đồ. Ngày mai, truyện bắt đầu.',cta:'Chúc ngủ ngon'}
+];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {bs:[],chapters:[]};
+    const {b1,b2,b3}=K.blinkers(this.state.bt);
+    const done3=3;
+    return {
+      pipFace:K.fc('redpanda',30,'happy','#F9DAFB'), linhSticker:K.fc('pangolin',62,'happy','#CFF0FD'), duskArt:K.sc('cafeWarm',300,220,{t:K.tk(300)}),
+      chapters:CH.map(([en,vi,sp],i)=>{ const d=i<done3, now=i===done3, todo=i>done3;
+        return {n:d?'✓':String(i+1),en,vi,done:d,now,todo,face:K.fc(sp,34,'happy',sp==='otter'?'#FFE9C2':sp==='bulldog'?'#D7F7E2':'#CFF0FD'),
+          nBg:d?'#5FD98A':now?'#EFA3F4':'#FFFFFF',nStyle:todo?'dashed':'solid',rowBg:now?'#FFFFFF':'transparent',rowBd:now?'2.5px solid #17131C':'2.5px solid transparent',op:todo?'.6':'1'}; }),
+      bs:BS.map((s,si)=>Object.assign({},s,{one:!!s.one,two:!!s.two,card:!!s.card,list:!!s.list,dusk:!!s.dusk,
+        scene:K.sc('burrow2',390,844,{t:K.tk(250),tod:s.tod}),
+        tint:s.dusk?'linear-gradient(180deg,rgba(59,49,96,.28),rgba(239,163,244,.12) 60%,rgba(59,49,96,.22))':'transparent',
+        segs:CH.map((_,i)=>({bg:i<s.done?'#5FD98A':i===s.done?'#EFA3F4':'#FFFFFF'})),
+        boxes:BOXPOS.slice(s.done).map(([x,y,r],j)=>({x:x+'px',y:y+'px',r,t:CH[s.done+j][0].split(',')[0]})),
+        items:ITEM.slice(0,s.done).map(([fam,stage,ex],i)=>({x:SLOT[i][0]+'px',y:SLOT[i][1]+'px',fresh:i===s.fresh,anim:i===s.fresh?'ypop .75s .3s cubic-bezier(.34,1.56,.64,1) both':'none',el:K.obj(fam,stage,'bi'+si+i,44,ex)})),
+        pip:K.cr('redpanda',{size:120,mood:s.mood,blink:[b1,b2,b3,b1][si],k:'bp'+si})}))
+    };
+  }
+}
+</script>
+</body>
+</html>

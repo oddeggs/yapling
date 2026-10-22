@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R6 · The level question</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes ypeek{0%,8%{transform:translateX(120px) rotate(-10deg)}26%,100%{transform:translateX(0) rotate(-10deg)}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#FFE48A;border:2px solid #17131C"></span>Yapling · Round 6 · Settling in · 1</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">The <span style="background:#5FD98A;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">level</span> question</div>
+      <div style="font-size:17px;font-weight:700;max-width:900px;line-height:1.35;color:#3E3646">A new onboarding step after the AI explainer, before picking a roommate. Two big chips, no test. Linh peeks in to say it isn't a quiz.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R6 Flow.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Flow strip</a>
+      <a href="Yapling R6 Visitor card.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · Visitor card ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ qs }}" as="q" hint-placeholder-count="3">
+      <div data-screen-label="{{ q.id }} Level question" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ q.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ q.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:-24px;filter:blur(10px)">{{ bg }}</div>
+          <div style="position:absolute;inset:0;background:rgba(251,250,253,.35)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:5"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:6"></div>
+
+          <div style="position:absolute;top:66px;left:24px;display:flex;gap:5px;align-items:center" aria-label="Bước 3 trên 5">
+            <span style="width:22px;height:7px;border-radius:4px;background:#17131C"></span><span style="width:22px;height:7px;border-radius:4px;background:#17131C"></span><span style="width:34px;height:9px;border-radius:5px;background:#EFA3F4;border:2px solid #17131C;box-sizing:border-box"></span><span style="width:22px;height:7px;border-radius:4px;background:#D3CCDC"></span><span style="width:22px;height:7px;border-radius:4px;background:#D3CCDC"></span>
+          </div>
+
+          <div style="position:absolute;top:126px;left:262px;animation:ypeek 1.6s cubic-bezier(.2,.8,.3,1) both;transform-origin:50% 100%">{{ q.linh }}</div>
+          <div style="position:absolute;top:98px;left:18px;width:232px;display:flex;flex-direction:column;gap:3px;padding:11px 14px;border-radius:22px 22px 6px 22px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;box-sizing:border-box;z-index:3;animation:yin .4s .5s ease-out both">
+            <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800">Linh<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px;white-space:nowrap">AI</span></span>
+            <span style="font-size:16.5px;font-weight:700;line-height:1.32">{{ q.en }}</span>
+            <span style="font-family:'Kithfield Hand',cursive;font-size:17px;line-height:1.25;color:#5B4A8C;border-top:2px dashed rgba(23,19,28,.2);padding-top:4px">{{ q.vi }}</span>
+          </div>
+
+          <div style="position:absolute;left:8px;right:8px;top:318px;bottom:8px;border-radius:42px;padding:22px 16px 16px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.62);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+            <span style="font-size:11.5px;font-weight:800;letter-spacing:.06em;color:#5D5366;padding:0 4px">TRƯỚC KHI DỌN VÀO</span>
+            <span style="font-size:28px;font-weight:800;letter-spacing:-0.045em;line-height:1.18;padding:0 4px">Tiếng Anh của bạn bây giờ thế nào?</span>
+            <span style="font-size:14px;font-weight:600;line-height:1.35;color:#3E3646;padding:0 4px">Chọn câu gần với bạn nhất. Đổi lại lúc nào cũng được.</span>
+            <button style="display:flex;align-items:center;gap:12px;min-height:96px;padding:12px 14px 12px 10px;border-radius:24px;border:{{ q.a.bd }};background:{{ q.a.bg }};box-shadow:{{ q.a.sh }};font-family:inherit;color:#17131C;text-align:left;cursor:pointer;margin-top:4px">
+              <span style="width:56px;height:75px;flex:none">{{ seed }}</span>
+              <span style="display:flex;flex-direction:column;gap:3px;flex:1"><span style="font-size:20px;font-weight:800;letter-spacing:-0.03em">Mình mới bắt đầu</span><span style="font-size:13.5px;font-weight:600;color:#3E3646;line-height:1.35">chào hỏi, nói tên, vài từ</span></span>
+              <span style="width:28px;height:28px;border-radius:14px;border:2.5px solid #17131C;background:{{ q.a.dot }};color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box">{{ q.a.tick }}</span>
+            </button>
+            <button style="display:flex;align-items:center;gap:12px;min-height:96px;padding:12px 14px 12px 10px;border-radius:24px;border:{{ q.b.bd }};background:{{ q.b.bg }};box-shadow:{{ q.b.sh }};font-family:inherit;color:#17131C;text-align:left;cursor:pointer">
+              <span style="width:56px;height:75px;flex:none">{{ sprout }}</span>
+              <span style="display:flex;flex-direction:column;gap:3px;flex:1"><span style="font-size:20px;font-weight:800;letter-spacing:-0.03em">Mình nói được một chút</span><span style="font-size:13.5px;font-weight:600;color:#3E3646;line-height:1.35">giới thiệu bản thân, gọi món</span></span>
+              <span style="width:28px;height:28px;border-radius:14px;border:2.5px solid #17131C;background:{{ q.b.dot }};color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box">{{ q.b.tick }}</span>
+            </button>
+            <span style="min-height:36px;font-size:13px;font-weight:700;line-height:1.35;color:#5D5366;padding:2px 6px 0">{{ q.note }}</span>
+            <button style="height:56px;border-radius:28px;border:3px solid {{ q.cta.bd }};background:{{ q.cta.bg }};color:{{ q.cta.fg }};font:800 17px Lexend,sans-serif;box-shadow:{{ q.cta.sh }};margin-top:auto;cursor:pointer">Tiếp tục</button>
+          </div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:7"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const QS=[
+  {id:'Q1',label:'Linh peeks in · nothing picked yet',sel:0,mood:'wave',en:"No quiz, promise! It just helps me help you.",vi:'Không phải bài kiểm tra đâu! Chỉ để mình giúp bạn.',note:''},
+  {id:'Q2',label:'Picked "Mình mới bắt đầu"',sel:1,mood:'warm',en:"Great! I'll help you settle in first.",vi:'Tuyệt! Mình sẽ giúp bạn làm quen trước.',note:'Linh sẽ giúp bạn làm quen trước: sáu cuộc gọi ngắn, mỗi cuộc 2–3 phút.'},
+  {id:'Q3',label:'Picked "Mình nói được một chút"',sel:2,mood:'excited',en:"Nice! I'm right next door if you need me.",vi:'Hay quá! Cần gì thì mình ở ngay nhà bên.',note:'Bạn sẽ vào thẳng truyện. Muốn làm quen với Linh thì mở mục Tôi.'}
+];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {qs:[]};
+    const {b1,b2,b3}=K.blinkers(this.state.bt);
+    const chip=on=>({bg:on?'#EFA3F4':'rgba(255,255,255,.85)',bd:on?'3px solid #17131C':'1.5px solid rgba(23,19,28,.14)',sh:on?'0 4px 0 #17131C':'none',dot:on?'#17131C':'#FFFFFF',tick:on?'✓':''});
+    return {
+      bg:K.h(K.Cv,{fn:'s_burrowDay1',w:438,hh:892,o:{}}),
+      seed:K.obj('seed',0,'lvs',56), sprout:K.obj('plant',1,'lvp',56),
+      qs:QS.map((q,i)=>({id:q.id,label:q.label,en:q.en,vi:q.vi,note:q.note,a:chip(q.sel===1),b:chip(q.sel===2),
+        cta:q.sel?{bg:'#EFA3F4',bd:'#17131C',fg:'#17131C',sh:'0 4px 0 #17131C'}:{bg:'#F1ECF4',bd:'#D3CCDC',fg:'#8A8094',sh:'none'},
+        linh:K.cr('pangolin',{size:150,mood:q.mood,blink:[b1,b2,b3][i],k:'lq'+i})}))
+    };
+  }
+}
+</script>
+</body>
+</html>

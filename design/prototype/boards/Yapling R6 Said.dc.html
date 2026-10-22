@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R6 · What was said</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes yglow{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 6px rgba(239,163,244,.45)}50%{box-shadow:0 4px 0 #17131C,0 0 0 12px rgba(239,163,244,.12)}}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#EFA3F4;border:2px solid #17131C"></span>Yapling · Round 6 · Calls · 7</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">What was <span style="background:#FFE48A;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">said</span></div>
+      <div style="font-size:17px;font-weight:700;max-width:900px;line-height:1.35;color:#3E3646">Testers missed lines when a character said several in a row. The bubble now counts them ("2/3") and you can step back. A pull-up sheet lists every line of the call so far. Any line shows its Vietnamese with a tap, in every call.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R6 Calm.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ No timers</a>
+      <a href="Yapling R6 Too hard.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · Khó quá ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ ws }}" as="c" hint-placeholder-count="3">
+      <div data-screen-label="{{ c.id }} What was said" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ c.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ c.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F9DAFB;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ bg }}</div>
+          <div style="position:absolute;left:30px;top:236px">{{ c.mei }}</div>
+          <div style="position:absolute;left:268px;top:336px">{{ c.pip }}</div>
+          <div style="position:absolute;inset:0;pointer-events:none">{{ front }}</div>
+
+          <div style="position:absolute;top:58px;left:62px;display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 5px;border-radius:20px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16);z-index:4"><span style="width:30px;height:30px;border-radius:15px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ meiFace }}</span><span style="font-size:14px;font-weight:800">Mei</span><span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800;white-space:nowrap">AI</span><span style="font-size:12px;font-weight:600;color:#5D5366;white-space:nowrap">Làm quen · 5/6 · Mei's café</span></div>
+
+          <div style="position:absolute;top:110px;left:16px;right:16px;display:flex;flex-direction:column;gap:3px;padding:10px 10px 11px 15px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;z-index:4">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800">Mei<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px;white-space:nowrap">AI</span></span>
+              <div style="display:flex;align-items:center;gap:2px;padding:2px;border-radius:15px;background:#F1ECF4">
+                <button aria-label="Câu trước" style="width:28px;height:28px;border-radius:14px;border:none;background:{{ c.prevBg }};font:800 15px Lexend,sans-serif;color:{{ c.prevFg }};cursor:pointer;padding:0">‹</button>
+                <span style="font-size:12.5px;font-weight:800;min-width:28px;text-align:center">{{ c.count }}</span>
+                <button aria-label="Câu sau" style="width:28px;height:28px;border-radius:14px;border:none;background:{{ c.nextBg }};font:800 15px Lexend,sans-serif;color:{{ c.nextFg }};cursor:pointer;padding:0">›</button>
+              </div>
+            </div>
+            <span style="font-size:18px;font-weight:700;line-height:1.32;padding-right:6px">{{ c.line }}</span>
+            <sc-if value="{{ c.showVi }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Kithfield Hand',cursive;font-size:18px;line-height:1.25;color:#5B4A8C;border-top:2px dashed rgba(23,19,28,.2);padding-top:4px;animation:yin .3s ease-out both">{{ c.lineVi }}</span></sc-if>
+            <sc-if value="{{ c.tapHint }}" hint-placeholder-val="{{ true }}"><span style="font-size:11px;font-weight:700;opacity:.6">Chạm để xem nghĩa</span></sc-if>
+          </div>
+
+          <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;z-index:6">
+            <button style="align-self:center;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px 8px;border-radius:18px;border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.72);backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 1px 0 #fff,0 6px 16px rgba(46,20,70,.14);font-family:inherit;color:#17131C;cursor:pointer"><span style="width:34px;height:4px;border-radius:2px;background:#B9B0C4"></span><span style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800">Đã nói gì<span style="padding:1px 7px;border-radius:8px;background:#17131C;color:#fff;font-size:11px">5</span></span></button>
+            <div style="display:flex;justify-content:center;gap:8px">
+              <button style="display:flex;align-items:center;gap:6px;height:38px;padding:0 14px 0 11px;border-radius:19px;border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.72);backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 1px 0 #fff,0 6px 16px rgba(46,20,70,.14);font:800 13px Lexend,sans-serif;color:#17131C;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v5h5" fill="none" stroke="#17131C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>Nói lại</button>
+              <button style="display:flex;align-items:center;gap:6px;height:38px;padding:0 14px 0 11px;border-radius:19px;border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.72);backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 1px 0 #fff,0 6px 16px rgba(46,20,70,.14);font:800 13px Lexend,sans-serif;color:#17131C;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 17a8.5 8.5 0 0 1 17 0" fill="none" stroke="#17131C" stroke-width="2.6" stroke-linecap="round"></path><path d="M12 17L7.5 11.5" fill="none" stroke="#17131C" stroke-width="2.6" stroke-linecap="round"></path></svg>Chậm thôi</button>
+            </div>
+            <div style="height:120px;border-radius:60px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <button style="height:50px;width:92px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 14px Lexend,sans-serif;cursor:pointer">Chờ chút</button>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+                <div style="position:relative;width:92px;height:92px;display:flex;align-items:center;justify-content:center">
+                  <svg width="92" height="92" viewBox="0 0 92 92" style="position:absolute;inset:0" aria-hidden="true"><circle cx="46" cy="46" r="42" fill="none" stroke="rgba(23,19,28,.12)" stroke-width="7"></circle></svg>
+                  <button aria-label="Giữ để nói" style="position:relative;width:70px;height:70px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;animation:yglow 1.6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box;cursor:pointer"><span style="width:5px;height:26px;border-radius:3px;background:#17131C"></span><span style="width:5px;height:26px;border-radius:3px;background:#17131C"></span><span style="width:5px;height:26px;border-radius:3px;background:#17131C"></span></button>
+                </div>
+                <span style="font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap">Lượt của bạn · giữ để nói</span>
+              </div>
+              <button style="height:50px;width:92px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 14px Lexend,sans-serif;cursor:pointer">Rời đi</button>
+            </div>
+          </div>
+
+          <sc-if value="{{ c.sheet }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:rgba(23,19,28,.28);z-index:7"></div>
+            <div style="position:absolute;left:6px;right:6px;top:150px;bottom:0;border-radius:40px 40px 0 0;padding:10px 14px 22px;box-sizing:border-box;display:flex;flex-direction:column;gap:8px;background:rgba(251,250,253,.95);backdrop-filter:blur(30px) saturate(1.8);-webkit-backdrop-filter:blur(30px) saturate(1.8);border:1px solid rgba(255,255,255,.95);box-shadow:inset 0 1.5px 0 #fff,0 -10px 30px rgba(46,20,70,.16);z-index:8;animation:yup .45s cubic-bezier(.2,.9,.25,1) both">
+              <div style="align-self:center;width:40px;height:5px;border-radius:3px;background:#D3CCDC"></div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:0 6px"><span style="font-size:26px;font-weight:800;letter-spacing:-0.045em">Đã nói gì</span><span style="font-size:12.5px;font-weight:700;color:#5D5366">Cuộc gọi với Mei · 02:10</span></div>
+              <span style="font-size:12.5px;font-weight:600;color:#5D5366;padding:0 6px">Chạm một câu để xem tiếng Việt.</span>
+              <sc-for list="{{ lines }}" as="l" hint-placeholder-count="5">
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 8px 9px 8px;border-radius:18px;background:{{ l.bg }};border:{{ l.bd }};box-sizing:border-box">
+                  <span style="width:36px;height:36px;border-radius:12px;overflow:hidden;border:2.5px solid #17131C;box-sizing:border-box;flex:none;transform:rotate(-4deg);background:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900">{{ l.face }}</span>
+                  <span style="display:flex;flex-direction:column;gap:1px;flex:1;min-width:0"><span style="font-size:11px;font-weight:800;letter-spacing:.03em;color:#5D5366">{{ l.who }}</span><span style="font-size:15.5px;font-weight:700;line-height:1.35">{{ l.en }}</span><sc-if value="{{ l.showVi }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Kithfield Hand',cursive;font-size:16.5px;line-height:1.25;color:#5B4A8C">{{ l.vi }}</span></sc-if></span>
+                  <button aria-label="Nghe lại câu này" style="width:34px;height:34px;border-radius:17px;border:1.5px solid rgba(23,19,28,.14);background:#FFFFFF;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer;padding:0;margin-top:4px"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#17131C" stroke="#17131C" stroke-width="1.5" stroke-linejoin="round"></path><path d="M16.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="#17131C" stroke-width="2.2" stroke-linecap="round"></path></svg></button>
+                </div>
+              </sc-for>
+              <button style="margin-top:auto;height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 16px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Quay lại cuộc gọi</button>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:9"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:10"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:10"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const MEI=[["Oh! You must be Lan.",'Ồ! Chắc bạn là Lan.'],['Linh told me all about you.','Linh kể cho mình nghe về bạn rồi.'],['Sit anywhere you like.','Bạn ngồi đâu cũng được.']];
+const WS=[
+  {id:'W1',label:'Mei says three lines · bubble shows 2/3',at:1,showVi:false,sheet:false},
+  {id:'W2',label:'Stepped back to 1/3 · tapped for Vietnamese',at:0,showVi:true,sheet:false},
+  {id:'W3',label:'Pulled up "Đã nói gì" · the call so far',at:2,showVi:false,sheet:true}
+];
+const LOG=[['pip','Pip',"Hi, Mei! This is Lan. We just moved in.",'Chào Mei! Đây là Lan. Tụi mình mới chuyển đến.'],['you','Bạn',"Hi! I'm Lan.",'Chào! Mình là Lan.'],['mei','Mei',MEI[0][0],MEI[0][1]],['mei','Mei',MEI[1][0],MEI[1][1]],['mei','Mei',MEI[2][0],MEI[2][1]]];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const K=window.YapDC?window.YapDC(React):null; if(!K) return {ws:[],lines:[]};
+    const {b1,b2,b3}=K.blinkers(this.state.bt), bl=[b1,b2,b3];
+    const nav=on=>on?{bg:'#FFFFFF',fg:'#17131C'}:{bg:'transparent',fg:'#B9B0C4'};
+    return {
+      bg:K.sc('cafeWarm',390,844,{t:K.tk(250)}), front:K.sc('cafeFront',390,844,{}), meiFace:K.fc('otter',30,'happy','#FFE9C2'),
+      lines:LOG.map(([w,who,en,vi],i)=>({who,en,vi,showVi:i===3,face:w==='you'?'LAN':K.fc(w==='pip'?'redpanda':'otter',36,'happy',w==='pip'?'#F9DAFB':'#FFE9C2'),
+        bg:w==='you'?'rgba(239,163,244,.22)':i===3?'#FFFFFF':'transparent',bd:i===3?'2px solid #17131C':'2px solid transparent'})),
+      ws:WS.map((s,i)=>{ const p=nav(s.at>0), n=nav(s.at<2);
+        return {id:s.id,label:s.label,sheet:s.sheet,count:(s.at+1)+'/3',line:MEI[s.at][0],lineVi:MEI[s.at][1],showVi:s.showVi,tapHint:!s.showVi,
+          prevBg:p.bg,prevFg:p.fg,nextBg:n.bg,nextFg:n.fg,
+          mei:K.cr('otter',{size:200,mood:'happy',blink:bl[i%3],mouth:s.at===1&&!s.sheet?K.mouthFor(MEI[1][0],(this.state.bt*2)%28):'rest',k:'wm'+i}),
+          pip:K.cr('redpanda',{size:104,mood:'listen',blink:bl[(i+1)%3],k:'wp'+i})}; })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -7,7 +7,7 @@ Source of truth: `design/prototype/` (Claude Design export, 22 Oct 2026). Open a
 | `Yapling Week 1.dc.html` | The clickable first week, day 1 to day 8. Open any step with `?step=<id>`. Shift+F hides the facilitator strip |
 | `Yapling Week 1 Map.dc.html` | Every step and branch on one page |
 | `Yapling Prototype.dc.html` | The earlier hub prototype: town map, incoming call, Me sheet, Plus, voice postcard, end of episode |
-| `boards/*.dc.html` | Rounds 4–5 boards: brand and components, onboarding, home and calls, town, journey, learning, real week, care and errors |
+| `boards/*.dc.html` | Rounds 4–5 boards: brand and components, onboarding, home and calls, town, journey, learning, real week, care and errors. Round 6 (`Yapling R6 *`, 23 Oct 2026): the beginner path and three call fixes |
 | `art/*.js` | Parametric generators for critters, cast, stickers, scenes. Synced into `@yapling/art`; never edit the copies |
 | `audio/` | Recorded lines used by the prototype (copies of `audio/season-1/lines/`) |
 | `fonts/` | Kithfield Hand Bold. Lexend comes from Google Fonts |
@@ -47,3 +47,15 @@ Release 1 is the first week (the learner-test build). Ids are `?step=` values in
 | Learning board: L12–L14 | Listening checkpoint before a move-in | 3 |
 | Town board: T3, T5, T9 | Move-in, time capsule, home-screen widget | 3 |
 | Prototype: town, ring | Town map, incoming call | 2 (map), 3 (incoming call with Live Activity) |
+| R6 Level: Q1–Q3 | The level question in onboarding | 1.1 |
+| R6 Visitor card | Visitor residency card | 1.1 |
+| R6 Burrow | The burrow during Settling in, chapter card, Settling-in list | 1.1 |
+| R6 Call | A Settling-in call: say-this card, two choices, Nói lại / Chậm thôi, task card, Bỏ qua | 1.1 |
+| R6 After call: A1–A3 | Visitor after-call card | 1.1 |
+| R6 Stage up | Stage-up keepsake: Linh hands over the Newcomer card | 1.1 |
+| R6 Too hard | The Khó quá sheet | 1.1 |
+| R6 Me | Me sheet rows for Visitor | 1.1 |
+| R6 Hold | Hold-to-talk ring and retry tips (every call) | 1 (shipped), polish 1.1 |
+| R6 Calm: N1–N3 | No timers while you think (every call) | 1 (shipped) |
+| R6 Said | What was said: paging and the history sheet (every call) | 1 (shipped), polish 1.1 |
+| R6 Flow | Flow strip: level question → Visitor card → chapter 1 → after-call → burrow | 1.1 |
