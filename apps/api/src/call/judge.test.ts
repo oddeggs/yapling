@@ -341,7 +341,7 @@ describe('the request', () => {
   it('gives up at its time budget', async () => {
     upstream.fetch = (_input, init) =>
       new Promise((_resolve, reject) => {
-        init?.signal?.addEventListener('abort', () => reject(init.signal?.reason));
+        init?.signal?.addEventListener('abort', () => reject(new Error('timed out')));
       });
     const start = Date.now();
     expect(await judgeTurn(TURN, { apiKey: 'k', timeoutMs: 150 })).toBeNull();

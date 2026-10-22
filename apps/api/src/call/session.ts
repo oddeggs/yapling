@@ -87,6 +87,7 @@ export class CallSession {
       data,
       director: this.director,
       scene,
+      judgeKey: env.TYPESAFE_API_KEY,
       frames: () => this.frames,
       learner: () => this.learner,
       active: () => this.active,
