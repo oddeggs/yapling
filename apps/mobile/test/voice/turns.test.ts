@@ -90,6 +90,14 @@ describe('the latency meter', () => {
     expect(m.takeLag(4)).toBeNull();
   });
 
+  it('never counts the next recorded beat after the reply as a reaction', () => {
+    const m = new LatencyMeter();
+    m.speechEnded(10_000);
+    expect(m.lineScheduled(5, 'live', 12_000)).toBe(2000);
+    expect(m.lineScheduled(6, 'recorded', 16_780)).toBeNull();
+    expect(m.takeLag(6)).toBeNull();
+  });
+
   it('starts over when the learner speaks again', () => {
     const m = new LatencyMeter();
     m.speechEnded(1000);

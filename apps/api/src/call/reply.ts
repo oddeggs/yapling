@@ -3,6 +3,7 @@ import { speechSettings } from '@yapling/domain';
 import type { Scene, SceneEffect } from '@yapling/story';
 
 import { NO_CONTROL, type Control } from './control';
+import { addSample } from './costs';
 import { replyDirection, type Director, type ReplyPlan } from './director';
 import type { CallData } from './finalize';
 import type { FrameSender } from './frames';
@@ -72,6 +73,11 @@ export class Replies {
   private reply: Reply | null = null;
   /** A correction prompt waiting for the second try. */
   private correction: { targetId: string; original: string } | null = null;
+  /** This turn's recorded reaction and reply streams, to file the phone's lag under each. */
+  private turnStreams: { reaction: number | null; reply: number | null } = {
+    reaction: null,
+    reply: null,
+  };
 
   constructor(private readonly host: ReplyHost) {}
 
@@ -93,7 +99,7 @@ export class Replies {
     if (plan === null) return null;
     const { data } = host;
     const stage = data.learner.stage;
-    const reaction = gated ? pickReaction(plan.speaker, text, data.turns) : null;
+    const reaction = pickReaction(plan.speaker, text, data.turns);
     const direction = replyDirection(plan, stage, data.learner.targets, reaction?.text ?? null);
     const pending = this.learnerLine(text, [], plan.beatId);
     const system = systemFor(plan.speaker, host.scene, data.learner);
@@ -123,8 +129,13 @@ export class Replies {
       learnerLine: -1,
     };
     this.reply = reply;
+    this.turnStreams = { reaction: null, reply: line.streamId };
+    data.awaitingLag = true;
     host.learner()?.closeWindow();
     line.start();
+    // Hold-to-talk answers at once: the recorded reaction plays now, while the reply streams in
+    // (hands-free plays it when the reply is released).
+    if (!gated && reaction) this.sendReaction(reply.plan.speaker, reaction.lineId);
     if (!gated) {
       // Hold-to-talk answers at once: a slow reply tilts the head instead of leaving dead air.
       const slow = setTimeout(() => {
@@ -142,15 +153,29 @@ export class Replies {
     const reply = this.reply;
     if (reply?.line !== line) return;
     const reaction = pickReaction(reply.plan.speaker, line.text, this.host.data.turns);
-    if (reaction) {
-      this.host.frames().send({
-        type: 'play_rec',
-        streamId: this.host.nextStreamId(),
-        lineId: reaction.lineId,
-        character: reply.plan.speaker,
-      });
-    }
+    if (reaction) this.sendReaction(reply.plan.speaker, reaction.lineId);
     if (!line.committed) this.host.thinking(true);
+  }
+
+  private sendReaction(character: CharacterId, lineId: string): void {
+    const streamId = this.host.nextStreamId();
+    this.turnStreams = { ...this.turnStreams, reaction: streamId };
+    this.host.frames().send({ type: 'play_rec', streamId, lineId, character });
+  }
+
+  /**
+   * The phone's lag for a line of this turn: end of the learner's speech → the line heard. Filed
+   * as the reaction's or the reply's, and the turn's first character audio is the first of them.
+   */
+  lag(streamId: number, lagMs: number): void {
+    const { data } = this.host;
+    const { reaction, reply } = this.turnStreams;
+    if (streamId !== reaction && streamId !== reply) return;
+    addSample(data.samples, streamId === reaction ? 'phoneReaction' : 'phoneReply', lagMs);
+    if (data.awaitingLag) {
+      addSample(data.samples, 'phoneLag', lagMs);
+      data.awaitingLag = false;
+    }
   }
 
   private learnerLine(
@@ -195,7 +220,6 @@ export class Replies {
     if (reply.speechEndAt > 0) s.replyOut.push(Date.now() - reply.speechEndAt);
     if (t.llmFirstToken) s.llmFirstToken.push(t.llmFirstToken - t.start);
     if (t.ttsFirstAudio && t.ttsFirstText) s.ttsFirstAudio.push(t.ttsFirstAudio - t.ttsFirstText);
-    data.awaitingLag = true;
     host.newActive(reply.line.streamId, null);
     if (reply.control) this.apply(reply);
   }

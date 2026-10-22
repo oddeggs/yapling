@@ -513,3 +513,36 @@ describe('a slow or failed reply', () => {
     phone.close();
   }, 25_000);
 });
+
+describe('latency', () => {
+  it('plays the reaction at once in hold-to-talk and files the phone’s lag for both lines', async () => {
+    script();
+    const { token } = await newGuest();
+    const phone = await Phone.call(token, { turnMode: 'hold_to_talk' });
+    await beat(phone, 'ask-whats-wrong');
+    await sleep(200);
+    providers.firstTokenDelayMs = 400;
+    const from = phone.frames.length;
+    providers.speech.push("What's wrong?");
+    phone.mic(pcm(1_200, true));
+    phone.send({ type: 'end_turn' });
+    const reaction = await phone.next('play_rec', (p) => p.lineId.startsWith('s1-react-mei'), {
+      from,
+    });
+    const reply = await phone.next('say_start', () => true, { from });
+    expect(phone.frames.indexOf(reaction)).toBeLessThan(phone.frames.indexOf(reply));
+    await phone.next('say_end', () => true, { from });
+    await sleep(300);
+    phone.send({ type: 'hangup' });
+    const ended = await phone.next('ended');
+    const row = await env.DB.prepare('SELECT timings FROM calls WHERE id = ?')
+      .bind(ended.callRecordId)
+      .first<{ timings: string }>();
+    // The test phone reports 900 ms for every line it plays.
+    expect(JSON.parse(row?.timings ?? '{}')).toMatchObject({
+      phoneLag: 900,
+      phoneReaction: 900,
+      phoneReply: 900,
+    });
+  }, 20_000);
+});

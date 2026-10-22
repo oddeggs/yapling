@@ -57,8 +57,13 @@ export const STAGES = [
   'ttsFirstAudio',
   // End of learner speech → first reply audio sent (call clock).
   'replyOut',
-  // End of learner speech → first character audio, measured on the phone.
+  // End of learner speech → first character audio heard (the reaction, else the reply), measured
+  // on the phone.
   'phoneLag',
+  // End of learner speech → the recorded reaction heard, measured on the phone.
+  'phoneReaction',
+  // End of learner speech → the generated reply's first audio heard, measured on the phone.
+  'phoneReply',
 ] as const;
 export type Stage = (typeof STAGES)[number];
 
@@ -66,6 +71,11 @@ export type Samples = Record<Stage, number[]>;
 
 export const noSamples = (): Samples =>
   Object.fromEntries(STAGES.map((s) => [s, []])) as unknown as Samples;
+
+/** Adds a sample (a call object saved before a stage existed has no list for it yet). */
+export function addSample(samples: Samples, stage: Stage, ms: number): void {
+  (samples[stage] ??= []).push(Math.round(ms));
+}
 
 export function median(values: readonly number[]): number | null {
   if (values.length === 0) return null;
@@ -77,7 +87,7 @@ export function median(values: readonly number[]): number | null {
 }
 
 export function medians(samples: Samples): Record<Stage, number | null> & { turns: number } {
-  const out = Object.fromEntries(STAGES.map((s) => [s, median(samples[s])])) as Record<
+  const out = Object.fromEntries(STAGES.map((s) => [s, median(samples[s] ?? [])])) as Record<
     Stage,
     number | null
   >;
