@@ -1,5 +1,6 @@
 import type {
   AppleLinkRequest,
+  Id,
   CallRecord,
   EpochMs,
   MemoryCreate,
@@ -16,8 +17,9 @@ import type {
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { ConnectivityState } from './connectivity';
-import type { OpenState, SeenMoment, SeenState } from './moments';
+import { seenSceneOf, type OpenState, type SeenMoment, type SeenState } from './moments';
 import type { ProgressSave } from './progress';
+import { pipsMinuteToday } from './pips-minute';
 import { useData } from './provider';
 import type { TurnModeState } from './turn-mode';
 import type { Resource, ResourceState } from './resource';
@@ -131,7 +133,11 @@ export function useAppNow(timezone: string = deviceTimeZone()): EpochMs {
   return now;
 }
 
-/** This week's ring from progress and the day clock; moves on at local midnight. */
+/**
+ * The learner's week from progress and the day clock: the story week (the week of the next episode
+ * they haven't played, never ahead of the calendar), its plan and ring, and the calls still waiting
+ * from earlier weeks. Moves on at local midnight.
+ */
 export function useWeek(): CurrentWeek | null {
   const data = useData();
   const progress = useStore(data.progress.resource.store, (s) => s.data);
@@ -141,19 +147,52 @@ export function useWeek(): CurrentWeek | null {
     useStore(data.profile.resource.store, (s) => s.data?.storyStartedOn) ?? null;
   const now = useAppNow(timezone);
   return useMemo(
-    () => (progress === null ? null : currentWeek(progress, now, timezone, storyStartedOn)),
-    [progress, now, timezone, storyStartedOn],
+    () =>
+      progress === null ? null : currentWeek(progress, now, timezone, storyStartedOn, data.season),
+    [progress, now, timezone, storyStartedOn, data],
   );
 }
 
-/** The between-call moments seen on this phone, and the mark for one just finished. */
+/**
+ * Whether Pip's minute has a phrase today (one of the learner's phrases is due); false while
+ * progress loads. Moves on at local midnight and with the app's clock.
+ */
+export function usePipsMinute(): boolean {
+  const data = useData();
+  const progress = useStore(data.progress.resource.store, (s) => s.data);
+  const timezone =
+    useStore(data.profile.resource.store, (s) => s.data?.timezone) ?? deviceTimeZone();
+  const now = useAppNow(timezone);
+  return useMemo(
+    () => progress !== null && pipsMinuteToday(progress, now, timezone, data.pipsMinuteLines),
+    [progress, now, timezone, data],
+  );
+}
+
+/**
+ * The between-call moments seen on this phone (named, and scenes by id), and the marks for ones
+ * just finished.
+ */
 export function useSeen(): SeenState & {
   readonly markSeen: (...moments: SeenMoment[]) => Promise<void>;
+  /** Marks scenes seen by id (a Visitor version as its scene). */
+  readonly markScenesSeen: (...sceneIds: Id[]) => Promise<void>;
+  /** Whether a scene has been seen (a Visitor version counts as its scene). */
+  readonly sceneSeen: (sceneId: Id) => boolean;
 } {
   const data = useData();
   const state = useStore(data.seen.store);
   const markSeen = useCallback((...moments: SeenMoment[]) => data.seen.mark(moments), [data]);
-  return useMemo(() => ({ ...state, markSeen }), [state, markSeen]);
+  const markScenesSeen = useCallback((...ids: Id[]) => data.seen.markScenes(ids), [data]);
+  return useMemo(
+    () => ({
+      ...state,
+      markSeen,
+      markScenesSeen,
+      sceneSeen: (sceneId: Id) => state.scenes.has(seenSceneOf(sceneId)),
+    }),
+    [state, markSeen, markScenesSeen],
+  );
 }
 
 /**

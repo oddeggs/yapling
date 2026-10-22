@@ -5,6 +5,7 @@ import type {
   Session,
   TimeZone,
 } from '@yapling/contracts';
+import type { PipsMinuteLines, SeasonWeeks } from '@yapling/domain';
 
 import { createApiClient, createSessionApi, type ApiClient } from './client';
 import { phoneClock, type AppClock } from './clock';
@@ -17,6 +18,7 @@ import { ProfileRepo } from './profile';
 import { ProgressRepo } from './progress';
 import { CallsRepo, minutesResource } from './records';
 import type { Resource } from './resource';
+import { PIPS_MINUTE_LINES, SEASON_WEEKS } from './season';
 import { SessionManager } from './session';
 import { CACHE_KEYS, type CacheStorage, type SecretStorage } from './storage';
 import { createStore, type Store } from './store';
@@ -44,6 +46,10 @@ export interface DataOptions {
   readonly clock?: AppClock;
   readonly schedule?: Schedule;
   readonly timeoutMs?: number;
+  /** The season's weeks the learner's weeks are read from; the story's by default. */
+  readonly season?: SeasonWeeks;
+  /** Which phrases have Pip's-minute lines; the story's by default. */
+  readonly pipsMinuteLines?: PipsMinuteLines;
 }
 
 export class Data {
@@ -62,6 +68,10 @@ export class Data {
   readonly opens: OpenLog;
   /** Holding the mic or hands-free in calls (this phone only). */
   readonly turnMode: TurnModePreference;
+  /** The season's weeks: what each week opens, and on which day. */
+  readonly season: SeasonWeeks;
+  /** Which phrases Pip's minute can set up and say wrong. */
+  readonly pipsMinuteLines: PipsMinuteLines;
   /** Moves each time the app's clock moves or is replaced. */
   readonly clockMoves: Store<number> = createStore(0);
   private clockNow: AppClock;
@@ -73,6 +83,8 @@ export class Data {
 
   constructor(opts: DataOptions) {
     this.cache = opts.cache;
+    this.season = opts.season ?? SEASON_WEEKS;
+    this.pipsMinuteLines = opts.pipsMinuteLines ?? PIPS_MINUTE_LINES;
     this.connectivity = new Connectivity(opts.schedule);
     const http = watchedHttp(
       createHttp({
@@ -96,7 +108,7 @@ export class Data {
       (resources) => this.dropped(resources),
     );
     this.profile = new ProfileRepo(this.api, opts.cache, this.outbox);
-    this.progress = new ProgressRepo(this.api, opts.cache);
+    this.progress = new ProgressRepo(this.api, opts.cache, this.season);
     this.memory = new MemoryRepo(this.api, opts.cache, this.outbox, opts.now);
     this.minutes = minutesResource(this.api, opts.cache);
     this.calls = new CallsRepo(this.api, opts.cache);

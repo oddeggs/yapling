@@ -1,9 +1,16 @@
 import { Progress, type EpochMs } from '@yapling/contracts';
-import { fromPhraseProgress, meetPhrase, ringWeeks, toPhraseProgress } from '@yapling/domain';
+import {
+  fromPhraseProgress,
+  meetPhrase,
+  seasonRingWeeks,
+  toPhraseProgress,
+  type SeasonWeeks,
+} from '@yapling/domain';
 
 import type { ApiClient } from './client';
 import { isDataError } from './errors';
 import { Resource } from './resource';
+import { SEASON_WEEKS } from './season';
 import { CACHE_KEYS, type CacheStorage } from './storage';
 
 /*
@@ -24,6 +31,8 @@ export class ProgressRepo {
   constructor(
     private readonly api: ApiClient,
     cache: CacheStorage,
+    /** The season's weeks: each slot opens on its scene's day and knows its scene. */
+    private readonly season: SeasonWeeks = SEASON_WEEKS,
   ) {
     this.resource = new Resource({
       cache,
@@ -76,8 +85,9 @@ export class ProgressRepo {
     const current = this.resource.data ?? (await this.refresh());
     if (current === null) return null;
     // The day as the phone counts it (`currentWeek`): from the story's start, so a Visitor's week 1
-    // never opens on install days.
-    const opened = (p: Progress) => [...ringWeeks(p.weeks, dayIndex)];
+    // never opens on install days. Slots open on the season's days with their scenes, as the
+    // server's rings do.
+    const opened = (p: Progress) => [...seasonRingWeeks(p.weeks, dayIndex, this.season)];
     if (JSON.stringify(opened(current)) === JSON.stringify(current.weeks)) return null;
     return this.update((p) => ({ ...p, weeks: opened(p) }));
   }

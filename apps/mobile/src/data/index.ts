@@ -8,6 +8,7 @@ export {
   useLastOpen,
   useMemory,
   useMinutes,
+  usePipsMinute,
   useProfile,
   useProgress,
   useSeen,
@@ -16,7 +17,15 @@ export {
   useWeek,
 } from './hooks';
 export type { AppClock } from './clock';
-export { SEEN_MOMENTS, type SeenMoment, type SeenState, type OpenState } from './moments';
+export {
+  MOMENT_SCENES,
+  SEEN_MOMENTS,
+  seenSceneOf,
+  type SeenMoment,
+  type SeenState,
+  type OpenState,
+} from './moments';
+export { pipsMinuteToday } from './pips-minute';
 export { DataError, isDataError, type DataErrorKind } from './errors';
 export type { ProgressSave } from './progress';
 export type { CurrentWeek } from './week';
