@@ -262,6 +262,8 @@ export class CallSession {
 
   private pump(): void {
     if (this.ended || this.active !== null || this.replies.busy || this.data.crisis) return;
+    // No phone, no lines: nothing is generated or spoken until a phone resumes the call.
+    if (!this.frames.attached) return;
     if (this.data.wrapping && !this.data.wrapStarted && this.linesPlayed > 0) {
       this.queue = [];
       this.data.wrapStarted = true;

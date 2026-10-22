@@ -26,6 +26,9 @@ import { CallSession } from './session';
  * where calls from Vietnam land, is refused by the Anthropic API). The Worker relays the phone's
  * socket here after reading its `hello`; this object checks the token, runs the call, and keeps
  * its state for two minutes after a drop so `hello` with the resume token picks the beat up again.
+ *
+ * A learner has one live call: a new one claims the line in their `UserDO` and the call it
+ * replaces ends (`replaced`). A phone that leaves before its call is ready never starts one.
  */
 
 /** A dropped call can be resumed for this long. */
@@ -83,6 +86,7 @@ export class CallDO extends DurableObject<Bindings> {
 
   private listen(socket: WebSocket, country: string, clockOffset: number): void {
     let hello: Promise<void> | null = null;
+    let gone = false;
     const early: (string | ArrayBuffer)[] = [];
     socket.addEventListener('message', (event) => {
       const data = event.data as string | ArrayBuffer;
@@ -91,7 +95,7 @@ export class CallDO extends DurableObject<Bindings> {
         return;
       }
       if (hello === null) {
-        hello = this.hello(socket, data, country, clockOffset).then(() => {
+        hello = this.hello(socket, data, country, clockOffset, () => gone).then(() => {
           for (const message of early.splice(0)) this.message(socket, message);
         });
         return;
@@ -100,13 +104,30 @@ export class CallDO extends DurableObject<Bindings> {
       else this.message(socket, data);
     });
     socket.addEventListener('close', () => {
-      if (this.socket !== socket) return;
-      this.socket = null;
-      const session = this.session;
-      if (session === null || session.data.endReason !== null) return;
-      session.detach();
-      void this.ctx.storage.setAlarm(Date.now() + RESUME_WINDOW_MS);
+      // A phone that leaves while its `hello` is still being answered is caught when it is.
+      gone = true;
+      if (this.socket === socket) this.phoneLeft();
     });
+  }
+
+  /** The phone's socket closed: the call waits two minutes for a resume. */
+  private phoneLeft(): void {
+    this.socket = null;
+    const session = this.session;
+    if (session === null || session.data.endReason !== null) return;
+    session.detach();
+    void this.ctx.storage.setAlarm(Date.now() + RESUME_WINDOW_MS);
+  }
+
+  /**
+   * Another call of the learner's started: this one ends (`replaced`), so a phone that opened a
+   * second call never leaves the first running on with nobody listening.
+   */
+  async supersede(): Promise<void> {
+    const data = this.session?.data ?? (await this.load());
+    if (data === null || data.endReason !== null) return;
+    const session = this.session ?? this.revive(data);
+    await session?.end('replaced');
   }
 
   private message(socket: WebSocket, data: string | ArrayBuffer): void {
@@ -126,6 +147,7 @@ export class CallDO extends DurableObject<Bindings> {
     raw: string | ArrayBuffer,
     country: string,
     clockOffset: number,
+    gone: () => boolean,
   ): Promise<void> {
     const reject = (
       code: 'unauthorized' | 'update_required' | 'unknown_scene' | 'minutes_exhausted',
@@ -153,9 +175,11 @@ export class CallDO extends DurableObject<Bindings> {
         this.socket = socket;
         old.close(1000, 'replaced');
       }
+      if (gone()) return;
       this.socket = socket;
       await this.ctx.storage.deleteAlarm();
       await session.attach(socket, { newCall: false, freshScene: false }, frame.resumeToken);
+      if (gone() && this.socket === socket) this.phoneLeft();
       return;
     }
 
@@ -193,14 +217,30 @@ export class CallDO extends DurableObject<Bindings> {
         continuousSince: time.continuousSince,
       },
     );
+    // The phone left while the call was being set up: nobody would hear it, so it never starts.
+    if (gone()) return;
     const session = this.makeSession(data, scene);
     this.socket = socket;
     await this.ctx.storage.put(STORAGE_KEY, data);
+    // One live call per learner: the call this one replaces ends now.
+    void this.claimLine(userId);
     await session.attach(
       socket,
       { newCall: true, freshScene: resumeFrom === null },
       resumeTokenOf(this.ctx.id.toString(), secret),
     );
+    // It never got its resume token, so it can't be picked up again: it ends.
+    if (gone() && this.socket === socket) await session.end('hangup');
+  }
+
+  private async claimLine(userId: string): Promise<void> {
+    try {
+      const previous = await userObject(this.env, userId).claimCall(this.ctx.id.toString());
+      if (previous !== null)
+        await this.env.CALL.get(this.env.CALL.idFromString(previous)).supersede();
+    } catch (error) {
+      console.error('call line claim failed', { error: String(error).slice(0, 200) });
+    }
   }
 
   private resumable(data: CallData, token: string): boolean {
@@ -228,6 +268,9 @@ export class CallDO extends DurableObject<Bindings> {
         const socket = this.socket;
         this.socket = null;
         this.session = null;
+        void userObject(this.env, data.meta.userId)
+          .releaseCall(this.ctx.id.toString())
+          .catch(() => undefined);
         try {
           socket?.close(1000, 'ended');
         } catch {

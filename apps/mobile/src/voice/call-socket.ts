@@ -168,6 +168,17 @@ export class CallSocket {
     this.clearTimers();
     this.isReady = false;
     this.seq.reset();
+    // Never two sockets: one still open (a second `open()`) is closed first, or its call runs on.
+    const previous = this.socket;
+    this.socket = null;
+    if (previous) {
+      detach(previous);
+      try {
+        previous.close(1000, 'reconnect');
+      } catch {
+        // already closed
+      }
+    }
     this.setStatus(this.reconnector.active ? 'reconnecting' : 'connecting');
     let s: SocketLike;
     try {

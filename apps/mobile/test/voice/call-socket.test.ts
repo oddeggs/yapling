@@ -115,6 +115,18 @@ afterEach(() => {
 });
 
 describe('the call socket', () => {
+  it('never keeps two sockets: opening again closes the one still open', () => {
+    const { socket, sockets } = setup();
+    socket.open();
+    sockets[0]!.open();
+    socket.open();
+    expect(sockets).toHaveLength(2);
+    expect(sockets[0]!.closed).toBe(true);
+    expect(sockets[0]!.onmessage).toBeNull();
+    socket.close();
+    expect(sockets[1]!.closed).toBe(true);
+  });
+
   it('says hello first, with the token in the frame and never in the URL', () => {
     const { socket, last } = setup();
     socket.open();
