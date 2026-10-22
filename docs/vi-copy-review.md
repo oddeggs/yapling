@@ -208,6 +208,7 @@ Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with 
 | `call.a11y.mic` | Hold to talk | Giữ để nói |  |  |
 | `call.a11y.thinking` | {name} is thinking | {name} đang nghĩ | New | New: VoiceOver for the thinking bubble |
 | `call.a11y.seconds` | {count} seconds | {count} giây | New | New: VoiceOver for timers and rounds |
+| `call.a11y.letter` | The letter. Tap to read it again | Lá thư. Chạm để đọc lại | New | New: VoiceOver for the tucked letter in the call |
 | `call.done.wrapUp` | Wrap up | Kết thúc cuộc gọi |  |  |
 | `call.done.hopOff` | Hop off | Xuống xe |  |  |
 | `call.done.seasonMap` | See the season map | Xem bản đồ mùa |  |  |
