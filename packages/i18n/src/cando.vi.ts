@@ -27,4 +27,16 @@ export const candoVi = {
   'cando.speak-to-a-group.certificate': 'Đã nói trước một nhóm người',
   'cando.make-a-case-take-a-question.certificate':
     'Đã trình bày ngắn gọn quan điểm và trả lời một câu hỏi',
+  'cando.say-hello-and-your-name': 'Chào hỏi và nói tên mình',
+  'cando.answer-yes-or-no-politely': 'Trả lời có hoặc không một cách lịch sự',
+  'cando.ask-again-or-slower': 'Nhờ người khác nói lại hoặc nói chậm hơn',
+  'cando.understand-number-time-price': 'Nghe hiểu số, giờ và giá tiền',
+  'cando.order-one-thing': 'Gọi một món',
+  'cando.say-where-youre-from-and-what-you-do': 'Nói mình từ đâu đến và làm nghề gì',
+  'cando.say-hello-and-your-name.certificate': 'Đã chào hỏi và nói tên mình',
+  'cando.answer-yes-or-no-politely.certificate': 'Đã trả lời có hoặc không một cách lịch sự',
+  'cando.ask-again-or-slower.certificate': 'Đã nhờ người khác nói lại',
+  'cando.understand-number-time-price.certificate': 'Đã nghe hiểu số, giờ và giá tiền',
+  'cando.order-one-thing.certificate': 'Đã gọi một món',
+  'cando.say-where-youre-from-and-what-you-do.certificate': 'Đã nói mình từ đâu đến và làm nghề gì',
 } as const satisfies Translation<typeof candoEn>;
