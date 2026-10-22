@@ -152,6 +152,7 @@ export async function finalizeCall(
     cost,
     timings: medians(data.samples),
     transcriptKey: key,
+    samples: data.samples,
   });
   console.log('call ended', {
     callId: meta.callId,

@@ -22,6 +22,7 @@ import { useLocale } from '../../ui/locale';
 import { SpeakerPill } from '../../ui/speaker-pill';
 import { SpeechBubble, type BubbleTone } from '../../ui/speech-bubble';
 import { useToast } from '../../ui/toast';
+import { useCallAnalytics } from '../../observability';
 import { useLipsyncClock, type Lipsync } from '../../voice/lipsync';
 import { BubbleCaption } from './bubble-caption';
 import { CritterFace } from './call-art';
@@ -153,6 +154,7 @@ export function CallScreen({
     micDenied: call.mic === 'denied',
     connectFailed: call.connectFailed,
   });
+  useCallAnalytics(kind, scene.id, { ...state, mode: view.mode });
 
   const nameOf = useCallback(
     (c: CharacterId) =>

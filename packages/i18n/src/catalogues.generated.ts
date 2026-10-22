@@ -9,6 +9,8 @@ import { candoVi } from './cando.vi';
 import { candoEn } from './cando.en';
 import { commonVi } from './common.vi';
 import { commonEn } from './common.en';
+import { devmenuVi } from './devmenu.vi';
+import { devmenuEn } from './devmenu.en';
 import { errorsVi } from './errors.vi';
 import { errorsEn } from './errors.en';
 import { knocksVi } from './knocks.vi';
@@ -36,6 +38,7 @@ export const features: readonly FeatureCatalogues[] = [
   { name: 'call', file: 'call', catalogues: { vi: callVi, en: callEn } },
   { name: 'cando', file: 'cando', catalogues: { vi: candoVi, en: candoEn } },
   { name: 'common', file: 'common', catalogues: { vi: commonVi, en: commonEn } },
+  { name: 'devmenu', file: 'devmenu', catalogues: { vi: devmenuVi, en: devmenuEn } },
   { name: 'errors', file: 'errors', catalogues: { vi: errorsVi, en: errorsEn } },
   { name: 'knocks', file: 'knocks', catalogues: { vi: knocksVi, en: knocksEn } },
   { name: 'me', file: 'me', catalogues: { vi: meVi, en: meEn } },
@@ -54,6 +57,7 @@ export const vi = {
   ...callVi,
   ...candoVi,
   ...commonVi,
+  ...devmenuVi,
   ...errorsVi,
   ...knocksVi,
   ...meVi,
@@ -72,6 +76,7 @@ export const en = {
   ...callEn,
   ...candoEn,
   ...commonEn,
+  ...devmenuEn,
   ...errorsEn,
   ...knocksEn,
   ...meEn,

@@ -70,6 +70,13 @@ export interface BuildEnv {
   easProjectId: string | undefined;
   /** Points the app at another API, such as `wrangler dev` on this Mac. */
   apiBase: string | undefined;
+  /**
+   * Whether release builds upload source maps and debug symbols to Sentry: only with the
+   * organization, the project and the auth token (`SENTRY_ORG`, `SENTRY_PROJECT`, the
+   * `SENTRY_AUTH_TOKEN` secret) all set. Otherwise the upload steps are skipped and the build
+   * needs no Sentry account.
+   */
+  sentryUpload?: boolean | undefined;
 }
 
 const isSet = (value: string | undefined): value is string => value !== undefined && value !== '';
@@ -78,7 +85,7 @@ const isSet = (value: string | undefined): value is string => value !== undefine
 export function buildConfig(
   config: ConfigContext['config'],
   appVariant: AppVariant,
-  { easProjectId, apiBase }: BuildEnv,
+  { easProjectId, apiBase, sentryUpload = false }: BuildEnv,
 ): ExpoConfig {
   const variant = VARIANTS[appVariant];
   const api = isSet(apiBase) ? apiBase : variant.apiBase;
@@ -127,6 +134,13 @@ export function buildConfig(
       ],
       // Day knocks are local notifications; remote pushes (voicemails, calls) turn APNs on later.
       ['expo-notifications', { enableRemoteNotifications: false }],
+      // Crash reports: the build steps that upload source maps and debug symbols to Sentry, skipped
+      // (`SENTRY_DISABLE_AUTO_UPLOAD`) unless the build can upload. Reporting itself needs only the
+      // DSN (`EXPO_PUBLIC_SENTRY_DSN`).
+      [
+        '@sentry/react-native/expo',
+        { url: 'https://sentry.io/', disableAutoUpload: !sentryUpload },
+      ],
     ],
     experiments: {
       typedRoutes: true,
@@ -147,4 +161,7 @@ export default ({ config }: ConfigContext): ExpoConfig =>
   buildConfig(config, resolveVariant(env['APP_VARIANT']), {
     easProjectId: env['EAS_PROJECT_ID'],
     apiBase: env['API_BASE'],
+    sentryUpload: ['SENTRY_AUTH_TOKEN', 'SENTRY_ORG', 'SENTRY_PROJECT'].every((name) =>
+      isSet(env[name]),
+    ),
   });

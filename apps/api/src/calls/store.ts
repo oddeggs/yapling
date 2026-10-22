@@ -7,6 +7,9 @@ import {
   type CharacterId,
 } from '@yapling/contracts';
 
+import type { Samples } from '../call/costs';
+import { costRecordOf, insertCallCost, usageOf, addSummaryCost } from './costs';
+
 /** Reads and writes on `calls`, always within one learner's calls. */
 
 export interface CallRow {
@@ -45,9 +48,12 @@ export interface NewCall {
   readonly summaryPending: boolean;
   readonly sceneState: unknown;
   readonly safetyFlag: string | null;
+  /** Provider usage and the estimated cost (`callCost`). */
   readonly cost: unknown;
   readonly timings: unknown;
   readonly transcriptKey: string;
+  /** Per-stage latency samples, for the cost record's percentiles. */
+  readonly samples?: Pick<Samples, 'replyOut' | 'phoneLag'>;
 }
 
 export function recordOf(row: CallRow): CallRecord {
@@ -96,6 +102,32 @@ export async function insertCall(db: D1Database, call: NewCall): Promise<void> {
       call.transcriptKey,
     )
     .run();
+  await saveCost(db, call);
+}
+
+/** The call's cost record. A failure is logged and never loses the call record above. */
+async function saveCost(db: D1Database, call: NewCall): Promise<void> {
+  try {
+    await insertCallCost(
+      db,
+      costRecordOf({
+        callId: call.id,
+        userId: call.userId,
+        kind: call.kind,
+        sceneId: call.sceneId,
+        startedAt: call.startedAt,
+        endedAt: call.endedAt,
+        endReason: call.endReason,
+        learnerSeconds: call.learnerSeconds,
+        characterSeconds: call.characterSeconds,
+        ...usageOf(call.cost),
+        samples: call.samples ?? null,
+      }),
+    );
+  } catch (error) {
+    // The one place a cost record fails; an error reporter (Sentry, Toucan) can hook in here.
+    console.error('call cost not saved', { callId: call.id, error: String(error) });
+  }
 }
 
 export async function listCalls(db: D1Database, userId: string): Promise<CallRecord[]> {
@@ -138,6 +170,8 @@ export async function storeSummary(
       JSON.stringify(summaryCost),
     )
     .run();
+  const usd = (summaryCost as { usd?: unknown } | null)?.usd;
+  if (typeof usd === 'number') await addSummaryCost(db, userId, id, usd);
 }
 
 /**

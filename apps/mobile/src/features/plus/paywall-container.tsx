@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Linking } from 'react-native';
 
+import { useTrackOnce } from '../../observability';
 import { useLocale, useToast } from '../../ui';
 import { LINKS } from './links';
 import {
@@ -42,6 +43,7 @@ export function PaywallContainer({
   const { t } = useLocale();
   const copy = t;
   const store = plusStore();
+  useTrackOnce('paywall_viewed', { store_available: store.available });
   const [state, setState] = useState<PaywallState>(() => ({
     offers: initialOffers(store.available, devFallbackAllowed()),
     selected: 'yearly',
