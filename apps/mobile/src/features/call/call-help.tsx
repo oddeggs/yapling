@@ -133,6 +133,8 @@ export function useCallHelp(input: CallHelpInput): CallHelp {
     input.leave('too_hard');
   };
 
+  // A Settling-in chapter is the practice with Linh: "Khó quá" offers only slower voices there.
+  const practise = scene.kind !== 'settling';
   const where = t('call.exit.where', {
     place: input.place,
     time: elapsed(now - (startedAt.current ?? now)),
@@ -149,6 +151,7 @@ export function useCallHelp(input: CallHelpInput): CallHelp {
       {sheet === 'exit' ? (
         <ExitSheet
           where={where}
+          practise={practise}
           onTooHard={openTooHard}
           onStay={() => setSheet(null)}
           onLeave={() => {
@@ -159,6 +162,7 @@ export function useCallHelp(input: CallHelpInput): CallHelp {
       ) : sheet === 'tooHard' ? (
         <TooHardSheet
           stage={stage}
+          practise={practise}
           onChoose={choose}
           onClose={() => {
             track('too_hard_chosen', { place: 'call_exit', stage, choice: 'closed' });

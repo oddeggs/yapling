@@ -130,6 +130,8 @@ export const callEn = {
   'call.exit.where': '{place} · {time}.',
   'call.exit.tooHard': 'Too hard?',
   'call.exit.tooHardSub': 'Slower voices, or practise with Linh first',
+  /** In a Settling-in chapter, already with Linh: only slower voices. */
+  'call.exit.tooHardSubSlower': 'Everyone will speak more slowly',
   'call.exit.stay': 'Keep calling',
   'call.exit.leave': 'Leave',
   'call.tooHard.slowerSub': 'Stay in the call. Everyone will speak more slowly.',

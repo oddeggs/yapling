@@ -992,6 +992,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `call.exit.where` | {place} · {time}. | {place} · {time}. | New | New: the exit sheet's line: the place and the minutes so far |
 | `call.exit.tooHard` | Too hard? | Khó quá? | New | New: the exit sheet's row |
 | `call.exit.tooHardSub` | Slower voices, or practise with Linh first | Nói chậm hơn, hoặc tập với Linh trước | New | New: under it |
+| `call.exit.tooHardSubSlower` | Everyone will speak more slowly | Mọi người sẽ nói chậm hơn | New | Under "Khó quá?" in a Settling-in chapter, where practising with Linh isn't offered (you're with her already) |
 | `call.exit.stay` | Keep calling | Tiếp tục gọi | New | New: the exit sheet's primary button |
 | `call.exit.leave` | Leave | Rời đi | New | New: the exit sheet's quiet button |
 | `call.tooHard.slowerSub` | Stay in the call. Everyone will speak more slowly. | Ở lại cuộc gọi. Mọi người sẽ nói chậm hơn. | New | New: the "Khó quá" sheet opened in a call: "Nói chậm hơn" |

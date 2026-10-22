@@ -107,9 +107,17 @@ export interface TooHardSheetProps {
   readonly onChoose: (choice: TooHardChoice) => void;
   readonly onClose: () => void;
   readonly copy?: TooHardCopy;
+  /** Whether "Tập với Linh trước" is offered; not in a call that is with Linh already. */
+  readonly practise?: boolean;
 }
 
-export function TooHardSheet({ stage, onChoose, onClose, copy }: TooHardSheetProps) {
+export function TooHardSheet({
+  stage,
+  onChoose,
+  onClose,
+  copy,
+  practise = true,
+}: TooHardSheetProps) {
   const { t } = useLocale();
   const circle = {
     width: 46,
@@ -154,34 +162,38 @@ export function TooHardSheet({ stage, onChoose, onClose, copy }: TooHardSheetPro
           sub={copy?.slowerSub ?? t('payoff.tooHard.slowerSub')}
           onPress={() => onChoose('slower')}
         />
-        <Option
-          icon={
-            <View style={circle}>
-              <Face character="linh" size={42} background={colours.successSoft} />
-            </View>
-          }
-          title={t('payoff.tooHard.linh')}
-          sub={
-            copy?.practiseSub ??
-            t(
-              stage === 'visitor'
-                ? 'payoff.tooHard.linhSubVisitor'
-                : 'payoff.tooHard.linhSubNewcomer',
-            )
-          }
-          onPress={() => onChoose('practise')}
-        />
+        {practise ? (
+          <Option
+            icon={
+              <View style={circle}>
+                <Face character="linh" size={42} background={colours.successSoft} />
+              </View>
+            }
+            title={t('payoff.tooHard.linh')}
+            sub={
+              copy?.practiseSub ??
+              t(
+                stage === 'visitor'
+                  ? 'payoff.tooHard.linhSubVisitor'
+                  : 'payoff.tooHard.linhSubNewcomer',
+              )
+            }
+            onPress={() => onChoose('practise')}
+          />
+        ) : null}
       </View>
-      <Sticker
-        shadow={stickerShadows.sheet}
-        radius={radii.aiTag}
-        outline={outline.regular}
-        fill={colours.surfacePaper}
-        style={{ marginTop: 6, transform: [{ rotate: '-1.5deg' }] }}
-        contentStyle={{ paddingVertical: 14, paddingHorizontal: 16 }}
-      >
-        <Txt variant={sheetType.note}>{t('payoff.tooHard.note')}</Txt>
-      </Sticker>
+      {practise ? (
+        <Sticker
+          shadow={stickerShadows.sheet}
+          radius={radii.aiTag}
+          outline={outline.regular}
+          fill={colours.surfacePaper}
+          style={{ marginTop: 6, transform: [{ rotate: '-1.5deg' }] }}
+          contentStyle={{ paddingVertical: 14, paddingHorizontal: 16 }}
+        >
+          <Txt variant={sheetType.note}>{t('payoff.tooHard.note')}</Txt>
+        </Sticker>
+      ) : null}
       <Press onPress={onClose} accessibilityRole="button" style={[quietButton, { marginTop: 4 }]}>
         <Txt variant="buttonGlass">{copy?.back ?? t('payoff.tooHard.back')}</Txt>
       </Press>

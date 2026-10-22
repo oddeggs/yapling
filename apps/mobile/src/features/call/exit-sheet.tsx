@@ -24,13 +24,16 @@ const exitType = {
 export interface ExitSheetProps {
   /** "Quán Lantern · 02:40." */
   readonly where: string;
+  /** Whether "Khó quá?" offers practising with Linh first (not in a call with Linh already). */
+  readonly practise: boolean;
   readonly onTooHard: () => void;
   readonly onStay: () => void;
   readonly onLeave: () => void;
 }
 
-export function ExitSheet({ where, onTooHard, onStay, onLeave }: ExitSheetProps) {
+export function ExitSheet({ where, practise, onTooHard, onStay, onLeave }: ExitSheetProps) {
   const { t } = useLocale();
+  const tooHardSub = practise ? t('call.exit.tooHardSub') : t('call.exit.tooHardSubSlower');
   return (
     <OverlaySheet onClose={onStay} closeLabel={t('call.exit.stay')}>
       <Txt variant={exitType.title} accessibilityRole="header">
@@ -43,7 +46,7 @@ export function ExitSheet({ where, onTooHard, onStay, onLeave }: ExitSheetProps)
         onPress={onTooHard}
         haptic="selection"
         accessibilityRole="button"
-        accessibilityLabel={`${t('call.exit.tooHard')} ${t('call.exit.tooHardSub')}`}
+        accessibilityLabel={`${t('call.exit.tooHard')} ${tooHardSub}`}
         style={{
           marginTop: 2,
           flexDirection: 'row',
@@ -74,7 +77,7 @@ export function ExitSheet({ where, onTooHard, onStay, onLeave }: ExitSheetProps)
         <View style={{ flex: 1 }}>
           <Txt variant={exitType.rowTitle}>{t('call.exit.tooHard')}</Txt>
           <Txt variant={exitType.rowSub} colour={colours.textMuted}>
-            {t('call.exit.tooHardSub')}
+            {tooHardSub}
           </Txt>
         </View>
         <Txt variant={exitType.chevron} colour={colours.textMuted} importantForAccessibility="no">
