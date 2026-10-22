@@ -416,6 +416,49 @@ Knocks for weeks 2–7 (`season-1-script.md`, "Knocks"), Pip's minute, the week'
 | Season end · residency stamp | Season One | Mùa Một | Term | "Mùa" for season everywhere |
 | Burrow · weeks 8 on | Season One is done. Replay any episode, or call Pip. | Mùa Một đã xong. Chơi lại tập nào cũng được, hoặc gọi Pip. | New |  |
 
+The knocks above are in `knocks.week{N}_{episode|story|voicemail}`. At Visitor a character's day-1 line is replaced by the Vietnamese in its row (`knocks.week{N}_episode_visitor`); in English it reads as Yapling telling the same news.
+
+The test menu's later-week tools (test builds only, `devmenu.*`):
+
+| Key | English | Tiếng Việt | Flag | Notes |
+|---|---|---|---|---|
+| `devmenu.weeks.heading` | LATER WEEKS | CÁC TUẦN SAU | New | Test menu |
+| `devmenu.weeks.status` | Story week {week}, day {day} · ring {done} of 3 | Tuần truyện {week}, ngày {day} · vòng tuần {done}/3 | New | Test menu |
+| `devmenu.weeks.needsStory` | The story hasn’t started: finish Settling in first (the letter day). | Truyện chưa bắt đầu: hãy làm quen xong trước (ngày lá thư). | New | Test menu |
+| `devmenu.weeks.needsLearner` | No learner yet: onboarding hasn’t made one. | Chưa có người học: phần mở đầu chưa tạo người học. | New | Test menu |
+| `devmenu.weeks.weekChip` | Week {week} | Tuần {week} | New | Test menu |
+| `devmenu.weeks.a11y.weekChip` | Choose week {week} | Chọn tuần {week} | New | Test menu |
+| `devmenu.weeks.dayChip` | {day} | {day} | New | Test menu |
+| `devmenu.weeks.a11y.dayChip` | Choose day {day} of the week | Chọn ngày {day} trong tuần | New | Test menu |
+| `devmenu.weeks.jump` | Jump to week {week}, day {day} | Chuyển tới tuần {week}, ngày {day} | New | Test menu |
+| `devmenu.weeks.jumpHint` | Every week before it played in full, its own calls not yet; the clock on that day | Các tuần trước coi như đã chơi hết, các cuộc gọi của tuần này thì chưa; đồng hồ chuyển tới ngày đó | New | Test menu |
+| `devmenu.weeks.fill` | Fill week {week}’s ring | Lấp đầy vòng tuần {week} | New | Test menu |
+| `devmenu.weeks.fillHint` | Marks the week’s three calls done and hangs its keepsake | Đánh dấu xong ba cuộc gọi của tuần và treo kỷ vật | New | Test menu |
+| `devmenu.weeks.working` | Working… | Đang làm… | New | Test menu |
+| `devmenu.weeks.failed` | Didn’t work: {reason} | Không được: {reason} | New | Test menu |
+| `devmenu.weeks.done.jump` | Week {week}, day {day}. Every week before it is played. | Tuần {week}, ngày {day}. Các tuần trước đã chơi xong. | New | Test menu |
+| `devmenu.weeks.done.fill` | Week {week}’s ring is full. | Vòng tuần {week} đã đầy. | New | Test menu |
+| `devmenu.weeks.knocksHeading` | WEEK {week}’S KNOCKS | THÔNG BÁO TUẦN {week} | New | Test menu |
+| `devmenu.weeks.knockChip` | Day {day} | Ngày {day} | New | Test menu |
+| `devmenu.weeks.a11y.knockChip` | Preview the knock on day {day} of week {week} | Xem trước thông báo ngày {day} của tuần {week} | New | Test menu |
+| `devmenu.weeks.noKnocks` | Nothing in this week knocks. | Tuần này không có thông báo nào. | New | Test menu |
+| `devmenu.weeks.tag` | Week {week} · day {day} | Tuần {week} · ngày {day} | New | Test menu |
+| `devmenu.weeks.previewHint` | Jumps to that day and opens what the tapped knock opens | Chuyển tới ngày đó và mở nơi thông báo dẫn tới khi chạm vào | New | Test menu |
+| `devmenu.weeks.ringSoon` | Week {week} day {day}, a minute before its knock | Tuần {week} ngày {day}, một phút trước thông báo | New | Test menu |
+| `devmenu.weeks.ringSoonHint` | Jumps to that day and moves the clock to a minute before its scheduled knock | Chuyển tới ngày đó và đưa đồng hồ tới một phút trước thông báo đã hẹn | New | Test menu |
+| `devmenu.weeks.ringNote` | Week {week}’s scheduled knock rings in a minute. Lock the phone or leave the app. | Thông báo đã hẹn của tuần {week} sẽ reo sau một phút. Khoá máy hoặc thoát ứng dụng. | New | Test menu |
+| `devmenu.weeks.fire` | Fire it in 5 s | Gửi sau 5 giây | New | Test menu |
+| `devmenu.weeks.fireNote` | The knock rings in 5 s. Lock the phone or leave the app. | Thông báo sẽ reo sau 5 giây. Khoá máy hoặc thoát ứng dụng. | New | Test menu |
+| `devmenu.weeks.noWeekOneKnock` | Day {day} has no week-1 knock: see the later weeks | Ngày {day} không có thông báo tuần 1: xem phần các tuần sau | New | Test menu |
+| `devmenu.back.heading` | BACK AFTER DAYS AWAY | QUAY LẠI SAU VÀI NGÀY | New | Test menu |
+| `devmenu.back.off` | Not away | Không vắng | New | Test menu |
+| `devmenu.back.days` | {days} days | {days} ngày | New | Test menu |
+| `devmenu.back.a11y` | Treat this open as a return after {days} days | Coi lần mở này là quay lại sau {days} ngày | New | Test menu |
+| `devmenu.back.offA11y` | Treat this open as an ordinary one | Coi lần mở này như bình thường | New | Test menu |
+| `devmenu.back.note` | The welcome back with the story so far; everything waits where it was. | Lời chào khi quay lại kèm phần truyện đã qua; mọi thứ vẫn chờ ở chỗ cũ. | New | Test menu |
+| `devmenu.handsFree.title` | Hands-free calls | Gọi rảnh tay | New | Test menu |
+| `devmenu.handsFree.sub` | Talk and pause to answer, without holding the mic | Nói rồi ngừng để trả lời, không cần giữ nút mic | New | Test menu |
+
 ---
 
 ## Settling in and the Visitor stage (Release 1.1)

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useTurnMode } from '../../data';
 import { analytics, track, type TimeTravelAction } from '../../observability';
 import { ChoiceChip } from '../../ui/chip';
 import { GlassSheet } from '../../ui/glass-sheet';
@@ -23,7 +24,7 @@ import {
   now,
   reloadDebugClock,
   resetDebugClock,
-  setCameBackAfterAway,
+  setBackAfterDays,
   useDebugClock,
   backToRealTime,
 } from './debug-clock';
@@ -35,8 +36,12 @@ import { KnockPreview } from './knock-preview';
 import { SettlingSection } from './settling-section';
 import { createVisitor, seedOf } from './settling-tools';
 import { dayOf, deviceTimeZone, settlingOf, testLearnerOf } from './test-learner';
+import { WeeksSection } from './weeks-section';
 
 const DAYS = WEEK_ONE_PLAN.map((d) => d.day);
+
+/** The returns the test menu can stand for, in days away (0: an ordinary open). */
+const AWAY_CHOICES = [0, 3, 7, 14, 21] as const;
 
 /** A test-menu action: this install is a test session from now on, and the action is counted. */
 const used = (action: TimeTravelAction, day: number | null = null) => {
@@ -76,6 +81,7 @@ export function DevMenu() {
   const setLanguage = useLanguageOverride();
   const clock = useDebugClock();
   const resetLocalData = useResetLocalData();
+  const { turnMode, setTurnMode } = useTurnMode();
   const learner = testLearnerOf(useKnockInputs(), Date.now());
   const appNow = now();
   const day = dayOf(learner, appNow);
@@ -209,17 +215,42 @@ export function DevMenu() {
         </Row>
       </Section>
 
+      <Section title={t('devmenu.back.heading')}>
+        <Row>
+          {AWAY_CHOICES.map((days) => (
+            <ChoiceChip
+              key={days}
+              label={days === 0 ? t('devmenu.back.off') : t('devmenu.back.days', { days })}
+              selected={
+                days === 0
+                  ? !clock.cameBackAfterAway
+                  : clock.cameBackAfterAway && clock.awayDays === days
+              }
+              accessibilityLabel={
+                days === 0 ? t('devmenu.back.offA11y') : t('devmenu.back.a11y', { days })
+              }
+              onPress={() => {
+                used('came_back_after_away', days);
+                setBackAfterDays(days);
+              }}
+            />
+          ))}
+        </Row>
+        <Txt variant="note" colour={colours.textMuted}>
+          {t('devmenu.back.note')}
+        </Txt>
+      </Section>
+
       <ToggleRow
-        title="Came back after 3 days"
-        subtitle="The welcome back, and day 8's knock"
-        on={clock.cameBackAfterAway}
-        onChange={(on) => {
-          used('came_back_after_away');
-          setCameBackAfterAway(on);
-        }}
+        title={t('devmenu.handsFree.title')}
+        subtitle={t('devmenu.handsFree.sub')}
+        on={turnMode === 'hands_free'}
+        onChange={(on) => void setTurnMode(on ? 'hands_free' : 'hold_to_talk')}
       />
 
       <SettlingSection learner={learner} onUsed={used} onStartVisitor={() => void startVisitor()} />
+
+      <WeeksSection learner={learner} onUsed={used} />
 
       <Section title="LANGUAGE">
         <Row>
@@ -275,7 +306,9 @@ export function DevMenu() {
             today === null
               ? settling
                 ? t('devmenu.settling.noWeekKnock')
-                : 'No knock on day 1'
+                : day > 1
+                  ? t('devmenu.weeks.noWeekOneKnock', { day })
+                  : 'No knock on day 1'
               : `Fire day ${day}'s knock in 5 s`
           }
           tone="secondary"
