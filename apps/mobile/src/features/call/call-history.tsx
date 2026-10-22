@@ -2,7 +2,7 @@ import { BurrowObject } from '@yapling/art/native';
 import type { Translate } from '@yapling/i18n';
 import type { CharacterId } from '@yapling/contracts';
 import { colours, controls, glass, motion, radii, translucent } from '@yapling/theme';
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { ScrollView, View, type ScrollViewInstance } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -77,6 +77,7 @@ function RoundButton({
   disabled = false,
 }: {
   label: string;
+  /** The text to show, or `play` for the drawn play triangle. */
   glyph: string;
   onPress: () => void;
   disabled?: boolean;
@@ -99,13 +100,30 @@ function RoundButton({
         opacity: disabled ? 0.35 : 1,
       }}
     >
-      <CallTxt
-        variant={{ ...typeExtras.meaningChip, size: 14 }}
-        importantForAccessibility="no"
-        accessibilityElementsHidden
-      >
-        {glyph}
-      </CallTxt>
+      {glyph === 'play' ? (
+        // An ink triangle: the text ▶ turns into an emoji on iOS.
+        <View
+          style={{
+            marginLeft: 2,
+            width: 0,
+            height: 0,
+            borderTopWidth: 6,
+            borderBottomWidth: 6,
+            borderLeftWidth: 10,
+            borderTopColor: 'transparent',
+            borderBottomColor: 'transparent',
+            borderLeftColor: colours.text,
+          }}
+        />
+      ) : (
+        <CallTxt
+          variant={{ ...typeExtras.meaningChip, size: 14 }}
+          importantForAccessibility="no"
+          accessibilityElementsHidden
+        >
+          {glyph}
+        </CallTxt>
+      )}
     </Press>
   );
 }
@@ -207,9 +225,13 @@ export function HistorySheet({
   const { t } = useLocale();
   const rise = useKeyframes(motion.call.whisper);
   const scroll = useRef<ScrollViewInstance>(null);
-  useEffect(() => {
+  // Scrolled to the latest when it opens and when a line is added; a gloss opening stays put.
+  const scrolledFor = useRef(-1);
+  const toLatest = () => {
+    if (scrolledFor.current === entries.length) return;
+    scrolledFor.current = entries.length;
     scroll.current?.scrollToEnd({ animated: false });
-  }, [entries.length]);
+  };
   return (
     <Animated.View style={[rise, style]} accessibilityViewIsModal>
       <GlassView glass={glass.panel} radius={radii.sheet} style={{ flex: 1, paddingTop: 14 }}>
@@ -222,7 +244,7 @@ export function HistorySheet({
         <ScrollView
           ref={scroll}
           contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 14, gap: 10 }}
-          onContentSizeChange={() => scroll.current?.scrollToEnd({ animated: false })}
+          onContentSizeChange={toLatest}
         >
           {entries.map((entry) => {
             if (entry.kind === 'you') {
@@ -246,7 +268,7 @@ export function HistorySheet({
                   <View style={{ paddingTop: 10 }}>
                     <RoundButton
                       label={t('call.history.replay')}
-                      glyph="▶"
+                      glyph="play"
                       disabled={!replayable}
                       onPress={view.onReplay}
                     />

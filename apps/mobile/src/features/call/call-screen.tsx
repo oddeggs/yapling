@@ -330,7 +330,8 @@ export function CallScreen({
         <View
           style={{
             position: 'absolute',
-            top: spot.top * k,
+            // A line from before the phone rang, gone back to, sits under the phone pill.
+            top: Math.max(spot.top * k, phoneShown ? phoneBottom + 6 : 0),
             left: spot.left,
             right: spot.right,
             gap: 8,

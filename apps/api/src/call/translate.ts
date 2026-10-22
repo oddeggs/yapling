@@ -29,6 +29,11 @@ const LANGUAGE_NAMES: Readonly<Partial<Record<FirstLanguage, string>>> = {
   tr: 'Turkish',
 };
 
+/** The app's own register in a language, so a translated line sounds like the rest of the app. */
+const REGISTER: Readonly<Partial<Record<FirstLanguage, string>>> = {
+  vi: ' Warm and peer to peer: the speaker calls themself "mình" and the learner "bạn"; never "tớ", "cậu", "tôi" or "quý khách" unless the line is formal (an office on the phone).',
+};
+
 /** Whether a learner at this stage gets a spoken line in their first language on a tap. */
 export function lineGlossAllowed(stage: Stage, firstLanguage: FirstLanguage): boolean {
   const policy = glossPolicy(stage, 'captions', { firstLanguage });
@@ -76,7 +81,7 @@ export async function translateLine(
         },
       },
     },
-    system: `You help an English learner in a language-learning app. Translate the line a friendly character just said into short, natural, everyday ${language}, the way a friend would say it. Keep names as they are. Translate only; add no notes.`,
+    system: `You help an English learner in a language-learning app. Translate the line a friendly character just said into short, natural, everyday ${language}, the way a friend would say it. Keep names as they are. Translate only; add no notes.${REGISTER[firstLanguage] ?? ''}`,
     messages: [{ role: 'user', content: `Line: ${JSON.stringify(text)}` }],
   });
   usage.input += message.usage.input_tokens;
