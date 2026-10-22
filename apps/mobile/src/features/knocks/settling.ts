@@ -19,6 +19,8 @@ import {
   type SettlingChapter,
 } from '@yapling/domain';
 
+import { letterDayOf as burrowLetterDayOf, nextChapter } from '../burrow/settling';
+
 /*
  * Settling in's knocks: a Visitor's mornings before the story starts. Each one is from Yapling, in
  * the learner's language, and announces the chapter that waits; tapping it opens that chapter's
@@ -65,22 +67,18 @@ export interface SettlingState {
 export const isVisitorPath = (profile: Pick<Profile, 'startPath' | 'stage'>): boolean =>
   profile.startPath === 'visitor' || profile.stage === 'visitor';
 
-const CHAPTERS: readonly SettlingChapter[] = [1, 2, 3, 4, 5, 6];
-
-/** The lowest chapter not done yet, or null when all six are. */
+/** The lowest chapter not done yet, or null when all six are (the burrow's rule). */
 export const nextSettlingChapter = (
   chapters: readonly SettlingChapterDone[],
-): SettlingChapter | null => CHAPTERS.find((c) => !chapters.some((d) => d.chapter === c)) ?? null;
+): SettlingChapter | null => nextChapter(chapters);
 
 /**
  * The letter's day, which is week 1's day 1: the story's start when it is recorded, otherwise the
- * day Chapter 6 was finished, otherwise none yet. The burrow reads it the same way.
+ * day Chapter 6 was finished, otherwise none yet (the burrow's rule).
  */
-export const letterDayOf = (state: Pick<SettlingState, 'chapters' | 'storyStartedOn'>) => {
-  if (state.storyStartedOn !== null) return state.storyStartedOn;
-  if (nextSettlingChapter(state.chapters) !== null) return null;
-  return state.chapters.find((c) => c.chapter === SETTLING_CHAPTER_COUNT)?.doneOn ?? null;
-};
+export const letterDayOf = (
+  state: Pick<SettlingState, 'chapters' | 'storyStartedOn'>,
+): LocalDate | null => burrowLetterDayOf(state.chapters, state.storyStartedOn);
 
 /** Still settling in: a Visitor whose letter hasn't come. */
 export const isSettlingIn = (state: SettlingState): boolean =>

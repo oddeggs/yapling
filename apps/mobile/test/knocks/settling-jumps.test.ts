@@ -14,6 +14,7 @@ jest.mock('expo-sqlite/kv-store', () => ({ Storage: {} }));
 jest.mock('../../src/data', () => ({ appData: () => null, getSessionToken: () => null }));
 jest.mock('../../src/data/config', () => ({ apiBase: () => 'https://example.test/api' }));
 jest.mock('../../src/data/http', () => ({ createHttp: () => null }));
+jest.mock('../../src/features/burrow/settling-store', () => ({ devSeedSettling: () => null }));
 
 const installedOn = '2026-10-20';
 

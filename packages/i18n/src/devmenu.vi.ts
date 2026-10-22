@@ -60,4 +60,9 @@ export const devmenuVi = {
   'devmenu.settling.tag': 'Chương {chapter}',
   'devmenu.settling.day': 'Ngày làm quen {day}',
   'devmenu.settling.noWeekKnock': 'Chưa có thông báo tuần 1 khi đang làm quen',
+  'devmenu.previews.heading': 'XEM TRƯỚC CHO NGƯỜI MỚI BẮT ĐẦU',
+  'devmenu.previews.afterCall': 'Thẻ sau cuộc gọi của Khách mới đến',
+  'devmenu.previews.stageUp': 'Thẻ Người mới Linh trao',
+  'devmenu.previews.me': 'Trang Tôi của Khách mới đến',
+  'devmenu.previews.hint': 'Người học mẫu; không gửi gì đi',
 } as const satisfies Translation<typeof devmenuEn>;

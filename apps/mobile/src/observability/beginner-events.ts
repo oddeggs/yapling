@@ -6,8 +6,8 @@ import type {
   SettlingChapterDone,
   TurnMode,
 } from '@yapling/contracts';
-import { SETTLING_SCENES } from '@yapling/domain';
 
+import { chapterOfScene as burrowChapterOfScene } from '../features/burrow/settling';
 import type { AnalyticsEvents, CallProperties } from './events';
 
 /*
@@ -18,10 +18,7 @@ import type { AnalyticsEvents, CallProperties } from './events';
  */
 
 /** The Settling-in chapter a scene plays, 1 to 6, or null for a scene outside Settling in. */
-export const chapterOfScene = (sceneId: string): number | null => {
-  const index = (SETTLING_SCENES as readonly string[]).indexOf(sceneId);
-  return index < 0 ? null : index + 1;
-};
+export const chapterOfScene = (sceneId: string): number | null => burrowChapterOfScene(sceneId);
 
 /** Every call event's own properties. */
 export const callPropertiesOf = (

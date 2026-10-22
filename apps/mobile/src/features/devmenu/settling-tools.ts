@@ -11,11 +11,12 @@ import {
   type SettlingChapterDone,
   type TimeZone,
 } from '@yapling/contracts';
-import { addDays, type SettlingChapter } from '@yapling/domain';
+import { addDays, localDateOf, type SettlingChapter } from '@yapling/domain';
 
 import { appData, getSessionToken } from '../../data';
 import { apiBase } from '../../data/config';
 import { createHttp } from '../../data/http';
+import { devSeedSettling } from '../burrow/settling-store';
 import { requestKnockPermission } from '../knocks/permission';
 import { jumpToDay } from './debug-clock';
 
@@ -26,8 +27,10 @@ import { jumpToDay } from './debug-clock';
  * knocks all see the same state a learner would reach by playing.
  *
  * A jump leaves one chapter done per day from the install day, so chapter N is next on settling
- * day N (two in a day would bring the burrow's "tomorrow"). Jumps go forward; to go back, start a
- * new Visitor.
+ * day N (two in a day would bring the burrow's "tomorrow", and the knocks would wait a day). The
+ * chapters go to the server's progress, which the burrow trusts first, rather than only to the
+ * burrow's own copy on the phone (its `devSeedSettling` marks them all done today). Jumps go
+ * forward; to go back, start a new Visitor.
  */
 
 /** The chapters done before `chapter`, one a day from the install day (chapter k on day k). */
@@ -101,7 +104,13 @@ async function requestStage(request: StageRequest): Promise<Profile> {
  */
 export async function createVisitor(seed: VisitorSeed, timezone: TimeZone): Promise<Profile> {
   const data = appData();
-  await data.startGuest();
+  const session = await data.startGuest();
+  // The burrow's own copy says "started with Linh" at once, before the profile is read back.
+  await devSeedSettling(session.userId, {
+    visitor: true,
+    upTo: 0,
+    today: localDateOf(Date.now(), timezone),
+  });
   const allowed = await requestKnockPermission().catch(() => false);
   await data.profile.put(visitorProfileInput(seed, timezone, allowed));
   const profile = await requestStage({ to: 'visitor', reason: 'self_select' });

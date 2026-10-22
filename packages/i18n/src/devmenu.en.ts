@@ -74,4 +74,10 @@ export const devmenuEn = {
   /** The status line's day while settling in, counted from the install day. */
   'devmenu.settling.day': 'Settling day {day}',
   'devmenu.settling.noWeekKnock': 'No week-1 knock while settling in',
+  /** The other lanes' sample screens, development builds only. */
+  'devmenu.previews.heading': 'BEGINNER PREVIEWS',
+  'devmenu.previews.afterCall': 'A Visitor’s after-call card',
+  'devmenu.previews.stageUp': 'Linh’s Newcomer card',
+  'devmenu.previews.me': 'A Visitor’s Me sheet',
+  'devmenu.previews.hint': 'A sample learner; nothing is sent',
 } as const satisfies EnCatalogue;

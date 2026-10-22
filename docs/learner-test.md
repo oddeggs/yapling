@@ -95,6 +95,7 @@ Open it with a **three-finger tap anywhere** on the screen, or a **long press (a
 | JUMP TO CHAPTER: 1–6 | Marks the chapters before it done, one a day from the install day, and moves the clock to that chapter's day. Jumps go forward; to go back, start a new Visitor |
 | Jump to the letter day | All six chapters done and the clock on Chapter 6's day: the letter comes that evening, and it is week 1's day 1 (JUMP TO DAY then counts from it) |
 | SETTLING-IN KNOCKS: Chapter 2–6 | That chapter's morning knock as the lock screen shows it; tapping the preview opens the chapter's call. "A minute before its knock" jumps to the chapter and rings the real scheduled knock; "Fire … in 5 s" rings it now, and tapping it opens the call |
+| BEGINNER PREVIEWS (development builds) | Sample screens with a stand-in learner, nothing sent: a Visitor's after-call card, Linh's Newcomer card, a Visitor's Me sheet |
 | RESET | Clears everything on this phone: the learner (signed out), the debug clock and the knocks, and goes back to the first run. The account stays on the server |
 
 The day and the learner survive closing and relaunching the app. There is no way to seed a learner mid-week: each tester creates theirs on day 1. If a session is cut short, the phone keeps the tester's week; reopen the app and jump to where you stopped.

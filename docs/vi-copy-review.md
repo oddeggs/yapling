@@ -2,7 +2,7 @@
 
 Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here, except the beginner path's Vietnamese (Release 1.1), which comes first because Linh's spoken lines gate the recording.
 
-513 strings in 15 catalogues; 89 flagged.
+518 strings in 15 catalogues; 89 flagged.
 
 ## How to review
 
@@ -916,7 +916,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 Seen only in development builds by the team: no review needed; listed for completeness.
 
-`packages/i18n/src/devmenu.vi.ts` · 48 strings
+`packages/i18n/src/devmenu.vi.ts` · 53 strings
 
 | Key | English | Tiếng Việt | Flag | Notes |
 |---|---|---|---|---|
@@ -968,4 +968,9 @@ Seen only in development builds by the team: no review needed; listed for comple
 | `devmenu.settling.tag` | Chapter {chapter} | Chương {chapter} | New |  |
 | `devmenu.settling.day` | Settling day {day} | Ngày làm quen {day} | New |  |
 | `devmenu.settling.noWeekKnock` | No week-1 knock while settling in | Chưa có thông báo tuần 1 khi đang làm quen | New |  |
+| `devmenu.previews.heading` | BEGINNER PREVIEWS | XEM TRƯỚC CHO NGƯỜI MỚI BẮT ĐẦU | New |  |
+| `devmenu.previews.afterCall` | A Visitor’s after-call card | Thẻ sau cuộc gọi của Khách mới đến | New |  |
+| `devmenu.previews.stageUp` | Linh’s Newcomer card | Thẻ Người mới Linh trao | New |  |
+| `devmenu.previews.me` | A Visitor’s Me sheet | Trang Tôi của Khách mới đến | New |  |
+| `devmenu.previews.hint` | A sample learner; nothing is sent | Người học mẫu; không gửi gì đi | New |  |
 

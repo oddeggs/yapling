@@ -206,6 +206,39 @@ export function SettlingSection({
           {note}
         </Txt>
       )}
+
+      {__DEV__ ? <Previews /> : null}
     </View>
+  );
+}
+
+/** The sample screens other features show in development builds (their own `?preview=` links). */
+const PREVIEWS = [
+  { label: 'devmenu.previews.afterCall', path: '/post?callId=preview&preview=visitor' },
+  { label: 'devmenu.previews.stageUp', path: '/keepsake?callId=preview&preview=stage-up' },
+  { label: 'devmenu.previews.me', path: '/me?preview=visitor' },
+] as const;
+
+function Previews() {
+  const { t } = useLocale();
+  return (
+    <>
+      <Heading>{t('devmenu.previews.heading')}</Heading>
+      <Row>
+        {PREVIEWS.map((p) => (
+          <StickerButton
+            key={p.path}
+            label={t(p.label)}
+            tone="glass"
+            size="small"
+            accessibilityHint={t('devmenu.previews.hint')}
+            onPress={() => {
+              router.dismissAll();
+              router.push(p.path);
+            }}
+          />
+        ))}
+      </Row>
+    </>
   );
 }
