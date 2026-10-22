@@ -1,0 +1,56 @@
+{
+  "dex-1-1": {
+    "sha1": "825c13681650141d019c446dcfb1e6f230f9e404",
+    "heard": "Hi, I'm Dex. I hear you said no to Hank, very kindly",
+    "diff": [],
+    "stray": []
+  },
+  "dex-1-2": {
+    "sha1": "eb4e1680a7adb9770624b503209935df33d33f8b",
+    "heard": "Much better. 60 seconds and I wanted to hear more",
+    "diff": [],
+    "stray": []
+  },
+  "dex-1-3": {
+    "sha1": "a6bd7dbc03dd556996bd7282c2e905e4795ad81c",
+    "heard": "I'm Dex. Work on Sunday? Okay",
+    "diff": [],
+    "stray": []
+  },
+  "dex-2-1": {
+    "sha1": "be69dfc0dd38fb2816c143d52d6e3f4ea3cab4be",
+    "heard": "Hi, I'm Dex. I hear you said no to Hank, very kindly",
+    "diff": [],
+    "stray": []
+  },
+  "dex-2-2": {
+    "sha1": "0d8fcd5e0c9940860b92a972d069a9c2b74f30e4",
+    "heard": "Much better sixty seconds and I wanted to hear more",
+    "diff": [],
+    "stray": []
+  },
+  "dex-2-3": {
+    "sha1": "afec410e03cc36227f598df747ecc5142d56bf74",
+    "heard": "I'm Dex. Work on Sunday okay?",
+    "diff": [],
+    "stray": []
+  },
+  "dex-3-1": {
+    "sha1": "66c42c33097807b84f50d38c322041d29381f040",
+    "heard": "Hi, I'm Dex. I hear you said no to Hank, very kindly",
+    "diff": [],
+    "stray": []
+  },
+  "dex-3-2": {
+    "sha1": "491fce0e1ebce7746e3a016668e75d763ae762b2",
+    "heard": "Much better. 60 seconds, and I wanted to hear more",
+    "diff": [],
+    "stray": []
+  },
+  "dex-3-3": {
+    "sha1": "529fa09c9b9e7e73ad7ce0fdc59101fc5eb59a03",
+    "heard": "I'm Dex. Work on Sunday okay?",
+    "diff": [],
+    "stray": []
+  }
+}

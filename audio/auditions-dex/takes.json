@@ -1,0 +1,98 @@
+{
+  "_note": "Dex voice audition (Release 1.2). Three designed candidates from the cast-bible brief in audio/cast-voices.json, each saying the same three lines on Eleven v4. Render with `python3 tools/voice/yap_voice.py audition audio/auditions-dex/takes.json`; existing takes are skipped. Swap the voice with `yap_voice.py pick dex <n>`, then re-render Dex's 6 lines.",
+  "page": {
+    "title": "Dex voice audition",
+    "intro": "<p>Dex runs the real-week calls of weeks 3–5. Brief (from <code>docs/cast-bible.md</code>): General American, calm, deep, 40s, measured and reassuring, a fair and encouraging interviewer. One voice design (Eleven v3) gave three previews; each is saved as a voice and says the same three lines on Eleven v4: two of his recorded lines at the cast's default speed, and his Visitor live line at speed 0.7 with <code>[pause]</code>, which must measure 100 wpm or slower.</p><p><b>Provisional pick: candidate 2</b> (<code>1DEdvFXrvpcwIg7NWEqZ</code>). On Eleven v4 it stays the lowest and steadiest of the three (a rough pitch estimate: about 125–155 Hz across the three takes; candidate 1 rose to about 200 Hz on v4, candidate 3 to about 180 Hz on the second line), its Visitor line measures 94 wpm (candidate 3 ran 102), and speech recognition heard every word. Picked by measurement, not by ear: <b>the founder should listen</b>. To swap: <code>yap_voice.py pick dex 1</code> (or 3), delete Dex's six <code>s1-e*-rw-*-dex</code> takes and <code>render pending</code> again (about 380 credits).</p><p>At the default speed (0.92) every candidate speaks his recorded lines at 160–185 wpm, the same pace as the other characters' Newcomer lines, though the bible asks for about 110 at Newcomer.</p>",
+    "groups": [
+      {
+        "key": "dex-1",
+        "title": "Candidate 1"
+      },
+      {
+        "key": "dex-2",
+        "title": "Candidate 2 · provisional pick"
+      },
+      {
+        "key": "dex-3",
+        "title": "Candidate 3"
+      }
+    ]
+  },
+  "takes": [
+    {
+      "id": "dex-1-1",
+      "char": "dex",
+      "group": "dex-1",
+      "voice_id": "ugSabLIXzwLBKZk3jMTV",
+      "line": "s1-e3-rw-open",
+      "text": "[warmly] Hi, I'm Dex. I hear you said no to Hank, very kindly."
+    },
+    {
+      "id": "dex-1-2",
+      "char": "dex",
+      "group": "dex-1",
+      "voice_id": "ugSabLIXzwLBKZk3jMTV",
+      "line": "s1-e5-rw-close",
+      "text": "[warmly] Much better. Sixty seconds, and I wanted to hear more."
+    },
+    {
+      "id": "dex-1-3",
+      "char": "dex",
+      "group": "dex-1",
+      "voice_id": "ugSabLIXzwLBKZk3jMTV",
+      "line": "visitor (live line)",
+      "text": "[friendly, slowly] I'm Dex. [pause] Work on Sunday? [pause] Okay?",
+      "speed": 0.7
+    },
+    {
+      "id": "dex-2-1",
+      "char": "dex",
+      "group": "dex-2",
+      "voice_id": "1DEdvFXrvpcwIg7NWEqZ",
+      "line": "s1-e3-rw-open",
+      "text": "[warmly] Hi, I'm Dex. I hear you said no to Hank, very kindly."
+    },
+    {
+      "id": "dex-2-2",
+      "char": "dex",
+      "group": "dex-2",
+      "voice_id": "1DEdvFXrvpcwIg7NWEqZ",
+      "line": "s1-e5-rw-close",
+      "text": "[warmly] Much better. Sixty seconds, and I wanted to hear more."
+    },
+    {
+      "id": "dex-2-3",
+      "char": "dex",
+      "group": "dex-2",
+      "voice_id": "1DEdvFXrvpcwIg7NWEqZ",
+      "line": "visitor (live line)",
+      "text": "[friendly, slowly] I'm Dex. [pause] Work on Sunday? [pause] Okay?",
+      "speed": 0.7
+    },
+    {
+      "id": "dex-3-1",
+      "char": "dex",
+      "group": "dex-3",
+      "voice_id": "3obsfZTkCLh1pcOtVExU",
+      "line": "s1-e3-rw-open",
+      "text": "[warmly] Hi, I'm Dex. I hear you said no to Hank, very kindly."
+    },
+    {
+      "id": "dex-3-2",
+      "char": "dex",
+      "group": "dex-3",
+      "voice_id": "3obsfZTkCLh1pcOtVExU",
+      "line": "s1-e5-rw-close",
+      "text": "[warmly] Much better. Sixty seconds, and I wanted to hear more."
+    },
+    {
+      "id": "dex-3-3",
+      "char": "dex",
+      "group": "dex-3",
+      "voice_id": "3obsfZTkCLh1pcOtVExU",
+      "line": "visitor (live line)",
+      "text": "[friendly, slowly] I'm Dex. [pause] Work on Sunday? [pause] Okay?",
+      "speed": 0.7
+    }
+  ]
+}
