@@ -6,7 +6,13 @@ import type {
   Progress,
   WeekRing,
 } from '@yapling/contracts';
-import { SEASON_1_CAN_DOS, canDoById, isRingFull } from '@yapling/domain';
+import {
+  SEASON_1_CAN_DOS,
+  SETTLING_CAN_DOS,
+  canDoById,
+  isRingFull,
+  type AnyCanDoDefinition,
+} from '@yapling/domain';
 import { translator, type StringKey, type Translate } from '@yapling/i18n';
 
 import { characterName, handDate } from './format';
@@ -64,12 +70,26 @@ function canDoWording(canDoId: string): string {
     : canDoId;
 }
 
-function trackOf(canDoId: string): Certificate['track'] {
+/**
+ * The can-dos a certificate counts among: the Visitor's Settling-in ones for a Visitor can-do,
+ * Season 1's otherwise. Each set counts on its own, so a Visitor's keepsake says how far Settling
+ * in has come and a Season 1 keepsake never counts the Visitor's.
+ */
+function canDoSetOf(canDoId: string): readonly AnyCanDoDefinition[] {
+  return SETTLING_CAN_DOS.some((c) => c.id === canDoId) ? SETTLING_CAN_DOS : SEASON_1_CAN_DOS;
+}
+
+/** The can-do's track, how many of its set's can-dos on that track are ticked, and how many there are. */
+export function trackOf(
+  canDoId: string,
+  canDos: readonly CanDoProgress[] = [],
+): Certificate['track'] {
   const definition = canDoById(canDoId);
   if (!definition) return null;
   const track = definition.track;
-  const total = SEASON_1_CAN_DOS.filter((c) => c.track === track).length;
-  return { track, done: 0, total };
+  const set = canDoSetOf(canDoId).filter((c) => c.track === track);
+  const ticked = new Set(canDos.filter((c) => c.status === 'ticked').map((c) => c.id));
+  return { track, done: set.filter((c) => ticked.has(c.id)).length, total: set.length };
 }
 
 function certificate(
@@ -83,7 +103,7 @@ function certificate(
       ? (keepsake.signedBy ?? canDo?.witness ?? 'pip')
       : (canDo?.witness ?? keepsake.signedBy ?? 'pip');
   const witnessName = characterName(witness, learner.roommateName);
-  const track = canDo ? trackOf(canDo.id) : null;
+  const track = canDo ? trackOf(canDo.id, canDos) : null;
   return {
     id: keepsake.id,
     heading: en('payoff.keepsake.canNow', { learner: learner.name }),
@@ -95,15 +115,7 @@ function certificate(
     witness: witness === 'office' ? null : witness,
     witnessName,
     earnedOn: keepsake.earnedOn,
-    track:
-      track === null
-        ? null
-        : {
-            ...track,
-            done: canDos.filter(
-              (c) => c.status === 'ticked' && canDoById(c.id)?.track === track.track,
-            ).length,
-          },
+    track,
   };
 }
 
@@ -148,7 +160,7 @@ export function ringOfCall(weeks: readonly WeekRing[], callId: string): WeekRing
 }
 
 /** Whether this call filled the last open slot of its week. */
-function filledRing(weeks: readonly WeekRing[], callId: string): WeekRing | null {
+export function filledRing(weeks: readonly WeekRing[], callId: string): WeekRing | null {
   const ring = ringOfCall(weeks, callId);
   if (!ring || !isRingFull(ring)) return null;
   const last = [...ring.slots].sort((a, b) => (a.doneAt ?? 0) - (b.doneAt ?? 0)).at(-1);

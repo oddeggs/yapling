@@ -55,4 +55,31 @@ export const meEn = {
   /** Read for the delete button beside a note. */
   'me.memory.a11y.delete': 'Delete “{text}”',
   'me.memory.failed': 'That didn’t save. Try again.',
+  /** The Visitor's stage, below Newcomer (the chip reads "Visitor · Khách mới đến" in Vietnamese). */
+  'me.stage.visitor': 'Visitor',
+  /** The stage chip with its English name first, when the chrome isn't English. */
+  'me.stageBoth': '{en} · {local}',
+  /** Beside a Visitor's stage chip: Settling-in chapters done. */
+  'me.settlingCount': 'Settling in {done}/{total}',
+  'me.a11y.settlingCount': 'Settling in: {done} of {total} chapters done',
+  /** The Settling-in card: replay a chapter, move up, or "too hard". */
+  'me.settling.title': 'SETTLING IN',
+  'me.settling.replay': 'Settle in with Linh again',
+  'me.settling.replaySub': 'Play any of the 6 chapters again',
+  'me.settling.faster': 'Try it faster',
+  'me.settling.fasterSub': 'Into the story at the usual pace',
+  'me.settling.tooHard': 'Too hard?',
+  'me.settling.tooHardSub': 'Slower voices, or practise with Linh first',
+  /** The chapter list behind "Settle in with Linh again". */
+  'me.settling.chapter': 'Chapter {chapter}',
+  'me.settling.notYet': 'Not played yet',
+  'me.settling.played': 'Played',
+  /** "Try it faster?": the confirm sheet. */
+  'me.faster.title': 'Try it faster?',
+  'me.faster.body':
+    'Everyone speaks at the usual pace and the read-aloud cards hide. Tap {slower} any time you need it.',
+  'me.faster.slowerPill': 'Slower',
+  'me.faster.back': 'Want the old pace back? Open Me › Too hard?',
+  'me.faster.confirm': 'Try it',
+  'me.faster.later': 'Later',
 } as const satisfies EnCatalogue;

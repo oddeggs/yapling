@@ -31,4 +31,17 @@ export const candoEn = {
   'cando.pitch-45s.certificate': 'Gave a 45-second pitch',
   'cando.speak-to-a-group.certificate': 'Spoke in front of a group',
   'cando.make-a-case-take-a-question.certificate': 'Made a short case and answered a question',
+  /** The Visitor's can-dos, one per Settling-in chapter (`docs/beginner-path.md` §6). */
+  'cando.say-hello-and-your-name': 'Say hello and your name',
+  'cando.answer-yes-or-no-politely': 'Answer yes or no politely',
+  'cando.ask-again-or-slower': 'Ask someone to say it again or slower',
+  'cando.understand-number-time-price': 'Understand a number, a time and a price',
+  'cando.order-one-thing': 'Order one thing',
+  'cando.say-where-youre-from-and-what-you-do': 'Say where you’re from and what you do',
+  'cando.say-hello-and-your-name.certificate': 'Said hello and my name',
+  'cando.answer-yes-or-no-politely.certificate': 'Answered yes or no politely',
+  'cando.ask-again-or-slower.certificate': 'Asked someone to say it again',
+  'cando.understand-number-time-price.certificate': 'Understood a number, a time and a price',
+  'cando.order-one-thing.certificate': 'Ordered one thing',
+  'cando.say-where-youre-from-and-what-you-do.certificate': 'Said where I’m from and what I do',
 } as const satisfies EnCatalogue;
