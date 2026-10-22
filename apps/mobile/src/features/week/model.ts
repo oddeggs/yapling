@@ -24,8 +24,10 @@ import { callRoute } from '../burrow/routes';
  */
 
 export interface WeekInput {
+  /** The story's day: week 1's day 1 is the day the story started. */
   readonly day: number;
-  readonly installedOn: string;
+  /** Week 1's day 1: the story's start (the letter's day), not the install day. */
+  readonly startedOn: string;
   readonly roommate: Roommate;
   readonly firstLanguage: FirstLanguage;
   readonly progress: BurrowProgress;
@@ -82,8 +84,8 @@ export interface WeekDates {
   readonly month: number;
 }
 
-export function weekDates(installedOn: string, week: number): WeekDates {
-  const from = dateOfDay(installedOn, firstDayOfWeek(week));
+export function weekDates(startedOn: string, week: number): WeekDates {
+  const from = dateOfDay(startedOn, firstDayOfWeek(week));
   const to = addDays(from, 6);
   return {
     from: dayOfMonth(from),
@@ -182,7 +184,7 @@ export function weekModel(input: WeekInput): WeekModel {
   };
 
   const rows: WeekRow[] = ring.slots.map((slot) => {
-    const opens = dateOfDay(input.installedOn, slotOpensOnDay(ring.week, slot.kind));
+    const opens = dateOfDay(input.startedOn, slotOpensOnDay(ring.week, slot.kind));
     const opensToday = slotOpensOnDay(ring.week, slot.kind) === input.day;
     const scene = sceneOf(slot.kind);
     return {
@@ -214,7 +216,7 @@ export function weekModel(input: WeekInput): WeekModel {
 
   const firstOpen = rows.find((r) => r.status === 'open' && r.target !== null);
   return {
-    dates: weekDates(input.installedOn, ring.week),
+    dates: weekDates(input.startedOn, ring.week),
     roommate: input.roommate,
     rows,
     phrases,

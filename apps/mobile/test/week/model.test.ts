@@ -18,7 +18,7 @@ const weekOn = (day: number, after = false): WeekInput => {
   const preview = previewModel(day, { after }, NOW);
   return {
     day,
-    installedOn: preview.installedOn,
+    startedOn: preview.installedOn,
     roommate: preview.input.roommate,
     firstLanguage: 'vi',
     progress: preview.progress,
@@ -61,7 +61,7 @@ describe('the three calls of the week', () => {
 
   it('says which day each call opens, "today" for today’s', () => {
     const week = weekModel(weekOn(2));
-    const install = new Date(`${weekOn(2).installedOn}T00:00:00Z`).getUTCDay();
+    const install = new Date(`${weekOn(2).startedOn}T00:00:00Z`).getUTCDay();
     const weekday = (offset: number) =>
       vi(
         `common.weekdayShort.${['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][(install + offset) % 7]}` as 'common.weekdayShort.mon',
@@ -120,5 +120,19 @@ describe('the week’s phrases', () => {
   it('leave the gloss out for a learner whose first language has none', () => {
     const week = weekModel({ ...weekOn(2), firstLanguage: 'other' });
     expect(week.phrases.every((p) => p.gloss === '')).toBe(true);
+  });
+});
+
+describe('week 1 after Settling in', () => {
+  it('runs from the letter’s day, not the install day', () => {
+    // Installed four days before the letter: week 1 still starts on the letter's day.
+    const visitor = { ...weekOn(2), startedOn: '2026-10-04' };
+    const week = weekModel(visitor);
+    expect(week.dates).toEqual({ from: 4, to: 10, fromMonth: null, month: 10 });
+    expect(render(vi, week.rows[0]?.when ?? { kind: 'text', text: '' })).toBe('Hôm nay');
+    // The real-week call opens on the story's day 4: Wednesday 7 October.
+    expect(render(en, week.rows[1]?.when ?? { kind: 'text', text: '' })).toBe(
+      en('common.weekdayShort.wed'),
+    );
   });
 });
