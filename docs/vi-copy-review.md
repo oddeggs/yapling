@@ -2,7 +2,7 @@
 
 Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here, except the beginner path's Vietnamese (Release 1.1), which comes first because Linh's spoken lines gate the recording.
 
-478 strings in 15 catalogues; 89 flagged.
+486 strings in 15 catalogues; 97 flagged.
 
 ## How to review
 
@@ -394,7 +394,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## Live calls: the call frame, captions, hints, the call bar, the fluency mirror
 
-`packages/i18n/src/call.vi.ts` · 42 strings
+`packages/i18n/src/call.vi.ts` · 50 strings
 
 | Key | English | Tiếng Việt | Flag | Notes |
 |---|---|---|---|---|
@@ -431,6 +431,14 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `call.mic.talking` | {who} is talking | {who} đang nói |  |  |
 | `call.mic.sceneComplete` | Scene complete | Hết cảnh |  |  |
 | `call.a11y.mic` | Hold to talk | Giữ để nói |  |  |
+| `call.a11y.micHandsFree` | Tap when you're done | Nói xong thì chạm | New | New: VoiceOver for the mic in hands-free (a tap ends the turn) |
+| `call.handsFree` | Hands-free | Rảnh tay | New | New: the in-call switch over the call bar (no holding the mic) |
+| `call.a11y.handsFree` | Hands-free: just talk, no holding. I answer when you pause. | Rảnh tay: cứ nói, không cần giữ nút. Bạn ngừng thì mình trả lời. | New | New: VoiceOver for that switch |
+| `call.handsFree.on` | Hands-free: just talk, I answer when you pause | Rảnh tay: cứ nói, bạn ngừng thì mình trả lời | New | New: the toast when hands-free is switched on |
+| `call.handsFree.off` | Hold the mic while you talk | Giữ nút trong lúc nói nhé | New | New: the toast when it is switched off (same words as the hold tip) |
+| `call.mic.handsFree` | Listening… I'll answer when you pause | Đang nghe… nói xong mình sẽ trả lời | New | New: under the mic on the learner's hands-free turn, however long they think |
+| `call.mic.handsFreeTalking` | Listening… tap when you're done | Đang nghe… nói xong thì chạm | New | New: under the mic while the learner talks hands-free |
+| `call.mic.handsFreeNotHeard` | Didn't catch that · say it again | Mình chưa nghe rõ · nói lại nhé | New | New: under the mic, quietly, after hands-free speech with no words (a cough, an "um") |
 | `call.a11y.thinking` | {name} is thinking | {name} đang nghĩ | New | New: VoiceOver for the thinking bubble |
 | `call.a11y.seconds` | {count} seconds | {count} giây | New | New: VoiceOver for timers and rounds |
 | `call.a11y.letter` | The letter. Tap to read it again | Lá thư. Chạm để đọc lại | New | New: VoiceOver for the tucked letter in the call |

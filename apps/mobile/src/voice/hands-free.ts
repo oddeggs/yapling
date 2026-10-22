@@ -37,6 +37,8 @@ export interface GateOptions {
   readonly tailMs?: number;
   /** Quiet kept after a character's line before listening again (the echo dies away). */
   readonly settleMs?: number;
+  /** Diagnostics: what was sent of what was heard, now and then. */
+  readonly log?: (message: string) => void;
 }
 
 export const HANDS_FREE_GATE = {
@@ -44,6 +46,9 @@ export const HANDS_FREE_GATE = {
   tailMs: 4_500,
   settleMs: 300,
 } as const;
+
+/** How often the gate logs what it sent, in ms of mic heard. */
+const LOG_EVERY_MS = 15_000;
 
 export type GateState = 'idle' | 'speech' | 'tail';
 
@@ -61,10 +66,13 @@ export class HandsFreeGate {
   sentMs = 0;
   heardMs = 0;
 
+  private readonly log: ((message: string) => void) | null;
+
   constructor(
     private readonly out: GateOutput,
     options: GateOptions = {},
   ) {
+    this.log = options.log ?? null;
     this.chunker = new MicChunker(options.chunkMs ?? DEFAULT_MIC_CHUNK_MS);
     this.prerollFrames = Math.round(
       (options.prerollMs ?? HANDS_FREE_GATE.prerollMs) / MIC_FRAME_MS,
@@ -109,6 +117,8 @@ export class HandsFreeGate {
    */
   frame(frame: Int16Array, endMs: number, speaking: boolean, event: VadEvent | null): void {
     this.heardMs += MIC_FRAME_MS;
+    if (this.log && this.heardMs % LOG_EVERY_MS === 0)
+      this.log(`hands-free mic: ${this.sentMs / 1000} s sent of ${this.heardMs / 1000} s heard`);
     if (!this.open) return;
     if (this.settleLeft > 0) {
       this.settleLeft -= 1;

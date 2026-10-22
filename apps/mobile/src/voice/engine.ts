@@ -21,6 +21,7 @@ import {
 } from './call-socket';
 import { initialCallState, update, withLatency, type CallState } from './call-state';
 import { MIC_FRAME_MS } from './framing';
+import { MicLevel } from './mic-level';
 import { createLipsync, type Lipsync } from './lipsync';
 import { CallPlayer, type LineInfo, type RecordedLineSource } from './player';
 import { storyRecordedLines } from './recorded-lines';
@@ -66,15 +67,14 @@ export { storyRecordedLines } from './recorded-lines';
 /** Streams the phone plays on its own are numbered above any the call uses. */
 const LOCAL_STREAM_BASE = 0xffff_0000;
 
-/** How often hands-free logs what it sent (dev diagnostics), in ms of mic heard. */
-const IDLE_LOG_MS = 15_000;
-
 /** How long the engine takes to settle on a new route before the graph is checked. */
 const ROUTE_SETTLE_MS = 300;
 
 export class VoiceEngine {
   readonly state: Store<CallState>;
   readonly lipsync: Lipsync;
+  /** How loud the learner is while hands-free hears them, for the mic's bars. */
+  readonly level = new MicLevel();
   private readonly socket: CallSocket;
   private readonly audio: CallAudio;
   private readonly vad = new Vad();
@@ -128,6 +128,7 @@ export class VoiceEngine {
       {
         ...(options.micChunkMs === undefined ? {} : { chunkMs: options.micChunkMs }),
         ...(options.now ? { now: options.now } : {}),
+        handsFree: { log: (m) => this.log(m) },
       },
     );
     this.socket = new CallSocket({
@@ -378,9 +379,7 @@ export class VoiceEngine {
     }
     if (!this.socket.ready) return;
     this.turns.frame(frame, r.speaking, r.event, endMs);
-    const { sentMs, heardMs } = this.turns.gate;
-    if (handsFree && heardMs % IDLE_LOG_MS === 0)
-      this.log(`hands-free mic: ${sentMs / 1000} s sent of ${heardMs / 1000} s heard`);
+    this.level.push(r.db, this.vad.noiseFloorDb, handsFree && this.turns.gate.state === 'speech');
   }
 
   /** Hands-free: the gate heard the learner start or stop; the call hears it on its mic clock. */
