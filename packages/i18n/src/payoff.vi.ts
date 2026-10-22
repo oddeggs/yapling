@@ -59,6 +59,7 @@ export const payoffVi = {
   'payoff.keepsake.title': 'Vòng tuần đã đầy!',
   'payoff.keepsake.week': 'TUẦN {week}',
   'payoff.keepsake.roommateSays': 'Mình tự vẽ đó. {witness} đã ký!',
+  'payoff.keepsake.officeWitness': 'Cô lễ tân',
   'payoff.keepsake.canDoTicked': 'Thêm một điều bạn làm được',
   'payoff.keepsake.track.life': 'ĐỜI SỐNG',
   'payoff.keepsake.track.work': 'CÔNG VIỆC',

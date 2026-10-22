@@ -16,7 +16,16 @@ import {
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { AiTag, GlassSheet, Press, Sticker, StickerButton, Txt, useKeyframes } from '../../ui';
+import {
+  AiTag,
+  GlassSheet,
+  Press,
+  sentences,
+  Sticker,
+  StickerButton,
+  Txt,
+  useKeyframes,
+} from '../../ui';
 import { BlurredScene, useScale, useTopShift } from './art';
 import { SheetScroll } from './sheets';
 
@@ -112,7 +121,7 @@ export function LevelScreen({
         ]}
         accessible
         accessibilityLiveRegion="polite"
-        accessibilityLabel={`${linh.name}, ${linh.aiTag}: ${linh.en}${linh.gloss ? `. ${linh.gloss}` : ''}`}
+        accessibilityLabel={sentences(`${linh.name}, ${linh.aiTag}: ${linh.en}`, linh.gloss)}
       >
         <LinhBubble {...linh} />
       </Animated.View>
@@ -346,7 +355,7 @@ function Choice({
       haptic="selection"
       accessibilityRole="radio"
       accessibilityState={{ selected: picked, checked: picked }}
-      accessibilityLabel={`${choice.title}. ${choice.sub}`}
+      accessibilityLabel={sentences(choice.title, choice.sub)}
     >
       {picked ? (
         <Sticker

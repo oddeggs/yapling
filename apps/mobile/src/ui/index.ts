@@ -9,6 +9,7 @@ export {
   type CaptionWord,
   type CharAlignment,
 } from './caption';
+export { sentences } from './spoken';
 export { CheckRow, type CheckRowKind } from './check-row';
 export { CritterSlot, type CritterSlotKind } from './critter-slot';
 export { BackButton, GlassSheet, type GlassSheetKind } from './glass-sheet';

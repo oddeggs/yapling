@@ -77,6 +77,8 @@ export const payoffEn = {
   'payoff.keepsake.title': 'Your ring is full!',
   'payoff.keepsake.week': 'WEEK {week}',
   'payoff.keepsake.roommateSays': 'I drew it myself. {witness} signed it!',
+  /** Who signed, when it was the property office's receptionist (a voice with no face). */
+  'payoff.keepsake.officeWitness': 'The receptionist',
   'payoff.keepsake.canDoTicked': 'New can-do ticked',
   'payoff.keepsake.track.life': 'LIFE',
   'payoff.keepsake.track.work': 'WORK',
