@@ -12,6 +12,7 @@ export {
   useProgress,
   useSeen,
   useSession,
+  useTurnMode,
   useWeek,
 } from './hooks';
 export type { AppClock } from './clock';
@@ -21,3 +22,4 @@ export type { ProgressSave } from './progress';
 export type { CurrentWeek } from './week';
 export type { ResourceState } from './resource';
 export type { SessionState, SessionStatus } from './session';
+export { DEFAULT_TURN_MODE, type TurnModeState } from './turn-mode';

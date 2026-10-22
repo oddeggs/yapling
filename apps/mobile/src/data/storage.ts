@@ -40,6 +40,8 @@ export const CACHE_KEYS = {
   seen: 'seen',
   /** When the app was last opened. */
   lastOpen: 'last-open',
+  /** Holding the mic or hands-free in calls. */
+  turnMode: 'turn-mode',
 } as const;
 
 /** A cached JSON value, checked against its schema; a value that no longer parses is dropped. */

@@ -20,6 +20,7 @@ import type { Resource } from './resource';
 import { SessionManager } from './session';
 import { CACHE_KEYS, type CacheStorage, type SecretStorage } from './storage';
 import { createStore, type Store } from './store';
+import { TurnModePreference } from './turn-mode';
 import { phoneTimeZone } from './week';
 
 /*
@@ -59,6 +60,8 @@ export class Data {
   readonly seen: SeenMoments;
   /** The app's opens, for the welcome back. */
   readonly opens: OpenLog;
+  /** Holding the mic or hands-free in calls (this phone only). */
+  readonly turnMode: TurnModePreference;
   /** Moves each time the app's clock moves or is replaced. */
   readonly clockMoves: Store<number> = createStore(0);
   private clockNow: AppClock;
@@ -101,6 +104,7 @@ export class Data {
     this.stopClock = this.clockNow.subscribe(() => this.clockMoves.set((n) => n + 1));
     this.seen = new SeenMoments(opts.cache, () => this.clockNow.now());
     this.opens = new OpenLog(opts.cache);
+    this.turnMode = new TurnModePreference(opts.cache);
     this.connectivity.setProbe(() => this.resume());
   }
 
@@ -137,6 +141,7 @@ export class Data {
       this.minutes.loadCache(),
       this.outbox.load(),
       this.seen.load(),
+      this.turnMode.load(),
     ]);
     await this.session.start();
     await this.resume();
@@ -231,6 +236,7 @@ export class Data {
     this.calls.reset();
     this.seen.reset();
     this.opens.reset();
+    this.turnMode.reset();
   }
 
   /** The cache belongs to one learner: another one's session starts it afresh. */
