@@ -47,6 +47,24 @@ export interface CallLayout {
   readonly episodeTag: string | null;
   /** Pass it on: the strip of listeners and their seconds. */
   readonly rounds: boolean;
+  /** Where a letter handed over in the scene can sit clear of faces and bubbles; null for none. */
+  readonly letter: LetterSpots | null;
+}
+
+/**
+ * The two places a letter can lie open without covering a face or the bubble on screen, and the
+ * corner it tucks into. Tops and edges are frame points (times the screen's scale, as the cast);
+ * the peek's width is plain points, as the bubbles' side insets are.
+ */
+export interface LetterSpots {
+  /** On the counter's front, left of the roommate: its home while the bubble is up top. */
+  readonly low: { readonly top: number; readonly right: number };
+  /** Under the speaker pill, down to the crown of the host's head: its home while the bubble is low. */
+  readonly high: { readonly bottom: number };
+  /** A bubble whose top is at or below this line is low (it shares the counter with the letter). */
+  readonly lowBand: number;
+  /** The tucked letter's width, in the low home's corner left of the low bubbles' inset. */
+  readonly peekWidth: number;
 }
 
 /** The call bar's way out, by scene. */
@@ -70,6 +88,20 @@ const at = (character: CharacterId, size: number, left: number, top: number): Ca
   top,
 });
 const bubble = (top: number, left: number, right: number): BubbleSpot => ({ top, left, right });
+
+/**
+ * A letter at the café counter (and the office's): the host's head starts at 248 and her brows at
+ * 274, the counter's top edge is at 409 and the roommate's drawing starts at 270 across. Up top the
+ * letter may brush the crown of the host's head, never her brows or eyes. The letter rests tilted,
+ * so each edge keeps a few points' clearance. The roommate's bubble starts 96 points in, so the
+ * peek fits in the 16 to 80 corner.
+ */
+const COUNTER_LETTER: LetterSpots = {
+  low: { top: 418, right: 254 },
+  high: { bottom: 256 },
+  lowBand: 300,
+  peekWidth: 64,
+};
 
 /** "S1 · E1" from an episode scene id (`s1-e1`, `s1-e1-practice`). */
 export function episodeTagOf(sceneId: string): string | null {
@@ -103,6 +135,7 @@ export function layoutFor(scene: Scene): CallLayout {
         exit: 'call.done.wrapUp',
         episodeTag: scene.kind === 'episode' ? episodeTagOf(scene.id) : null,
         rounds: false,
+        letter: COUNTER_LETTER,
       };
     }
     case 'bus-45':
@@ -121,6 +154,7 @@ export function layoutFor(scene: Scene): CallLayout {
         exit: 'call.done.hopOff',
         episodeTag: scene.kind === 'episode' ? episodeTagOf(scene.id) : null,
         rounds: scene.kind === 'practice',
+        letter: null,
       };
     case 'hollowbrook-office': {
       const host = neighbour ?? 'sol';
@@ -135,6 +169,7 @@ export function layoutFor(scene: Scene): CallLayout {
         exit: 'call.done.wrapUp',
         episodeTag: scene.kind === 'episode' ? episodeTagOf(scene.id) : null,
         rounds: false,
+        letter: COUNTER_LETTER,
       };
     }
     case 'burrow':
@@ -150,6 +185,7 @@ export function layoutFor(scene: Scene): CallLayout {
           exit: 'onboarding.unpack.done',
           episodeTag: null,
           rounds: false,
+          letter: null,
         };
       }
       return {
@@ -163,6 +199,7 @@ export function layoutFor(scene: Scene): CallLayout {
         exit: 'common.done',
         episodeTag: null,
         rounds: false,
+        letter: null,
       };
     case 'lantern-inn':
     case 'town-square':
@@ -178,6 +215,7 @@ export function layoutFor(scene: Scene): CallLayout {
         exit: 'common.done',
         episodeTag: episodeTagOf(scene.id),
         rounds: false,
+        letter: null,
       };
   }
 }

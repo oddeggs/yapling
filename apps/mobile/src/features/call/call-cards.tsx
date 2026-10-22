@@ -16,8 +16,8 @@ import {
   translucent,
   type Animation,
 } from '@yapling/theme';
-import { useMemo, useState } from 'react';
-import { Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ScrollView, Text, View, type ScrollViewInstance } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { AiTag, Tag } from '../../ui/chip';
@@ -181,29 +181,36 @@ export function MeaningWhisper({
             </CallTxt>
           </Press>
         ) : null}
-        <Press
-          onPress={onClose}
-          haptic="selection"
-          accessibilityLabel={t('common.a11y.close')}
-          hitSlop={9}
-          style={{
-            position: 'absolute',
-            top: 6,
-            right: 8,
-            width: 26,
-            height: 26,
-            borderRadius: 13,
-            backgroundColor: translucent.inkWash,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <CallTxt variant={{ ...typeExtras.meaningChip, size: 12 }} importantForAccessibility="no">
-            ✕
-          </CallTxt>
-        </Press>
+        <CloseButton label={t('common.a11y.close')} onPress={onClose} />
       </Sticker>
     </Animated.View>
+  );
+}
+
+/** The round ✕ in a card's top-right corner. */
+function CloseButton({ label, onPress }: { label: string; onPress: () => void }) {
+  return (
+    <Press
+      onPress={onPress}
+      haptic="selection"
+      accessibilityLabel={label}
+      hitSlop={9}
+      style={{
+        position: 'absolute',
+        top: 6,
+        right: 8,
+        width: 26,
+        height: 26,
+        borderRadius: 13,
+        backgroundColor: translucent.inkWash,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <CallTxt variant={{ ...typeExtras.meaningChip, size: 12 }} importantForAccessibility="no">
+        ✕
+      </CallTxt>
+    </Press>
   );
 }
 
@@ -404,58 +411,98 @@ export function LetterCard({
   letter,
   language,
   onLineGloss,
+  maxHeight,
+  interactive = true,
+  onTuck,
   style,
 }: {
   letter: Letter;
   language: FirstLanguage;
   /** A line's gloss opened for the first time. */
   onLineGloss: (line: LetterLine) => void;
+  /** Taller than this, the lines scroll inside the paper. */
+  maxHeight?: number;
+  /** False while tucked away: the lines don't take taps or VoiceOver. */
+  interactive?: boolean;
+  /** Puts the letter away (its corner button, as the whispered meaning's). */
+  onTuck?: () => void;
   style?: ViewStyleProp;
 }) {
+  const { t } = useLocale();
   const fly = useKeyframes(motion.call.letter);
   const [open, setOpen] = useState<readonly number[]>([]);
+  const scroll = useRef<ScrollViewInstance>(null);
+  const [overflows, setOverflows] = useState(false);
+  const inner = maxHeight === undefined ? undefined : maxHeight - 2 * outline.bold;
+  // Tucked away, the letter shows its top again.
+  useEffect(() => {
+    if (!interactive) scroll.current?.scrollTo({ y: 0, animated: false });
+  }, [interactive]);
   return (
     // The fly-in leaves the letter at its last tilt, as the prototype's animation does.
-    <Animated.View style={[style, fly]}>
+    <Animated.View
+      style={[style, fly]}
+      pointerEvents={interactive ? 'auto' : 'none'}
+      accessibilityElementsHidden={!interactive}
+      importantForAccessibility={interactive ? 'auto' : 'no-hide-descendants'}
+    >
       <Sticker
         shadow={stickerShadows.card}
         radius={radii.paper}
         outline={outline.bold}
         fill={colours.surfacePaper}
-        contentStyle={{ paddingVertical: 12, paddingHorizontal: 14, gap: 6 }}
+        contentStyle={{ overflow: 'hidden' }}
       >
-        {letter.lines.map((line, i) => {
-          const gloss = glossFor(line.glosses, language);
-          const shown = open.includes(i);
-          return (
-            <Press
-              key={i}
-              haptic={gloss ? 'selection' : null}
-              onPress={
-                gloss
-                  ? () => {
-                      setOpen((o) => (shown ? o.filter((n) => n !== i) : [...o, i]));
-                      if (!shown) onLineGloss(line);
-                    }
-                  : undefined
-              }
-              accessibilityLabel={shown && gloss ? `${line.en}. ${gloss}` : line.en}
-              style={{ gap: 2, paddingVertical: 3, paddingHorizontal: 4, marginHorizontal: -4 }}
-            >
-              <CallTxt
-                variant={{ ...typeExtras.win, size: 13.5, weight: 700, lineHeight: 1.25 }}
-                style={{
-                  textDecorationLine: 'underline',
-                  textDecorationStyle: 'dotted',
-                  textDecorationColor: palette.dotted,
-                }}
+        <ScrollView
+          ref={scroll}
+          style={inner === undefined ? null : { maxHeight: inner }}
+          contentContainerStyle={{ paddingVertical: 12, paddingHorizontal: 14, gap: 6 }}
+          scrollEnabled={overflows && interactive}
+          showsVerticalScrollIndicator={overflows}
+          bounces={false}
+          onContentSizeChange={(_w, h) => {
+            const over = inner !== undefined && h > inner + 1;
+            // A short phone shows the scroll bar once, so the rest of the letter is found.
+            if (over && !overflows) setTimeout(() => scroll.current?.flashScrollIndicators(), 0);
+            setOverflows(over);
+          }}
+        >
+          {letter.lines.map((line, i) => {
+            const gloss = glossFor(line.glosses, language);
+            const shown = open.includes(i);
+            return (
+              <Press
+                key={i}
+                haptic={gloss ? 'selection' : null}
+                onPress={
+                  gloss
+                    ? () => {
+                        setOpen((o) => (shown ? o.filter((n) => n !== i) : [...o, i]));
+                        if (!shown) onLineGloss(line);
+                      }
+                    : undefined
+                }
+                accessibilityLabel={shown && gloss ? `${line.en}. ${gloss}` : line.en}
+                style={{ gap: 2, paddingVertical: 3, paddingHorizontal: 4, marginHorizontal: -4 }}
               >
-                {line.en}
-              </CallTxt>
-              {shown && gloss ? <GlossLine text={gloss} variant="glossLetter" /> : null}
-            </Press>
-          );
-        })}
+                <CallTxt
+                  variant={{ ...typeExtras.win, size: 13.5, weight: 700, lineHeight: 1.25 }}
+                  style={{
+                    textDecorationLine: 'underline',
+                    textDecorationStyle: 'dotted',
+                    textDecorationColor: palette.dotted,
+                  }}
+                >
+                  {line.en}
+                </CallTxt>
+                {shown && gloss ? <GlossLine text={gloss} variant="glossLetter" /> : null}
+              </Press>
+            );
+          })}
+        </ScrollView>
+        {onTuck && interactive ? (
+          <CloseButton label={t('common.a11y.close')} onPress={onTuck} />
+        ) : null}
       </Sticker>
     </Animated.View>
   );
