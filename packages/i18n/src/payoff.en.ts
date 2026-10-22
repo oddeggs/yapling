@@ -96,6 +96,8 @@ export const payoffEn = {
    * packet and a one-tap "how was it". `{title}` is the chapter's title ("Hello"); `{name}` is the
    * neighbour who guides Settling in (Linh).
    */
+  /** The title when a chapter was left before its end: not done, no shame. */
+  'payoff.visitor.notDone': 'Next time!',
   'payoff.visitor.kicker': 'Settling in · {chapter} of {total} · {title}',
   'payoff.visitor.said': 'You said:',
   'payoff.visitor.a11ySaid': 'You said: {lines}',

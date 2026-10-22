@@ -5,6 +5,7 @@ export * from './cast';
 export * from './lines';
 export * from './catalogue';
 export * from './runner';
+export * from './card-words';
 export {
   PENDING_LINE_IDS,
   PENDING_LINES,

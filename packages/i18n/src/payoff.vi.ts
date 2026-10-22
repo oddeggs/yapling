@@ -68,6 +68,7 @@ export const payoffVi = {
   'payoff.keepsake.canNow': '{learner} can now…',
   'payoff.keepsake.witnessed': 'witnessed by {witness} · {date}',
   'payoff.keepsake.weekCanDo': 'fill a whole week with calls',
+  'payoff.visitor.notDone': 'Hẹn lần sau!',
   'payoff.visitor.kicker': 'Làm quen · {chapter}/{total} · {title}',
   'payoff.visitor.said': 'Bạn đã nói được:',
   'payoff.visitor.a11ySaid': 'Bạn đã nói được: {lines}',
