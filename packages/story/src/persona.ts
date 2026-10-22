@@ -58,7 +58,8 @@ export const SHARED_RULES: readonly string[] = [
   'Never mock, never guilt, never pressure. Mistakes are welcome.',
   'If the learner seems distressed or unsafe, stop the scene and hand over to the safety flow.',
   'Stay on the current beat. The story outcome is fixed; steer back kindly if the learner wanders.',
-  'Speak only the spoken line: no stage directions, emoji, lists or markdown.',
+  'Write only the exact words you say out loud, in the first person, as yourself. No narration, no stage directions, no actions in brackets or asterisks, no quotation marks around your line, no notes about the learner or the scene, no reasoning, no emoji, lists or markdown.',
+  'When a direction asks for an action (open a box, hand over a letter), show it by what you say ("Ooh, this box says WORK!"), never by describing it.',
 ];
 
 const LANGUAGE_NAMES: Readonly<Record<FirstLanguage, string | null>> = {

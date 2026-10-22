@@ -1,6 +1,6 @@
 import type { CallEndReason, CharacterId } from '@yapling/contracts';
 import { speechSettings } from '@yapling/domain';
-import type { Scene, SceneEffect } from '@yapling/story';
+import { SAFE_REPLY, type Scene, type SceneEffect } from '@yapling/story';
 
 import { NO_CONTROL, type Control } from './control';
 import { addSample } from './costs';
@@ -112,6 +112,7 @@ export class Replies {
       gated,
       maxWords: speechSettings(stage).maxWordsPerTurn,
       afterReaction: reaction !== null,
+      safeLine: SAFE_REPLY,
       onFirstAudio: () => reply && this.committed(reply),
       onControl: (control) => {
         if (!reply) return;
@@ -249,7 +250,8 @@ export class Replies {
         fixed: control.outcome === 'fine',
       });
     }
-    const applied = host.director.apply(plan, control.outcome);
+    // A line that came out as narration said only a safe word: the runner's own next line follows.
+    const applied = host.director.apply(plan, control.outcome, { merge: !reply.line.replaced });
     const valid = new Set([...plan.answer.phrases, ...scene.phrases]);
     const canDo =
       control.canDo !== null &&

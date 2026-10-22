@@ -72,7 +72,8 @@ describe('the reply splitter', () => {
   });
 
   it('removes markup the voice would read out', () => {
-    expect(stream('*smiles* That is **great**!', 3).spoken).toBe('smiles That is great!');
+    expect(stream('*smiles* That is **great**!', 3).spoken).toBe('That is great!');
+    expect(stream('That is **great**!', 3).spoken).toBe('That is great!');
   });
 
   it('reads a missing or broken control line as a fine turn', () => {

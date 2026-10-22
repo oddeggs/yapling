@@ -1,4 +1,5 @@
 import { CONTROL_MARKER } from './control';
+import { NarrationGuard, type GuardAction } from './narration-guard';
 
 /*
  * Splits a streamed model reply into the words to speak and the control line, as text arrives.
@@ -10,6 +11,8 @@ import { CONTROL_MARKER } from './control';
  * - The spoken line is trimmed: two sentences at most, and about `maxWords` words (cut at the
  *   next clause end once over, hard cut a few words later).
  * - After a recorded reaction ("Ooh,") has played, a leading reaction word is dropped.
+ * - Narration is kept from the voice (`NarrationGuard`): notes about the scene, the speaker
+ *   described in the third person, asides and stage directions, labels and quotation marks.
  * - Markup the voice would read out (`*`, `_`, `#`, backticks) is removed.
  */
 
@@ -25,6 +28,10 @@ export interface SplitterOptions {
   readonly maxSentences?: number;
   /** A recorded reaction already started the reply: drop a leading "Ooh"/"Mm". */
   readonly afterReaction?: boolean;
+  /** The speaker's name, so the guard knows the speaker described in the third person. */
+  readonly speaker?: string;
+  /** False for written text, which never holds narration. */
+  readonly guard?: boolean;
 }
 
 export interface SplitEnd {
@@ -43,8 +50,36 @@ export class ReplySplitter {
   private first = true;
   private capitalizeNext = false;
   private readonly spoken: string[] = [];
+  private readonly guard: NarrationGuard | null;
 
-  constructor(private readonly options: SplitterOptions) {}
+  constructor(private readonly options: SplitterOptions) {
+    this.guard = options.guard === false ? null : new NarrationGuard(options.speaker ?? '');
+  }
+
+  /** What the narration guard did to the line: null when it passed untouched. */
+  get guardAction(): GuardAction | null {
+    return this.guard?.action ?? null;
+  }
+
+  /** The text the guard kept from the voice. */
+  get guardDropped(): readonly string[] {
+    return this.guard?.dropped ?? [];
+  }
+
+  /**
+   * Speaks written text in place of a line that had nothing safe left (it was all narration).
+   * Returns the words to speak; the text is the line's from now on.
+   */
+  speakInstead(text: string): string {
+    this.pending = '';
+    this.done = false;
+    this.first = false;
+    const out: string[] = [];
+    for (const word of text.split(/\s+/)) this.emit(word, out);
+    if (out.length === 0) return '';
+    this.spoken.push(...out);
+    return `${out.join(' ')} `;
+  }
 
   /** The whole spoken line so far. */
   get text(): string {
@@ -86,37 +121,43 @@ export class ReplySplitter {
     this.pending = all ? '' : text.slice(cut + 1);
     const out: string[] = [];
     for (const raw of ready.split(' ')) {
-      const word = raw.replace(MARKUP, '');
-      if (word === '' || this.done) continue;
-      if (this.first) {
-        this.first = false;
-        if (this.options.afterReaction === true && REACTION_WORD.test(word)) {
-          this.capitalizeNext = true;
-          continue;
-        }
-      }
-      let spoken = word;
-      if (this.capitalizeNext) {
-        spoken = spoken.charAt(0).toUpperCase() + spoken.slice(1);
-        this.capitalizeNext = false;
-      }
-      this.words++;
-      if (SENTENCE_END.test(spoken)) this.sentences++;
-      const overLimit = this.words >= this.options.maxWords;
-      if (this.sentences >= (this.options.maxSentences ?? 2)) {
-        this.done = true;
-      } else if (overLimit && CLAUSE_END.test(spoken)) {
-        spoken = spoken.replace(/[,;:]$/, '.');
-        this.done = true;
-      } else if (this.words >= this.options.maxWords + OVERRUN_WORDS) {
-        spoken = `${spoken.replace(/[,;:]$/, '')}.`;
-        this.done = true;
-      }
-      out.push(spoken);
+      for (const word of this.guard ? this.guard.push(raw) : [raw]) this.emit(word, out);
     }
+    if (all && this.guard) for (const word of this.guard.end()) this.emit(word, out);
     if (out.length === 0) return '';
     this.spoken.push(...out);
     return `${out.join(' ')} `;
+  }
+
+  /** One word the guard let through: markup off, the reaction dropped, the trims applied. */
+  private emit(raw: string, out: string[]): void {
+    const word = raw.replace(MARKUP, '');
+    if (word === '' || this.done) return;
+    if (this.first) {
+      this.first = false;
+      if (this.options.afterReaction === true && REACTION_WORD.test(word)) {
+        this.capitalizeNext = true;
+        return;
+      }
+    }
+    let spoken = word;
+    if (this.capitalizeNext || (this.spoken.length + out.length === 0 && this.guardAction)) {
+      spoken = spoken.charAt(0).toUpperCase() + spoken.slice(1);
+      this.capitalizeNext = false;
+    }
+    this.words++;
+    if (SENTENCE_END.test(spoken)) this.sentences++;
+    const overLimit = this.words >= this.options.maxWords;
+    if (this.sentences >= (this.options.maxSentences ?? 2)) {
+      this.done = true;
+    } else if (overLimit && CLAUSE_END.test(spoken)) {
+      spoken = spoken.replace(/[,;:]$/, '.');
+      this.done = true;
+    } else if (this.words >= this.options.maxWords + OVERRUN_WORDS) {
+      spoken = `${spoken.replace(/[,;:]$/, '')}.`;
+      this.done = true;
+    }
+    out.push(spoken);
   }
 }
 

@@ -94,11 +94,11 @@ export interface Step {
 /** Hint and meaning requests on one beat before the next one counts as a silence. */
 export const MAX_ASKS = 3;
 
+/** Directions are instructions to the character, never text about the learner it could echo. */
 const NUDGE_INTENT =
-  'The learner is quiet. Kindly ask again more simply, in a few words. Do not answer for them.';
+  'Ask your last question again, kindly, in fewer and simpler words, and wait for the answer. Never answer it for them.';
 
-const MEANING_INTENT =
-  'The learner asked what that means. Explain it in simple English, in one short sentence.';
+const MEANING_INTENT = 'Explain what that means in simple English, in one short sentence.';
 
 export const activeBeats = (scene: Scene, stage: Stage): readonly Beat[] =>
   scene.beats.filter((b) => stageInRange(stage, b.minStage, b.maxStage));

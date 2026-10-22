@@ -1,10 +1,12 @@
 import type Anthropic from '@anthropic-ai/sdk';
 import type { CharacterId } from '@yapling/contracts';
+import { CAST } from '@yapling/story';
 
 import { NO_CONTROL, parseControl, type Control } from './control';
 import type { FrameSender } from './frames';
 import { hedged } from './hedge';
 import { noUsage, type Usage } from './llm';
+import type { GuardAction } from './narration-guard';
 import type { MappedAlignment } from './phrase-breaks';
 import { ReplySplitter } from './reply-splitter';
 import { TtsLine, type TtsVoice } from './tts';
@@ -55,6 +57,15 @@ export interface LineResult {
   readonly control: Control;
   readonly aborted: boolean;
   readonly failed: 'llm' | 'tts' | null;
+  /** What the narration guard did, or null when the line passed untouched. */
+  readonly guard: GuardReport | null;
+}
+
+export interface GuardReport {
+  /** `replaced`: nothing safe was left, so the line's safe text was spoken instead. */
+  readonly action: GuardAction | 'replaced';
+  /** The text kept from the voice (for the logs). */
+  readonly dropped: string;
 }
 
 export interface LineHost {
@@ -77,6 +88,8 @@ export interface LineOptions {
   readonly onFirstAudio?: () => void;
   /** The model's control line, as soon as its stream ends. */
   readonly onControl?: (control: Control) => void;
+  /** Spoken instead when the guard leaves nothing of a model line (it was all narration). */
+  readonly safeLine?: string;
 }
 
 export class SpokenLine {
@@ -95,6 +108,7 @@ export class SpokenLine {
   private failed: 'llm' | 'tts' | null = null;
   private control: Control = NO_CONTROL;
   private splitter: ReplySplitter;
+  private replacedBySafeLine = false;
   private settle!: (result: LineResult) => void;
   readonly done: Promise<LineResult>;
   private lastProgress = 0;
@@ -109,6 +123,8 @@ export class SpokenLine {
     this.splitter = new ReplySplitter({
       maxWords: options.maxWords,
       afterReaction: options.afterReaction,
+      speaker: CAST[options.speaker].name,
+      guard: options.source.kind === 'model',
     });
     this.done = new Promise((resolve) => (this.settle = resolve));
   }
@@ -128,6 +144,17 @@ export class SpokenLine {
   /** The words spoken so far. */
   get text(): string {
     return this.splitter.text;
+  }
+
+  /** The model's line was all narration and its safe text was spoken instead. */
+  get replaced(): boolean {
+    return this.replacedBySafeLine;
+  }
+
+  get guard(): GuardReport | null {
+    const action = this.replacedBySafeLine ? 'replaced' : this.splitter.guardAction;
+    if (action === null) return null;
+    return { action, dropped: this.splitter.guardDropped.join(' ').slice(0, 300) };
   }
 
   start(): this {
@@ -233,10 +260,16 @@ export class SpokenLine {
       }
       if (this.aborted) return;
       const end = this.splitter.end();
+      let tail = end.tail;
+      const { safeLine } = this.options;
+      if (this.splitter.text === '' && this.splitter.guardAction !== null && safeLine) {
+        this.replacedBySafeLine = true;
+        tail = this.splitter.speakInstead(safeLine);
+      }
       this.control = parseControl(end.control);
       this.options.onControl?.(this.control);
-      if (end.tail && !(await openTts())) return;
-      say(end.tail);
+      if (tail && !(await openTts())) return;
+      say(tail);
       if (this.splitter.text === '') {
         // Nothing to say (only a control line): no stream at all.
         void ttsSocket.then((ws) => ws?.close(1000, 'unused'));
@@ -334,6 +367,7 @@ export class SpokenLine {
       control: this.control,
       aborted: this.aborted,
       failed: this.failed,
+      guard: this.guard,
     });
   }
 }

@@ -17,7 +17,7 @@ beforeEach(() => {
   providers = new Providers().install();
   providers.reply = (request) => {
     const direction = JSON.stringify(request.messages.at(-1)?.content ?? '');
-    return direction.includes('The learner just spoke')
+    return direction.includes('what the learner just said')
       ? `Oh, thank you! Okay.${control({ outcome: 'fine', phrasesUsed: [] })}`
       : `Okay, here we go. Ready?${control({ outcome: 'fine' })}`;
   };

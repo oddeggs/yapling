@@ -140,8 +140,11 @@ export class Director {
     };
   }
 
-  /** Applies the outcome the line chose. */
-  apply(plan: ReplyPlan, outcome: Outcome): Applied {
+  /**
+   * Applies the outcome the line chose. With `merge: false` (the line didn't say what it was
+   * asked), the runner's next generated line is kept to be spoken on its own.
+   */
+  apply(plan: ReplyPlan, outcome: Outcome, options: { readonly merge?: boolean } = {}): Applied {
     const event: SceneEvent['type'] =
       outcome === 'fine' || (outcome === 'target_error' && plan.error === null)
         ? 'fine'
@@ -153,7 +156,7 @@ export class Director {
     const effects = [...this.dispatch({ type: event })];
     let fulfilled = false;
     let correction = false;
-    if (branch?.kind === 'merge') {
+    if (branch?.kind === 'merge' && options.merge !== false) {
       const i = effects.findIndex(
         (e) =>
           e.type === 'gen' &&
@@ -207,10 +210,20 @@ const BRANCH_TEXT: Readonly<Record<Exclude<Branch['kind'], 'merge'>, string>> = 
 const branchText = (branch: Branch) =>
   branch.kind === 'merge' ? `Then: ${genDirection(branch.effect)}` : BRANCH_TEXT[branch.kind];
 
-function rules(stage: Stage, phrases: readonly Id[], canDo: Id | null): string {
+/** What every direction ends with: the reply is the character's own words and nothing else. */
+const spokenOnly = (speaker: CharacterId) =>
+  `Write only the exact words ${nameOf(speaker)} says out loud, in the first person: no narration, no stage directions, no quotation marks, no notes about the learner or the scene, no reasoning.`;
+
+function rules(
+  speaker: CharacterId,
+  stage: Stage,
+  phrases: readonly Id[],
+  canDo: Id | null,
+): string {
   const max = speechSettings(stage).maxWordsPerTurn;
   return [
     `Say one or two short sentences, under ${max} words in all. Spell numbers as words.`,
+    spokenOnly(speaker),
     CONTROL_RULE,
     phrases.length > 0 ? `Phrase ids you may list: ${phrases.join(', ')}.` : '',
     canDo ? `The can-do this turn can show: ${canDo}.` : '',
@@ -226,7 +239,7 @@ export function replyDirection(
   targets: readonly ErrorTargetBrief[],
   afterReaction: string | null,
 ): string {
-  const lines = [`Speak as ${nameOf(plan.speaker)}. The learner just spoke.`];
+  const lines = [`Your reply as ${nameOf(plan.speaker)} to what the learner just said.`];
   if (afterReaction) {
     lines.push(
       `You have already said "${afterReaction}" out loud: carry on from it, without another Ooh, Oh, Mm or Hmm.`,
@@ -254,22 +267,22 @@ export function replyDirection(
       `- off_topic (it doesn't answer, is unclear, or is only "um"): ${branchText(plan.offTopic)}`,
     );
   }
-  lines.push(rules(stage, plan.answer.phrases, plan.answer.canDo));
+  lines.push(rules(plan.speaker, stage, plan.answer.phrases, plan.answer.canDo));
   return lines.join('\n');
 }
 
 /** The direction for a line the runner asks for on its own (a beat line, nudge or fallback). */
 export function lineDirection(effect: GenEffect, stage: Stage): string {
   return [
-    `Speak as ${nameOf(effect.speaker)}. ${genDirection(effect)}`,
-    rules(stage, effect.elicits, null),
+    `Your next line as ${nameOf(effect.speaker)}, said straight to the learner. ${genDirection(effect)}`,
+    rules(effect.speaker, stage, effect.elicits, null),
   ].join('\n');
 }
 
 /** The kind close when the learner's live minutes are nearly used up. */
 export function wrapUpDirection(speaker: CharacterId, stage: Stage): string {
   return [
-    `Speak as ${nameOf(speaker)}. Time is nearly up for today. Close the scene kindly: say you will carry on next time, and thank the learner. No question.`,
-    rules(stage, [], null),
+    `Your next line as ${nameOf(speaker)}. Time is nearly up for today. Close the scene kindly: say you will carry on next time, and thank the learner. No question.`,
+    rules(speaker, stage, [], null),
   ].join('\n');
 }
