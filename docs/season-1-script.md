@@ -1,12 +1,13 @@
 # Yapling — Season 1 script: "The Café Might Close"
 
-*v0.1 · 2026-10-21 · 6 episodes, 1 per week · matches design round 5 · cast notes in `cast-bible.md`*
+*v0.2 · 2026-10-22 · Settling in (Visitors) added before Episode 1 · 6 episodes, 1 per week · matches design round 5 · cast notes in `cast-bible.md`*
 
 ## How to read this script
 
 - **[REC]** = a fixed line, written and voice-recorded (consistent acting, zero AI cost).
 - **[GEN]** = a slot the live-call AI fills, with its intent. The AI uses the character's persona prompt (`cast-bible.md`), the learner's stage, their due phrases and their two target errors.
-- **Lines are written at Newcomer level.** Each episode has a **Stage scaling** note for higher stages; the AI adapts speed, length and hints per the stage table in the cast bible.
+- **Lines are written at Newcomer level.** Each episode has a **Stage scaling** note for higher stages; the AI adapts speed, length and hints per the stage table in the cast bible. Visitors (A0–A1) first play **Settling in**, six short chapters after the prologue, and get easier versions of week 1's hard turns (both in the Settling-in section below).
+- **[REC-VI]** = a recorded line Linh speaks in Vietnamese (Settling in only).
 - **Each week** = 1 Episode call (this script) + 1 Real-week call + 1 Practice call, plus free "between calls" content (Pip's story, a postcard, the cliffhanger voicemail).
 - **Missed a week?** The episode waits. Pip tells the **Recap** line when the learner returns.
 
@@ -34,6 +35,196 @@
 - Pip [REC]: "Okay. I know three things about you already. You keep going when you're stuck. You ask questions. And you're very good at unpacking."
 - Linh knocks [REC]: "Hi! I'm Linh, from next door. I heard someone new moved in. When you're settled, come by the café. Mei makes the best kaya toast in town."
 - **Hook into E1:** that evening, a letter is pushed under the café door (seen through the burrow window as a tiny animation; no explanation yet).
+- **Visitors:** Linh's knock is Chapter 1 of Settling in instead of `s1-pro-03`, and the letter comes at the end of Chapter 6. A learner who chose "Mình mới bắt đầu" skips the unpacking call; one the placement call made a Visitor hears it as usual.
+
+---
+
+## Settling in (Visitors, before week 1)
+
+*Release 1.1 · design in `beginner-path.md` · Vietnamese: "Làm quen".* Six short calls with Linh, Pip, Bea and Mei for learners at the **Visitor** stage (A0–A1), between day 1 and the letter. Each call is 2–3 minutes with 3–5 turns. Nothing fails: no timer, no score, and a chapter ends when its last line plays. After Chapter 6 the letter slides under the café door and week 1 starts the next morning.
+
+**How to read these tables**
+
+- **[REC]** English lines are recorded slow: speed 0.7, at most 8 words, each sentence its own clause, 100 wpm or slower (the gate in `tools/voice/yap_voice.py pace`). Two lines are fast on purpose and marked.
+- **[REC-VI]** lines are Linh speaking Vietnamese, the only spoken Vietnamese in the cast: at the start of a new kind of task, in Chapters 1, 2, 3 and 6 only. If her Vietnamese voice is turned down after native review, each one shows as a text card instead (same words).
+- **Turn** rows are the learner: the card or cards shown from the start (Vietnamese under each), and the words that pass (any try containing one of them; see `beginner-path.md` §5.2). After a pass, a praise line from the shared pool plays unless the row says otherwise.
+- **[GEN]** is a short live line (it needs the learner's own words), 6 words at most at the Visitor row.
+- Line ids are the keys in `audio/season-1/lines.json` (`pending` until recorded). The Vietnamese column is the line's on-screen gloss; for [REC-VI] lines it gives the English meaning in brackets instead.
+
+| # | Title | Place | Cast | You learn to say | Phrase (seed packet) | Can-do |
+|---|---|---|---|---|---|---|
+| 1 | Hello | Burrow door (Linh's knock) | Linh, Pip | Hi · I'm … · Nice to meet you · Bye | *Nice to meet you* | Say hello and your name |
+| 2 | Boxes | Day-one burrow | Linh, Pip | Yes · No · this or that · Yes, please · No, thank you · Thank you | *Yes, please* | Answer yes or no politely |
+| 3 | Again, please | Burrow | Linh, Pip | Sorry? Again, please · Slowly, please | *Sorry? Again, please.* · *Slowly, please.* | Ask someone to say it again or slower |
+| 4 | Bus 45 | Bus stop | Linh, Bea | Numbers (2, 9, 10, 45, 50) · Two, please | — | Understand a number, a time and a price |
+| 5 | Mei's café | Lantern Café | Mei, Pip | Tea, please · How much? · Here you go | *How much?* | Order one thing |
+| 6 | About me | Burrow at dusk | Pip, Linh | I'm from … · I'm a … / I work at … · I like … | *I'm from …* | Say where you're from and what you do |
+
+### Chapter 1 · Hello (Linh at the door, day 1 evening)
+
+| # | Id | Who | Line or turn | Vietnamese |
+|---|---|---|---|---|
+| 1 | | — | Knock | |
+| 2 | `s1-set1-01` | Linh [REC] | "Hi! I'm Linh." | Chào bạn! Mình là Linh. |
+| 3 | `s1-set1-02` | Linh [REC-VI] | "Chào bạn! Mình là Linh, ở nhà bên cạnh. Hồi mới xuống phà, mình cũng chưa nói được câu nào đâu. Giờ mình nói trước, bạn nói theo nhé." | (Hi! I'm Linh, from next door. When I got off the ferry, I couldn't say a word either. Now I'll say it first, and you say it after me.) |
+| 4 | | Turn | Card **"Hi!"** (Chào!) · passes on hi, hello, hey | |
+| 5 | `s1-set1-03` | Pip [REC] | "Hi! Hi, Linh!" (copies you; no praise line) | Chào! Chào Linh! |
+| 6 | `s1-set1-04` | Linh [REC] | "I'm Linh. And you?" | Mình là Linh. Còn bạn? |
+| 7 | | Turn | Card **"I'm {name}."** (Mình là {name}.) · passes on I'm, I am, my name, or their name | |
+| 8 | `s1-set1-05` | Linh [REC] | "{name}! Nice to meet you." (recorded without the name; the name is spliced in) | {name}! Rất vui được gặp bạn. |
+| 9 | | Turn | Card **"Nice to meet you, too."** (Mình cũng rất vui được gặp bạn.) · passes on nice, meet | |
+| 10 | `s1-set1-06` | Pip [REC] | "Nice to meet you, too! I'm Pip!" | Mình cũng rất vui được gặp bạn! Mình là Pip! |
+| 11 | `s1-set1-07` | Linh [REC] | "Bye! See you tomorrow." | Tạm biệt! Mai gặp nhé. |
+| 12 | | Turn | Card **"Bye!"** (Tạm biệt!) · passes on bye, see you | |
+| 13 | `s1-set1-08` | Linh [REC-VI] | "Bạn vừa nói tiếng Anh rồi đó! Mai gặp lại nhé." | (You just spoke English! See you tomorrow.) |
+
+### Chapter 2 · Boxes
+
+| # | Id | Who | Line or turn | Vietnamese |
+|---|---|---|---|---|
+| 1 | `s1-set2-01` | Pip [REC] | "So many boxes! Help, please!" | Nhiều thùng quá! Giúp mình với! |
+| 2 | `s1-set2-02` | Linh [REC-VI] | "Mình hỏi, bạn chọn một thẻ rồi đọc to lên nhé." | (I'll ask; you pick a card and read it out loud.) |
+| 3 | `s1-set2-03` | Linh [REC] | "Is this your box?" | Đây là thùng của bạn à? |
+| 4 | | Turn | Cards **"Yes."** (Có.) / **"No."** (Không.) · either passes | |
+| 5 | `s1-set-linh-okay`, `s1-set2-04` | Linh [REC] | "Okay!" then "Books or clothes?" | Được rồi! · Sách hay quần áo? |
+| 6 | | Turn | Cards **"Books."** (Sách.) / **"Clothes."** (Quần áo.) | |
+| 7 | `s1-set2-05` | Pip [REC] | "Tea? For you!" | Trà nhé? Cho bạn đó! |
+| 8 | | Turn | Cards **"Yes, please."** (Có, cảm ơn nhé.) / **"No, thank you."** (Thôi, cảm ơn nhé.) | |
+| 9 | `s1-set2-06` | Linh [REC] | "A gift for you. Here you go!" | Quà cho bạn nè. Của bạn đây! |
+| 10 | | Turn | Card **"Thank you!"** (Cảm ơn!) · passes on thank, thanks | |
+| 11 | `s1-set2-07` | Linh [REC] | "You're welcome!" | Không có gì! |
+| 12 | `s1-set2-08` | Pip [REC] | "One box done! Thank you!" (a box unpacks) | Xong một thùng! Cảm ơn bạn! |
+
+### Chapter 3 · Again, please (the two lifesavers, and the call honours them)
+
+| # | Id | Who | Line or turn | Vietnamese |
+|---|---|---|---|---|
+| 1 | `s1-set3-01` | Linh [REC-VI] | "Mình chỉ bạn hai câu cứu nguy nhé. Không nghe kịp thì nói: Sorry? Again, please. Người ta nói nhanh quá thì nói: Slowly, please. Ở Natterwick, ai cũng sẵn lòng nói lại cho bạn." | (Here are two lifesavers. If you didn't catch it, say: Sorry? Again, please. If people talk too fast, say: Slowly, please. In Natterwick, everyone's happy to say it again for you.) |
+| 2 | `s1-set3-02` | Linh [REC] | "Sorry? Again, please." (the model) | Xin lỗi? Nói lại giúp mình nhé. |
+| 3 | | Turn | Card **"Sorry? Again, please."** (Xin lỗi? Nói lại giúp mình nhé.) · passes on sorry, again, pardon, repeat | |
+| 4 | `s1-set3-03` | Linh [REC] | "Slowly, please." (the model) | Nói chậm giúp mình nhé. |
+| 5 | | Turn | Card **"Slowly, please."** (Nói chậm giúp mình nhé.) · passes on slow, slowly | |
+| 6 | `s1-set3-04` | Pip [REC] | "Ooh, I found my snacks and my map and my notebook!" (**fast on purpose**: 11 words at speed 1.0, the only long line in Settling in) | Ồ, mình tìm thấy đồ ăn vặt, bản đồ và sổ tay rồi! |
+| 7 | | Turn | Cards **"Sorry? Again, please."** / **"Slowly, please."** · the call replays Pip's line slower (`beginner-path.md` §5) and the turn passes | |
+| 8 | `s1-set3-05` | Pip [REC] | "Snacks. Map. Notebook!" | Đồ ăn vặt. Bản đồ. Sổ tay! |
+| 9 | `s1-set3-06` | Linh [REC] | "See? It works. Every time." | Thấy chưa? Lần nào cũng được. |
+| 10 | | Turn | Card **"Thank you!"** (Cảm ơn!) | |
+| 11 | `s1-set3-07` | Linh [REC] | "Use them every day. Bye!" | Dùng mỗi ngày nhé. Tạm biệt! |
+
+### Chapter 4 · Bus 45
+
+| # | Id | Who | Line or turn | Vietnamese |
+|---|---|---|---|---|
+| 1 | `s1-set4-01` | Linh [REC] | "This is the bus stop." | Đây là trạm xe buýt. |
+| 2 | | — | Task card: "Nghe số, rồi chọn thẻ và đọc to." | |
+| 3 | `s1-set4-02` | Bea [REC] | "Morning! This is Bus forty-five." | Chào buổi sáng! Đây là xe buýt số 45. |
+| 4 | `s1-set4-03` | Linh [REC] | "Which bus? Forty-five or fifty?" | Xe nào? Số 45 hay số 50? |
+| 5 | | Turn | Cards **"Forty-five."** (Bốn mươi lăm.) / **"Fifty."** (Năm mươi.) · 45 passes; 50 gets Linh's "Again?" (`s1-set-linh-again`) and line 3 replays | |
+| 6 | `s1-set4-04` | Bea [REC] | "I leave at nine." | Chín giờ xe chạy nhé. |
+| 7 | `s1-set4-05` | Linh [REC] | "What time? Nine or ten?" | Mấy giờ? Chín giờ hay mười giờ? |
+| 8 | | Turn | Cards **"Nine."** (Chín giờ.) / **"Ten."** (Mười giờ.) | |
+| 9 | `s1-set4-06` | Bea [REC] | "Tickets are two dollars each, love." (**Bea's normal pace on purpose**, speed 0.92) | Mỗi vé hai đô nhé. |
+| 10 | | Turn | Cards **"Sorry? Again, please."** / **"Two dollars."** (Hai đô.) · both pass; "again" replays it slower after Bea's "Of course, love." (`s1-set-bea-slowly`) | |
+| 11 | `s1-set4-07` | Linh [REC] | "How many tickets? One or two?" | Mấy vé? Một hay hai? |
+| 12 | | Turn | Cards **"Two, please."** (Hai vé nhé.) / **"One, please."** (Một vé nhé.) | |
+| 13 | `s1-set4-08` | Bea [REC] | "Two tickets. Here you go!" | Hai vé. Của bạn đây! |
+| 14 | | Turn | Card **"Thank you!"** (Cảm ơn!) | |
+| 15 | `s1-set4-09` | Bea [REC] | "Lovely! Have a nice day!" | Tuyệt! Chúc một ngày vui vẻ! |
+
+### Chapter 5 · Mei's café (meet Mei before her bad news)
+
+| # | Id | Who | Line or turn | Vietnamese |
+|---|---|---|---|---|
+| 1 | `s1-set5-01` | Mei [REC] | "Hi! Welcome to my café!" | Chào! Chào mừng đến quán của mình! |
+| 2 | | Turn | Cards **"Hi!"** (Chào!) / **"Hello!"** (Xin chào!) | |
+| 3 | `s1-set5-02` | Mei [REC] | "I'm Mei. Tea or coffee?" | Mình là Mei. Trà hay cà phê? |
+| 4 | | Turn | Task card: "Chọn món trên thẻ rồi đọc to nhé." · Cards **"Tea, please."** (Cho mình trà nhé.) / **"Coffee, please."** (Cho mình cà phê nhé.) | |
+| 5 | `s1-set5-03` | Mei [REC] | "Kaya toast too? It's really good!" | Thêm bánh mì nướng kaya không? Ngon lắm đó! |
+| 6 | | Turn | Cards **"Yes, please."** / **"No, thank you."** | |
+| 7 | `s1-set5-04` | Pip [REC, whisper] | "Ask her: how much?" | Hỏi Mei đi: bao nhiêu tiền? |
+| 8 | | Turn | Card **"How much?"** (Bao nhiêu tiền?) | |
+| 9 | `s1-set5-05` | Mei [REC] | "Three dollars, please." | Ba đô nhé. |
+| 10 | | Turn | Cards **"Here you go."** (Đây, gửi bạn.) / **"Thank you!"** (Cảm ơn!) | |
+| 11 | `s1-set5-06` | Mei [REC] | "Thanks lah. Enjoy!" (Mei's one "lah") | Cảm ơn nha. Ăn ngon nhé! |
+| 12 | `s1-set5-07` | Mei [REC] | *(sighs)* "Okay. Back to work." | Thôi. Làm tiếp thôi. |
+| 13 | `s1-set5-08` | Pip [REC, whisper] | "Mei looks tired." | Mei trông mệt quá. |
+
+### Chapter 6 · About me (Pip writes a page about you; the letter arrives)
+
+| # | Id | Who | Line or turn | Vietnamese |
+|---|---|---|---|---|
+| 1 | `s1-set6-01` | Pip [REC] | "I'm writing a page about you!" | Mình đang viết một trang về bạn! |
+| 2 | `s1-set6-02` | Linh [REC] | "I'm from Vietnam. And you?" (re-recorded per market by that market's Home Neighbour) | Mình đến từ Việt Nam. Còn bạn? |
+| 3 | | Turn | Task card: "Nói về bạn: chọn thẻ, hoặc nói bằng từ của bạn." · Card **"I'm from …"** (Mình đến từ …) with chip **"I'm from Vietnam."** (Mình đến từ Việt Nam.) · passes on from (their own town is welcome) | |
+| 4 | | Pip [GEN] | Repeats their place, delighted, 6 words at most ("From Hanoi! Writing it down.") | |
+| 5 | `s1-set6-03` | Linh [REC] | "I work at the library. And you?" | Mình làm ở thư viện. Còn bạn? |
+| 6 | | Turn | Cards **"I'm a student."** (Mình là sinh viên.) / **"I work in an office."** (Mình làm văn phòng.) · passes on I'm a, I work, or any job word | |
+| 7 | | Pip [GEN] | Repeats their job ("A teacher! Wow!") | |
+| 8 | `s1-set6-04` | Pip [REC] | "I like snacks! And you?" | Mình thích đồ ăn vặt! Còn bạn? |
+| 9 | | Turn | Cards **"I like coffee."** (Mình thích cà phê.) / **"I like music."** (Mình thích âm nhạc.) · passes on like | |
+| 10 | | Pip [GEN] | Reads its page back in three bits: their name, their place, what they like | |
+| 11 | `s1-set6-05` | Linh [REC-VI] | "Giỏi lắm! Bạn sẵn sàng rồi đó. Mai mình gặp nhau ở quán của Mei nhé." | (Well done! You're ready. See you at Mei's café tomorrow.) |
+| 12 | | — | Dusk: the letter under the café door (the existing `dusk_letter` beat) | |
+| 13 | `s1-set6-06` | Pip [REC] | "Look! A letter under Mei's door!" | Nhìn kìa! Có lá thư dưới cửa quán Mei! |
+
+### Shared lines (all chapters and the week-1 Visitor turns)
+
+| Use | Id | Who | Line | Vietnamese |
+|---|---|---|---|---|
+| Praise (after a pass) | `s1-set-linh-great` · `s1-set-linh-yes` | Linh | "Great!" · "Yes!" | Tuyệt! · Đúng rồi! |
+| | `s1-set-pip-great` · `s1-set-pip-yes` | Pip | "Great!" · "Yes!" | Tuyệt! · Đúng rồi! |
+| | `s1-set-mei-great` | Mei | "Great!" | Tuyệt! |
+| | `s1-set-bea-lovely` | Bea | "Lovely!" | Tuyệt quá! |
+| Okay / again | `s1-set-linh-okay` · `s1-set-linh-again` | Linh | "Okay!" · "Again?" | Được rồi! · Nói lại nhé? |
+| | `s1-set-mei-okay` | Mei | "Okay!" | Được rồi! |
+| | `s1-set-bea-right` | Bea | "Right!" | Được rồi! |
+| Before a slow replay | `s1-set-linh-slowly` | Linh | "Sure. Slowly." | Được. Mình nói chậm nhé: |
+| | `s1-set-pip-slowly` | Pip | "Okay! Slowly." | Ừ! Nói chậm nhé: |
+| | `s1-set-mei-slowly` | Mei | "Sure, sure." | Được, được. |
+| | `s1-set-bea-slowly` | Bea | "Of course, love." | Tất nhiên rồi. |
+| Linh's help [REC-VI] | `s1-set-linh-together` | Linh | "Mình nói cùng nhau nhé." | (Let's say it together.) |
+| | `s1-set-linh-english` | Linh | "Bạn thử nói bằng tiếng Anh nhé, cứ đọc thẻ gợi ý là được." (after a Vietnamese answer, once per chapter) | (Try it in English; just read the card.) |
+| Skip | `s1-set-linh-skip` | Linh | "That's okay!" | Không sao đâu! |
+
+Only Linh has a recorded "Again?". When Mei, Bea or Pip needs one, the call speaks it with the live voice at the Visitor row.
+
+### Week 1 for Visitors
+
+Same story, scenes and recordings. Each hard turn gets a Visitor version (`maxStage: 'visitor'`), and each Newcomer-only beat gets `minStage: 'newcomer'`. Cards show from the start, each with its Vietnamese; a Vietnamese task card opens each new kind of turn.
+
+| Day · beat | Newcomer | Visitor | Task card |
+|---|---|---|---|
+| 2 · Pip whispers "Can you ask her what's wrong?" | Ask in your own words | Card **"What's wrong?"** (Có chuyện gì vậy?) · passes on wrong, okay | Hỏi Mei có chuyện gì. Đọc thẻ nhé. |
+| 2 · Mei deflects ("nothing lah") | Ask again or offer help | Skipped: Mei shows the letter | |
+| 2 · "What does rent mean?" | Explain the word | Pip [REC] `s1-e1-visitor-rent` "Rent… is it bread? Or money?" ("Rent"… là bánh mì à? Hay là tiền?) · cards **"It's money."** (Là tiền.) / **"It's money for a home."** (Là tiền thuê nhà.) | Pip hỏi "rent" là gì. Chọn một thẻ. |
+| 2 · "Can you call them for me? My English goes funny…" | Agree | Mei [REC] `s1-e1-visitor-call` "Can you call them? Please?" (Bạn gọi cho họ được không? Nhờ bạn nhé?) · cards **"Yes, I can help."** (Ừ, mình giúp được.) / **"Okay!"** (Được!) | Mei nhờ bạn gọi điện. Nhận lời nhé. |
+| 2 · Office: "Who's calling, please?" | Introduce yourself and say you're calling for Mei | Office [GEN, Visitor row] asks in 5 words · cards **"I'm {name}."** (Tôi là {name}.) / **"I'm {name}. I'm calling for Mei."** (Tôi là {name}. Tôi gọi giúp Mei.) · new Visitor turn after the Friday meeting: card **"Thank you. Bye!"** (Cảm ơn. Tạm biệt!) | Văn phòng hỏi ai đang gọi. Nói tên bạn. · Chào tạm biệt văn phòng. |
+| 2 · "Okay. So… what do I do?" | Give one piece of advice | Cards **"Go on Friday."** (Thứ Sáu đi gặp họ nhé.) / **"I think you should go on Friday."** (Mình nghĩ bạn nên đi vào thứ Sáu.) | Mei hỏi nên làm gì. Chọn một lời khuyên. |
+| 3 · Linh's postcard | As is | Linh [REC, postcard] `s1-e1-visitor-postcard` "Remember: Sorry? Again, please. It always works!" (Nhớ nhé: Sorry? Again, please. Lúc nào cũng được!) | |
+| 3 · Pip's story | Tap lines for Vietnamese | The same, with Vietnamese shown under each line | |
+| 4 · Introduce yourself in 30 s, twice | Timer ring | No timer. Three short turns from Chapters 1 and 6 (cards **"Hi, I'm …"**, **"I'm a … / I work at …"**, **"Nice to meet you."**), then once more all together from one card: the learner's first three-sentence run. Pip tries it back [GEN] | Giới thiệu bản thân: từng câu một. · Giờ nói cả ba câu liền nhau nhé. |
+| 5 · Pass it on, 90/60/45 s | Talk about your day | 30/25/20 s, the frame "Today I … / I went to … / I'm …" as English cards (no Vietnamese: the Pass it on rule); every round passes when the timer ends | (none) |
+| 5 · Keepsake | Pip's certificate | Linh hands over the Newcomer residency card, if at least 70% of week-1 turns passed without the generous pass (`beginner-path.md` §2.2) | |
+| 6 · Fix Pip's "Can I helping you?" | Frame after a pause | Card **"Can I help you?"** (Mình giúp gì được cho bạn?) from the start | Pip nói sai. Đọc câu đúng cho Pip nhé. |
+
+**Later episodes.** Episodes 2–6 get a Visitor row in Release 2 (see `journey-and-story.md` §2.4). Until then a Visitor who stays past week 1 plays them at Newcomer with "slower" on.
+
+### Edits from the design draft (native-editor pass, 22 Oct 2026)
+
+| Line | Was (`beginner-path.md` §4) | Now | Why |
+|---|---|---|---|
+| `s1-set1-02` | "…Mình là Linh, nhà bên cạnh. Hồi mới xuống phà tới đây, mình cũng chưa nói được câu nào…" | "…Mình là Linh, ở nhà bên cạnh. Hồi mới xuống phà, mình cũng chưa nói được câu nào đâu…" | "ở nhà bên cạnh" is how people say it; "xuống phà tới đây" doubled the motion |
+| `s1-set2-06` | Linh "Here you go." | "A gift for you. Here you go!" | Pip offers the tea, so Linh handing it over didn't follow, and it made no sense after "No, thank you". A small gift works after either answer |
+| `s1-set3-01` | "hai câu cứu cánh" · "ai cũng sẽ nói lại cho bạn" | "hai câu cứu nguy nhé" · "ai cũng sẵn lòng nói lại cho bạn" | "cứu cánh" also means "the end goal", so it reads oddly; "sẵn lòng" is warmer |
+| `s1-set3-07` | "Use it every day. Bye!" | "Use them every day. Bye!" | Two phrases |
+| `s1-set4-04` | Bea "The next bus is at nine." | "I leave at nine." | Bea's bus is already at the stop; "next bus" contradicted that |
+| `s1-set4-09` | Bea "Lovely. See you, love!" | "Lovely! Have a nice day!" | One "love" per chapter (line 9 keeps it); a useful set phrase |
+| `s1-set5-03` | Mei "Kaya toast too? Yes or no?" | "Kaya toast too? It's really good!" | "Yes or no?" sounded like a quiz, not a café owner; the cards already show the choice |
+| `s1-set6-06` | Pip "Look! A letter at Mei's café!" | "Look! A letter under Mei's door!" | Says what Pip sees, and matches the dusk beat |
+| `s1-set-bea-slowly` | "Course, love." | "Of course, love." | The clipped form is hard to catch at A0 |
+| `s1-set-linh-english` | "Bạn thử nói bằng tiếng Anh nhé, nhìn thẻ gợi ý đó." | "Bạn thử nói bằng tiếng Anh nhé, cứ đọc thẻ gợi ý là được." | The task is to read the card aloud, not look at it; "là được" reassures |
+
+The other lines stand as drafted. Every character line is 8 words or fewer except the deliberate `s1-set3-04`.
 
 ---
 

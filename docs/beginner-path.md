@@ -1,6 +1,6 @@
 # Yapling: the beginner path ("Settling in")
 
-_v0.1 · 22 Oct 2026 · design for Release 1.1 · inputs: `concept.md`, `journey-and-story.md`, `cast-bible.md`, `season-1-script.md`, `learner-test.md`, the built week (`packages/story/src/season-1/*`, `packages/domain/src/stages.ts`, `apps/api/src/call/*`, `apps/mobile/src/features/onboarding`, `features/burrow/day-plan.ts`) and the recorded lines in `audio/season-1/`. The build plan is "Release 1.1 · Beginner path" in `plans/261022-0200-yapling-releases/plan.md`._
+_v0.2 · 22 Oct 2026 · design for Release 1.1, approved by the founder 22 Oct 2026 (§10) · inputs: `concept.md`, `journey-and-story.md`, `cast-bible.md`, `season-1-script.md`, `learner-test.md`, the built week (`packages/story/src/season-1/*`, `packages/domain/src/stages.ts`, `apps/api/src/call/*`, `apps/mobile/src/features/onboarding`, `features/burrow/day-plan.ts`) and the recorded lines in `audio/season-1/`. The build plan is "Release 1.1 · Beginner path" in `plans/261022-0200-yapling-releases/plan.md`._
 
 The founder's friend "barely completed any days". This doc says why, and designs a short path that gets a true beginner (A0–A1) talking before the story starts.
 
@@ -114,7 +114,7 @@ Rules from the cast bible that this frame keeps:
 
 ### 4.1 The scripts
 
-Line ids are `s1-setN-NN`. **EN** lines are English, under 8 words, recorded slow (section 5.3). **VI** lines are Linh in Vietnamese [VI review before recording]. **Turn** rows are the learner: the card(s) they read aloud and what passes. **Gen** is a short live line (it needs the learner's own words). Every English line has a Vietnamese gloss; every card shows its Vietnamese under it.
+**The script of record is now `season-1-script.md`, "Settling in"**, with every line id and the final wording after a native-editor pass (its last table lists the edits, which are applied below too). Line ids are `s1-setN-NN`; shared lines are `s1-set-<who>-<what>` and the week-1 Visitor lines `s1-e1-visitor-<what>`. **EN** lines are English, under 8 words, recorded slow (section 5.3). **VI** lines are Linh in Vietnamese [VI review before recording]. **Turn** rows are the learner: the card(s) they read aloud and what passes. **Gen** is a short live line (it needs the learner's own words). Every English line has a Vietnamese gloss; every card shows its Vietnamese under it.
 
 **Chapter 1 · Hello** (Linh at the door, day 1 evening)
 
@@ -122,7 +122,7 @@ Line ids are `s1-setN-NN`. **EN** lines are English, under 8 words, recorded slo
 |---|---|---|
 | 1 | — | Knock |
 | 2 | Linh EN | "Hi! I'm Linh." |
-| 3 | Linh VI | "Chào bạn! Mình là Linh, nhà bên cạnh. Hồi mới xuống phà tới đây, mình cũng chưa nói được câu nào. Giờ mình nói trước, bạn nói theo nhé." |
+| 3 | Linh VI | "Chào bạn! Mình là Linh, ở nhà bên cạnh. Hồi mới xuống phà, mình cũng chưa nói được câu nào đâu. Giờ mình nói trước, bạn nói theo nhé." |
 | 4 | Turn | Card **"Hi!"** · passes on hi, hello, hey |
 | 5 | Pip EN | "Hi! Hi, Linh!" (copies you) |
 | 6 | Linh EN | "I'm Linh. And you?" |
@@ -146,7 +146,7 @@ Line ids are `s1-setN-NN`. **EN** lines are English, under 8 words, recorded slo
 | 6 | Turn | Cards **"Books."** / **"Clothes."** |
 | 7 | Pip EN | "Tea? For you!" |
 | 8 | Turn | Cards **"Yes, please."** / **"No, thank you."** |
-| 9 | Linh EN | "Here you go." |
+| 9 | Linh EN | "A gift for you. Here you go!" |
 | 10 | Turn | Card **"Thank you!"** · passes on thank, thanks |
 | 11 | Linh EN | "You're welcome!" |
 | 12 | Pip EN | "One box done! Thank you!" (a box unpacks) |
@@ -155,7 +155,7 @@ Line ids are `s1-setN-NN`. **EN** lines are English, under 8 words, recorded slo
 
 | # | Who | Line or turn |
 |---|---|---|
-| 1 | Linh VI | "Mình chỉ bạn hai câu cứu cánh. Không nghe kịp thì nói: Sorry? Again, please. Người ta nói nhanh quá thì nói: Slowly, please. Ở Natterwick, ai cũng sẽ nói lại cho bạn." |
+| 1 | Linh VI | "Mình chỉ bạn hai câu cứu nguy nhé. Không nghe kịp thì nói: Sorry? Again, please. Người ta nói nhanh quá thì nói: Slowly, please. Ở Natterwick, ai cũng sẵn lòng nói lại cho bạn." |
 | 2 | Linh EN | "Sorry? Again, please." (the model) |
 | 3 | Turn | Card **"Sorry? Again, please."** · passes on sorry, again, pardon, repeat |
 | 4 | Linh EN | "Slowly, please." (the model) |
@@ -165,7 +165,7 @@ Line ids are `s1-setN-NN`. **EN** lines are English, under 8 words, recorded slo
 | 8 | Pip EN | "Snacks. Map. Notebook!" |
 | 9 | Linh EN | "See? It works. Every time." |
 | 10 | Turn | Card **"Thank you!"** |
-| 11 | Linh EN | "Use it every day. Bye!" |
+| 11 | Linh EN | "Use them every day. Bye!" |
 
 **Chapter 4 · Bus 45**
 
@@ -176,7 +176,7 @@ Line ids are `s1-setN-NN`. **EN** lines are English, under 8 words, recorded slo
 | 3 | Bea EN | "Morning! This is Bus forty-five." |
 | 4 | Linh EN | "Which bus? Forty-five or fifty?" |
 | 5 | Turn | Cards **"Forty-five."** / **"Fifty."** · 45 passes; 50 gets a pool "Again?" and the line replays |
-| 6 | Bea EN | "The next bus is at nine." |
+| 6 | Bea EN | "I leave at nine." |
 | 7 | Linh EN | "What time? Nine or ten?" |
 | 8 | Turn | Cards **"Nine."** / **"Ten."** |
 | 9 | Bea EN | "Tickets are two dollars each, love." (Bea's normal pace) |
@@ -185,7 +185,7 @@ Line ids are `s1-setN-NN`. **EN** lines are English, under 8 words, recorded slo
 | 12 | Turn | Cards **"Two, please."** / **"One, please."** |
 | 13 | Bea EN | "Two tickets. Here you go!" |
 | 14 | Turn | Card **"Thank you!"** |
-| 15 | Bea EN | "Lovely. See you, love!" |
+| 15 | Bea EN | "Lovely! Have a nice day!" |
 
 **Chapter 5 · Mei's café** (meet Mei before her bad news)
 
@@ -195,7 +195,7 @@ Line ids are `s1-setN-NN`. **EN** lines are English, under 8 words, recorded slo
 | 2 | Turn | Cards **"Hi!"** / **"Hello!"** |
 | 3 | Mei EN | "I'm Mei. Tea or coffee?" |
 | 4 | Turn | Cards **"Tea, please."** / **"Coffee, please."** |
-| 5 | Mei EN | "Kaya toast too? Yes or no?" |
+| 5 | Mei EN | "Kaya toast too? It's really good!" |
 | 6 | Turn | Cards **"Yes, please."** / **"No, thank you."** |
 | 7 | Pip EN | "[whispers] Ask her: how much?" |
 | 8 | Turn | Card **"How much?"** |
@@ -221,7 +221,7 @@ Line ids are `s1-setN-NN`. **EN** lines are English, under 8 words, recorded slo
 | 10 | Gen Pip | Reads its page back in three bits: their name, their place, what they like |
 | 11 | Linh VI | "Giỏi lắm! Bạn sẵn sàng rồi đó. Mai mình gặp nhau ở quán của Mei nhé." |
 | 12 | — | Dusk: the letter under the café door (the existing `dusk_letter` beat) |
-| 13 | Pip EN | "Look! A letter at Mei's café!" |
+| 13 | Pip EN | "Look! A letter under Mei's door!" |
 
 **Shared lines** (used across all chapters and the week-1 Visitor turns)
 
@@ -229,8 +229,8 @@ Line ids are `s1-setN-NN`. **EN** lines are English, under 8 words, recorded slo
 |---|---|
 | Praise (after a pass) | Linh "Great!", "Yes!" · Pip "Great!", "Yes!" · Mei "Great!" · Bea "Lovely!" |
 | Okay / again | Linh "Okay!", "Again?" · Mei "Okay!" · Bea "Right!" |
-| Before a slow replay | Linh "Sure. Slowly:" · Pip "Okay! Slowly:" · Mei "Sure, sure." · Bea "Course, love." |
-| Linh's help (VI) | "Mình nói cùng nhau nhé." (say it together) · "Bạn thử nói bằng tiếng Anh nhé, nhìn thẻ gợi ý đó." (after a Vietnamese answer) |
+| Before a slow replay | Linh "Sure. Slowly:" · Pip "Okay! Slowly:" · Mei "Sure, sure." · Bea "Of course, love." |
+| Linh's help (VI) | "Mình nói cùng nhau nhé." (say it together) · "Bạn thử nói bằng tiếng Anh nhé, cứ đọc thẻ gợi ý là được." (after a Vietnamese answer) |
 | Skip | Linh "That's okay!" |
 
 ---
@@ -266,7 +266,7 @@ What the call **doesn't** do at Visitor: no timer rings, no turns over 8 words f
 
 ### 5.3 Recorded lines must be slow
 
-The current recordings run 107–188 wpm because they render at speed 0.92 with voices designed for natural pace. Visitor lines render at the floor speed (0.7) with a slow-delivery direction tag tried in the audition, each short sentence its own clause. **Gate: every Visitor line measures 100 wpm or slower from its timing file**, checked by a script in the voice lane; lines that fail are re-rendered or split.
+The current recordings run 107–188 wpm because they render at speed 0.92 with voices designed for natural pace. Visitor lines render at the floor speed (0.7) with a slow-delivery direction tag tried in the audition, each short sentence its own clause. The audition (`audio/auditions-visitor/`) found that the tag alone isn't enough: `[pause]` between sentences, and for Linh's longer lines at the phrase break, is what brings every take under 100 wpm. **Gate: every Visitor line measures 100 wpm or slower from its timing file**, checked by a script in the voice lane; lines that fail are re-rendered or split.
 
 ---
 
@@ -373,13 +373,15 @@ Kill signal: two or more beginners stuck in Chapter 1 or 2, or any beginner read
 
 ---
 
-## 10. Decisions I need from you
+## 10. Decisions (founder, 22 Oct 2026)
 
-| # | Decision | My recommendation |
+All six recommendations accepted.
+
+| # | Decision | Decided |
 |---|---|---|
-| 1 | **Linh speaks Vietnamese out loud** (7 recorded lines; until now nobody in the cast speaks Vietnamese, it's only on screen). Per market she'd be re-recorded in that market's language, as her English lines already are | Yes, only in Settling in, only at the start of a new kind of task. Approve after hearing a 3-line audition of her designed voice in Vietnamese; if it doesn't sound native, keep the 7 lines as text cards instead |
-| 2 | **Settling-in calls don't use live minutes, and the generous first-week hour starts on the day the story starts** (not the install day). The chapters cost little: mostly recorded audio and word matching, few model calls | Yes. Otherwise a beginner spends their best free week before the story starts and meets the 10-minute week right at Mei's café |
-| 3 | **Spend about 5,000 ElevenLabs credits** on 66 slow-delivery lines, and re-brief the voices for slow delivery if the audition still runs over 100 wpm | Yes. It's about a tenth of what's left this cycle |
-| 4 | **The new stage's name: "Visitor" / "Khách mới đến"**, shown on the card and in the Me sheet | Visitor. It fits arriving on the ferry and makes the Newcomer card a real arrival moment |
-| 5 | **Bea and Mei appear before week 1** (Bea at the bus stop, Mei at her café before the letter) | Yes. It's a softer first meeting, and Mei being tired in Chapter 5 sets up the letter |
-| 6 | **The next learner test includes 3 true beginners** (self-rated 1–2), which means changing the screener in `learner-test.md` | Yes. The friend's result is one data point; three beginners tell us if this works |
+| 1 | **Linh speaks Vietnamese out loud** in Settling in (7 recorded lines), only at the start of a new kind of task | **Yes**, after a 3-line audition of her designed voice in Vietnamese; if it doesn't sound native, the 7 lines become text cards. Audition: `audio/auditions-visitor/` |
+| 2 | **Settling-in calls don't use live minutes; the generous first-week allowance starts the day the story starts** | **Yes** |
+| 3 | **About 5,000 ElevenLabs credits** for the 66 slow lines and the audition | **Yes** |
+| 4 | **The new stage is "Visitor" / "Khách mới đến"**, on the card and in the Me sheet | **Yes** |
+| 5 | **Bea and Mei appear before week 1** (Bea at the bus stop, Mei at her café before the letter) | **Yes** |
+| 6 | **The next learner test includes 3 true beginners** (self-rated 1–2); the screener in `learner-test.md` changes | **Yes** |
