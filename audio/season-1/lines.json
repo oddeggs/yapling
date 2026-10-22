@@ -785,25 +785,33 @@
       "id": "s1-e2-09",
       "char": "pip",
       "text": "[whispers] Wait, was that the fourteenth? Can you check?",
-      "_vi": "Khoan đã, ngày mười bốn hả? Bạn hỏi lại giúp mình nhé?"
+      "_vi": "Khoan đã, ngày mười bốn hả? Bạn hỏi lại giúp mình nhé?",
+      "mp3": "s1-e2-09-pip.mp3",
+      "timing": "s1-e2-09-pip.timing.json"
     },
     {
       "id": "s1-e2-10",
       "char": "sol",
       "text": "[friendly] Before you go, would you like to see the office?",
-      "_vi": "Trước khi về, hai bạn có muốn xem văn phòng một chút không?"
+      "_vi": "Trước khi về, hai bạn có muốn xem văn phòng một chút không?",
+      "mp3": "s1-e2-10-sol.mp3",
+      "timing": "s1-e2-10-sol.timing.json"
     },
     {
       "id": "s1-e2-11",
       "char": "sol",
       "text": "[warmly] And you came with Pip! Can I ask you the same question?",
-      "_vi": "Bạn đi cùng Pip à! Mình hỏi bạn câu đó luôn nhé?"
+      "_vi": "Bạn đi cùng Pip à! Mình hỏi bạn câu đó luôn nhé?",
+      "mp3": "s1-e2-11-sol.mp3",
+      "timing": "s1-e2-11-sol.timing.json"
     },
     {
       "id": "s1-e2-12",
       "char": "sol",
       "text": "Last thing. The job starts on the fourteenth, mornings only.",
-      "_vi": "Còn một việc nữa. Công việc bắt đầu từ ngày mười bốn, chỉ làm buổi sáng."
+      "_vi": "Còn một việc nữa. Công việc bắt đầu từ ngày mười bốn, chỉ làm buổi sáng.",
+      "mp3": "s1-e2-12-sol.mp3",
+      "timing": "s1-e2-12-sol.timing.json"
     },
     {
       "id": "s1-e2-13",
@@ -817,80 +825,104 @@
       "char": "pip",
       "text": "[excited, slowly] Be Sol, please! [pause] Ask me: what's your job?",
       "speed": 0.7,
-      "_vi": "Bạn làm Sol nhé! Hỏi mình: bạn làm nghề gì?"
+      "_vi": "Bạn làm Sol nhé! Hỏi mình: bạn làm nghề gì?",
+      "mp3": "s1-e2-visitor-practise-pip.mp3",
+      "timing": "s1-e2-visitor-practise-pip.timing.json"
     },
     {
       "id": "s1-e2-visitor-pip-me",
       "char": "pip",
-      "text": "[proud, slowly] I'm Pip. [pause] I help at Mei's café.",
+      "text": "[proud, slowly] I'm Pip. [long pause] I help [pause] at Mei's café.",
       "speed": 0.7,
-      "_vi": "Mình là Pip. Mình phụ việc ở quán của Mei."
+      "_vi": "Mình là Pip. Mình phụ việc ở quán của Mei.",
+      "mp3": "s1-e2-visitor-pip-me-pip.mp3",
+      "timing": "s1-e2-visitor-pip-me-pip.timing.json"
     },
     {
       "id": "s1-e2-visitor-sol-hi",
       "char": "sol",
       "text": "[friendly, slowly] Hi! [pause] I'm Sol. [pause] Welcome to Hollowbrook!",
       "speed": 0.7,
-      "_vi": "Chào! Mình là Sol. Chào mừng đến Hollowbrook!"
+      "_vi": "Chào! Mình là Sol. Chào mừng đến Hollowbrook!",
+      "mp3": "s1-e2-visitor-sol-hi-sol.mp3",
+      "timing": "s1-e2-visitor-sol-hi-sol.timing.json"
     },
     {
       "id": "s1-e2-visitor-sol-you",
       "char": "sol",
       "text": "[slowly, clearly] Thank you, Pip. [pause] And you?",
       "speed": 0.7,
-      "_vi": "Cảm ơn Pip. Còn bạn?"
+      "_vi": "Cảm ơn Pip. Còn bạn?",
+      "mp3": "s1-e2-visitor-sol-you-sol.mp3",
+      "timing": "s1-e2-visitor-sol-you-sol.timing.json"
     },
     {
       "id": "s1-e2-visitor-sol-good",
       "char": "sol",
-      "text": "[slowly, clearly] I'm good at meetings. [pause] And you?",
+      "text": "[slowly, clearly] I'm good [pause] at meetings. [long pause] And you?",
       "speed": 0.7,
-      "_vi": "Mình giỏi chủ trì các cuộc họp. Còn bạn?"
+      "_vi": "Mình giỏi chủ trì các cuộc họp. Còn bạn?",
+      "mp3": "s1-e2-visitor-sol-good-sol.mp3",
+      "timing": "s1-e2-visitor-sol-good-sol.timing.json"
     },
     {
       "id": "s1-e2-visitor-sol-mornings",
       "char": "sol",
-      "text": "[slowly, clearly] Pip's job is in the mornings. [pause] Okay?",
+      "text": "[slowly, clearly] Pip's job [pause] is in the mornings. [long pause] Okay?",
       "speed": 0.7,
-      "_vi": "Pip sẽ làm buổi sáng. Được không?"
+      "_vi": "Pip sẽ làm buổi sáng. Được không?",
+      "mp3": "s1-e2-visitor-sol-mornings-sol.mp3",
+      "timing": "s1-e2-visitor-sol-mornings-sol.timing.json"
     },
     {
       "id": "s1-e2-visitor-sol-bye",
       "char": "sol",
       "text": "[warmly, slowly] Thank you both. [pause] Goodbye!",
       "speed": 0.7,
-      "_vi": "Cảm ơn hai bạn. Tạm biệt!"
+      "_vi": "Cảm ơn hai bạn. Tạm biệt!",
+      "mp3": "s1-e2-visitor-sol-bye-sol.mp3",
+      "timing": "s1-e2-visitor-sol-bye-sol.timing.json"
     },
     {
       "id": "s1-e2-visitor-pip-done",
       "char": "pip",
       "text": "[excited, slowly] We did it! [pause] Thank you!",
       "speed": 0.7,
-      "_vi": "Chúng mình làm được rồi! Cảm ơn bạn!"
+      "_vi": "Chúng mình làm được rồi! Cảm ơn bạn!",
+      "mp3": "s1-e2-visitor-pip-done-pip.mp3",
+      "timing": "s1-e2-visitor-pip-done-pip.timing.json"
     },
     {
       "id": "s1-e2-rw-open",
       "char": "pip",
       "text": "[cheerful] No Sol today, just me. Tell me about yourself, for real?",
-      "_vi": "Hôm nay không có Sol, chỉ có mình thôi. Kể thật về bạn cho mình nghe nhé?"
+      "_vi": "Hôm nay không có Sol, chỉ có mình thôi. Kể thật về bạn cho mình nghe nhé?",
+      "mp3": "s1-e2-rw-open-pip.mp3",
+      "timing": "s1-e2-rw-open-pip.timing.json"
     },
     {
       "id": "s1-e2-rw-close",
       "char": "pip",
       "text": "[warmly] I wrote it all down. Now I know you better!",
-      "_vi": "Mình ghi lại hết rồi. Giờ mình hiểu bạn hơn rồi!"
+      "_vi": "Mình ghi lại hết rồi. Giờ mình hiểu bạn hơn rồi!",
+      "mp3": "s1-e2-rw-close-pip.mp3",
+      "timing": "s1-e2-rw-close-pip.timing.json"
     },
     {
       "id": "s1-e2-pr-open",
       "char": "pip",
       "text": "[curious] I copied the poster at Hollowbrook. Three words I don't know!",
-      "_vi": "Mình chép lại tấm áp phích ở Hollowbrook. Có ba từ mình không biết!"
+      "_vi": "Mình chép lại tấm áp phích ở Hollowbrook. Có ba từ mình không biết!",
+      "mp3": "s1-e2-pr-open-pip.mp3",
+      "timing": "s1-e2-pr-open-pip.timing.json"
     },
     {
       "id": "s1-e2-pr-close",
       "char": "pip",
       "text": "[proud] Deadline, team, shift. Now I can read the whole poster!",
-      "_vi": "Hạn chót, nhóm, ca làm. Giờ mình đọc được cả tấm áp phích rồi!"
+      "_vi": "Hạn chót, nhóm, ca làm. Giờ mình đọc được cả tấm áp phích rồi!",
+      "mp3": "s1-e2-pr-close-pip.mp3",
+      "timing": "s1-e2-pr-close-pip.timing.json"
     },
     {
       "id": "s1-e2-story-01",
@@ -949,10 +981,12 @@
     {
       "id": "s1-e3-09",
       "char": "hank",
-      "text": "[lowers voice] One more thing: a man from the office was here. He checked the size of your door.",
+      "text": "[lowers voice, slowly] One more thing: [long pause] a man from the office was here. [long pause] He checked the size of your door.",
       "take": "newcomer",
       "speed": 0.85,
-      "_vi": "Còn chuyện này nữa: có người của văn phòng vừa tới đây. Ông ta đo kích thước cửa quán của cô đấy."
+      "_vi": "Còn chuyện này nữa: có người của văn phòng vừa tới đây. Ông ta đo kích thước cửa quán của cô đấy.",
+      "mp3": "s1-e3-09-hank.mp3",
+      "timing": "s1-e3-09-hank.timing.json"
     },
     {
       "id": "s1-e3-10",
@@ -960,96 +994,124 @@
       "text": "[friendly, brisk] Morning! I buy fifty kilos a month. I'd like ten percent off. And free delivery?",
       "take": "neighbour",
       "speed": 0.95,
-      "_vi": "Chào buổi sáng! Mỗi tháng tôi mua năm mươi ký. Tôi muốn được giảm mười phần trăm. Và giao hàng miễn phí nữa, được không?"
+      "_vi": "Chào buổi sáng! Mỗi tháng tôi mua năm mươi ký. Tôi muốn được giảm mười phần trăm. Và giao hàng miễn phí nữa, được không?",
+      "mp3": "s1-e3-10-hank.mp3",
+      "timing": "s1-e3-10-hank.timing.json"
     },
     {
       "id": "s1-e3-11",
       "char": "hank",
-      "text": "[brisk] Look, I buy fifty kilos a month. Ten percent off and we're friends. Deal?",
+      "text": "[brisk, quickly] Look, I buy fifty kilos a month. Ten percent off and we're friends. Deal?",
       "take": "regular",
       "speed": 1.05,
-      "_vi": "Nghe này, mỗi tháng tôi mua năm mươi ký. Giảm mười phần trăm là mình thành bạn. Chốt không?"
+      "_vi": "Nghe này, mỗi tháng tôi mua năm mươi ký. Giảm mười phần trăm là mình thành bạn. Chốt không?",
+      "mp3": "s1-e3-11-hank.mp3",
+      "timing": "s1-e3-11-hank.timing.json"
     },
     {
       "id": "s1-e3-12",
       "char": "pip",
       "text": "While you were away, a raccoon called Hank wanted cheaper beans. We said no, nicely, and he said 'deal'! Then he told us about a man at Mei's door.",
       "kind": "recap",
-      "_vi": "Trong lúc bạn đi vắng, một chú gấu mèo tên Hank muốn mua hạt cà phê rẻ hơn. Chúng mình đã từ chối thật khéo, và ông ấy nói \"chốt\"! Rồi ông ấy kể có một người lạ đến xem cửa quán Mei."
+      "_vi": "Trong lúc bạn đi vắng, một chú gấu mèo tên Hank muốn mua hạt cà phê rẻ hơn. Chúng mình đã từ chối thật khéo, và ông ấy nói \"chốt\"! Rồi ông ấy kể có một người lạ đến xem cửa quán Mei.",
+      "mp3": "s1-e3-12-pip.mp3",
+      "timing": "s1-e3-12-pip.timing.json"
     },
     {
       "id": "s1-e3-visitor-hank",
       "char": "hank",
-      "text": "[friendly, slowly] I'm Hank. [pause] Ten percent off. [pause] Okay?",
+      "text": "[friendly, slowly] I'm Hank. [long pause] Ten percent off. [pause] Okay?",
       "take": "visitor",
       "speed": 0.7,
-      "_vi": "Tôi là Hank. Giảm mười phần trăm nhé. Được không?"
+      "_vi": "Tôi là Hank. Giảm mười phần trăm nhé. Được không?",
+      "mp3": "s1-e3-visitor-hank-hank.mp3",
+      "timing": "s1-e3-visitor-hank-hank.timing.json"
     },
     {
       "id": "s1-e3-visitor-mei",
       "char": "mei",
-      "text": "[whispers, slowly] Please say no. [pause] I need the money.",
+      "text": "[whispers, slowly] Please [pause] say no. [long pause] I need [pause] the money.",
       "speed": 0.7,
-      "_vi": "Bạn từ chối giúp mình nhé. Mình cần tiền lắm."
+      "_vi": "Bạn từ chối giúp mình nhé. Mình cần tiền lắm.",
+      "mp3": "s1-e3-visitor-mei-mei.mp3",
+      "timing": "s1-e3-visitor-mei-mei.timing.json"
     },
     {
       "id": "s1-e3-visitor-hank-hmm",
       "char": "hank",
-      "text": "[thoughtful, slowly] Hmm. [pause] Then what?",
+      "text": "[thoughtful, slowly] Hmm. [long pause] Then what?",
       "speed": 0.7,
-      "_vi": "Hừm. Vậy thì sao?"
+      "_vi": "Hừm. Vậy thì sao?",
+      "mp3": "s1-e3-visitor-hank-hmm-hank.mp3",
+      "timing": "s1-e3-visitor-hank-hmm-hank.timing.json"
     },
     {
       "id": "s1-e3-visitor-pip",
       "char": "pip",
       "text": "[whispers, slowly] Offer him something. [pause] Not money.",
       "speed": 0.7,
-      "_vi": "Mời ông ấy món gì đó đi. Đừng giảm tiền."
+      "_vi": "Mời ông ấy món gì đó đi. Đừng giảm tiền.",
+      "mp3": "s1-e3-visitor-pip-pip.mp3",
+      "timing": "s1-e3-visitor-pip-pip.timing.json"
     },
     {
       "id": "s1-e3-visitor-hank-deal",
       "char": "hank",
       "text": "[surprised, slowly] Free? [pause] Okay. [pause] Deal!",
       "speed": 0.7,
-      "_vi": "Miễn phí à? Được. Chốt!"
+      "_vi": "Miễn phí à? Được. Chốt!",
+      "mp3": "s1-e3-visitor-hank-deal-hank.mp3",
+      "timing": "s1-e3-visitor-hank-deal-hank.timing.json"
     },
     {
       "id": "s1-e3-visitor-twist",
       "char": "hank",
-      "text": "[lowers voice, slowly] A man [pause] checked your door.",
+      "text": "[lowers voice, slowly] A man [long pause] checked [pause] your door.",
       "speed": 0.7,
-      "_vi": "Có một người đã đến xem xét cửa quán đấy."
+      "_vi": "Có một người đã đến xem xét cửa quán đấy.",
+      "mp3": "s1-e3-visitor-twist-hank.mp3",
+      "timing": "s1-e3-visitor-twist-hank.timing.json"
     },
     {
       "id": "s1-e3-visitor-mei-why",
       "char": "mei",
       "text": "[worried, slowly] Thank you! [pause] My door? [pause] Why?",
       "speed": 0.7,
-      "_vi": "Cảm ơn bạn! Cửa quán mình á? Sao vậy?"
+      "_vi": "Cảm ơn bạn! Cửa quán mình á? Sao vậy?",
+      "mp3": "s1-e3-visitor-mei-why-mei.mp3",
+      "timing": "s1-e3-visitor-mei-why-mei.timing.json"
     },
     {
       "id": "s1-e3-rw-open",
       "char": "dex",
       "text": "[warmly] Hi, I'm Dex. I hear you said no to Hank, very kindly.",
-      "_vi": "Chào bạn, tôi là Dex. Nghe nói bạn đã từ chối Hank, mà rất khéo nữa."
+      "_vi": "Chào bạn, tôi là Dex. Nghe nói bạn đã từ chối Hank, mà rất khéo nữa.",
+      "mp3": "s1-e3-rw-open-dex.mp3",
+      "timing": "s1-e3-rw-open-dex.timing.json"
     },
     {
       "id": "s1-e3-rw-close",
       "char": "dex",
       "text": "[encouraging] That was strong. Say it just like that this week.",
-      "_vi": "Tốt lắm. Tuần này bạn cứ nói đúng như vậy nhé."
+      "_vi": "Tốt lắm. Tuần này bạn cứ nói đúng như vậy nhé.",
+      "mp3": "s1-e3-rw-close-dex.mp3",
+      "timing": "s1-e3-rw-close-dex.timing.json"
     },
     {
       "id": "s1-e3-pr-open",
       "char": "pip",
       "text": "[thoughtful] Mei might lose this café. Why does it matter to you?",
-      "_vi": "Mei có thể mất quán này. Với bạn, quán quan trọng thế nào?"
+      "_vi": "Mei có thể mất quán này. Với bạn, quán quan trọng thế nào?",
+      "mp3": "s1-e3-pr-open-pip.mp3",
+      "timing": "s1-e3-pr-open-pip.timing.json"
     },
     {
       "id": "s1-e3-pr-close",
       "char": "pip",
       "text": "[amazed] Three times! And Hank listened to the very end.",
-      "_vi": "Ba lần liền! Hank còn nghe tới tận cuối nữa."
+      "_vi": "Ba lần liền! Hank còn nghe tới tận cuối nữa.",
+      "mp3": "s1-e3-pr-close-pip.mp3",
+      "timing": "s1-e3-pr-close-pip.timing.json"
     },
     {
       "id": "s1-e3-postcard-linh",
@@ -1116,86 +1178,112 @@
       "id": "s1-e4-07",
       "char": "mei",
       "text": "[upset] It's Big Bean, the big café across the harbour. They want my building.",
-      "_vi": "Là Big Bean, chuỗi quán cà phê lớn bên kia bến cảng. Họ muốn mua toà nhà của mình."
+      "_vi": "Là Big Bean, chuỗi quán cà phê lớn bên kia bến cảng. Họ muốn mua toà nhà của mình.",
+      "mp3": "s1-e4-07-mei.mp3",
+      "timing": "s1-e4-07-mei.timing.json"
     },
     {
       "id": "s1-e4-08",
       "char": "nell",
       "text": "[reading a note] Arjun from Market Lane couldn't come. His note says: a market day!",
-      "_vi": "Arjun ở Market Lane không đến được. Anh ấy gửi lời nhắn: mở một phiên chợ!"
+      "_vi": "Arjun ở Market Lane không đến được. Anh ấy gửi lời nhắn: mở một phiên chợ!",
+      "mp3": "s1-e4-08-nell.mp3",
+      "timing": "s1-e4-08-nell.timing.json"
     },
     {
       "id": "s1-e4-09",
       "char": "pip",
       "text": "While you were away, the town met at Nell's inn. You ran the meeting! The plan: a petition, a hundred names. And I have to get them. [nervous] Help!",
       "kind": "recap",
-      "_vi": "Trong lúc bạn đi vắng, cả thị trấn đã họp ở quán trọ của Nell. Bạn chủ trì cuộc họp đó! Kế hoạch là: một bản kiến nghị, một trăm chữ ký. Và mình phải đi xin chữ ký. Cứu với!"
+      "_vi": "Trong lúc bạn đi vắng, cả thị trấn đã họp ở quán trọ của Nell. Bạn chủ trì cuộc họp đó! Kế hoạch là: một bản kiến nghị, một trăm chữ ký. Và mình phải đi xin chữ ký. Cứu với!",
+      "mp3": "s1-e4-09-pip.mp3",
+      "timing": "s1-e4-09-pip.timing.json"
     },
     {
       "id": "s1-e4-visitor-mei",
       "char": "mei",
-      "text": "[upset, slowly] A big café wants my place.",
+      "text": "[upset, slowly] A big café [pause] wants [pause] my place.",
       "speed": 0.7,
-      "_vi": "Một quán cà phê lớn muốn lấy chỗ của mình."
+      "_vi": "Một quán cà phê lớn muốn lấy chỗ của mình.",
+      "mp3": "s1-e4-visitor-mei-mei.mp3",
+      "timing": "s1-e4-visitor-mei-mei.timing.json"
     },
     {
       "id": "s1-e4-visitor-nell",
       "char": "nell",
-      "text": "[warmly, slowly] I'm Nell. [pause] Please start the meeting!",
+      "text": "[warmly, slowly] I'm Nell. [long pause] Please [pause] start the meeting!",
       "speed": 0.7,
-      "_vi": "Mình là Nell. Bạn mở đầu cuộc họp nhé!"
+      "_vi": "Mình là Nell. Bạn mở đầu cuộc họp nhé!",
+      "mp3": "s1-e4-visitor-nell-nell.mp3",
+      "timing": "s1-e4-visitor-nell-nell.timing.json"
     },
     {
       "id": "s1-e4-visitor-bea",
       "char": "bea",
-      "text": "[cheerful, slowly] A cake sale [pause] on my bus!",
+      "text": "[cheerful, slowly] A cake sale [long pause] on [pause] my bus!",
       "speed": 0.7,
-      "_vi": "Bán bánh ngay trên xe buýt của mình!"
+      "_vi": "Bán bánh ngay trên xe buýt của mình!",
+      "mp3": "s1-e4-visitor-bea-bea.mp3",
+      "timing": "s1-e4-visitor-bea-bea.timing.json"
     },
     {
       "id": "s1-e4-visitor-linh",
       "char": "linh",
       "text": "[slowly, clearly] A petition. [pause] A hundred names!",
       "speed": 0.7,
-      "_vi": "Một bản kiến nghị. Một trăm chữ ký!"
+      "_vi": "Một bản kiến nghị. Một trăm chữ ký!",
+      "mp3": "s1-e4-visitor-linh-linh.mp3",
+      "timing": "s1-e4-visitor-linh-linh.timing.json"
     },
     {
       "id": "s1-e4-visitor-nell-sum",
       "char": "nell",
-      "text": "[slowly, clearly] So, a petition. [pause] A hundred names. [pause] Okay?",
+      "text": "[warmly, slowly] So, a petition. [pause] A hundred names. [pause] Okay?",
       "speed": 0.7,
-      "_vi": "Vậy là: một bản kiến nghị. Một trăm chữ ký. Được chứ?"
+      "_vi": "Vậy là: một bản kiến nghị. Một trăm chữ ký. Được chứ?",
+      "mp3": "s1-e4-visitor-nell-sum-nell.mp3",
+      "timing": "s1-e4-visitor-nell-sum-nell.timing.json"
     },
     {
       "id": "s1-e4-visitor-mei-thanks",
       "char": "mei",
-      "text": "[moved, slowly] Thank you. [pause] Let's save my café!",
+      "text": "[moved, slowly] Thank you. [long pause] Let's save my café!",
       "speed": 0.7,
-      "_vi": "Cảm ơn mọi người. Cùng cứu quán của mình nhé!"
+      "_vi": "Cảm ơn mọi người. Cùng cứu quán của mình nhé!",
+      "mp3": "s1-e4-visitor-mei-thanks-mei.mp3",
+      "timing": "s1-e4-visitor-mei-thanks-mei.timing.json"
     },
     {
       "id": "s1-e4-rw-open",
       "char": "dex",
       "text": "[warmly] You ran the town meeting! Now let's practise one of yours.",
-      "_vi": "Bạn đã chủ trì cuộc họp của cả thị trấn! Giờ chúng ta tập cho một cuộc họp của bạn nhé."
+      "_vi": "Bạn đã chủ trì cuộc họp của cả thị trấn! Giờ chúng ta tập cho một cuộc họp của bạn nhé.",
+      "mp3": "s1-e4-rw-open-dex.mp3",
+      "timing": "s1-e4-rw-open-dex.timing.json"
     },
     {
       "id": "s1-e4-rw-close",
       "char": "dex",
       "text": "[encouraging] Clear and kind. Try it in your real meeting.",
-      "_vi": "Rõ ràng mà vẫn nhẹ nhàng. Hãy thử nói vậy trong cuộc họp thật của bạn nhé."
+      "_vi": "Rõ ràng mà vẫn nhẹ nhàng. Hãy thử nói vậy trong cuộc họp thật của bạn nhé.",
+      "mp3": "s1-e4-rw-close-dex.mp3",
+      "timing": "s1-e4-rw-close-dex.timing.json"
     },
     {
       "id": "s1-e4-pr-open",
       "char": "pip",
       "text": "[sheepish] I forgot the time on Nell's postcard. What did she say?",
-      "_vi": "Mình quên mất giờ ghi trên bưu thiếp của Nell. Nell hẹn mấy giờ nhỉ?"
+      "_vi": "Mình quên mất giờ ghi trên bưu thiếp của Nell. Nell hẹn mấy giờ nhỉ?",
+      "mp3": "s1-e4-pr-open-pip.mp3",
+      "timing": "s1-e4-pr-open-pip.timing.json"
     },
     {
       "id": "s1-e4-pr-close",
       "char": "pip",
       "text": "[proud] Petition, signature, and my signature has a star. Ready for Bus 45!",
-      "_vi": "Kiến nghị, chữ ký, mà chữ ký của mình còn có ngôi sao nữa. Sẵn sàng lên xe buýt 45 rồi!"
+      "_vi": "Kiến nghị, chữ ký, mà chữ ký của mình còn có ngôi sao nữa. Sẵn sàng lên xe buýt 45 rồi!",
+      "mp3": "s1-e4-pr-close-pip.mp3",
+      "timing": "s1-e4-pr-close-pip.timing.json"
     },
     {
       "id": "s1-e4-postcard-nell",
@@ -1262,19 +1350,25 @@
       "id": "s1-e5-08",
       "char": "pip",
       "text": "[whispers, nervous] Strangers! Can you go first, please?",
-      "_vi": "Người lạ! Bạn nói trước giúp mình nhé?"
+      "_vi": "Người lạ! Bạn nói trước giúp mình nhé?",
+      "mp3": "s1-e5-08-pip.mp3",
+      "timing": "s1-e5-08-pip.timing.json"
     },
     {
       "id": "s1-e5-09",
       "char": "bea",
       "text": "[cheerful] Morning! You can talk about your petition until the next stop.",
-      "_vi": "Chào buổi sáng! Bạn được nói về bản kiến nghị cho tới trạm kế tiếp nhé."
+      "_vi": "Chào buổi sáng! Bạn được nói về bản kiến nghị cho tới trạm kế tiếp nhé.",
+      "mp3": "s1-e5-09-bea.mp3",
+      "timing": "s1-e5-09-bea.timing.json"
     },
     {
       "id": "s1-e5-10",
       "char": "pip",
       "text": "[overjoyed] One hundred! You got shorter and better every time!",
-      "_vi": "Một trăm! Mỗi lần bạn lại nói ngắn hơn và hay hơn!"
+      "_vi": "Một trăm! Mỗi lần bạn lại nói ngắn hơn và hay hơn!",
+      "mp3": "s1-e5-10-pip.mp3",
+      "timing": "s1-e5-10-pip.timing.json"
     },
     {
       "id": "s1-e5-11",
@@ -1288,73 +1382,95 @@
       "char": "pip",
       "text": "While you were away, we got a hundred names on Bus 45. Bea signed last! Now there's a vote. Mei wants you to speak.",
       "kind": "recap",
-      "_vi": "Trong lúc bạn đi vắng, chúng mình đã xin được một trăm chữ ký trên xe buýt 45. Bea ký cuối cùng! Giờ sắp có cuộc bỏ phiếu. Mei muốn bạn lên phát biểu."
+      "_vi": "Trong lúc bạn đi vắng, chúng mình đã xin được một trăm chữ ký trên xe buýt 45. Bea ký cuối cùng! Giờ sắp có cuộc bỏ phiếu. Mei muốn bạn lên phát biểu.",
+      "mp3": "s1-e5-12-pip.mp3",
+      "timing": "s1-e5-12-pip.timing.json"
     },
     {
       "id": "s1-e5-visitor-bea",
       "char": "bea",
-      "text": "[cheerful, slowly] Morning, love! [pause] Listen to me first.",
+      "text": "[cheerful, slowly] Morning, love! [long pause] Listen to me [pause] first.",
       "speed": 0.7,
-      "_vi": "Chào buổi sáng! Nghe mình nói trước nhé."
+      "_vi": "Chào buổi sáng! Nghe mình nói trước nhé.",
+      "mp3": "s1-e5-visitor-bea-bea.mp3",
+      "timing": "s1-e5-visitor-bea-bea.timing.json"
     },
     {
       "id": "s1-e5-visitor-bea-model",
       "char": "bea",
-      "text": "[cheerful, slowly] Please sign. [pause] It's for Mei's café.",
+      "text": "[cheerful, slowly] Please sign. [long pause] It's for [pause] Mei's café.",
       "speed": 0.7,
-      "_vi": "Ký giúp nhé. Là để giúp quán của Mei."
+      "_vi": "Ký giúp nhé. Là để giúp quán của Mei.",
+      "mp3": "s1-e5-visitor-bea-model-bea.mp3",
+      "timing": "s1-e5-visitor-bea-model-bea.timing.json"
     },
     {
       "id": "s1-e5-visitor-pip",
       "char": "pip",
-      "text": "[whispers, slowly] So many people! [pause] You go first?",
+      "text": "[whispers, slowly] So many people! [long pause] You [pause] go first?",
       "speed": 0.7,
-      "_vi": "Đông người quá! Bạn nói trước nhé?"
+      "_vi": "Đông người quá! Bạn nói trước nhé?",
+      "mp3": "s1-e5-visitor-pip-pip.mp3",
+      "timing": "s1-e5-visitor-pip-pip.timing.json"
     },
     {
       "id": "s1-e5-visitor-count",
       "char": "pip",
       "text": "[excited, slowly] Ninety-nine names! [pause] One more!",
       "speed": 0.7,
-      "_vi": "Chín mươi chín chữ ký! Thêm một nữa thôi!"
+      "_vi": "Chín mươi chín chữ ký! Thêm một nữa thôi!",
+      "mp3": "s1-e5-visitor-count-pip.mp3",
+      "timing": "s1-e5-visitor-count-pip.timing.json"
     },
     {
       "id": "s1-e5-visitor-bea-signs",
       "char": "bea",
       "text": "[cheerful, slowly] Wait! [pause] I can sign!",
       "speed": 0.7,
-      "_vi": "Khoan đã! Mình ký được mà!"
+      "_vi": "Khoan đã! Mình ký được mà!",
+      "mp3": "s1-e5-visitor-bea-signs-bea.mp3",
+      "timing": "s1-e5-visitor-bea-signs-bea.timing.json"
     },
     {
       "id": "s1-e5-visitor-pip-100",
       "char": "pip",
       "text": "[overjoyed, slowly] One hundred! [pause] You were great!",
       "speed": 0.7,
-      "_vi": "Một trăm chữ ký! Bạn giỏi quá!"
+      "_vi": "Một trăm chữ ký! Bạn giỏi quá!",
+      "mp3": "s1-e5-visitor-pip-100-pip.mp3",
+      "timing": "s1-e5-visitor-pip-100-pip.timing.json"
     },
     {
       "id": "s1-e5-rw-open",
       "char": "dex",
       "text": "[impressed] A hundred names in one ride. Now, a short talk about you.",
-      "_vi": "Một trăm chữ ký chỉ trong một chuyến xe. Giờ đến một bài nói ngắn về chính bạn."
+      "_vi": "Một trăm chữ ký chỉ trong một chuyến xe. Giờ đến một bài nói ngắn về chính bạn.",
+      "mp3": "s1-e5-rw-open-dex.mp3",
+      "timing": "s1-e5-rw-open-dex.timing.json"
     },
     {
       "id": "s1-e5-rw-close",
       "char": "dex",
       "text": "[warmly] Much better. Sixty seconds, and I wanted to hear more.",
-      "_vi": "Tốt hơn nhiều. Sáu mươi giây, mà tôi vẫn muốn nghe thêm."
+      "_vi": "Tốt hơn nhiều. Sáu mươi giây, mà tôi vẫn muốn nghe thêm.",
+      "mp3": "s1-e5-rw-close-dex.mp3",
+      "timing": "s1-e5-rw-close-dex.timing.json"
     },
     {
       "id": "s1-e5-pr-open",
       "char": "pip",
       "text": "[excited] Linh and Mei weren't on the bus. Tell them our petition story!",
-      "_vi": "Linh với Mei không đi chuyến xe đó. Bạn kể chuyện xin chữ ký cho hai người nghe nhé!"
+      "_vi": "Linh với Mei không đi chuyến xe đó. Bạn kể chuyện xin chữ ký cho hai người nghe nhé!",
+      "mp3": "s1-e5-pr-open-pip.mp3",
+      "timing": "s1-e5-pr-open-pip.timing.json"
     },
     {
       "id": "s1-e5-pr-close",
       "char": "pip",
       "text": "[proud] Three friends! Bea says it's her favourite story this week.",
-      "_vi": "Ba người bạn! Bea bảo đây là câu chuyện Bea thích nhất tuần này."
+      "_vi": "Ba người bạn! Bea bảo đây là câu chuyện Bea thích nhất tuần này.",
+      "mp3": "s1-e5-pr-close-pip.mp3",
+      "timing": "s1-e5-pr-close-pip.timing.json"
     },
     {
       "id": "s1-e5-story-01",
@@ -1414,105 +1530,137 @@
       "id": "s1-e6-07",
       "char": "hank",
       "text": "[gruffly] Full price, fifty kilos, Mei. [whispers] Don't tell anyone.",
-      "_vi": "Giá gốc, năm mươi ký nhé, Mei. Đừng nói với ai đấy."
+      "_vi": "Giá gốc, năm mươi ký nhé, Mei. Đừng nói với ai đấy.",
+      "mp3": "s1-e6-07-hank.mp3",
+      "timing": "s1-e6-07-hank.timing.json"
     },
     {
       "id": "s1-e6-08",
       "char": "pip",
       "text": "[gently] Want to practise your speech first? Just once, with me.",
-      "_vi": "Bạn có muốn tập bài phát biểu trước không? Một lần thôi, với mình."
+      "_vi": "Bạn có muốn tập bài phát biểu trước không? Một lần thôi, với mình.",
+      "mp3": "s1-e6-08-pip.mp3",
+      "timing": "s1-e6-08-pip.timing.json"
     },
     {
       "id": "s1-e6-09",
       "char": "pip",
       "text": "[gasps] Look! Your name is on the flags!",
-      "_vi": "Nhìn kìa! Tên bạn ở trên dây cờ!"
+      "_vi": "Nhìn kìa! Tên bạn ở trên dây cờ!",
+      "mp3": "s1-e6-09-pip.mp3",
+      "timing": "s1-e6-09-pip.timing.json"
     },
     {
       "id": "s1-e6-10",
       "char": "mei",
       "text": "[crying and laughing] Shiok! Thank you, everyone, especially you.",
-      "_vi": "Đã quá! Cảm ơn mọi người, nhất là bạn."
+      "_vi": "Đã quá! Cảm ơn mọi người, nhất là bạn.",
+      "mp3": "s1-e6-10-mei.mp3",
+      "timing": "s1-e6-10-mei.timing.json"
     },
     {
       "id": "s1-e6-11",
       "char": "mags",
       "text": "[formal] The office wants to sell 12 Harbour Lane. Does anyone want to speak?",
-      "_vi": "Văn phòng muốn bán toà nhà số 12 đường Harbour. Có ai muốn phát biểu không?"
+      "_vi": "Văn phòng muốn bán toà nhà số 12 đường Harbour. Có ai muốn phát biểu không?",
+      "mp3": "s1-e6-11-mags.mp3",
+      "timing": "s1-e6-11-mags.timing.json"
     },
     {
       "id": "s1-e6-12",
       "char": "pip",
       "text": "[whispers] You can do it. First, second, thank you, like we practised.",
-      "_vi": "Bạn làm được mà. Thứ nhất, thứ hai, cảm ơn, như mình đã tập."
+      "_vi": "Bạn làm được mà. Thứ nhất, thứ hai, cảm ơn, như mình đã tập.",
+      "mp3": "s1-e6-12-pip.mp3",
+      "timing": "s1-e6-12-pip.timing.json"
     },
     {
       "id": "s1-e6-visitor-mags",
       "char": "mags",
-      "text": "[formal, slowly] Does anyone [pause] want to speak?",
+      "text": "[formal, slowly] Does anyone [long pause] want to speak?",
       "speed": 0.7,
-      "_vi": "Có ai muốn phát biểu không?"
+      "_vi": "Có ai muốn phát biểu không?",
+      "mp3": "s1-e6-visitor-mags-mags.mp3",
+      "timing": "s1-e6-visitor-mags-mags.timing.json"
     },
     {
       "id": "s1-e6-visitor-pip",
       "char": "pip",
-      "text": "[whispers, slowly] You can do it. [pause] Line by line.",
+      "text": "[whispers, slowly] You can do it. [long pause] Line [pause] by line.",
       "speed": 0.7,
-      "_vi": "Bạn làm được mà. Từng câu một thôi."
+      "_vi": "Bạn làm được mà. Từng câu một thôi.",
+      "mp3": "s1-e6-visitor-pip-pip.mp3",
+      "timing": "s1-e6-visitor-pip-pip.timing.json"
     },
     {
       "id": "s1-e6-visitor-hank",
       "char": "hank",
-      "text": "[curious, slowly] Good speech. [pause] But why this café?",
+      "text": "[curious, slowly] Good speech. [long pause] But why this café?",
       "speed": 0.7,
-      "_vi": "Nói hay lắm. Nhưng sao lại là quán này?"
+      "_vi": "Nói hay lắm. Nhưng sao lại là quán này?",
+      "mp3": "s1-e6-visitor-hank-hank.mp3",
+      "timing": "s1-e6-visitor-hank-hank.timing.json"
     },
     {
       "id": "s1-e6-visitor-hank-yes",
       "char": "hank",
-      "text": "[warmly, slowly] Okay. [pause] I say yes!",
+      "text": "[slowly, warmly] Okay. [long pause] I say yes!",
       "speed": 0.7,
-      "_vi": "Được. Tôi đồng ý!"
+      "_vi": "Được. Tôi đồng ý!",
+      "mp3": "s1-e6-visitor-hank-yes-hank.mp3",
+      "timing": "s1-e6-visitor-hank-yes-hank.timing.json"
     },
     {
       "id": "s1-e6-visitor-mags-vote",
       "char": "mags",
-      "text": "[formal, slowly] The town says yes. [pause] The café stays!",
+      "text": "[formal, slowly] The town says yes. [long pause] The café stays!",
       "speed": 0.7,
-      "_vi": "Thị trấn đồng ý. Quán cà phê được ở lại!"
+      "_vi": "Thị trấn đồng ý. Quán cà phê được ở lại!",
+      "mp3": "s1-e6-visitor-mags-vote-mags.mp3",
+      "timing": "s1-e6-visitor-mags-vote-mags.timing.json"
     },
     {
       "id": "s1-e6-visitor-mei",
       "char": "mei",
-      "text": "[crying and laughing, slowly] Thank you lah! [pause] You were great!",
+      "text": "[crying and laughing, slowly] Thank you lah! [long pause] You were great!",
       "speed": 0.7,
-      "_vi": "Cảm ơn nhiều nha! Bạn giỏi lắm!"
+      "_vi": "Cảm ơn nhiều nha! Bạn giỏi lắm!",
+      "mp3": "s1-e6-visitor-mei-mei.mp3",
+      "timing": "s1-e6-visitor-mei-mei.timing.json"
     },
     {
       "id": "s1-e6-visitor-flags",
       "char": "pip",
-      "text": "[gasps, slowly] Look! [pause] Your name! [pause] On the flags!",
+      "text": "[gasps, slowly] Look! [pause] Your name! [long pause] On the flags!",
       "speed": 0.7,
-      "_vi": "Nhìn kìa! Tên bạn! Ở trên dây cờ!"
+      "_vi": "Nhìn kìa! Tên bạn! Ở trên dây cờ!",
+      "mp3": "s1-e6-visitor-flags-pip.mp3",
+      "timing": "s1-e6-visitor-flags-pip.timing.json"
     },
     {
       "id": "s1-e6-visitor-boat",
       "char": "pip",
-      "text": "[curious, slowly] Look! [pause] A boat! [pause] Who's on it?",
+      "text": "[curious, slowly] Look! [pause] A boat! [long pause] Who's [pause] on it?",
       "speed": 0.7,
-      "_vi": "Nhìn kìa! Một con thuyền! Ai ở trên đó vậy?"
+      "_vi": "Nhìn kìa! Một con thuyền! Ai ở trên đó vậy?",
+      "mp3": "s1-e6-visitor-boat-pip.mp3",
+      "timing": "s1-e6-visitor-boat-pip.timing.json"
     },
     {
       "id": "s1-e6-rw-open",
       "char": "pip",
       "text": "[curious] I have a question from my notebook. A real one.",
-      "_vi": "Mình có một câu hỏi trong sổ tay. Câu hỏi thật đấy."
+      "_vi": "Mình có một câu hỏi trong sổ tay. Câu hỏi thật đấy.",
+      "mp3": "s1-e6-rw-open-pip.mp3",
+      "timing": "s1-e6-rw-open-pip.timing.json"
     },
     {
       "id": "s1-e6-rw-close",
       "char": "pip",
       "text": "[warmly] I'm so happy for you. Tell a friend about it, too!",
-      "_vi": "Mình mừng cho bạn lắm. Kể cho một người bạn nghe nữa nhé!"
+      "_vi": "Mình mừng cho bạn lắm. Kể cho một người bạn nghe nữa nhé!",
+      "mp3": "s1-e6-rw-close-pip.mp3",
+      "timing": "s1-e6-rw-close-pip.timing.json"
     },
     {
       "id": "s1-e6-postcard-linh",

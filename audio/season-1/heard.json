@@ -17,6 +17,54 @@
     "diff": [],
     "stray": []
   },
+  "s1-e2-09": {
+    "sha1": "5232b0509473568ff7fc9fc0ddea7bd72ac466f7",
+    "heard": "Wait, was that the fourteenth? Can you check?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-10": {
+    "sha1": "ce18c3c4e96a65f3d7f14ca4531c39719a5a4139",
+    "heard": "Before you go, would you like to see the office?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-11": {
+    "sha1": "4690562d0db9d10418b710b4d4de54ce5988ad69",
+    "heard": "And you came with Pip. Can I ask you the same question?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-12": {
+    "sha1": "938e5108f0e195a4ca5dbae6a20e4aa08c1b2fd6",
+    "heard": "Last thing, the job starts on the 14th, mornings only",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-pr-close": {
+    "sha1": "2c2ec6e91b2ce0fc5e08fe0e43e0d97128bc5d4b",
+    "heard": "Deadline, team, shift. Now I can read the whole poster",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-pr-open": {
+    "sha1": "bb99972f0b2a7f73eccbf4f19c6e3eeac461e0a5",
+    "heard": "I copied the poster at Hollowbrook three words i don't know",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-rw-close": {
+    "sha1": "9216517c6f8deb3887171147b9478d1dbb30a7bc",
+    "heard": "I wrote it all down. Now I know you better",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-rw-open": {
+    "sha1": "becd509f8b38045701427d93171ff339e06a2c25",
+    "heard": "No soul today, just me. Tell me about yourself, for real",
+    "diff": [],
+    "stray": []
+  },
   "s1-e2-story-01": {
     "sha1": "12b95b005776d3e544563861de7d590bd11f2587",
     "heard": "Story time. Before my interview, I tried on three things",
@@ -50,6 +98,102 @@
   "s1-e2-story-06": {
     "sha1": "180186accceab88bc2b11b36e730b368860d2f6c",
     "heard": "Saul said, \"Would you like some tea?\" And I said, \"I'd love to.\" I felt very smart",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-visitor-pip-done": {
+    "sha1": "ae9011fcf582301bbf6bf6db8305e2ebbab27273",
+    "heard": "We did it! Thank you",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-visitor-pip-me": {
+    "sha1": "53c5b421bca58a6f7e495528be8566206aecd166",
+    "heard": "I'm Pip. I help at May's Cafe",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-visitor-practise": {
+    "sha1": "34021f6f20fa6b77b51b5e5a32de44b2ba7085d5",
+    "heard": "Be Sol, please Ask me What's your job?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-visitor-sol-bye": {
+    "sha1": "6a4ad702051925aa370852e9401e436bf25de90c",
+    "heard": "Thank you both. Goodbye",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-visitor-sol-good": {
+    "sha1": "1e7daad7bf6617adf1a923aa83eedb5608bc0764",
+    "heard": "I'm good at meetings. And you?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-visitor-sol-hi": {
+    "sha1": "4e19949fe9bf93c0424a8ac796948a987ec440b6",
+    "heard": "Hi, I'm Sol. Welcome to Hollowbrook",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-visitor-sol-mornings": {
+    "sha1": "d8fd5d3d59b89197efc21ccaaeb5cd5831c1bcfc",
+    "heard": "Pip's job is in the mornings. Okay?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e2-visitor-sol-you": {
+    "sha1": "b3c562594d02b4dfa730e9248d693f31316e1b51",
+    "heard": "Thank you, Pip. And you?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-09": {
+    "sha1": "d329d72aae03807ba594223b57b88564fb20b06f",
+    "heard": "One more thing. A man from the office was here. He checked the size of your door",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-10": {
+    "sha1": "1b6e67ad62d9e1de199c6e9deb5c7696d91d5c10",
+    "heard": "Morning. I buy 50 kilos a month. I'd like 10% off and free delivery",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-11": {
+    "sha1": "149596dbe4e80aa671809f55a83f28c6648b5e80",
+    "heard": "Look, I buy 50 kilos a month, 10% off, and we're friends. Deal?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-12": {
+    "sha1": "5a27bf335fa730fa0f733c3fa122af2d4a021ce1",
+    "heard": "While you were away, a raccoon called Hank wanted cheaper beans. We said no nicely, and he said, \"Deal!\" Then he told us about a man at May's door",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-pr-close": {
+    "sha1": "436aacbb66d8655f45f128de4b3b9291641e50b1",
+    "heard": "Three times and Hank listened to the very end",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-pr-open": {
+    "sha1": "64907aa04f4412212f4bb68fd9e34e7c282b7718",
+    "heard": "Mae might lose this cafe. Why does it matter to you?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-rw-close": {
+    "sha1": "bdd24095dce6d2eb081b809dc75d6d3229b4b5db",
+    "heard": "That was strong. Say it just like that this week",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-rw-open": {
+    "sha1": "2c1511881092ab82c131a378c93cb88b7e5ce0d2",
+    "heard": "Hi, I'm Dex. I hear you said no to Hank very kindly",
     "diff": [],
     "stray": []
   },
@@ -89,6 +233,90 @@
     "diff": [],
     "stray": []
   },
+  "s1-e3-visitor-hank": {
+    "sha1": "614dbd1e7d57cf1b78eb8ebb99554651adeabe61",
+    "heard": "I'm Hank. 10% off. Okay?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-visitor-hank-deal": {
+    "sha1": "a34ae77810ed01dca58c079ea9c98f0fca43d308",
+    "heard": "Free? Okay. Deal",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-visitor-hank-hmm": {
+    "sha1": "2438316da940ee589705772e137764477041891b",
+    "heard": "Hmm. Then what?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-visitor-mei": {
+    "sha1": "4f820edd1305fcbaaf3e9a758abcd752d4facab9",
+    "heard": "Please say no. I need the money",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-visitor-mei-why": {
+    "sha1": "bd190206fe69d9a133bfb6486015ee0641fe39a3",
+    "heard": "Thank you my door why?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-visitor-pip": {
+    "sha1": "40a51ca2b372f2497f1f5a8fb745ec5c43bd5936",
+    "heard": "Offer him something not money.",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e3-visitor-twist": {
+    "sha1": "0b4d90c9157a717a20afdb9363ecdba91fb60adb",
+    "heard": "A man checked your door",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-07": {
+    "sha1": "f1cdf0936db3740ce87c09207316fd77bddb4211",
+    "heard": "It's Big Bean, the big cafe across the harbor. They want my building",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-08": {
+    "sha1": "50427331954a007f6084482fc78650e29e1e78a3",
+    "heard": "Arjun from Market Lane couldn't come. His note says, \"A market day.\"",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-09": {
+    "sha1": "5bd4be946972b5f7e6ec40a10038221876a6cddf",
+    "heard": "While you were away, the town met at Nell's Inn. You ran the meeting. The plan: a petition, a hundred names, and I have to get them. Help",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-pr-close": {
+    "sha1": "5116639b3bd614eec9363fe7e8756a083c40bc6f",
+    "heard": "Petition, signature, and my signature has a star. Ready for Bus 45",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-pr-open": {
+    "sha1": "16fd0321d98e1c883881cb11d0510a229f6e766d",
+    "heard": "I forgot the time on Nell's postcard what did she say?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-rw-close": {
+    "sha1": "ed9191cc1ffbae1d9a23ba4169e5e3d257fce3fc",
+    "heard": "Clear and kind. Try it in your real meeting",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-rw-open": {
+    "sha1": "224544d3388dfad7dc98b170f4588d1da68d9155",
+    "heard": "You ran the town meeting. Now let's practice one of yours",
+    "diff": [],
+    "stray": []
+  },
   "s1-e4-story-01": {
     "sha1": "cd16cc4e45f2682dbc1e68131d06db992cfae486",
     "heard": "I made a poster for the petition. Big letters, very big",
@@ -122,6 +350,90 @@
   "s1-e4-story-06": {
     "sha1": "1afba96d94372f218b6754903b8b5924755e2e44",
     "heard": "Now it says \"Cafe\" with one F and a small star. Stars make everything better",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-visitor-bea": {
+    "sha1": "efc62932eb10c9edc10b81175b0c87ed967306cf",
+    "heard": "A cake sale on my bus",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-visitor-linh": {
+    "sha1": "10655a7c5efe09aa704a64c86b4ad740c3e1a3c9",
+    "heard": "A petition A hundred names",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-visitor-mei": {
+    "sha1": "2f5a8e097d937eaa90057fb69539f16efd39ac26",
+    "heard": "A big cafe wants my place",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-visitor-mei-thanks": {
+    "sha1": "f0502f7ecfbf197782d9844546a825477b064f36",
+    "heard": "Thank you. Let's save my cafe",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-visitor-nell": {
+    "sha1": "56b32384de104c8c40b3aa6d05d0860ff6a94d30",
+    "heard": "I'm Nell. Please start the meeting",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e4-visitor-nell-sum": {
+    "sha1": "16a6e6b7cb843fdef5d995efc8039271e6a16081",
+    "heard": "So a petition a hundred names okay?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-08": {
+    "sha1": "9865d6357d693fd33ada580ab9ac94940a6ffc33",
+    "heard": "Strangers, can you go first please?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-09": {
+    "sha1": "f2d83bac3990398d4099736265d3907a97e11f29",
+    "heard": "Morning. You can talk about your petition until the next stop",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-10": {
+    "sha1": "cffa16875599792d4361a4f64e21428279ae72d1",
+    "heard": "100! You got shorter and better every time",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-12": {
+    "sha1": "36e261aa24f9e2295198238609300f73b13e8678",
+    "heard": "While you were away, we got a hundred names on Bus 45. Bee signed last. Now there's a vote. May wants you to speak",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-pr-close": {
+    "sha1": "20c6cda953daa384d1eec31d069d6318f1c473f9",
+    "heard": "Three friends. Bea says it's her favorite story this week",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-pr-open": {
+    "sha1": "89b6aae377766ed6e018a1bac8cab9b9dcfda573",
+    "heard": "Lynn and May weren't on the bus. Tell them our petition story",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-rw-close": {
+    "sha1": "a1e26c22eec90a0e53e62c458e6aeced9ba58603",
+    "heard": "Much better. 60 seconds and I wanted to hear more",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-rw-open": {
+    "sha1": "8229405cdc8d0cb25a75cef0a251e46ef29d7879",
+    "heard": "A hundred names in one ride. Now, a short talk about you",
     "diff": [],
     "stray": []
   },
@@ -161,6 +473,90 @@
     "diff": [],
     "stray": []
   },
+  "s1-e5-visitor-bea": {
+    "sha1": "640f897e48d77ecbe271ba9532fed737153fd530",
+    "heard": "Morning, love. Listen to me first",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-visitor-bea-model": {
+    "sha1": "470997cde99ee3ae4ca592bb6fc8f8cdd2f211f5",
+    "heard": "Please sign It's for May's Cafe",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-visitor-bea-signs": {
+    "sha1": "48d1013de508421f2a16e20a44ac140922fa19ae",
+    "heard": "Wait! I can sign",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-visitor-count": {
+    "sha1": "30473894d711b998922bde59957567bbd37555cf",
+    "heard": "99 names one more",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-visitor-pip": {
+    "sha1": "39f087386f0be47e6f2747ddd667b01add8e9cd5",
+    "heard": "So many people You go first?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-visitor-pip-100": {
+    "sha1": "83fa69af29a9ffa123169f27b289d7b48da61206",
+    "heard": "One hundred! You were great",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-07": {
+    "sha1": "030fce2d65be9495fdbb2811e09d9bccc5618e7b",
+    "heard": "Full price, 50 kilos, May. Don't tell anyone",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-08": {
+    "sha1": "78f9076fb9d2479632555025de113e8ffc8b5dd8",
+    "heard": "Want to practice your speech first just once with me?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-09": {
+    "sha1": "c94d1a037a95844c8c970e5ff58939b342256d65",
+    "heard": "Look, your name is on the flags",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-10": {
+    "sha1": "8624ff947d2239b2c0e952c2b1fbcc22fb81e19a",
+    "heard": "Shiok! Thank you everyone, especially you",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-11": {
+    "sha1": "dbc95391d5f411489469fe78fda14012ba2d9597",
+    "heard": "The office wants to sell twelve harbor lane does anyone want to speak?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-12": {
+    "sha1": "4af0e7e18acf88fbee8dc0ec01303876856a8c1e",
+    "heard": "You can do it first, second. Thank you. Like we practiced",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-rw-close": {
+    "sha1": "6205eff544aa04edac48698a2d9428b7d04543a3",
+    "heard": "I'm so happy for you. Tell a friend about it too",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-rw-open": {
+    "sha1": "cedce62cfc2dd49dbf1084b3cff401fb93c9a6d4",
+    "heard": "I have a question from my notebook a real one",
+    "diff": [],
+    "stray": []
+  },
   "s1-e6-story-01": {
     "sha1": "d4128726d260a756f9fc26b32286b6b10e640d02",
     "heard": "The night before the meeting I couldn't sleep.",
@@ -194,6 +590,54 @@
   "s1-e6-story-06": {
     "sha1": "164f9e599e9b41b1bb6b9e9e491f85569bd595d3",
     "heard": "Then I said, \"Thank you all,\" to the moon and the owl. And I went to bed",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-visitor-boat": {
+    "sha1": "396ce3b6f566840b96b1f6856c797ec77575fb1a",
+    "heard": "Look a boat who's on it?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-visitor-flags": {
+    "sha1": "f6bf7ad4333c795564f629990362ae759d9e2913",
+    "heard": "Look, your name on the flags",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-visitor-hank": {
+    "sha1": "c1e2fea1fa90d4f98de65c95670e559daeacb5aa",
+    "heard": "Good speech. But why this cafe?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-visitor-hank-yes": {
+    "sha1": "775d262b11f3d90bba879c21d274572040bf0021",
+    "heard": "Okay. I say yes",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-visitor-mags": {
+    "sha1": "66c7c894781feb65ea44f52a8497f6616abc2d82",
+    "heard": "Does anyone want to speak?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-visitor-mags-vote": {
+    "sha1": "e7d4548a47ed45b64c33cbec0ea9c94ec0634fae",
+    "heard": "The town says yes. The cafe stays",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-visitor-mei": {
+    "sha1": "8342745e15d510dc25958c3cc8c9ee2738a911b0",
+    "heard": "Thank you, La. You were great",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-visitor-pip": {
+    "sha1": "09aaedbbec98ebc89bab0a71a6d2939ff980252d",
+    "heard": "You can do it line by line",
     "diff": [],
     "stray": []
   },
