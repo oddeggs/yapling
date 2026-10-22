@@ -41,6 +41,12 @@
     "diff": [],
     "stray": []
   },
+  "s1-e2-13": {
+    "sha1": "80f862715869fff815738625a32ee30ba1df290d",
+    "heard": "I got the job! Oh, and May says a big man wants cheaper coffee beans She looked worried",
+    "diff": [],
+    "stray": []
+  },
   "s1-e2-pr-close": {
     "sha1": "2c2ec6e91b2ce0fc5e08fe0e43e0d97128bc5d4b",
     "heard": "Deadline, team, shift. Now I can read the whole poster",
@@ -173,6 +179,12 @@
     "diff": [],
     "stray": []
   },
+  "s1-e3-postcard-linh": {
+    "sha1": "04c55c611d7bb21a1d6381cf647bd73346ba0f7b",
+    "heard": "Tip from a neighbor: I used to say yes to everything. Now I say, \"Sorry, I can't. How about Monday?\"",
+    "diff": [],
+    "stray": []
+  },
   "s1-e3-pr-close": {
     "sha1": "436aacbb66d8655f45f128de4b3b9291641e50b1",
     "heard": "Three times and Hank listened to the very end",
@@ -293,6 +305,12 @@
     "diff": [],
     "stray": []
   },
+  "s1-e4-postcard-nell": {
+    "sha1": "dbcbac0d48bcce1834738a20c95e518e0f45f699",
+    "heard": "It's Nell from the Lantern Inn. Great meeting. The petition papers are ready at my desk after 4:00",
+    "diff": [],
+    "stray": []
+  },
   "s1-e4-pr-close": {
     "sha1": "5116639b3bd614eec9363fe7e8756a083c40bc6f",
     "heard": "Petition, signature, and my signature has a star. Ready for Bus 45",
@@ -404,6 +422,12 @@
   "s1-e5-10": {
     "sha1": "cffa16875599792d4361a4f64e21428279ae72d1",
     "heard": "100! You got shorter and better every time",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e5-11": {
+    "sha1": "3b844017270098582bdf91044d4026d02d75a996",
+    "heard": "Bus forty five leaves at nine o'clock Bring your best story, love",
     "diff": [],
     "stray": []
   },
@@ -545,6 +569,42 @@
     "diff": [],
     "stray": []
   },
+  "s1-e6-postcard-bea": {
+    "sha1": "b9e8c69222494fdbd6b7082e8f0c45ec29186b15",
+    "heard": "Tell me again, love, why does the cafe matter to you?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-postcard-hank": {
+    "sha1": "111900324ca51889c75e806956a8be21311c5c0a",
+    "heard": "Full price, fifty kilos every month. Deal?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-postcard-linh": {
+    "sha1": "cc78320b9c00a939b550a9e872d54ed9a2517077",
+    "heard": "You spoke to the whole town. How did you get so brave?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-postcard-mei": {
+    "sha1": "da1630bb63ba986f91ed1302afde4145204998f7",
+    "heard": "The cafe is staying. Okay, so what's the plan for the party?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-postcard-nell": {
+    "sha1": "a6632ce34aa54a7f510fc3356860cd7336359a08",
+    "heard": "The inn wants a party for the cafe. What do you think?",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-postcard-sol": {
+    "sha1": "dbceb4c03a4e31ec5d8bcc8a558143ffd83ffdb9",
+    "heard": "Pip is doing great at work. Can you come to our team lunch on Friday?",
+    "diff": [],
+    "stray": []
+  },
   "s1-e6-rw-close": {
     "sha1": "6205eff544aa04edac48698a2d9428b7d04543a3",
     "heard": "I'm so happy for you. Tell a friend about it too",
@@ -638,6 +698,78 @@
   "s1-e6-visitor-pip": {
     "sha1": "09aaedbbec98ebc89bab0a71a6d2939ff980252d",
     "heard": "You can do it line by line",
+    "diff": [],
+    "stray": []
+  },
+  "s1-e6-vm-bunting": {
+    "sha1": "dcd6ee753a48be20a16906602a54cf701f66ddb7",
+    "heard": "Big news! The little flags in the square stay up for a whole week. It's called Bunting Week. It starts next week",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-postcard-mei": {
+    "sha1": "fc3b637846acbe3672c7be3d2c43650c9a490138",
+    "heard": "Thank you, Lah. The cafe stays because of you. Free kaya toast for you all week",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-story-01": {
+    "sha1": "23517514c1f994f9908fab144134bad81456dca0",
+    "heard": "This is the story of our season",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-story-02": {
+    "sha1": "35346470606ea763abb48d8f8d8964d9f4c5afa8",
+    "heard": "Six weeks ago, May got a letter her rent doubled",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-story-03": {
+    "sha1": "57b26a1a3404bff5efa22ed86d971e75ab8a6c80",
+    "heard": "You asked, \"What's wrong?\" Then you called the office for her",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-story-04": {
+    "sha1": "7c3c05359ad65d102bfae9fbed3789cd56ff455e",
+    "heard": "I had my first interview. You helped me, and I got the job",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-story-05": {
+    "sha1": "0829493b2a1ef9d6fd28fa28bf0bf2fcca2d6ac7",
+    "heard": "Hank wanted cheaper beans. You said no so kindly. He said, \"Deal.\"",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-story-06": {
+    "sha1": "5cf93a427d8bbc2b72d74a2480229d55a0be87b6",
+    "heard": "You ran the meeting at Nell's Inn. Everyone had a turn",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-story-07": {
+    "sha1": "a8dcbafa53c24fc2c9174bebe986607af896cf65",
+    "heard": "We rode bus 45 and got 100 names. Bea signed last",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-story-08": {
+    "sha1": "b17de33e5bef599303db0e2f2ba5d7bd461c4893",
+    "heard": "Then you spoke in front of the whole town And the cafe stays",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-story-09": {
+    "sha1": "543c86e3f688f7e6e077d684751e01332d472b91",
+    "heard": "I wrote it all in my notebook. The best pages are about you",
+    "diff": [],
+    "stray": []
+  },
+  "s1-fest-vm-boat": {
+    "sha1": "1503e27db4a89f4743bba0585f343fd2f9ba9276",
+    "heard": "Be here, love. That boat is still in the harbor. Nobody has come off it yet",
     "diff": [],
     "stray": []
   },

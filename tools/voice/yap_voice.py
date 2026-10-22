@@ -509,7 +509,8 @@ SEASON_INTRO = ("Release 1.2: Episodes 2–6 with their Visitor versions, Hank's
                 "and closers, Pip's stories, postcards, voicemails, Bunting Week and Pip's minute. Lines at speed 0.7 (Visitor "
                 "lines and Pip's minute) must measure <b>100 words a minute or slower</b> over the spoken span (pauses included); "
                 "the rest play at the character's own pace and are shown, not gated. Pip's slightly-wrong lines are wrong on "
-                "purpose: the check is that the voice kept the mistake.")
+                "purpose: the check is that the voice kept the mistake. Dex's voice is a provisional pick: "
+                "<a href=\"../auditions-dex/index.html\">his audition</a>.")
 
 
 def page(args):

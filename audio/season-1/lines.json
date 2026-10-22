@@ -818,7 +818,9 @@
       "char": "pip",
       "text": "[shouting with joy] I GOT THE JOB! [happy squeal] Oh, and Mei says a big man wants cheaper coffee beans. [worried] She looked worried.",
       "kind": "voicemail",
-      "_vi": "MÌNH ĐƯỢC NHẬN RỒI! À, Mei kể có một ông to con muốn mua hạt cà phê rẻ hơn. Trông Mei lo lắm."
+      "_vi": "MÌNH ĐƯỢC NHẬN RỒI! À, Mei kể có một ông to con muốn mua hạt cà phê rẻ hơn. Trông Mei lo lắm.",
+      "mp3": "s1-e2-13-pip.mp3",
+      "timing": "s1-e2-13-pip.timing.json"
     },
     {
       "id": "s1-e2-visitor-practise",
@@ -1118,7 +1120,9 @@
       "char": "linh",
       "text": "Tip from a neighbour: I used to say yes to everything. Now I say, 'Sorry, I can't. How about Monday?'",
       "kind": "postcard",
-      "_vi": "Mẹo nhỏ từ hàng xóm: trước đây việc gì mình cũng nhận lời. Giờ mình nói: \"Sorry, I can't. How about Monday?\""
+      "_vi": "Mẹo nhỏ từ hàng xóm: trước đây việc gì mình cũng nhận lời. Giờ mình nói: \"Sorry, I can't. How about Monday?\"",
+      "mp3": "s1-e3-postcard-linh-linh.mp3",
+      "timing": "s1-e3-postcard-linh-linh.timing.json"
     },
     {
       "id": "s1-e3-story-01",
@@ -1290,7 +1294,9 @@
       "char": "nell",
       "text": "It's Nell from the Lantern Inn: great meeting! The petition papers are ready at my desk after four.",
       "kind": "postcard",
-      "_vi": "Nell ở quán trọ Lantern đây: cuộc họp tuyệt lắm! Giấy kiến nghị để sẵn ở quầy của mình, sau bốn giờ ghé lấy nhé."
+      "_vi": "Nell ở quán trọ Lantern đây: cuộc họp tuyệt lắm! Giấy kiến nghị để sẵn ở quầy của mình, sau bốn giờ ghé lấy nhé.",
+      "mp3": "s1-e4-postcard-nell-nell.mp3",
+      "timing": "s1-e4-postcard-nell-nell.timing.json"
     },
     {
       "id": "s1-e4-story-01",
@@ -1375,7 +1381,9 @@
       "char": "bea",
       "text": "[cheerful] Bus 45 leaves at nine o'clock. Bring your best story, love.",
       "kind": "postcard",
-      "_vi": "Xe buýt 45 chạy lúc chín giờ. Mang theo câu chuyện hay nhất của bạn nhé."
+      "_vi": "Xe buýt 45 chạy lúc chín giờ. Mang theo câu chuyện hay nhất của bạn nhé.",
+      "mp3": "s1-e5-11-bea.mp3",
+      "timing": "s1-e5-11-bea.timing.json"
     },
     {
       "id": "s1-e5-12",
@@ -1667,49 +1675,63 @@
       "char": "linh",
       "text": "[warmly] You spoke to the whole town! How did you get so brave?",
       "kind": "postcard",
-      "_vi": "Bạn đã nói trước cả thị trấn! Sao bạn dũng cảm vậy?"
+      "_vi": "Bạn đã nói trước cả thị trấn! Sao bạn dũng cảm vậy?",
+      "mp3": "s1-e6-postcard-linh-linh.mp3",
+      "timing": "s1-e6-postcard-linh-linh.timing.json"
     },
     {
       "id": "s1-e6-postcard-mei",
       "char": "mei",
       "text": "[warmly] The café is staying! Ok, so what's the plan for the party?",
       "kind": "postcard",
-      "_vi": "Quán được ở lại rồi! Ok, vậy tiệc tính sao đây?"
+      "_vi": "Quán được ở lại rồi! Ok, vậy tiệc tính sao đây?",
+      "mp3": "s1-e6-postcard-mei-mei.mp3",
+      "timing": "s1-e6-postcard-mei-mei.timing.json"
     },
     {
       "id": "s1-e6-postcard-sol",
       "char": "sol",
       "text": "[warmly] Pip is doing great at work. Can you come to our team lunch on Friday?",
       "kind": "postcard",
-      "_vi": "Pip làm việc tốt lắm. Thứ Sáu bạn đến ăn trưa với nhóm mình được không?"
+      "_vi": "Pip làm việc tốt lắm. Thứ Sáu bạn đến ăn trưa với nhóm mình được không?",
+      "mp3": "s1-e6-postcard-sol-sol.mp3",
+      "timing": "s1-e6-postcard-sol-sol.timing.json"
     },
     {
       "id": "s1-e6-postcard-hank",
       "char": "hank",
       "text": "[gruff, friendly] Full price, fifty kilos, every month. Deal?",
       "kind": "postcard",
-      "_vi": "Giá gốc, năm mươi ký, tháng nào cũng vậy. Chốt không?"
+      "_vi": "Giá gốc, năm mươi ký, tháng nào cũng vậy. Chốt không?",
+      "mp3": "s1-e6-postcard-hank-hank.mp3",
+      "timing": "s1-e6-postcard-hank-hank.timing.json"
     },
     {
       "id": "s1-e6-postcard-nell",
       "char": "nell",
       "text": "[warmly] The inn wants a party for the café. What do you think?",
       "kind": "postcard",
-      "_vi": "Quán trọ muốn mở tiệc mừng cho quán cà phê. Bạn thấy sao?"
+      "_vi": "Quán trọ muốn mở tiệc mừng cho quán cà phê. Bạn thấy sao?",
+      "mp3": "s1-e6-postcard-nell-nell.mp3",
+      "timing": "s1-e6-postcard-nell-nell.timing.json"
     },
     {
       "id": "s1-e6-postcard-bea",
       "char": "bea",
       "text": "[warmly] Tell me again, love. Why does the café matter to you?",
       "kind": "postcard",
-      "_vi": "Kể lại cho mình nghe nào. Vì sao quán cà phê quan trọng với bạn?"
+      "_vi": "Kể lại cho mình nghe nào. Vì sao quán cà phê quan trọng với bạn?",
+      "mp3": "s1-e6-postcard-bea-bea.mp3",
+      "timing": "s1-e6-postcard-bea-bea.timing.json"
     },
     {
       "id": "s1-e6-vm-bunting",
       "char": "pip",
       "text": "[excited] Big news! The little flags in the square stay up for a whole week. It's called Bunting Week. It starts next week!",
       "kind": "voicemail",
-      "_vi": "Tin vui đây! Mấy dây cờ nhỏ ở quảng trường sẽ treo suốt một tuần. Gọi là Tuần Cờ Dây. Tuần sau là bắt đầu rồi!"
+      "_vi": "Tin vui đây! Mấy dây cờ nhỏ ở quảng trường sẽ treo suốt một tuần. Gọi là Tuần Cờ Dây. Tuần sau là bắt đầu rồi!",
+      "mp3": "s1-e6-vm-bunting-pip.mp3",
+      "timing": "s1-e6-vm-bunting-pip.timing.json"
     },
     {
       "id": "s1-e6-story-01",
@@ -1772,77 +1794,99 @@
       "kind": "story",
       "name_splice": "before",
       "_full": "{name}, this is the story of our season.",
-      "_vi": "{name} ơi, đây là câu chuyện mùa này của chúng mình."
+      "_vi": "{name} ơi, đây là câu chuyện mùa này của chúng mình.",
+      "mp3": "s1-fest-story-01-pip.mp3",
+      "timing": "s1-fest-story-01-pip.timing.json"
     },
     {
       "id": "s1-fest-story-02",
       "char": "pip",
       "text": "Six weeks ago, Mei got a letter. Her rent doubled.",
       "kind": "story",
-      "_vi": "Sáu tuần trước, Mei nhận được một lá thư. Tiền thuê nhà tăng gấp đôi."
+      "_vi": "Sáu tuần trước, Mei nhận được một lá thư. Tiền thuê nhà tăng gấp đôi.",
+      "mp3": "s1-fest-story-02-pip.mp3",
+      "timing": "s1-fest-story-02-pip.timing.json"
     },
     {
       "id": "s1-fest-story-03",
       "char": "pip",
       "text": "You asked, 'What's wrong?' Then you called the office for her.",
       "kind": "story",
-      "_vi": "Bạn hỏi: \"Có chuyện gì vậy?\" Rồi bạn gọi điện cho văn phòng giúp Mei."
+      "_vi": "Bạn hỏi: \"Có chuyện gì vậy?\" Rồi bạn gọi điện cho văn phòng giúp Mei.",
+      "mp3": "s1-fest-story-03-pip.mp3",
+      "timing": "s1-fest-story-03-pip.timing.json"
     },
     {
       "id": "s1-fest-story-04",
       "char": "pip",
       "text": "I had my first interview. You helped me, and I got the job!",
       "kind": "story",
-      "_vi": "Mình đi phỏng vấn lần đầu. Bạn giúp mình, và mình được nhận!"
+      "_vi": "Mình đi phỏng vấn lần đầu. Bạn giúp mình, và mình được nhận!",
+      "mp3": "s1-fest-story-04-pip.mp3",
+      "timing": "s1-fest-story-04-pip.timing.json"
     },
     {
       "id": "s1-fest-story-05",
       "char": "pip",
       "text": "Hank wanted cheaper beans. You said no, so kindly. He said, 'Deal.'",
       "kind": "story",
-      "_vi": "Hank muốn mua hạt cà phê rẻ hơn. Bạn từ chối thật khéo. Ông ấy nói: \"Chốt.\""
+      "_vi": "Hank muốn mua hạt cà phê rẻ hơn. Bạn từ chối thật khéo. Ông ấy nói: \"Chốt.\"",
+      "mp3": "s1-fest-story-05-pip.mp3",
+      "timing": "s1-fest-story-05-pip.timing.json"
     },
     {
       "id": "s1-fest-story-06",
       "char": "pip",
       "text": "You ran the meeting at Nell's inn. Everyone had a turn.",
       "kind": "story",
-      "_vi": "Bạn chủ trì cuộc họp ở quán trọ của Nell. Ai cũng được nói."
+      "_vi": "Bạn chủ trì cuộc họp ở quán trọ của Nell. Ai cũng được nói.",
+      "mp3": "s1-fest-story-06-pip.mp3",
+      "timing": "s1-fest-story-06-pip.timing.json"
     },
     {
       "id": "s1-fest-story-07",
       "char": "pip",
       "text": "We rode Bus 45 and got a hundred names. Bea signed last.",
       "kind": "story",
-      "_vi": "Chúng mình đi xe buýt 45 và xin được một trăm chữ ký. Bea ký cuối cùng."
+      "_vi": "Chúng mình đi xe buýt 45 và xin được một trăm chữ ký. Bea ký cuối cùng.",
+      "mp3": "s1-fest-story-07-pip.mp3",
+      "timing": "s1-fest-story-07-pip.timing.json"
     },
     {
       "id": "s1-fest-story-08",
       "char": "pip",
       "text": "Then you spoke in front of the whole town. [moved] And the café stays.",
       "kind": "story",
-      "_vi": "Rồi bạn phát biểu trước cả thị trấn. Và quán cà phê được ở lại."
+      "_vi": "Rồi bạn phát biểu trước cả thị trấn. Và quán cà phê được ở lại.",
+      "mp3": "s1-fest-story-08-pip.mp3",
+      "timing": "s1-fest-story-08-pip.timing.json"
     },
     {
       "id": "s1-fest-story-09",
       "char": "pip",
       "text": "[warmly] I wrote it all in my notebook. The best pages are about you.",
       "kind": "story",
-      "_vi": "Mình ghi hết vào sổ tay. Những trang hay nhất là về bạn."
+      "_vi": "Mình ghi hết vào sổ tay. Những trang hay nhất là về bạn.",
+      "mp3": "s1-fest-story-09-pip.mp3",
+      "timing": "s1-fest-story-09-pip.timing.json"
     },
     {
       "id": "s1-fest-postcard-mei",
       "char": "mei",
       "text": "[warmly] Thank you lah. The café stays because of you. Free kaya toast for you, all week!",
       "kind": "postcard",
-      "_vi": "Cảm ơn nhiều nha. Quán còn là nhờ bạn đó. Cả tuần này bánh mì nướng kaya miễn phí cho bạn!"
+      "_vi": "Cảm ơn nhiều nha. Quán còn là nhờ bạn đó. Cả tuần này bánh mì nướng kaya miễn phí cho bạn!",
+      "mp3": "s1-fest-postcard-mei-mei.mp3",
+      "timing": "s1-fest-postcard-mei-mei.timing.json"
     },
     {
       "id": "s1-fest-vm-boat",
       "char": "bea",
       "text": "[cheerful] Bea here, love. That boat is still in the harbour. [curious] Nobody has come off it yet.",
       "kind": "voicemail",
-      "_vi": "Bea đây. Con thuyền đó vẫn còn ở bến cảng. Chưa có ai bước xuống cả."
+      "_vi": "Bea đây. Con thuyền đó vẫn còn ở bến cảng. Chưa có ai bước xuống cả.",
+      "mp3": "s1-fest-vm-boat-bea.mp3",
+      "timing": "s1-fest-vm-boat-bea.timing.json"
     },
     {
       "id": "s1-pm-open-1",
