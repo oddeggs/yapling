@@ -9,8 +9,8 @@ import { useLocale } from '../../ui/locale';
 import { useKeyframes } from '../../ui/motion/play';
 import { useReduceMotion } from '../../ui/motion/reduce-motion';
 import { StickerButton } from '../../ui/sticker-button';
-import { Txt } from '../../ui/text';
 import { BlurredScene } from './call-art';
+import { CallTxt } from './call-text';
 
 /*
  * When the call can't happen: no connection ("Pip's line is crackly") with a try-again, or the
@@ -82,14 +82,14 @@ export function CallErrorSheet({ kind, name, species, onBack, onPrimary }: CallE
         style={{ position: 'absolute', top: layout.topBar, left: layout.marginScreen }}
       />
       <GlassSheet kind="info" entrance={motion.screens.infoSheet} top={SHEET_TOP * k}>
-        <Txt variant="kicker" colour={colours.textMuted} accessibilityRole="header">
+        <CallTxt variant="kicker" colour={colours.textMuted} accessibilityRole="header">
           {copy.kicker}
-        </Txt>
-        <Txt variant="sheetTitle">{copy.title}</Txt>
+        </CallTxt>
+        <CallTxt variant="sheetTitle">{copy.title}</CallTxt>
         {copy.body ? (
-          <Txt variant="body" colour={colours.textBody}>
+          <CallTxt variant="body" colour={colours.textBody}>
             {copy.body}
-          </Txt>
+          </CallTxt>
         ) : null}
         <View style={{ flex: 1 }} />
         <StickerButton label={copy.primary} onPress={onPrimary} />

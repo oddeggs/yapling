@@ -149,8 +149,9 @@ export class LatencyMeter {
 
   /** A line's first sample will be heard at `audibleMs`; returns its lag when it counts. */
   lineScheduled(streamId: number, kind: 'recorded' | 'live', audibleMs: number): number | null {
-    if (this.speechEndMs === null || this.seen.has(kind)) return null;
-    // A generated line after a recorded one still counts; a second recorded line does not.
+    // The reaction is a recorded line before the reply; once the reply has played, later lines
+    // (the next recorded beat) belong to no turn.
+    if (this.speechEndMs === null || this.seen.has(kind) || this.seen.has('live')) return null;
     this.seen.add(kind);
     const lag = Math.max(0, Math.round(audibleMs - this.speechEndMs));
     this.lags.set(streamId, lag);

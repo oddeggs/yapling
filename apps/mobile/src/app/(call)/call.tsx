@@ -5,9 +5,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { getSessionToken, useProfile, useProgress, useWeek } from '../../data';
 import { apiBase, clientVersion } from '../../data/config';
 import { CallScreen } from '../../features/call/call-screen';
+import { now } from '../../features/devmenu';
 import { BURROW_ROUTE, postCallHref, SAFETY_ROUTE } from '../../features/call/routes';
 import { onboardingStore } from '../../features/onboarding';
 import { phraseForSeed } from '../../features/story';
+import { withAppClock } from '../../voice/call-socket';
 
 /** The call socket on the same host as the API: `ws(s)://<api>/calls/socket`. */
 const socketUrl = (base: string) =>
@@ -72,7 +74,7 @@ export default function CallRoute() {
         }
       }
       turnMode={params.turn === 'hands' ? 'hands_free' : 'hold_to_talk'}
-      url={socketUrl(apiBase())}
+      url={withAppClock(socketUrl(apiBase()), now())}
       clientVersion={clientVersion()}
       getToken={getSessionToken}
       devFixtures={fixtures}

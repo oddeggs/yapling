@@ -38,11 +38,25 @@ export const callEn = {
   'call.mic.sceneComplete': 'Scene complete',
   /** Read for the mic button. */
   'call.a11y.mic': 'Hold to talk',
+  /** Read for a character's bubble while the reply is on its way. */
+  'call.a11y.thinking': '{name} is thinking',
+  /** Read for a timer and a Pass it on round (shown as "60s"). */
+  'call.a11y.seconds': '{count} seconds',
 
   /** The last button of each scene. */
   'call.done.wrapUp': 'Wrap up',
   'call.done.hopOff': 'Hop off',
   'call.done.seasonMap': 'See the season map',
+
+  /**
+   * The character's bubble when a turn got no answer (nothing heard, or the reply failed). Said in
+   * English in every language, as the character says it.
+   */
+  'call.didntCatch': "Sorry, I didn't catch that. Say it another way?",
+  /** The pill while the line drops and the phone dials back in. */
+  'call.reconnecting': 'Reconnecting…',
+  /** The pill while a phone call or Siri has the audio. */
+  'call.interrupted': 'Paused while you take that call',
 
   'call.fixedIt': 'You fixed it yourself',
   'call.nowALeaf': 'Now a leaf',

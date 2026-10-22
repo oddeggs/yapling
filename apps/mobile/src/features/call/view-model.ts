@@ -42,6 +42,8 @@ export interface BubbleView {
   readonly thinking: boolean;
   /** The Vietnamese for a written line, for the tap-to-gloss. */
   readonly gloss: string | null;
+  /** The turn got no answer: the bubble says the character didn't catch that (copy on screen). */
+  readonly didntCatch?: true;
 }
 
 export interface TimerView {
@@ -86,6 +88,8 @@ export interface CallView {
   readonly wrapUpSeconds: number | null;
   /** A crisis: the safety sheet opens. */
   readonly safety: boolean;
+  /** The line is down and the phone dials back in, or a phone call has the audio. */
+  readonly paused: 'reconnecting' | 'interrupted' | null;
 }
 
 export interface CallViewInput {
@@ -201,6 +205,13 @@ export function callView(input: CallViewInput): CallView {
     wrapUpSeconds:
       live && call.wrappingUp && call.secondsLeft !== null ? Math.max(0, call.secondsLeft) : null,
     safety: call.safety === 'crisis',
+    paused: !live
+      ? null
+      : call.interrupted
+        ? 'interrupted'
+        : call.reconnecting
+          ? 'reconnecting'
+          : null,
   };
 }
 
@@ -260,6 +271,17 @@ function bubbleOf(
       gloss: lineGloss ? glossFor(lineGloss.glosses, firstLanguage) : null,
     };
   }
+  if (call.notice === 'didnt_catch' && !thinking && !call.playing) {
+    return {
+      speaker: thinker,
+      streamId: -2,
+      text: '',
+      playing: false,
+      thinking: false,
+      gloss: null,
+      didntCatch: true,
+    };
+  }
   if (thinking) {
     return {
       speaker: thinker,
@@ -315,6 +337,7 @@ function moodsOf(
     if (call.onHold) mood = 'patient';
     else if (s.fixed && (c === s.listener || c === 'pip')) mood = 'excited';
     else if (tracker.correction !== null && c === (s.listener ?? 'pip')) mood = 'confused';
+    else if (call.notice === 'didnt_catch' && c === (s.listener ?? layout.pill)) mood = 'confused';
     else if (s.thinking && c === (s.listener ?? layout.pill)) mood = 'think';
     else if (s.talking === c) mood = 'happy';
     else if (s.mic === 'yourTurn' || s.mic === 'listening') mood = 'listen';

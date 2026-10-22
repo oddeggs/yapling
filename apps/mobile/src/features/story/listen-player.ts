@@ -7,6 +7,7 @@ import {
 
 import { VoiceSession } from '../../../modules/voice-session';
 import { storyRecordedLines, trackFromTiming, localVisemeTrack } from '../../voice';
+import { claimAudio, ownsAudio, releaseAudio, type AudioClaim } from '../../voice/audio-owner';
 import { createLipsync, type Lipsync, type LipsyncSource } from '../../voice/lipsync';
 import type { Segment } from '../../voice/playout';
 
@@ -14,7 +15,8 @@ import type { Segment } from '../../voice/playout';
  * Plays a story's recorded lines on the phone, with no call: the voice engine's bundled lines and
  * its caption clock (the lipsync shared values, read on the UI thread), plus a pause for "Chờ
  * chút". A playback-only audio session, so the story plays alongside nothing else and never
- * opens the mic.
+ * opens the mic. The session is shared with calls: whoever set it up last owns it, and only the
+ * owner deactivates it (`voice/audio-owner`).
  */
 
 export interface ListenPlayerEvents {
@@ -44,18 +46,14 @@ export class ListenPlayer {
   private timer: ReturnType<typeof setInterval> | null = null;
   private stream = 0;
   private disposed = false;
+  private claim: AudioClaim | null = null;
 
   constructor(private readonly events: ListenPlayerEvents) {}
 
   /** The playback session and the audio graph. */
   async start(): Promise<void> {
     if (this.context) return;
-    AudioManager.setAudioSessionOptions({
-      iosCategory: 'playback',
-      iosMode: 'spokenAudio',
-      iosOptions: [],
-    });
-    await AudioManager.setAudioSessionActivity(true);
+    await this.takeSession();
     const context = new AudioContext();
     await context.resume();
     if (this.disposed) {
@@ -63,6 +61,30 @@ export class ListenPlayer {
       return;
     }
     this.context = context;
+  }
+
+  /**
+   * Sets the shared session up for playback and claims it. A call may have set it up for itself
+   * since this player started (play and record, echo cancellation): playing again takes it back.
+   */
+  private async takeSession(): Promise<void> {
+    this.claim = claimAudio('listen');
+    // No echo cancellation for a story: a call may have left it on for the engine.
+    VoiceSession?.setVoiceProcessing(false);
+    AudioManager.setAudioSessionOptions({
+      iosCategory: 'playback',
+      iosMode: 'spokenAudio',
+      iosOptions: [],
+    });
+    await AudioManager.setAudioSessionActivity(true);
+  }
+
+  /** After a call had the session: take it back and start the engine again with this graph. */
+  private async reclaim(context: AudioContext): Promise<void> {
+    if (ownsAudio(this.claim)) return;
+    await this.takeSession();
+    await context.suspend().catch(() => undefined);
+    if (!this.paused) await context.resume().catch(() => undefined);
   }
 
   /** Decodes lines ahead of need. */
@@ -79,6 +101,7 @@ export class ListenPlayer {
       return;
     }
     this.stopCurrent();
+    await this.reclaim(context);
     let buffer: AudioBuffer;
     try {
       buffer = await this.decode(lineId);
@@ -156,6 +179,9 @@ export class ListenPlayer {
     const ctx = this.context;
     this.context = null;
     if (ctx) await ctx.close().catch(() => undefined);
+    // A call that started since owns the session now: leave it running for the call.
+    if (!releaseAudio(this.claim)) return;
+    this.claim = null;
     try {
       await AudioManager.setAudioSessionActivity(false);
     } catch {

@@ -9,7 +9,7 @@ import type {
 } from '@yapling/contracts';
 import { fromPhraseProgress, seedPhrase, usePhrase } from '@yapling/domain';
 import type { BurrowObjectId } from '@yapling/art';
-import type { Scene } from '@yapling/story';
+import { findPhrase, type Scene } from '@yapling/story';
 
 /*
  * The voicemail with a fix in it: Pip's recorded message, then its slightly wrong phrase, then a
@@ -92,13 +92,20 @@ export interface VoicemailScript {
   readonly roles: ReadonlyMap<Id, BeatRole>;
   /** The words of the fix (`Can I help you?`), from the turn's expectation; null when it names none. */
   readonly fix: string | null;
+  /**
+   * Every way of saying the fix that counts: the expectation's words and the turn's phrases as the
+   * story writes them (`Can I help?`). The call accepts any of them as fixed, so the screen does.
+   */
+  readonly fixes: readonly string[];
 }
 
 export function voicemailScript(scene: Scene): VoicemailScript {
   const turn = scene.beats.find((b) => b.kind === 'learner');
-  const expects = turn?.kind === 'learner' ? turn.answer.expects : '';
-  const quoted = /"([^"]+)"/.exec(expects)?.[1] ?? null;
-  return { roles: beatRoles(scene), fix: quoted };
+  const answer = turn?.kind === 'learner' ? turn.answer : null;
+  const quoted = /"([^"]+)"/.exec(answer?.expects ?? '')?.[1] ?? null;
+  const phrases = (answer?.phrases ?? []).flatMap((id) => findPhrase(id)?.en ?? []);
+  const fixes = [...new Set([...(quoted === null ? [] : [quoted]), ...phrases])];
+  return { roles: beatRoles(scene), fix: quoted, fixes };
 }
 
 const normal = (s: string) =>
@@ -114,8 +121,13 @@ const normal = (s: string) =>
  * knows how it went, so the call's frames alone can't tell a fix from Pip working it out; the
  * learner's own words can.
  */
-export const saysFix = (heard: string, fix: string | null): boolean =>
-  fix !== null && heard.trim() !== '' && normal(heard).includes(normal(fix));
+export const saysFix = (heard: string, fix: string | readonly string[] | null): boolean => {
+  const forms = fix === null ? [] : typeof fix === 'string' ? [fix] : fix;
+  const words = normal(heard);
+  return (
+    heard.trim() !== '' && forms.some((f) => normal(f).trim() !== '' && words.includes(normal(f)))
+  );
+};
 
 const PHASE_OF_ROLE: Readonly<Record<BeatRole, VoicemailPhase>> = {
   card: 'message',
@@ -130,7 +142,7 @@ const settled = (s: VoicemailState) => s.phase === 'done' || s.phase === 'offlin
 
 /** Applies one event from the call. */
 export function reduceVoicemail(
-  { roles, fix }: VoicemailScript,
+  { roles, fixes }: VoicemailScript,
   state: VoicemailState,
   event: VoicemailEvent,
 ): VoicemailState {
@@ -143,7 +155,7 @@ export function reduceVoicemail(
       // Past the turn: the learner fixed it when their words carried the fix, else Pip worked it out.
       const outcome =
         phase === 'grown' && state.outcome === null
-          ? saysFix(state.heard, fix)
+          ? saysFix(state.heard, fixes)
             ? 'fixed'
             : 'worked_out'
           : state.outcome;

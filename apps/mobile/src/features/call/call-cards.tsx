@@ -26,9 +26,9 @@ import { useKeyframes } from '../../ui/motion/play';
 import { Press } from '../../ui/press';
 import { DashedRule, type BubbleTone } from '../../ui/speech-bubble';
 import { GlassView, Sticker } from '../../ui/surface';
-import { Txt } from '../../ui/text';
 import { typeExtras } from '../../ui/type-extras';
 import type { ViewStyleProp } from '../../ui/style';
+import { CallTxt } from './call-text';
 
 /*
  * The cards a call shows over its scene, as the prototype draws them: the hint, the learner's
@@ -74,11 +74,13 @@ export function HintCard({
         >
           <Tag label={t('call.hint')} fill={palette.honey} />
           <View style={{ flexShrink: 1 }}>
-            <Txt variant={{ ...typeExtras.phrase, size: 15.5, lineHeight: null }}>{phrase}</Txt>
+            <CallTxt variant={{ ...typeExtras.phrase, size: 15.5, lineHeight: null }}>
+              {phrase}
+            </CallTxt>
             {gloss ? (
-              <Txt variant="handNote" colour={colours.textMuted}>
+              <CallTxt variant="handNote" colour={colours.textMuted}>
                 {gloss}
-              </Txt>
+              </CallTxt>
             ) : null}
           </View>
         </GlassView>
@@ -107,10 +109,10 @@ export function YouCaption({ text, heard }: { text: string; heard: boolean }) {
         boxShadow: shadowCss(softShadows.floating),
       }}
     >
-      <Txt variant="labelSmall" colour={colours.textMuted}>
+      <CallTxt variant="labelSmall" colour={colours.textMuted}>
         {heard ? t('call.youHeard') : t('call.you')}
-      </Txt>
-      <Txt variant="caption">{text}</Txt>
+      </CallTxt>
+      <CallTxt variant="caption">{text}</CallTxt>
     </View>
   );
 }
@@ -148,15 +150,15 @@ export function MeaningWhisper({
         contentStyle={{ paddingVertical: 12, paddingHorizontal: 16, gap: 3 }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingRight: 30 }}>
-          <Txt variant="bubbleName">{t('call.whisper', { name })}</Txt>
+          <CallTxt variant="bubbleName">{t('call.whisper', { name })}</CallTxt>
           <AiTag label={t('common.aiTag')} small />
         </View>
         {simple === null ? (
           <ThinkingDots />
         ) : (
-          <Txt variant={{ ...typeExtras.phrase, size: 16, weight: 700, lineHeight: 1.25 }}>
+          <CallTxt variant={{ ...typeExtras.phrase, size: 16, weight: 700, lineHeight: 1.25 }}>
             {simple}
-          </Txt>
+          </CallTxt>
         )}
         {translated && gloss ? <GlossLine text={gloss} variant="glossWhisper" /> : null}
         {simple !== null && gloss ? (
@@ -174,9 +176,9 @@ export function MeaningWhisper({
               backgroundColor: colours.surface,
             }}
           >
-            <Txt variant={{ ...typeExtras.meaningChip, size: 12 }}>
+            <CallTxt variant={{ ...typeExtras.meaningChip, size: 12 }}>
               {t(translated ? 'call.hideTranslation' : 'call.showTranslation')}
-            </Txt>
+            </CallTxt>
           </Press>
         ) : null}
         <Press
@@ -196,9 +198,9 @@ export function MeaningWhisper({
             justifyContent: 'center',
           }}
         >
-          <Txt variant={{ ...typeExtras.meaningChip, size: 12 }} importantForAccessibility="no">
+          <CallTxt variant={{ ...typeExtras.meaningChip, size: 12 }} importantForAccessibility="no">
             ✕
-          </Txt>
+          </CallTxt>
         </Press>
       </Sticker>
     </Animated.View>
@@ -213,9 +215,9 @@ function GlossLine({ text, variant }: { text: string; variant: 'glossWhisper' | 
       style={[variant === 'glossWhisper' ? { marginTop: 4, paddingTop: 4 } : null, easeIn]}
     >
       {variant === 'glossWhisper' ? <DashedRule /> : null}
-      <Txt variant={variant} colour={colours.textGloss}>
+      <CallTxt variant={variant} colour={colours.textGloss}>
         {text}
-      </Txt>
+      </CallTxt>
     </Animated.View>
   );
 }
@@ -265,7 +267,11 @@ export function ThinkingBubble({
 }) {
   const { t } = useLocale();
   return (
-    <View style={style} accessible accessibilityLabel={`${name}, ${t('common.aiTag')}`}>
+    <View
+      style={style}
+      accessible
+      accessibilityLabel={`${name}, ${t('common.aiTag')}: ${t('call.a11y.thinking', { name })}`}
+    >
       <Sticker
         shadow={stickerShadows.button}
         radius={radii.bubble}
@@ -275,7 +281,7 @@ export function ThinkingBubble({
         contentStyle={{ paddingVertical: 11, paddingHorizontal: 15, gap: 3 }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          <Txt variant="bubbleName">{name}</Txt>
+          <CallTxt variant="bubbleName">{name}</CallTxt>
           <AiTag label={t('common.aiTag')} small />
         </View>
         <ThinkingDots />
@@ -308,7 +314,7 @@ export function FixedSticker({ style }: { style?: ViewStyleProp }) {
         fill={colours.success}
         contentStyle={{ paddingVertical: 8, paddingHorizontal: 14 }}
       >
-        <Txt variant={{ ...typeExtras.phrase, size: 17 }}>{t('call.fixedIt')}</Txt>
+        <CallTxt variant={{ ...typeExtras.phrase, size: 17 }}>{t('call.fixedIt')}</CallTxt>
       </Sticker>
       {sparkles.map((s, i) => (
         <Sparkle key={i} index={i} {...s} />
@@ -386,9 +392,9 @@ export function PhonePill({ label, style }: { label: string; style?: ViewStylePr
           <Path path={PHONE_PATH} color={palette.ink} transform={[{ scale: 0.5 }]} />
         </Canvas>
       </Animated.View>
-      <Txt variant={{ ...typeExtras.meaningChip, size: 13 }} colour={colours.textOnInk}>
+      <CallTxt variant={{ ...typeExtras.meaningChip, size: 13 }} colour={colours.textOnInk}>
         {label}
-      </Txt>
+      </CallTxt>
     </Animated.View>
   );
 }
@@ -436,7 +442,7 @@ export function LetterCard({
               accessibilityLabel={shown && gloss ? `${line.en}. ${gloss}` : line.en}
               style={{ gap: 2, paddingVertical: 3, paddingHorizontal: 4, marginHorizontal: -4 }}
             >
-              <Txt
+              <CallTxt
                 variant={{ ...typeExtras.win, size: 13.5, weight: 700, lineHeight: 1.25 }}
                 style={{
                   textDecorationLine: 'underline',
@@ -445,7 +451,7 @@ export function LetterCard({
                 }}
               >
                 {line.en}
-              </Txt>
+              </CallTxt>
               {shown && gloss ? <GlossLine text={gloss} variant="glossLetter" /> : null}
             </Press>
           );

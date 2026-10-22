@@ -15,6 +15,7 @@ import { StoryScreen } from './story-screen';
 import { useVoicemailCall } from './voicemail-call';
 import { growthOfFix } from './voicemail-model';
 import { VoicemailScreen } from './voicemail-screen';
+import { now as appNow } from '../devmenu';
 
 /*
  * `/listen/<sceneId>`: a scene with nothing to fail. Pip's story and the postcards that come with
@@ -122,7 +123,8 @@ function VoicemailRoute({ scene, params }: { scene: Scene; params: Params }) {
     fixture: __DEV__ ? one(params, 'fixture') : undefined,
   });
   const target = findPhrase(scene.phrases[0] ?? '');
-  const [now] = useState(() => Date.now());
+  // The app's day: the test menu's time travel moves it in test builds.
+  const [now] = useState(() => appNow());
   const growth = useMemo(
     () =>
       target

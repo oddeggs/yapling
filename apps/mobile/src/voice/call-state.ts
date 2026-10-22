@@ -75,6 +75,11 @@ export interface CallState {
   readonly error: CallErrorCode | null;
   /** The last non-fatal error (a failed reply the call recovers from). */
   readonly warning: CallErrorCode | null;
+  /**
+   * The learner's turn got no answer (nothing heard, or the reply failed): the character says it
+   * didn't catch that, and it is the learner's turn again. Cleared when anyone speaks.
+   */
+  readonly notice: 'didnt_catch' | null;
   readonly endReason: CallEndReason | null;
   readonly summaryPending: boolean;
   readonly callRecordId: string | null;
@@ -107,6 +112,7 @@ export const initialCallState = (turnMode: TurnMode): CallState => ({
   safetyResourcesKey: null,
   error: null,
   warning: null,
+  notice: null,
   endReason: null,
   summaryPending: false,
   callRecordId: null,

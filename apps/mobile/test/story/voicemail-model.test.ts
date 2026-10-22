@@ -119,6 +119,21 @@ describe('the fix', () => {
     expect(saysFix('Can I help you?', null)).toBe(false);
   });
 
+  it('counts the phrase as the story writes it, as the call does', () => {
+    expect(script.fixes).toEqual(['Can I help you?', 'Can I help?']);
+    expect(saysFix('Are you okay? Can I help?', script.fixes)).toBe(true);
+    expect(saysFix('Oh Pip, you say can I help', script.fixes)).toBe(true);
+    expect(saysFix('Can I helping you?', script.fixes)).toBe(false);
+    expect(saysFix('I can help you', script.fixes)).toBe(false);
+    const s = run([
+      ...toTurn,
+      { type: 'heard', text: 'Are you okay? Can I help?' },
+      reply,
+      ...grows,
+    ]);
+    expect(s.outcome).toBe('fixed');
+  });
+
   it('ignores empty words', () => {
     const s = run([...toTurn, { type: 'heard', text: '  ' }, ...grows]);
     expect(s.outcome).toBe('worked_out');

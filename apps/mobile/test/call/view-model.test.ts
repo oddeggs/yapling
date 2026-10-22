@@ -462,3 +462,32 @@ describe('Pass it on', () => {
     expect(view(connected(), next, practice).mirror).toBeNull();
   });
 });
+
+describe('a turn with no answer, a dropped line, a phone call', () => {
+  const onTurn = () =>
+    track(episode, [frame({ type: 'beat', beatId: 'ask-whats-wrong', progress: 0.1 })]);
+
+  it("says the character didn't catch that, confused, and gives the turn back", () => {
+    const v = view(connected({ notice: 'didnt_catch' }), onTurn());
+    expect(v.bubble).toMatchObject({ speaker: 'mei', didntCatch: true, thinking: false });
+    expect(v.mic).toBe('yourTurn');
+    expect(v.moods.mei).toBe('confused');
+  });
+
+  it('shows the next line instead once a character speaks', () => {
+    const v = view(
+      connected({ notice: null, playing: true, caption: caption(9, 'mei', 'Oh! Sorry.') }),
+      onTurn(),
+    );
+    expect(v.bubble?.didntCatch).toBeUndefined();
+  });
+
+  it('says the line is reconnecting, or paused for a phone call', () => {
+    const live = connected({ sessionId: 'sess_1' });
+    expect(view(update(live, { connected: false, reconnecting: true }), onTurn()).paused).toBe(
+      'reconnecting',
+    );
+    expect(view(update(live, { interrupted: true }), onTurn()).paused).toBe('interrupted');
+    expect(view(live, onTurn()).paused).toBeNull();
+  });
+});

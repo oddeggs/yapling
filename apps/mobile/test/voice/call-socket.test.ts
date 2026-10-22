@@ -7,7 +7,12 @@ import {
   type CallServerFrame,
 } from '@yapling/contracts';
 
-import { CallSocket, type SocketLike, type SocketStatus } from '../../src/voice/call-socket';
+import {
+  CallSocket,
+  withAppClock,
+  type SocketLike,
+  type SocketStatus,
+} from '../../src/voice/call-socket';
 
 class FakeSocket implements SocketLike {
   binaryType = 'blob';
@@ -276,5 +281,48 @@ describe('the call socket', () => {
     expect(statuses.at(-1)).toBe('closed');
     jest.advanceTimersByTime(10_000);
     expect(sockets).toHaveLength(1);
+  });
+});
+
+describe('coming back from the background', () => {
+  it('reconnects at once when the socket went quiet while the app was away', () => {
+    const { socket, sockets, statuses, last } = setup();
+    socket.open();
+    last().open();
+    last().receive(ready(1, 'resume-token-aaaaaaaa'));
+    jest.advanceTimersByTime(5_000);
+    expect(socket.checkAlive()).toBe(false);
+    // Away for longer than two pings, with nothing heard back.
+    jest.advanceTimersByTime(16_000);
+    expect(socket.checkAlive()).toBe(true);
+    expect(statuses.at(-1)).toBe('reconnecting');
+    jest.advanceTimersByTime(1_000);
+    expect(sockets).toHaveLength(2);
+    last().open();
+    expect(last().json()[0]).toMatchObject({ type: 'hello', resumeToken: 'resume-token-aaaaaaaa' });
+  });
+
+  it('leaves a closed call alone', () => {
+    const { socket, sockets, last } = setup();
+    socket.open();
+    last().open();
+    socket.close();
+    jest.advanceTimersByTime(60_000);
+    expect(socket.checkAlive()).toBe(false);
+    expect(sockets).toHaveLength(1);
+  });
+});
+
+describe("a test build's clock on the socket URL", () => {
+  it('goes along only when the test menu moved it', () => {
+    const real = 1_790_000_000_000;
+    const url = 'wss://api.test/api/calls/socket';
+    expect(withAppClock(url, real + 20_000, real)).toBe(url);
+    expect(withAppClock(url, real + 3 * 86_400_000, real)).toBe(
+      `${url}?clock=${real + 3 * 86_400_000}`,
+    );
+    expect(withAppClock(`${url}?a=1`, real - 86_400_000, real)).toBe(
+      `${url}?a=1&clock=${real - 86_400_000}`,
+    );
   });
 });

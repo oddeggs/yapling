@@ -7,6 +7,7 @@ import {
   type TurnMode,
 } from '@yapling/contracts';
 import { getLine, type Scene } from '@yapling/story';
+import { RECORDED_LINE_ASSETS } from '@yapling/story/assets';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 
@@ -58,6 +59,15 @@ function openingLines(scene: Scene): string[] {
     if (getLine(beat.line).audio) out.push(beat.line);
   }
   return out.slice(0, 3);
+}
+
+/**
+ * The cast's recorded reactions ("Ooh," "Mm,"…), decoded while the phone rings so the first one
+ * plays the moment the learner's first turn ends, not after its decode.
+ */
+function reactionLines(scene: Scene): string[] {
+  const prefixes = scene.cast.map((c) => `s1-react-${c}-`);
+  return Object.keys(RECORDED_LINE_ASSETS).filter((id) => prefixes.some((p) => id.startsWith(p)));
 }
 
 /** The state before the engine exists: idle, nothing heard. */
@@ -137,7 +147,7 @@ export function useCall(setup: CallSetup) {
           dispatch({ type: 'frame', frame, now: Date.now() });
         }),
         visemeTrack: artVisemeTrack,
-        preloadLines: openingLines(s.scene),
+        preloadLines: [...openingLines(s.scene), ...reactionLines(s.scene)],
         ...(s.onLog ? { onLog: s.onLog } : {}),
       });
       setEngine(built);
@@ -156,6 +166,15 @@ export function useCall(setup: CallSetup) {
       setEngine(null);
     };
   }, [mic, attempt, dispatch]);
+
+  // Back from the background mid-call: a socket iOS dropped reconnects at once, audio restarts.
+  useEffect(() => {
+    if (!engine) return undefined;
+    const sub = AppState.addEventListener('change', (s) => {
+      if (s === 'active') void engine.foregrounded();
+    });
+    return () => sub.remove();
+  }, [engine]);
 
   const state = useStore(engine?.state ?? idleStore);
   const track = useStore(tracker);

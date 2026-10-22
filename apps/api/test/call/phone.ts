@@ -49,10 +49,13 @@ export class Phone {
     });
   }
 
-  static async open(): Promise<Phone> {
-    const response = await exports.default.fetch('https://api.yapling.test/api/calls/socket', {
-      headers: { Upgrade: 'websocket' },
-    });
+  static async open(query = ''): Promise<Phone> {
+    const response = await exports.default.fetch(
+      `https://api.yapling.test/api/calls/socket${query}`,
+      {
+        headers: { Upgrade: 'websocket' },
+      },
+    );
     expect(response.status).toBe(101);
     const ws = response.webSocket;
     if (!ws) throw new Error('no socket');
@@ -61,8 +64,8 @@ export class Phone {
     return new Phone(ws);
   }
 
-  static async call(token: string, hello: Partial<HelloFrame> = {}): Promise<Phone> {
-    const phone = await Phone.open();
+  static async call(token: string, hello: Partial<HelloFrame> = {}, query = ''): Promise<Phone> {
+    const phone = await Phone.open(query);
     phone.send({
       type: 'hello',
       protocol: PROTOCOL_VERSION,

@@ -439,10 +439,7 @@ export class CallSession {
 
   private played(streamId: number, lagMs: number | null): void {
     const active = this.active;
-    if (lagMs !== null && this.data.awaitingLag) {
-      this.data.samples.phoneLag.push(lagMs);
-      this.data.awaitingLag = false;
-    }
+    if (lagMs !== null) this.replies.lag(streamId, lagMs);
     if (active?.streamId !== streamId) return;
     active.played = true;
     if (active.ready) this.complete(active);

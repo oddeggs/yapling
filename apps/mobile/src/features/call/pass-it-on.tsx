@@ -18,11 +18,11 @@ import { transitionTo, useKeyframes } from '../../ui/motion/play';
 import { useReduceMotion } from '../../ui/motion/reduce-motion';
 import { TimerRing, useCountdown } from '../../ui/rings';
 import { GlassView, Sticker } from '../../ui/surface';
-import { Txt } from '../../ui/text';
 import type { ViewStyleProp } from '../../ui/style';
 import { CritterFace } from './call-art';
 import type { Mirror } from './fluency-mirror';
 import type { RoundView, TimerView } from './view-model';
+import { CallTxt } from './call-text';
 
 /*
  * Timed turns: the ring counting the round down (it starts when the learner starts talking and
@@ -47,7 +47,7 @@ export function CallTimer({
         total={timer.total}
         remaining={remaining}
         running={timer.running}
-        accessibilityLabel={t('call.seconds', { count: timer.total })}
+        accessibilityLabel={t('call.a11y.seconds', { count: timer.total })}
       />
     </View>
   );
@@ -93,7 +93,7 @@ export function RoundsStrip({
         <View
           key={r.listener}
           accessible
-          accessibilityLabel={t('call.seconds', { count: r.seconds })}
+          accessibilityLabel={t('call.a11y.seconds', { count: r.seconds })}
           accessibilityState={{ selected: r.state === 'now' }}
           style={{
             flexDirection: 'row',
@@ -121,7 +121,7 @@ export function RoundsStrip({
               fill={faceFill[r.state]}
             />
           </View>
-          <Txt variant={faceLabel}>{t('call.seconds', { count: r.seconds })}</Txt>
+          <CallTxt variant={faceLabel}>{t('call.seconds', { count: r.seconds })}</CallTxt>
         </View>
       ))}
     </GlassView>
@@ -145,7 +145,7 @@ export function MirrorCard({ mirror, style }: { mirror: Mirror; style?: ViewStyl
         fill={colours.surface}
         contentStyle={{ padding: 16, gap: 10 }}
       >
-        <Txt variant="cardTitle">{t('call.mirror.title')}</Txt>
+        <CallTxt variant="cardTitle">{t('call.mirror.title')}</CallTxt>
         {mirror.rows.map((row) => (
           <View
             key={row.round}
@@ -167,25 +167,25 @@ export function MirrorCard({ mirror, style }: { mirror: Mirror; style?: ViewStyl
                 columnGap: 10,
               }}
             >
-              <Txt variant={rowType}>{t('call.mirror.round', { round: row.round })}</Txt>
+              <CallTxt variant={rowType}>{t('call.mirror.round', { round: row.round })}</CallTxt>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 10 }}>
-                <Txt variant={rowType} colour={colours.textBody}>
+                <CallTxt variant={rowType} colour={colours.textBody}>
                   {t('call.mirror.flow', { seconds: row.flowSeconds })}
-                </Txt>
-                <Txt variant={rowType} colour={colours.textBody}>
+                </CallTxt>
+                <CallTxt variant={rowType} colour={colours.textBody}>
                   {t('call.mirror.pace', { wpm: row.paceWpm })}
-                </Txt>
-                <Txt variant={rowType} colour={colours.textBody}>
+                </CallTxt>
+                <CallTxt variant={rowType} colour={colours.textBody}>
                   {t('call.mirror.pauses', { pauses: row.pausesPerMin })}
-                </Txt>
+                </CallTxt>
               </View>
             </View>
             <FlowBar share={row.share} best={row.round === 3 && last === 3} />
           </View>
         ))}
-        <Txt variant={{ ...rowType, weight: 700 }} colour={colours.textMuted}>
+        <CallTxt variant={{ ...rowType, weight: 700 }} colour={colours.textMuted}>
           {mirror.smoother ? t('call.mirror.smoother') : t('call.mirror.flowMeans')}
-        </Txt>
+        </CallTxt>
       </Sticker>
     </Animated.View>
   );
