@@ -20,7 +20,7 @@ import { appClock, DevMenuHost, devToolsEnabled, now } from '../features/devmenu
 import { KnocksProvider, knockInputsOf } from '../features/knocks';
 import { onboardingStore } from '../features/onboarding';
 import { identifyPurchaser } from '../features/plus';
-import { analytics, useAppAnalytics } from '../observability';
+import { resetObservability, startCrashReports, useAppAnalytics } from '../observability';
 import { AppArtProvider } from '../ui/art-provider';
 import { UiProvider } from '../ui/ui-provider';
 import { useReduceMotion } from '../ui/motion/reduce-motion';
@@ -118,7 +118,7 @@ function AppShell() {
   const reset = async () => {
     await resetLocal();
     onboardingStore().dispatch({ type: 'reset' });
-    analytics().reset({ testSession: true });
+    resetObservability({ testSession: true });
   };
   useOpens();
   usePurchaserIdentity();
@@ -136,6 +136,9 @@ function AppShell() {
     </UiProvider>
   );
 }
+
+// Crash reports start before the first render (a no-op without a Sentry DSN).
+startCrashReports();
 
 // Lexend and Kithfield Hand are embedded natively by the expo-font plugin (app.config.ts), so they
 // are registered before the first frame and need no loading here; the art's Skia copy of Lexend

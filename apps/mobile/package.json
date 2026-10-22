@@ -13,6 +13,7 @@
     "@expo/log-box": "catalog:",
     "@expo/metro-runtime": "catalog:",
     "@react-native/metro-config": "catalog:",
+    "@sentry/react-native": "catalog:",
     "@shopify/react-native-skia": "catalog:",
     "@yapling/art": "workspace:*",
     "@yapling/contracts": "workspace:*",

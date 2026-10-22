@@ -8,7 +8,7 @@ import { useOnboarding } from '../features/onboarding/use-onboarding';
 import { callEventsBetween, type CallSnapshot } from './call-events';
 import type { AnalyticsEvent, AnalyticsEvents } from './events';
 import { reachedSteps } from './funnel';
-import { analytics, track } from './runtime';
+import { analytics, identifyLearner, track } from './runtime';
 
 /*
  * The hooks that feed analytics from the app: the learner's identity and funnel (mounted once at
@@ -25,7 +25,7 @@ export function useAppAnalytics(): void {
   const now = useAppNow(timezone);
 
   useEffect(() => {
-    if (userId !== null) analytics().identify(userId);
+    if (userId !== null) identifyLearner(userId);
   }, [userId]);
 
   const dayIndex = progress === null ? null : dayIndexOf(progress.installedOn, now, timezone);

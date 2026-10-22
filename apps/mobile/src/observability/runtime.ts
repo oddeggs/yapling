@@ -5,6 +5,7 @@ import { Analytics, type AnalyticsStorage } from './analytics';
 import { observabilityConfig } from './config';
 import type { AnalyticsEvent, AnalyticsEvents } from './events';
 import { createPostHogSink } from './posthog-sink';
+import { setSentryUser, startSentry } from './sentry';
 
 /*
  * The app's one analytics instance, made on first use from the build's settings. Without a PostHog
@@ -43,6 +44,23 @@ export function analytics(): Analytics {
     },
   });
   return shared;
+}
+
+/** Starts crash reports when the build has a Sentry DSN; called once, before the first render. */
+export function startCrashReports(): void {
+  startSentry(observabilityConfig());
+}
+
+/** Analytics and crash reports belong to this learner from now on. */
+export function identifyLearner(userId: string): void {
+  analytics().identify(userId);
+  setSentryUser(userId);
+}
+
+/** A fresh start on this phone: a new anonymous person, the funnel from the top. */
+export function resetObservability({ testSession }: { readonly testSession: boolean }): void {
+  analytics().reset({ testSession });
+  setSentryUser(null);
 }
 
 /** Sends one event (a no-op without a PostHog key). */
