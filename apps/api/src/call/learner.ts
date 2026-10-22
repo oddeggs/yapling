@@ -1,16 +1,68 @@
-import type { FirstLanguage, HelloFrame, Pace, Stage } from '@yapling/contracts';
+import type {
+  FirstLanguage,
+  HelloFrame,
+  MemoryCategory,
+  MemoryItem,
+  Pace,
+  Stage,
+} from '@yapling/contracts';
 import { duePhrases, errorTargetsApply, fromPhraseProgress } from '@yapling/domain';
 import { findPhrase, type ErrorTargetBrief, type Scene } from '@yapling/story';
 
 import type { Bindings } from '../env';
+import { listMemory } from '../memory';
 import { learnerTimeZone, readProgress } from '../progress';
 import { targetBrief } from './targets';
 
 /*
  * What the call knows about the learner when it starts: their name and timezone (profile), their
- * active error targets and the phrases due a chance (progress). The stage, first language and pace
- * come from `hello`, which the app reads from the same profile.
+ * active error targets and the phrases due a chance (progress), and a few things Pip remembers
+ * (the memory page), so a real-week call can ask about their job or last week's news. The stage,
+ * first language and pace come from `hello`, which the app reads from the same profile.
  */
+
+/** A memory item as the call's prompt carries it. */
+export interface PromptMemory {
+  readonly category: MemoryCategory;
+  readonly text: string;
+}
+
+/**
+ * How many memory items of each section a call is told, newest first: who the learner is (their
+ * job), what's coming up or just happened, and one thing about the two of you. A few items only;
+ * never a transcript.
+ */
+export const PROMPT_MEMORY_LIMITS: Readonly<Record<MemoryCategory, number>> = {
+  about_you: 2,
+  coming_up: 2,
+  about_us: 1,
+};
+/** The longest memory item a call is told; a longer one is cut at a word. */
+export const PROMPT_MEMORY_CHARS = 160;
+
+/** One line, no markup, at most `PROMPT_MEMORY_CHARS` (cut at a word). */
+const promptText = (text: string): string => {
+  const flat = text
+    .replace(/[\r\n\t<>{}[\]`*#|]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (flat.length <= PROMPT_MEMORY_CHARS) return flat;
+  const cut = flat.slice(0, PROMPT_MEMORY_CHARS);
+  const space = cut.lastIndexOf(' ');
+  return `${(space > PROMPT_MEMORY_CHARS / 2 ? cut.slice(0, space) : cut).trimEnd()}…`;
+};
+
+/** The memory items a call is told, from the page (newest first), by section. */
+export function promptMemories(items: readonly MemoryItem[]): PromptMemory[] {
+  const sections = Object.keys(PROMPT_MEMORY_LIMITS) as MemoryCategory[];
+  return sections.flatMap((category) =>
+    items
+      .filter((item) => item.category === category)
+      .map((item) => ({ category, text: promptText(item.text) }))
+      .filter((item) => item.text.length > 0)
+      .slice(0, PROMPT_MEMORY_LIMITS[category]),
+  );
+}
 
 export interface LearnerContext {
   readonly name: string;
@@ -23,6 +75,8 @@ export interface LearnerContext {
   readonly targets: readonly ErrorTargetBrief[];
   /** Phrase ids and text to give chances to use. */
   readonly duePhrases: readonly { readonly id: string; readonly text: string }[];
+  /** A few things Pip remembers; missing in a call saved before, and empty in Pip's minute. */
+  readonly memories?: readonly PromptMemory[];
 }
 
 export async function loadLearner(
@@ -31,12 +85,16 @@ export async function loadLearner(
   hello: Pick<HelloFrame, 'stage' | 'firstLanguage' | 'pace'>,
   scene: Scene,
   now: number,
+  options: { readonly memories: boolean } = { memories: true },
 ): Promise<LearnerContext> {
   const profile = await env.DB.prepare('SELECT display_name FROM profiles WHERE user_id = ?')
     .bind(userId)
     .first<{ display_name: string }>();
   const timezone = await learnerTimeZone(env.DB, userId);
-  const progress = await readProgress(env.DB, userId, now);
+  const [progress, memory] = await Promise.all([
+    readProgress(env.DB, userId, now),
+    options.memories ? listMemory(env.DB, userId) : Promise.resolve([]),
+  ]);
   // No corrections at Visitor, nor in a Settling-in chapter: everything there is recast.
   const corrects = errorTargetsApply(hello.stage) && scene.kind !== 'settling';
   const targets = progress.errorTargets
@@ -62,5 +120,6 @@ export async function loadLearner(
     pace: hello.pace ?? null,
     targets,
     duePhrases: [...due, ...sceneOwn].slice(0, 6),
+    memories: promptMemories(memory),
   };
 }

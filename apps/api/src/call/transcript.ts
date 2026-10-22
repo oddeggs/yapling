@@ -1,6 +1,8 @@
 import type { CharacterId, HeardWord } from '@yapling/contracts';
 import { lastQuestion } from '@yapling/story';
 
+import type { PipsMinuteOutcome } from './daily';
+
 /*
  * The call's transcript: every line in order, the learner's with their word timings. Kept in the
  * call object while the call runs, then written to R2 (`<user prefix>calls/<id>/transcript.json`)
@@ -49,6 +51,8 @@ export interface TranscriptFile {
   readonly startedAt: number;
   readonly endedAt: number;
   readonly lines: readonly TranscriptLine[];
+  /** Pip's minute: how its turns went, which the end of the call writes as phrase uses. */
+  readonly pipsMinute?: PipsMinuteOutcome;
 }
 
 export const transcriptKey = (prefix: string, callId: string): string =>

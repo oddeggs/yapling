@@ -83,8 +83,8 @@ export class CallSession {
     private readonly onEnded: () => void,
   ) {
     this.director = new Director(scene, data.runner, data.learner.stage);
-    // The scene's kind, not the phone's word for it, decides whether its minutes count.
-    const callKind = callKindOf(scene.kind) ?? data.meta.kind;
+    // The scene's kind (Pip's minute: `daily`), not the phone's word for it, decides its minutes.
+    const callKind = data.meta.pipsMinute ? 'daily' : (callKindOf(scene.kind) ?? data.meta.kind);
     this.meter = new Meter((seconds, kind) =>
       userObject(env, data.meta.userId).charge(seconds, kind, callKind),
     );
@@ -164,9 +164,9 @@ export class CallSession {
     const learner = new LearnerTurn(this.env.ELEVENLABS_API_KEY ?? '', this.data.meta.turnMode, {
       accepting: () => this.accepting(),
       partial: (text) => this.frames.send({ type: 'partial', text: text.slice(0, 2_000) }),
-      // A card turn is decided by its words; any other turn is answered by the listener's line.
+      // A card turn (all of Pip's minute) is decided by its words; others by the listener's line.
       answer: (text, speechEndAt, gated) =>
-        this.cards.handles()
+        this.cards.handles() || this.data.meta.pipsMinute
           ? this.cards.answer(text, speechEndAt, gated)
           : this.replies.answer(text, speechEndAt, gated),
       silence: () => this.run(this.director.dispatch({ type: 'silent' })),

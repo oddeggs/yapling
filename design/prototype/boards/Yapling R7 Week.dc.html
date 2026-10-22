@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R7 · This week in Natterwick</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-r7.js?v=1"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#CFF0FD;border:2px solid #17131C"></span>Yapling · Round 7 · Story engine · 1</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">This week in <span style="background:#CFF0FD;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">Natterwick</span></div>
+      <div style="font-size:17px;font-weight:700;max-width:1100px;line-height:1.35;color:#3E3646">Every Monday the week arrives: one episode-like town story everyone at your stage shares, one call built from your real week, and one practice call. When a story borrows something real (the weather, a cup final), a small "Pip nghe kể" note says so honestly. Real names never come through. A missed week waits.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R7 Flow.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Flow strip</a>
+      <a href="Yapling R7 Place.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · Same place, a new story ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ ws }}" as="w" hint-placeholder-count="4">
+      <div data-screen-label="{{ w.id }} This week" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ w.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ w.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFF7EE;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+
+          <sc-if value="{{ w.isHome }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:84px;left:22px;right:22px;display:flex;align-items:flex-end;justify-content:space-between">
+              <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700;color:#5D5366">Tuần 14 · 20–26/10 · mùa mưa</span><span style="font-size:38px;font-weight:900;letter-spacing:-0.06em;line-height:1.1">Tuần này ở<br>Natterwick</span></div>
+              <span style="width:58px;height:58px;border-radius:18px;overflow:hidden;border:3px solid #17131C;box-shadow:2px 4px 0 #17131C;box-sizing:border-box;rotate:6deg;flex:none">{{ pipFace58 }}</span>
+            </div>
+            <div style="position:absolute;top:196px;left:16px;right:16px;border-radius:26px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;overflow:hidden">
+              <div style="position:relative;height:128px;overflow:hidden;border-bottom:3px solid #17131C"><div style="position:absolute;left:-12px;top:-252px;width:390px;height:844px;transform:scale(.918);transform-origin:0 0">{{ rainBack }}</div><span style="position:absolute;top:10px;left:10px;font-size:10.5px;font-weight:800;letter-spacing:.05em;padding:3px 8px;border-radius:8px;background:#17131C;color:#fff">TRUYỆN THỊ TRẤN · 6 PHÚT</span></div>
+              <div style="display:flex;flex-direction:column;gap:5px;padding:11px 15px 14px">
+                <span style="font-size:23px;font-weight:800;letter-spacing:-0.03em;line-height:1.15">The Umbrella Mix-up</span>
+                <span style="font-size:13.5px;font-weight:600;line-height:1.35;color:#3E3646">Mưa cả tuần. Ở quán Mei ai cũng cầm nhầm ô, và bạn giúp mọi người tìm lại đúng chiếc của mình.</span>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
+                  <sc-for list="{{ storyCast }}" as="f" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:4px;height:28px;padding:0 8px 0 2px;border-radius:14px;background:#F4F1F7"><span style="width:24px;height:24px;border-radius:12px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box">{{ f.face }}</span><span style="font-size:12px;font-weight:800">{{ f.name }}</span><span style="padding:1px 4px;border-radius:5px;background:#17131C;color:#fff;font-size:9px;font-weight:800">AI</span></span></sc-for>
+                </div>
+              </div>
+            </div>
+            <div style="position:absolute;top:486px;left:16px;right:16px;display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:18px;border:2px dashed rgba(23,19,28,.35);background:rgba(255,255,255,.7)">
+              <span style="width:30px;height:30px;border-radius:15px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ pipFace30 }}</span>
+              <span style="display:flex;flex-direction:column;gap:1px"><span style="font-size:12px;font-weight:800">Pip nghe kể</span><span style="font-size:13px;font-weight:600;line-height:1.35;color:#3E3646">Tuần này nhiều nơi mưa to, nên Natterwick cũng mưa.</span><span style="font-size:11px;font-weight:700;color:#5D5366">Lấy từ thời tiết thật · không dùng tên thật</span></span>
+            </div>
+            <div style="position:absolute;top:582px;left:16px;right:16px;display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;background:#CFF0FD;border:2.5px solid #17131C"><span style="width:36px;height:36px;border-radius:18px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ dexFace }}</span><span style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-size:10.5px;font-weight:800;letter-spacing:.05em;color:#3E3646">TUẦN THẬT CỦA BẠN · 8 PHÚT</span><span style="font-size:15px;font-weight:800;line-height:1.25">Thứ Năm bạn phỏng vấn. Tập trước với Dex.</span></span></div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;background:#D7F7E2;border:2.5px solid #17131C"><span style="width:36px;height:36px;border-radius:18px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ nellFace }}</span><span style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-size:10.5px;font-weight:800;letter-spacing:.05em;color:#3E3646">LUYỆN TẬP · 4 PHÚT</span><span style="font-size:15px;font-weight:800;line-height:1.25">Chuyện mưa nắng với Nell ở quán trọ</span></span></div>
+            </div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:12px;border-radius:40px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <button style="width:100%;height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Nghe truyện tuần này</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ w.isStory }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:0;right:0;top:-150px;height:844px">
+              <div style="position:absolute;inset:0">{{ rainBack }}</div>
+              <div style="position:absolute;left:-14px;top:262px">{{ meiS }}</div>
+              <div style="position:absolute;left:228px;top:270px">{{ hankS }}</div>
+              <div style="position:absolute;inset:0">{{ rainFront }}</div>
+            </div>
+            <div style="position:absolute;top:58px;left:16px;display:flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:18px;background:rgba(255,255,255,.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);font-size:13px;font-weight:800">‹ Tuần này</div>
+            <div style="position:absolute;left:10px;right:10px;top:318px;bottom:10px;border-radius:40px;padding:20px 18px 14px;box-sizing:border-box;display:flex;flex-direction:column;gap:9px;background:rgba(255,255,255,.86);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.95);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">TRUYỆN THỊ TRẤN · TUẦN 14 · MEI, HANK, PIP</span>
+              <span style="font-size:28px;font-weight:800;letter-spacing:-0.045em;line-height:1.1">The Umbrella Mix-up</span>
+              <span style="font-size:14px;font-weight:600;line-height:1.4;color:#3E3646">Hai chiếc ô vàng giống hệt nhau ở quán Mei. Ai đã cầm nhầm? Bạn tả chiếc ô của mình để Mei trả đúng người.</span>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <span style="padding:6px 10px;border-radius:12px;background:#FFFFFF;border:2px solid #17131C;font-size:13.5px;font-weight:800">It's the small yellow one.</span>
+                <span style="padding:6px 10px;border-radius:12px;background:#FFFFFF;border:2px solid #17131C;font-size:13.5px;font-weight:800">I think that one's mine.</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:18px;border:2px dashed rgba(23,19,28,.35);background:#FFF7EE">
+                <span style="width:30px;height:30px;border-radius:15px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ pipFace30 }}</span>
+                <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;font-weight:800">Pip nghe kể</span><span style="font-size:13px;font-weight:600;line-height:1.38;color:#3E3646">Cuối tuần qua có một trận chung kết bóng đá phải đá luân lưu. Ở Natterwick, đó là chung kết Harbour Cup, và Hank vui quá nên cầm nhầm ô.</span><span style="font-size:11px;font-weight:700;color:#5D5366">Chuyện có thật, đã đổi thành chuyện Natterwick · không có tên đội hay người thật</span></span>
+              </div>
+              <button style="margin-top:auto;height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Bắt đầu · 6 phút</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ w.isReal }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:58px;left:16px;display:flex;align-items:center;height:36px;padding:0 12px;border-radius:18px;background:#FFFFFF;border:1.5px solid rgba(23,19,28,.16);font-size:13px;font-weight:800">‹ Tuần này</div>
+            <div style="position:absolute;top:110px;left:22px;right:22px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700;color:#5D5366">Tuần thật của bạn</span><span style="font-size:34px;font-weight:900;letter-spacing:-0.06em;line-height:1.12">Tập cho buổi phỏng vấn thứ Năm</span></div>
+            <div style="position:absolute;top:142px;right:10px;animation:yin .4s ease-out both">{{ dexCr }}</div>
+            <div style="position:absolute;top:300px;left:16px;right:16px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:20px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C">
+                <span style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3" fill="none" stroke="#17131C" stroke-width="2.4"></rect><path d="M3.5 10h17M8 3v4M16 3v4" stroke="#17131C" stroke-width="2.4" stroke-linecap="round"></path></svg>TỪ LỊCH BẠN ĐÃ CHIA SẺ</span>
+                <span style="font-size:17px;font-weight:800">Thứ Năm 30/10 · 9:00</span>
+                <span style="font-size:14px;font-weight:600;color:#3E3646">Phỏng vấn · điều phối kho hàng</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:20px;background:#CFF0FD;border:2.5px solid #17131C">
+                <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800">Dex<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px">AI</span><span style="font-weight:600;color:#3E3646">đóng vai người phỏng vấn, dùng CV bạn gửi</span></span>
+                <span style="font-size:15px;font-weight:800">· Tell me about yourself (90 giây)</span>
+                <span style="font-size:15px;font-weight:800">· A time you fixed a problem at work</span>
+                <span style="font-size:15px;font-weight:800">· One question to ask them</span>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;padding:0 4px"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;margin-top:1px"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="none" stroke="#5D5366" stroke-width="2.4"></rect><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="#5D5366" stroke-width="2.4"></path></svg><span style="font-size:12px;font-weight:700;line-height:1.4;color:#5D5366">Chỉ dùng để chuẩn bị cuộc gọi này cho bạn. Không bao giờ đưa vào tìm kiếm. Xoá cùng tài khoản.</span></div>
+              <div style="display:flex;gap:8px;align-items:center;padding:0 4px"><span style="width:26px;height:26px;border-radius:13px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ pipFace26 }}</span><span style="font-family:'Kithfield Hand',cursive;font-size:17px;line-height:1.25">Thứ Sáu Pip sẽ hỏi: "How did it go?"</span></div>
+            </div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:12px;border-radius:40px;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Tập với Dex · 8 phút</button>
+              <button style="height:46px;border-radius:23px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.85);color:#17131C;font:800 15px Lexend,sans-serif;cursor:pointer">Để sau</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ w.isWait }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:96px;left:22px;right:22px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700;color:#5D5366">Tuần 14 · bạn vừa quay lại</span><span style="font-size:38px;font-weight:900;letter-spacing:-0.06em;line-height:1.1">Truyện vẫn đợi bạn</span></div>
+            <div style="position:absolute;top:196px;left:22px">{{ pipWait }}</div>
+            <div style="position:absolute;top:214px;left:172px;right:16px;padding:11px 14px;border-radius:22px 22px 22px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;display:flex;flex-direction:column;gap:2px;animation:ypop .5s .2s ease-out both">
+              <span style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800">Pip<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px">AI</span></span>
+              <span style="font-size:16.5px;font-weight:800;line-height:1.3">Last week the inn got a new sign! Want the story?</span>
+            </div>
+            <div style="position:absolute;top:388px;left:16px;right:16px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:22px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 5px 0 #17131C">
+                <span style="font-size:10.5px;font-weight:800;letter-spacing:.05em;color:#5D5366">TUẦN 13 · ĐANG ĐỢI BẠN</span>
+                <span style="font-size:20px;font-weight:800;letter-spacing:-0.03em">A New Sign at the Inn</span>
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+                  <button style="height:44px;border-radius:22px;border:2.5px solid #17131C;background:#FFE48A;font:800 13.5px Lexend,sans-serif;color:#17131C;cursor:pointer">Pip kể lại · 1 phút</button>
+                  <button style="height:44px;border-radius:22px;border:1.5px solid rgba(23,19,28,.16);background:#FFFFFF;font:800 13.5px Lexend,sans-serif;color:#17131C;cursor:pointer">Chơi tập đó</button>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:22px;background:#FFFFFF;border:2.5px solid #17131C">
+                <span style="width:64px;height:48px;border-radius:12px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;position:relative;flex:none"><span style="position:absolute;left:-40px;top:-104px;width:390px;height:844px;transform:scale(.3);transform-origin:0 0">{{ rainBack }}</span></span>
+                <span style="display:flex;flex-direction:column;flex:1"><span style="font-size:10.5px;font-weight:800;letter-spacing:.05em;color:#5D5366">TUẦN 14 · MỚI</span><span style="font-size:17px;font-weight:800">The Umbrella Mix-up</span></span>
+              </div>
+              <span style="font-size:12.5px;font-weight:700;line-height:1.4;color:#5D5366;padding:0 4px">Không mất gì cả. Hang và album của bạn vẫn y nguyên.</span>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const WS=[
+  {id:'W1',label:'Monday · the week arrives',k:'isHome'},
+  {id:'W2',label:'The town story · with a "Pip nghe kể" note',k:'isStory'},
+  {id:'W3',label:'The real-week call · from your calendar',k:'isReal'},
+  {id:'W4',label:'Back after a busy week · it waited',k:'isWait'}
+];
+const RAIN=[{id:'umbrella',x:182,y:410,s:.85,v:'butter'},{id:'umbrella',x:228,y:410,s:.68,v:'butter'},{id:'umbrella',x:268,y:410,s:.85,v:'cyan'}];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const A=window.YapArt, K=(window.YapDC&&A&&A.r7)?window.YapDC(React):null; if(!K) return {ws:[],storyCast:[]};
+    const {b1,b2,b3}=K.blinkers(this.state.bt), t=K.tk(250);
+    return {
+      rainBack:K.sc('place',390,844,{scene:'cafe7b',so:{look:'rain',t},props:RAIN}), rainFront:K.sc('cafeFront7',390,844,{look:'rain'}),
+      meiS:K.cr('otter',{size:170,mood:'laugh',blink:b1,k:'wm'}), hankS:K.cr('raccoon',{size:160,mood:'think',blink:b2,k:'wh'}),
+      pipFace58:K.fc('redpanda',58,'happy','#FFE48A'), pipFace30:K.fc('redpanda',30,'happy','#F9DAFB'), pipFace26:K.fc('redpanda',26,'happy','#F9DAFB'),
+      dexFace:K.fc('bison',36,'happy','#FFFFFF'), nellFace:K.fc('koala',36,'happy','#FFFFFF'),
+      dexCr:K.cr('bison',{size:130,mood:'happy',blink:b3,k:'wd'}), pipWait:K.cr('redpanda',{size:140,mood:'wave',blink:b1,k:'wp'}),
+      storyCast:[['otter','Mei','#FFE9C2'],['raccoon','Hank','#E8E4EE'],['redpanda','Pip','#F9DAFB']].map(([sp,name,bg])=>({name,face:K.fc(sp,24,'happy',bg)})),
+      ws:WS.map(s=>({id:s.id,label:s.label,isHome:s.k==='isHome',isStory:s.k==='isStory',isReal:s.k==='isReal',isWait:s.k==='isWait'}))
+    };
+  }
+}
+</script>
+</body>
+</html>

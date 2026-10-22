@@ -8,3 +8,10 @@ export {
 } from './context';
 export { Critter, CritterArt, type CritterArtProps, type CritterProps } from './critter';
 export { BurrowObject, Scene, type BurrowObjectProps, type SceneProps } from './scene';
+export { useLoopClock, useOneShotClock } from './clock';
+export {
+  RigCritter,
+  RigCritterArt,
+  type RigCritterArtProps,
+  type RigCritterProps,
+} from './rig-critter';

@@ -138,6 +138,26 @@ describe('the phrase lifecycle', () => {
     ).toBe('bloom');
   });
 
+  it('keeps when Pip last reused a phrase through the progress body, so it rests a week', () => {
+    const sprout = run([correct(1)]);
+    const reused = markPipReuse(sprout, on(3));
+    const wire = toPhraseProgress(reused);
+    expect(wire.pipReusedAt).toBe(on(3));
+    expect(PhraseProgress.parse(wire)).toEqual(wire);
+    const back = fromPhraseProgress(PhraseProgress.parse(JSON.parse(JSON.stringify(wire))));
+    expect(back.pipReusedAt).toBe(on(3));
+    expect(pickPipReuse([back], on(5), HCM, seededRng(1))).toBeNull();
+    expect(pickPipReuse([back], on(10), HCM, seededRng(1))?.id).toBe(sprout.id);
+  });
+
+  it('reads a body without the reuse time as never reused, and leaves it out until there is one', () => {
+    const sprout = run([correct(1)]);
+    const wire = toPhraseProgress(sprout);
+    expect('pipReusedAt' in wire).toBe(false);
+    expect(fromPhraseProgress(wire).pipReusedAt).toBeNull();
+    expect(fromPhraseProgress({ ...wire, pipReusedAt: null }).pipReusedAt).toBeNull();
+  });
+
   it('meets an unknown phrase when the learner uses it first', () => {
     const result = recordPhraseUse([], { id: 'deal', text: 'Deal' }, correct(4), HCM);
     expect(result.events).toEqual(['met', 'used', 'sprouted']);

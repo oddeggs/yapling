@@ -5,8 +5,10 @@ import type { RunnerState, Scene } from '@yapling/story';
 import { userBlobPrefix } from '../account';
 import { countTurnPasses, insertCall } from '../calls/store';
 import type { Bindings } from '../env';
+import { recordDailyCall } from '../jobs/daily-call';
 import { PostCallJob } from '../jobs/messages';
 import { callCost, medians, noSamples, type Samples } from './costs';
+import { pipsMinuteOutcome, type PipsMinuteMeta } from './daily';
 import type { LearnerContext } from './learner';
 import { noUsage, type Usage } from './llm';
 import type { MeterState } from './meter';
@@ -38,6 +40,8 @@ export interface CallMeta {
    * record and transcript are stamped on that clock, so phrase use lands on the test session's day.
    */
   readonly clockOffsetMs?: number;
+  /** Pip's minute (a `daily` call): its phrases and turns. */
+  readonly pipsMinute?: PipsMinuteMeta;
 }
 
 export interface TurnPassRecord {
@@ -122,6 +126,9 @@ export const leadOf = (scene: Scene) => scene.cast[0] ?? 'pip';
 /**
  * Writes the record, the transcript and the post-call job. Returns whether a summary is coming
  * (a call with at least one learner turn gets one).
+ *
+ * Pip's minute has no summary model: its phrase uses are written here, from how its turns passed,
+ * before the phone hears the call ended. Only if that fails does the post-call job write them.
  */
 export async function finalizeCall(
   env: Bindings,
@@ -135,6 +142,7 @@ export async function finalizeCall(
   const startedAt = meta.startedAt + shift;
   const endedAt = Date.now() + shift;
   const key = transcriptKey(userBlobPrefix(meta.userId), meta.callId);
+  const minute = meta.pipsMinute ? pipsMinuteOutcome(meta.pipsMinute, data.passes ?? []) : null;
   const file: TranscriptFile = {
     version: 1,
     callId: meta.callId,
@@ -147,11 +155,14 @@ export async function finalizeCall(
     endedAt,
     // Each line's time too: the post-call job stamps a phrase's use with its line's.
     lines: shift === 0 ? data.transcript : data.transcript.map((l) => ({ ...l, at: l.at + shift })),
+    ...(minute ? { pipsMinute: minute } : {}),
   };
   await env.BLOBS.put(key, JSON.stringify(file), {
     httpMetadata: { contentType: 'application/json' },
   });
-  const summaryPending = data.transcript.some((l) => isLearnerLine(l) && l.text !== '');
+  let summaryPending = minute
+    ? minute.played
+    : data.transcript.some((l) => isLearnerLine(l) && l.text !== '');
   const reason = data.endReason ?? 'hangup';
   // The scene keeps its place when minutes ran out before it finished, or the learner left it as
   // too hard (to practise with Linh first).
@@ -186,6 +197,14 @@ export async function finalizeCall(
     usd: cost.usd,
     timings: medians(data.samples),
   });
+  if (minute && summaryPending) {
+    try {
+      await recordDailyCall(env.DB, meta.userId, { ...file, pipsMinute: minute }, Date.now());
+      summaryPending = false;
+    } catch (error) {
+      console.error('daily call progress failed', { error: String(error).slice(0, 200) });
+    }
+  }
   if (summaryPending) {
     const job: PostCallJob = { type: 'post_call', callId: meta.callId, userId: meta.userId };
     await env.JOBS.send(PostCallJob.parse(job));

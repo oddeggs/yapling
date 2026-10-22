@@ -1,4 +1,4 @@
-import { MinutesSummary } from '@yapling/contracts';
+import { MinutesSummary, RING_SLOT_KINDS } from '@yapling/contracts';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 
@@ -7,10 +7,13 @@ import {
   chargeTalk,
   currentLedger,
   FREE_FIRST_WEEK_SECONDS,
+  FREE_WEEKLY_MINUTES,
+  FREE_WEEKLY_SECONDS,
   isMeteredCall,
   ledgerPeriod,
   ledgerStatus,
   minutesSummary,
+  UNMETERED_CALL_KINDS,
   type LedgerContext,
   type LedgerState,
 } from './ledger';
@@ -197,5 +200,44 @@ describe('the ledger on the beginner path', () => {
   it('leaves Plus on calendar months whatever the story start', () => {
     const p = ledgerPeriod({ ...plus(at('2026-10-26')), storyStartedOn });
     expect(p.periodStart).toBe(at('2026-10-01', '00:00'));
+  });
+});
+
+describe('the ledger after the first week', () => {
+  it('takes the free weekly allowance from one named number of minutes', () => {
+    expect(FREE_WEEKLY_MINUTES).toBe(10);
+    expect(FREE_WEEKLY_SECONDS).toBe(FREE_WEEKLY_MINUTES * 60);
+    for (const date of ['2026-10-28', '2026-11-20', '2027-03-01']) {
+      expect(ledgerPeriod(free(at(date))).allowanceSeconds).toBe(FREE_WEEKLY_SECONDS);
+    }
+  });
+
+  it("never charges Pip's minute, which is no ring call", () => {
+    expect(isMeteredCall('daily')).toBe(false);
+    expect(UNMETERED_CALL_KINDS.has('daily')).toBe(true);
+    expect((RING_SLOT_KINDS as readonly string[]).includes('daily')).toBe(false);
+    const ctx = free(at('2026-11-10'));
+    const minute = chargeTalk(null, ctx, {
+      learnerSeconds: 20,
+      characterSeconds: 25,
+      callKind: 'daily',
+    });
+    expect(minute.chargedSeconds).toBe(0);
+    expect(minutesSummary(minute.state, ctx).leftSeconds).toBe(FREE_WEEKLY_SECONDS);
+  });
+
+  it('never charges an unmetered call, and lets it start with no minutes left', () => {
+    const ctx = free(at('2026-11-10'));
+    const spent = chargeTalk(null, ctx, { learnerSeconds: 600, characterSeconds: 0 }).state;
+    for (const kind of UNMETERED_CALL_KINDS) {
+      const r = chargeTalk(spent, ctx, {
+        learnerSeconds: 60,
+        characterSeconds: 40,
+        callKind: kind,
+      });
+      expect(r.chargedSeconds).toBe(0);
+      expect(r.state.usedSeconds).toBe(spent.usedSeconds);
+      expect(canStartCall(spent, ctx, kind)).toBe(true);
+    }
   });
 });

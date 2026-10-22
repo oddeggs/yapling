@@ -247,9 +247,11 @@ export const toPhraseProgress = (phrase: PhraseRecord): PhraseProgress => ({
   lastUsedAt: phrase.lastUsedAt,
   usedOn: phrase.useDays.slice(-LIMITS.usedDaysMax),
   contexts: phrase.contexts.slice(-LIMITS.phraseContextsMax),
+  // Left out until Pip has reused it, so a body for an older app reads exactly as before.
+  ...(phrase.pipReusedAt === null ? {} : { pipReusedAt: phrase.pipReusedAt }),
 });
 
-/** The phrase from the progress body. When Pip last reused it is not kept there. */
+/** The phrase from the progress body; one Pip never reused (or an older app's) reads null. */
 export const fromPhraseProgress = (phrase: PhraseProgress): PhraseRecord => ({
   id: phrase.id,
   text: phrase.text,
@@ -261,5 +263,5 @@ export const fromPhraseProgress = (phrase: PhraseProgress): PhraseRecord => ({
   lastUsedAt: phrase.lastUsedAt,
   useDays: phrase.usedOn,
   contexts: phrase.contexts,
-  pipReusedAt: null,
+  pipReusedAt: phrase.pipReusedAt ?? null,
 });

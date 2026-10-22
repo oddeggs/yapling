@@ -19,13 +19,13 @@ import {
 
 /*
  * The live-minute ledger. Only live calls cost minutes; stories, postcards, voicemails and voice
- * notes never do, and neither do Settling-in calls. A call charges the seconds the learner talked
- * plus the seconds the character talked. Periods are in the learner's timezone:
+ * notes never do, and neither do Settling-in calls or Pip's minute. A call charges the seconds the
+ * learner talked plus the seconds the character talked. Periods are in the learner's timezone:
  *
  * - Free, days 1–7 of the story: a generous first week. The story starts on `storyStartedOn` (the
  *   letter under the café door): the install day for a Newcomer, after Settling in for a Visitor.
- * - Free, after that: 10 minutes a week, the week rolling from the story start's weekday (the same
- *   seven-day weeks as the ring).
+ * - Free, after that: `FREE_WEEKLY_MINUTES` a week, the week rolling from the story start's
+ *   weekday (the same seven-day weeks as the ring).
  * - Plus: 150 minutes a calendar month, fair use.
  *
  * A new period, or a change of plan, starts a fresh allowance. At 60 seconds left the character
@@ -37,15 +37,21 @@ import {
  * and 4 minutes) several times over, plus the placement chat. Founder-tunable.
  */
 export const FREE_FIRST_WEEK_SECONDS = 60 * 60;
+/**
+ * The free plan's live minutes each week after the first. The one place to change it: 10 for now,
+ * the founder choosing between 10 and 15 (three ring calls take about 12). Pip's minute never
+ * counts against it.
+ */
+export const FREE_WEEKLY_MINUTES = 10;
 /** Free plan, every week after the first. */
-export const FREE_WEEKLY_SECONDS = 10 * 60;
+export const FREE_WEEKLY_SECONDS = FREE_WEEKLY_MINUTES * 60;
 /** Plus, per calendar month (fair use). */
 export const PLUS_MONTHLY_SECONDS = 150 * 60;
 /** From this many seconds left, the character wraps the scene up. */
 export const WRAP_UP_SECONDS = 60;
 
-/** The calls that never cost live minutes: Settling in is free. */
-export const UNMETERED_CALL_KINDS: ReadonlySet<CallKind> = new Set<CallKind>(['settling']);
+/** The calls that never cost live minutes: Settling in is free, and so is Pip's minute. */
+export const UNMETERED_CALL_KINDS: ReadonlySet<CallKind> = new Set<CallKind>(['settling', 'daily']);
 
 /** Whether a call of this kind costs live minutes. */
 export const isMeteredCall = (kind: CallKind): boolean => !UNMETERED_CALL_KINDS.has(kind);

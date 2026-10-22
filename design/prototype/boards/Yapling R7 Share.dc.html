@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R7 · Share cards</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes ytilt{from{transform:rotate(-1.5deg) translateY(16px);opacity:0}to{transform:rotate(-1.5deg);opacity:1}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-r7.js?v=1"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#22BFF2;border:2px solid #17131C"></span>Yapling · Round 7 · Sharing · 5</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12"><span style="background:#CFF0FD;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">Share</span> cards</div>
+      <div style="font-size:17px;font-weight:700;max-width:1100px;line-height:1.35;color:#3E3646">Drawn by the same art code and saved as an image for the iOS share sheet: your word shelf, the week's story recap and Pip's outfit. Every card carries the Yapling mark, the AI tag on every character and an invite line. No transcripts, voice, homework or calendar, ever. The phrase you said shows on a recap card only while you leave it on.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R7 Album.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ The album</a>
+      <a href="Yapling R7 Town goal.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · Town goal ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ ss }}" as="s" hint-placeholder-count="4">
+      <div data-screen-label="{{ s.id }} Share card" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ s.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ s.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#3B3160;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;top:60px;left:20px;right:20px;display:flex;align-items:center;justify-content:space-between;color:#FFFFFF"><span style="font-size:20px;font-weight:800;letter-spacing:-0.03em">{{ s.title }}</span><button aria-label="Đóng" style="width:40px;height:40px;border-radius:20px;border:none;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"></path></svg></button></div>
+
+          <sc-if value="{{ s.isShelf }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:116px;left:39px;width:312px;height:556px;border-radius:22px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.35);animation:ytilt .5s ease-out both;transform:rotate(-1.5deg)">
+              <div style="position:absolute;left:0;top:0;width:390px;height:695px;transform:scale(.8);transform-origin:0 0;background:#F9DAFB">
+                <div style="position:absolute;left:0;top:0">{{ shelfCard }}</div>
+                <span style="position:absolute;left:338px;top:74px;padding:2px 6px;border-radius:7px;background:#17131C;color:#fff;font-size:11px;font-weight:800">AI</span>
+                <div style="position:absolute;left:16px;right:16px;top:642px;height:46px;border-radius:16px;background:#17131C;color:#FFFFFF;display:flex;align-items:center;justify-content:space-between;padding:0 16px"><span style="font-size:13px;font-weight:700">Học nói tiếng Anh cùng mình nhé</span><span style="font-size:13px;font-weight:800;color:#FFE48A">yapling.app/i/lan45</span></div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ s.isRecap }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:116px;left:30px;width:330px;border-radius:24px;background:#FFF7EE;border:3px solid #17131C;box-shadow:0 18px 40px rgba(0,0,0,.35);overflow:hidden;animation:ytilt .5s ease-out both;transform:rotate(-1.5deg)">
+              <div style="position:relative;height:176px;overflow:hidden;border-bottom:3px solid #17131C">
+                <div style="position:absolute;left:0;top:-195px;width:390px;height:844px;transform:scale(.846);transform-origin:0 0">
+                  <div style="position:absolute;inset:0">{{ rainBack }}</div>
+                  <div style="position:absolute;left:-10px;top:258px">{{ meiR }}</div>
+                  <div style="position:absolute;left:286px;top:330px">{{ pipR }}</div>
+                  <div style="position:absolute;inset:0">{{ rainFront }}</div>
+                </div>
+                <span style="position:absolute;top:10px;left:10px;font-size:10.5px;font-weight:800;letter-spacing:.05em;padding:3px 8px;border-radius:8px;background:#17131C;color:#fff">TUẦN NÀY Ở QUÁN MEI</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;padding:12px 16px 14px">
+                <span style="font-size:24px;font-weight:800;letter-spacing:-0.035em;line-height:1.15">The Umbrella Mix-up</span>
+                <span style="font-size:13.5px;font-weight:600;line-height:1.4;color:#3E3646">Tuần này quán Mei có hai chiếc ô vàng giống hệt nhau, và Lan đã giúp trả đúng người.</span>
+                <sc-if value="{{ s.showPhrase }}" hint-placeholder-val="{{ true }}"><span style="align-self:flex-start;padding:8px 12px;border-radius:14px;background:#EFA3F4;border:3px solid #17131C;box-shadow:3px 4px 0 #17131C;font-size:17px;font-weight:900;letter-spacing:-0.03em;rotate:-2deg;animation:ypop .5s .3s ease-out both">"Mine is the small yellow umbrella."</span></sc-if>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <sc-for list="{{ recapCast }}" as="f" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:4px;height:28px;padding:0 8px 0 2px;border-radius:14px;background:#FFFFFF;border:1.5px solid rgba(23,19,28,.14)"><span style="width:24px;height:24px;border-radius:12px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box">{{ f.face }}</span><span style="font-size:12px;font-weight:800">{{ f.name }}</span><span style="padding:1px 4px;border-radius:5px;background:#17131C;color:#fff;font-size:9px;font-weight:800">AI</span></span></sc-for>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:2px dashed rgba(23,19,28,.2)"><span style="display:flex;align-items:center;gap:5px;font-size:15px;font-weight:900;letter-spacing:-0.03em"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1C12 9 15 12 23 12C15 12 12 15 12 23C12 15 9 12 1 12C9 12 12 9 12 1Z" fill="#EFA3F4" stroke="#17131C" stroke-width="2"></path></svg>yapling</span><span style="font-size:11.5px;font-weight:800;color:#5B4A8C">yapling.app/i/lan45</span></div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ s.isOutfit }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:116px;left:30px;width:330px;height:500px;border-radius:24px;background:#CFF0FD;border:3px solid #17131C;box-shadow:0 18px 40px rgba(0,0,0,.35);overflow:hidden;animation:ytilt .5s ease-out both;transform:rotate(-1.5deg);background-image:radial-gradient(rgba(23,19,28,.09) 1.1px,transparent 1.4px);background-size:16px 16px">
+              <div style="position:absolute;top:18px;left:18px;right:18px;display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#3E3646">BỘ ĐỒ MÙA MƯA</span><span style="font-size:26px;font-weight:800;letter-spacing:-0.04em;line-height:1.15">Pip's rainy-day look</span></div>
+              <div style="position:absolute;left:0;right:0;top:300px;height:200px;background:#FFFFFF;border-top:3px solid #17131C"></div>
+              <div style="position:absolute;top:110px;left:56px">{{ pipOutfit }}</div>
+              <div style="position:absolute;top:244px;left:232px;width:72px;height:72px">{{ umbrellaCyan }}</div>
+              <div style="position:absolute;top:372px;left:18px;right:18px;display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="font-size:16px;font-weight:800">Pip</span><span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800">AI</span><span style="font-size:13px;font-weight:600;color:#5D5366">bạn cùng hang của Lan</span></div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap"><span style="padding:5px 10px;border-radius:12px;background:#FFE48A;border:2px solid #17131C;font-size:13px;font-weight:800">raincoat · áo mưa</span><span style="padding:5px 10px;border-radius:12px;background:#CFF0FD;border:2px solid #17131C;font-size:13px;font-weight:800">umbrella · cái ô</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:2px dashed rgba(23,19,28,.2)"><span style="display:flex;align-items:center;gap:5px;font-size:15px;font-weight:900;letter-spacing:-0.03em"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1C12 9 15 12 23 12C15 12 12 15 12 23C12 15 9 12 1 12C9 12 12 9 12 1Z" fill="#EFA3F4" stroke="#17131C" stroke-width="2"></path></svg>yapling</span><span style="font-size:11.5px;font-weight:800;color:#5B4A8C">yapling.app/i/lan45</span></div>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.92);border:1px solid #fff;box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(0,0,0,.25)">
+            <sc-if value="{{ s.hasToggle }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 6px"><label for="{{ s.tid }}" style="display:flex;flex-direction:column;gap:1px"><span style="font-size:14.5px;font-weight:800">Hiện câu bạn đã nói</span><span style="font-size:11.5px;font-weight:600;color:#5D5366">Chỉ câu này. Không có giọng hay bản ghi.</span></label><button id="{{ s.tid }}" role="switch" aria-checked="{{ s.ariaOn }}" style="width:54px;height:32px;border-radius:16px;border:2.5px solid #17131C;background:{{ s.swBg }};position:relative;flex:none;cursor:pointer;padding:0"><span style="position:absolute;top:2px;left:{{ s.knob }};width:23px;height:23px;border-radius:12px;background:#FFFFFF;border:2px solid #17131C;box-sizing:border-box"></span></button></div>
+            </sc-if>
+            <sc-if value="{{ s.hasPrivacy }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:18px;background:#F4F1F7">
+                <span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">TRÊN THẺ KHÔNG BAO GIỜ CÓ</span>
+                <span style="font-size:13px;font-weight:700;line-height:1.45">Bản ghi cuộc gọi · giọng nói của bạn · bài tập, CV hay lịch · tên hay ảnh của người khác</span>
+              </div>
+            </sc-if>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+              <button style="height:52px;border-radius:26px;border:1.5px solid rgba(23,19,28,.16);background:#FFFFFF;font:800 15px Lexend,sans-serif;color:#17131C;cursor:pointer">Lưu ảnh</button>
+              <button style="height:52px;border-radius:26px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 15px Lexend,sans-serif;color:#17131C;cursor:pointer">Chia sẻ…</button>
+            </div>
+          </div>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:8;color:#FFFFFF"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #FFFFFF;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#FFFFFF;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#FFFFFF;z-index:9"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const SS=[
+  {id:'S1',label:'Your word shelf',k:'shelf',title:'Kệ từ của bạn'},
+  {id:'S2',label:'The week’s story recap · phrase on',k:'recap',title:'Tóm tắt tuần này',on:true},
+  {id:'S3',label:'Pip’s outfit',k:'outfit',title:'Bộ đồ của Pip'},
+  {id:'S4',label:'Recap with the phrase off · what never shows',k:'recap',title:'Tóm tắt tuần này',on:false,privacy:true}
+];
+const ITEMS=[['bubble-tea','bubble tea','trà sữa'],['iced-coffee','iced coffee','cà phê đá'],['teapot','teapot','ấm trà','rare','mint'],['kettle','kettle','ấm siêu tốc'],
+  ['umbrella','umbrella','cái ô',null,'butter'],['lantern','lantern','đèn lồng','limited','butter'],['desk-lamp','desk lamp','đèn bàn'],['armchair','armchair','ghế bành'],
+  ['monstera','monstera','cây trầu bà'],['cactus','cactus','xương rồng'],['backpack','backpack','ba lô'],['suitcase','suitcase','va li']];
+const RAIN=[{id:'umbrella',x:182,y:410,s:.85,v:'butter'},{id:'umbrella',x:228,y:410,s:.68,v:'butter'},{id:'umbrella',x:268,y:410,s:.85,v:'cyan'}];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const A=window.YapArt, K=(window.YapDC&&A&&A.r7)?window.YapDC(React):null; if(!K) return {ss:[],recapCast:[]};
+    const {b1,b2,b3}=K.blinkers(this.state.bt);
+    const items=ITEMS.map(([id,word,vi,rarity,v])=>{ const o={id,word,vi}; if(rarity){ o.rarity=rarity; o.season='cold-night'; } if(v) o.v=v; return o; });
+    return {
+      shelfCard:K.sc('shelfcard',390,640,{title:'Kệ từ của Lan',sub:'41 món · 6 nơi ở Natterwick',sp:'redpanda',items}),
+      rainBack:K.sc('place',390,844,{scene:'cafe7b',so:{look:'rain',t:0},props:RAIN}), rainFront:K.sc('cafeFront7',390,844,{look:'rain'}),
+      meiR:K.cr('otter',{size:170,mood:'laugh',blink:b1,k:'sm'}), pipR:K.cr('redpanda',{size:100,mood:'happy',blink:b2,k:'sp'}),
+      recapCast:[['otter','Mei','#FFE9C2'],['redpanda','Pip','#F9DAFB']].map(([sp,name,bg])=>({name,face:K.fc(sp,24,'happy',bg)})),
+      pipOutfit:K.h('div',{key:'po',style:{width:170,height:204,animation:'ybreathe 3.2s ease-in-out infinite',transformOrigin:'50% 100%'}},K.h(K.Cv,{fn:'s_critter',w:170,hh:204,o:{sp:'redpanda',mood:'happy',mouth:'rest',blink:b3,look:0,wear:['raincoat']}})),
+      umbrellaCyan:K.sc('prop',72,72,{id:'umbrella',v:'cyan'}),
+      ss:SS.map((s,i)=>({id:s.id,label:s.label,title:s.title,isShelf:s.k==='shelf',isRecap:s.k==='recap',isOutfit:s.k==='outfit',showPhrase:!!s.on,hasToggle:s.k==='recap',hasPrivacy:!!s.privacy,
+        tid:'sw'+i,ariaOn:s.on?'true':'false',swBg:s.on?'#5FD98A':'#E8E4EE',knob:s.on?'25px':'2px'}))
+    };
+  }
+}
+</script>
+</body>
+</html>

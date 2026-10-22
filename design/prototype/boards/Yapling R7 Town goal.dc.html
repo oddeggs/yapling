@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R7 · Town goal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yrise{0%{transform:translateY(120px) scale(.6);opacity:0}50%{opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+@keyframes yfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes yfill{from{width:0}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-r7.js?v=1"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#FFD66B;border:2px solid #17131C"></span>Yapling · Round 7 · Together · 6</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">A <span style="background:#FFD66B;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">town goal</span></div>
+      <div style="font-size:17px;font-weight:700;max-width:1060px;line-height:1.35;color:#3E3646">On First Cold Night every story anyone finishes lights a lantern, and the whole town counts together until the square is full. Nobody ranks and nobody can fall behind. Your own numbers are personal bests, compared only with your week 1, and none of them count live minutes.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R7 Share.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ Share cards</a>
+      <a href="Yapling R7 Callbacks.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · Callbacks ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ gs }}" as="g" hint-placeholder-count="3">
+      <div data-screen-label="{{ g.id }} Town goal" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ g.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ g.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#3E3470;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ g.sq }}</div>
+          <sc-if value="{{ g.isDone }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0">{{ confetti }}</div></sc-if>
+
+          <div style="position:absolute;top:60px;left:14px;right:14px;padding:14px 16px;border-radius:28px;display:flex;flex-direction:column;gap:6px;background:rgba(255,255,255,.78);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(0,0,0,.25)">
+            <span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">ĐÊM LẠNH ĐẦU TIÊN · LỄ CỦA NATTERWICK</span>
+            <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:42px;font-weight:900;letter-spacing:-0.06em;line-height:1.1">{{ g.count }}</span><span style="font-size:14px;font-weight:700;line-height:1.3">{{ g.unit }}</span></div>
+            <div style="height:16px;border-radius:8px;background:#E8E4EE;border:2px solid #17131C;overflow:hidden"><div style="height:100%;width:{{ g.pct }};background:#FFD66B;border-right:2px solid #17131C;animation:yfill 1.2s ease-out both"></div></div>
+            <span style="font-size:12.5px;font-weight:700;color:#3E3646">{{ g.goal }}</span>
+          </div>
+
+          <sc-if value="{{ g.isLit }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:300px;left:131px;width:128px;height:128px;animation:yrise 1.1s cubic-bezier(.3,.7,.4,1) both">{{ bigLantern }}</div>
+            <span style="position:absolute;top:296px;left:246px;padding:4px 10px;border-radius:12px;background:#FFD66B;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:18px;font-weight:900;animation:ypop .5s .9s ease-out both">+1</span>
+            <div style="position:absolute;left:22px;top:528px">{{ pipLit }}</div>
+            <div style="position:absolute;top:500px;left:150px;right:20px;padding:9px 13px;border-radius:20px 20px 20px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;display:flex;flex-direction:column;gap:2px;animation:ypop .5s 1.1s ease-out both"><span style="display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800">Pip<span style="padding:1px 4px;border-radius:5px;background:#17131C;color:#fff;font-size:9px">AI</span></span><span style="font-size:15px;font-weight:800;line-height:1.3">Look! That one is ours!</span></div>
+          </sc-if>
+
+          <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:16px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.92);border:1px solid #fff;box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(0,0,0,.25)">
+            <sc-if value="{{ g.isGoal }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:15px;font-weight:800;line-height:1.35">Mỗi truyện ai đó nghe xong thắp một đèn lồng.</span>
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;background:#FFF7EE;border:2px solid #17131C"><span style="width:36px;height:36px;flex:none">{{ smallLantern }}</span><span style="font-size:14px;font-weight:800;flex:1">Bạn đã thắp 3 chiếc tuần này</span></div>
+                <span style="font-size:12px;font-weight:700;color:#5D5366;padding:0 2px">Không xếp hạng ai cả. Cả thị trấn cùng thắp.</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ g.isLit }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:4px;padding:0 2px"><span style="font-size:20px;font-weight:800;letter-spacing:-0.03em">Bạn vừa thắp một đèn lồng</span><span style="font-size:13.5px;font-weight:600;color:#3E3646">Nhờ truyện "The Umbrella Mix-up". Quảng trường sáng thêm một chút.</span></div>
+            </sc-if>
+            <sc-if value="{{ g.isDone }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366;padding:0 2px">KỶ LỤC CỦA RIÊNG BẠN · SO VỚI TUẦN 1</span>
+                <sc-for list="{{ bests }}" as="b" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-radius:16px;background:#F4F1F7"><span style="font-size:14px;font-weight:800">{{ b.k }}</span><span style="display:flex;align-items:baseline;gap:6px"><span style="font-size:17px;font-weight:900">{{ b.now }}</span><span style="font-size:11.5px;font-weight:700;color:#5D5366">tuần 1: {{ b.then }}</span></span></div>
+                </sc-for>
+                <span style="font-size:12px;font-weight:700;color:#5D5366;padding:0 2px">Không có bảng xếp hạng. Món kỷ niệm "đèn lồng Đêm lạnh" đã vào hang.</span>
+              </div>
+            </sc-if>
+            <button style="height:54px;border-radius:27px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 16px Lexend,sans-serif;color:#17131C;cursor:pointer">{{ g.cta }}</button>
+          </div>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:8;color:#FFFFFF"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #FFFFFF;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#FFFFFF;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#FFFFFF;z-index:9"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const GS=[
+  {id:'G1',label:'The shared goal · lanterns for First Cold Night',k:'goal',lit:.83,count:'12.400',unit:'đèn lồng cả thị trấn đã thắp',pct:'83%',goal:'15.000 đèn là quảng trường sáng trọn',cta:'Nghe truyện tuần này'},
+  {id:'G2',label:'You finish a story · one more lantern',k:'lit',lit:.84,count:'12.401',unit:'đèn lồng cả thị trấn đã thắp',pct:'83%',goal:'15.000 đèn là quảng trường sáng trọn',cta:'Về hang'},
+  {id:'G3',label:'The square is full · and your personal bests',k:'done',lit:1,count:'15.000',unit:'đèn · cảm ơn cả thị trấn!',pct:'100%',goal:'Quảng trường đã sáng trọn',cta:'Chia sẻ khoảnh khắc này'}
+];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const A=window.YapArt, K=(window.YapDC&&A&&A.r7)?window.YapDC(React):null; if(!K) return {gs:[],bests:[]};
+    const {b1}=K.blinkers(this.state.bt), t=K.tk(250);
+    return {
+      confetti:K.sc('confetti',390,844,{t}), bigLantern:K.sc('prop',128,128,{id:'lantern',v:'butter',lit:true}), smallLantern:K.sc('prop',36,36,{id:'lantern',v:'butter',lit:true}),
+      pipLit:K.cr('redpanda',{size:120,mood:'excited',blink:b1,k:'gp'}),
+      bests:[{k:'Nói liền một mạch',now:'1 phút 40',then:'20 giây'},{k:'Album',now:'41 món',then:'3 món'},{k:'Cụm từ đã nở hoa',now:'9',then:'0'}],
+      gs:GS.map(s=>({id:s.id,label:s.label,count:s.count,unit:s.unit,pct:s.pct,goal:s.goal,cta:s.cta,isGoal:s.k==='goal',isLit:s.k==='lit',isDone:s.k==='done',
+        sq:K.sc('lanternSq',390,844,{lit:s.lit,t})}))
+    };
+  }
+}
+</script>
+</body>
+</html>

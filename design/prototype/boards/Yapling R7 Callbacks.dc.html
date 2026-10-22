@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R7 · Callbacks and payoffs</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes ystamp{0%,8%{transform:scale(2.6) rotate(-30deg);opacity:0}16%{transform:scale(.92) rotate(-12deg);opacity:1}22%,100%{transform:scale(1) rotate(-12deg);opacity:1}}
+@keyframes ynew{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 4px rgba(255,214,107,.6)}50%{box-shadow:0 4px 0 #17131C,0 0 0 10px rgba(255,214,107,.15)}}
+@keyframes yglow{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 8px rgba(239,163,244,.45)}50%{box-shadow:0 4px 0 #17131C,0 0 0 18px rgba(239,163,244,.12)}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-r7.js?v=1"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#EFA3F4;border:2px solid #17131C"></span>Yapling · Round 7 · Story engine · 7</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">Callbacks and <span style="background:#EFA3F4;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">payoffs</span></div>
+      <div style="font-size:17px;font-weight:700;max-width:1060px;line-height:1.35;color:#3E3646">The town remembers you. A neighbour asks about something you said weeks ago, a twist lands, and the week ends on a payoff you can see: your own sentence on Mei's new sign. Callbacks only use what you kept on Pip's memory page, which you can edit or clear at any time.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R7 Town goal.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ Town goal</a>
+      <a href="Yapling R7 Shop.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · The shop ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ cs }}" as="c" hint-placeholder-count="3">
+      <div data-screen-label="{{ c.id }} Callbacks" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ c.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ c.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFF7EE;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+
+          <sc-if value="{{ c.isCall }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0">{{ c.back }}</div>
+            <sc-for list="{{ c.cast }}" as="m" hint-placeholder-count="2"><div style="position:absolute;left:{{ m.left }};top:{{ m.top }}">{{ m.el }}</div></sc-for>
+            <div style="position:absolute;inset:0;pointer-events:none">{{ c.front }}</div>
+            <sc-if value="{{ c.hasSign }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;top:268px;left:10px;width:132px;padding:9px 10px 11px;border-radius:12px;background:#2E2740;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;transform:rotate(-3deg);display:flex;flex-direction:column;gap:4px;animation:ypop .6s .6s ease-out both;z-index:3">
+                <span style="font-family:'Kithfield Hand',cursive;font-size:14px;line-height:1.2;color:#FFFFFF">Lost an umbrella? Just say:</span>
+                <span style="font-family:'Kithfield Hand',cursive;font-size:16px;line-height:1.2;color:#FFE48A">"Mine is the small yellow one!"</span>
+              </div>
+            </sc-if>
+            <div style="position:absolute;top:58px;left:62px;display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 5px;border-radius:20px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);z-index:4"><span style="width:30px;height:30px;border-radius:15px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ c.topFace }}</span><span style="font-size:14px;font-weight:800">{{ c.who }}</span><span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800">AI</span><span style="font-size:12px;font-weight:600;color:#5D5366">{{ c.sub }}</span></div>
+            <div style="position:absolute;top:108px;left:16px;right:16px;display:flex;flex-direction:column;gap:6px;z-index:4">
+              <sc-if value="{{ c.hasMem }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start;display:flex;align-items:center;gap:6px;height:28px;padding:0 10px 0 6px;border-radius:14px;background:#FFE48A;border:2px solid #17131C;font-size:12px;font-weight:800;animation:yin .4s ease-out both"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z" fill="none" stroke="#17131C" stroke-width="2.4" stroke-linejoin="round"></path></svg>Mei nhớ điều bạn kể · 3 tuần trước</span></sc-if>
+              <sc-if value="{{ c.hasTwist }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start;padding:4px 10px;border-radius:10px;background:#17131C;color:#fff;font-size:12px;font-weight:800;letter-spacing:.06em;animation:ystamp 1.2s ease-out both">BẤT NGỜ</span></sc-if>
+              <div style="display:flex;flex-direction:column;gap:3px;padding:11px 15px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C">
+                <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800">{{ c.who }}<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px">AI</span></span>
+                <span style="font-size:18px;font-weight:700;line-height:1.32">{{ c.line }}</span>
+              </div>
+            </div>
+            <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;z-index:6">
+              <sc-if value="{{ c.hasYou }}" hint-placeholder-val="{{ false }}"><div style="align-self:flex-end;max-width:300px;padding:9px 14px;border-radius:20px 20px 6px 20px;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.95);box-shadow:0 8px 22px rgba(46,20,70,.14)"><span style="display:block;font-size:10.5px;font-weight:800;letter-spacing:.05em;color:#5D5366">BẠN · NGHE ĐƯỢC</span><span style="font-size:16.5px;font-weight:700;line-height:1.35">{{ c.you }}</span></div></sc-if>
+              <sc-if value="{{ c.hasPayoff }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;padding:10px 10px 10px 12px;border-radius:20px;background:#17131C;color:#FFFFFF;box-shadow:0 6px 0 #FFE48A;animation:yup .45s .8s ease-out both"><span style="font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 7px;border-radius:7px;background:#FFE48A;color:#17131C;flex:none">PHẦN THƯỞNG</span><span style="font-size:15px;font-weight:700;line-height:1.3;flex:1">Câu bạn nói giờ ở trên biển quán Mei.</span></div></sc-if>
+              <div style="height:104px;border-radius:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+                <button style="height:50px;width:96px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 14px Lexend,sans-serif;cursor:pointer">Chờ chút</button>
+                <button aria-label="Giữ để nói" style="width:72px;height:72px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;animation:yglow 1.6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box;cursor:pointer"><span style="width:5px;height:26px;border-radius:3px;background:#17131C"></span><span style="width:5px;height:26px;border-radius:3px;background:#17131C"></span><span style="width:5px;height:26px;border-radius:3px;background:#17131C"></span></button>
+                <button style="height:50px;width:96px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 14px Lexend,sans-serif;cursor:pointer">Rời đi</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ c.isMemory }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+            <div style="position:absolute;top:84px;left:22px;right:22px;display:flex;align-items:flex-end;justify-content:space-between">
+              <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700;color:#5D5366">Tôi · trang của Pip</span><span style="font-size:44px;font-weight:900;letter-spacing:-0.06em;line-height:1.1">Pip nhớ</span></div>
+              <span style="width:62px;height:62px;border-radius:18px;overflow:hidden;border:3px solid #17131C;box-shadow:2px 4px 0 #17131C;box-sizing:border-box;rotate:6deg;flex:none">{{ pipFace }}</span>
+            </div>
+            <span style="position:absolute;top:166px;left:22px;right:22px;font-size:13.5px;font-weight:600;line-height:1.4;color:#3E3646">Những điều bạn kể và muốn giữ. Truyện chỉ dùng những gì ở đây.</span>
+            <div style="position:absolute;top:214px;left:14px;right:14px;display:flex;flex-direction:column;gap:9px">
+              <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:20px;background:#FFF3C4;border:2.5px solid #17131C;animation:ynew 2s ease-in-out infinite">
+                <span style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.05em"><span style="padding:2px 6px;border-radius:6px;background:#17131C;color:#fff">MỚI</span>PIP MUỐN NHỚ ĐIỀU NÀY</span>
+                <span style="font-size:16px;font-weight:800;line-height:1.3">Thứ Năm bạn phỏng vấn vị trí điều phối kho.</span>
+                <span style="font-size:12px;font-weight:600;color:#5D5366">Từ lịch bạn chia sẻ · hôm nay</span>
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><button style="height:44px;border-radius:22px;border:2.5px solid #17131C;background:#5FD98A;box-shadow:0 3px 0 #17131C;font:800 14px Lexend,sans-serif;color:#17131C;cursor:pointer">Giữ lại</button><button style="height:44px;border-radius:22px;border:1.5px solid rgba(23,19,28,.16);background:#FFFFFF;font:800 14px Lexend,sans-serif;color:#17131C;cursor:pointer">Không cần</button></div>
+              </div>
+              <sc-for list="{{ mems }}" as="m" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:10px;padding:11px 8px 11px 14px;border-radius:18px;background:#FFFFFF;border:2px solid #17131C">
+                  <span style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0"><span style="font-size:15px;font-weight:800;line-height:1.3">{{ m.t }}</span><span style="font-size:11.5px;font-weight:600;color:#5D5366">{{ m.src }}</span><sc-if value="{{ m.used }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start;margin-top:2px;padding:2px 7px;border-radius:7px;background:#CFF0FD;border:1.5px solid #17131C;font-size:11px;font-weight:800">{{ m.usedT }}</span></sc-if></span>
+                  <button aria-label="{{ m.aria }}" style="width:44px;height:44px;border-radius:22px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;padding:0"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2" fill="#5D5366"></circle><circle cx="12" cy="12" r="2" fill="#5D5366"></circle><circle cx="19" cy="12" r="2" fill="#5D5366"></circle></svg></button>
+                </div>
+              </sc-for>
+            </div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px 18px;border-radius:32px;background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:12.5px;font-weight:700;line-height:1.4;color:#3E3646">Pip không nhớ điều gì bạn chưa đồng ý giữ. Sửa hoặc xoá bất cứ lúc nào; xoá tài khoản là xoá hết.</span>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CS=[
+  {id:'C1',label:'A callback · Mei remembers, weeks later',k:'call',look:'morning',spk:'mei',sub:'Tuần 17 · quán Mei',line:'Lan! Three weeks ago you said your sister was moving. Did she settle in?',you:'Yes! She loves her new flat. Thanks for asking!',mem:true,
+    props:[{id:'teapot',x:184,y:410,s:.5,v:'lilac'},{id:'bubble-tea',x:228,y:410,s:.85},{id:'iced-coffee',x:268,y:410,s:.85}],cast:[['mei','otter',170,-10,258,'warm'],['pip','redpanda',100,286,330,'listen']]},
+  {id:'C2',label:'The twist lands · and the payoff you can see',k:'call',look:'rain',spk:'hank',sub:'Tuần 14 · Umbrella Mix-up',line:"Huh. Small and yellow? That's yours. Sorry, kid. My mistake.",twist:true,sign:true,payoff:true,
+    props:[{id:'umbrella',x:228,y:410,s:.68,v:'butter'},{id:'umbrella',x:268,y:410,s:.85,v:'cyan'}],cast:[['pip','redpanda',100,140,330,'excited'],['hank','raccoon',150,236,276,'shy']]},
+  {id:'C3',label:"Pip's memory page · growing, and yours to edit",k:'memory'}
+];
+const WHO={mei:['Mei','otter','#FFE9C2'],hank:['Hank','raccoon','#E8E4EE']};
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const A=window.YapArt, K=(window.YapDC&&A&&A.r7)?window.YapDC(React):null; if(!K) return {cs:[],mems:[]};
+    const {b1,b2,b3}=K.blinkers(this.state.bt), bl=[b1,b2,b3], t=K.tk(250);
+    return {
+      pipFace:K.fc('redpanda',62,'happy','#FFE48A'),
+      mems:[
+        {t:'Em gái bạn vừa chuyển nhà',src:'Bạn kể với Mei · 3 tuần trước',used:true,usedT:'Mei đã hỏi lại tuần này',aria:'Sửa hoặc xoá: em gái chuyển nhà'},
+        {t:'Bạn thích cà phê đá, ít đường',src:'Bạn kể với Pip · tuần 2',used:false,usedT:'',aria:'Sửa hoặc xoá: cà phê đá'},
+        {t:'Mục tiêu: tự tin nói trong cuộc họp',src:'Lúc bắt đầu',used:true,usedT:'Dùng trong cuộc gọi với Dex',aria:'Sửa hoặc xoá: mục tiêu'},
+        {t:'Bạn đang học nấu canh cá',src:'Bạn kể với Arjun · tuần 15',used:false,usedT:'',aria:'Sửa hoặc xoá: nấu canh cá'}
+      ],
+      cs:CS.map((s,si)=>{ if(s.k!=='call') return {id:s.id,label:s.label,isCall:false,isMemory:true,cast:[]};
+        const w=WHO[s.spk];
+        return {id:s.id,label:s.label,isCall:true,isMemory:false,back:K.sc('place',390,844,{scene:'cafe7b',so:{look:s.look,t:s.look==='rain'?t:0},props:s.props}),front:K.sc('cafeFront7',390,844,{look:s.look}),
+          cast:s.cast.map(([key,sp,size,left,top,mood],i)=>({left:left+'px',top:top+'px',el:K.cr(sp,{size,mood:key===s.spk?(mood||'happy'):mood,blink:bl[(si+i)%3],k:'c'+si+key})})),
+          who:w[0],topFace:K.fc(w[1],30,'happy',w[2]),sub:s.sub,line:s.line,hasYou:!!s.you,you:s.you||'',hasMem:!!s.mem,hasTwist:!!s.twist,hasSign:!!s.sign,hasPayoff:!!s.payoff}; })
+    };
+  }
+}
+</script>
+</body>
+</html>

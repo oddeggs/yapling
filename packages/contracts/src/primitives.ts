@@ -168,7 +168,8 @@ export type FirstLanguage = z.infer<typeof FirstLanguage>;
 
 /**
  * What a call is for. `voicemail_reply` answers a character's voicemail. `settling`: a Settling-in
- * chapter with Linh, before the story starts.
+ * chapter with Linh, before the story starts. `daily`: Pip's minute, two card turns in the burrow
+ * on a day a phrase is due; it never costs live minutes and never fills a ring slot.
  */
 export const CALL_KINDS = [
   'placement',
@@ -177,6 +178,7 @@ export const CALL_KINDS = [
   'practice',
   'voicemail_reply',
   'settling',
+  'daily',
 ] as const;
 export const CallKind = z.enum(CALL_KINDS);
 export type CallKind = z.infer<typeof CallKind>;

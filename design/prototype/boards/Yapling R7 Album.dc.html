@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R7 · The album</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes ysp{0%{transform:scale(0) rotate(0);opacity:0}40%{transform:scale(1.2) rotate(20deg);opacity:1}100%{transform:scale(.8) rotate(45deg);opacity:0}}
+@keyframes yspin{0%{transform:rotate(-8deg) scale(.2);opacity:0}55%{transform:rotate(4deg) scale(1.08);opacity:1}100%{transform:rotate(0) scale(1);opacity:1}}
+@keyframes yfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-r7.js?v=1"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#EFA3F4;border:2px solid #17131C"></span>Yapling · Round 7 · Collecting · 4</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">The <span style="background:#EFA3F4;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">album</span></div>
+      <div style="font-size:17px;font-weight:700;max-width:1100px;line-height:1.35;color:#3E3646">The burrow shows what you can say; the album shows what you've found. Every prop and place you meet lands here, a shelf per topic and a page per place. Rarity is a sticker treatment, earned only by playing: common (white die-cut), rare (foil, from a twist or a milestone) and seasonal (gold glow, only during Natterwick's own festivals, back next year if you miss it). Bought items never appear here.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R7 Props.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ Props are words</a>
+      <a href="Yapling R7 Flow.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Flow strip</a>
+      <a href="Yapling R7 Share.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · Share cards ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ as }}" as="a" hint-placeholder-count="4">
+      <div data-screen-label="{{ a.id }} Album" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ a.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ a.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFF7EE;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+
+          <sc-if value="{{ a.isList }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:80px;left:20px;right:20px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:flex-end;justify-content:space-between"><div style="display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#5D5366">{{ a.count }}</span><span style="font-size:40px;font-weight:900;letter-spacing:-0.06em;line-height:1.1">Album</span></div><span style="width:50px;height:50px;border-radius:16px;overflow:hidden;border:3px solid #17131C;box-shadow:2px 4px 0 #17131C;box-sizing:border-box;rotate:-5deg">{{ pipFace }}</span></div>
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:4px;border-radius:22px;background:rgba(23,19,28,.06)">
+                <button style="height:38px;border-radius:18px;border:{{ a.tab1.bd }};background:{{ a.tab1.bg }};box-shadow:{{ a.tab1.sh }};font:800 14px Lexend,sans-serif;color:#17131C;cursor:pointer">Theo chủ đề</button>
+                <button style="height:38px;border-radius:18px;border:{{ a.tab2.bd }};background:{{ a.tab2.bg }};box-shadow:{{ a.tab2.sh }};font:800 14px Lexend,sans-serif;color:#17131C;cursor:pointer">Theo nơi chốn</button>
+              </div>
+            </div>
+
+            <sc-if value="{{ a.isTopics }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;top:226px;left:14px;right:14px;display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ shelves }}" as="sh" hint-placeholder-count="4">
+                  <div style="display:flex;flex-direction:column;gap:6px;padding:10px 10px 8px;border-radius:22px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C">
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;padding:0 4px"><span style="font-size:15px;font-weight:800">{{ sh.title }}</span><span style="font-size:12px;font-weight:700;color:#5D5366">{{ sh.n }}</span></div>
+                    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px">
+                      <sc-for list="{{ sh.items }}" as="it" hint-placeholder-count="4">
+                        <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+                          <div style="width:62px;height:62px;display:flex;align-items:center;justify-content:center;border-radius:16px;border:{{ it.bd }};box-sizing:border-box">{{ it.el }}</div>
+                          <span style="font-size:11px;font-weight:800;color:{{ it.ink }};white-space:nowrap">{{ it.word }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ a.isPlaces }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;top:226px;left:14px;right:14px;display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ places }}" as="pl" hint-placeholder-count="2">
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:22px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C">
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;padding:0 2px"><span style="font-size:17px;font-weight:800">{{ pl.name }}</span><span style="font-size:12px;font-weight:700;color:#5D5366">{{ pl.n }}</span></div>
+                    <div style="display:flex;gap:6px">
+                      <sc-for list="{{ pl.sets }}" as="st" hint-placeholder-count="4">
+                        <div style="display:flex;flex-direction:column;gap:3px;width:62px;flex:none">
+                          <div style="position:relative;width:62px;height:84px;border-radius:12px;overflow:hidden;border:{{ st.bd }};box-sizing:border-box;background:#F4F1F7"><sc-if value="{{ st.found }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:{{ st.dx }};top:{{ st.dy }};width:390px;height:844px;transform:scale(.2);transform-origin:0 0">{{ st.el }}</div></sc-if><sc-if value="{{ st.locked }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#B9B0C4">?</span></sc-if></div>
+                          <span style="font-size:10px;font-weight:700;line-height:1.2;color:#3E3646">{{ st.name }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;border:2px dashed rgba(23,19,28,.35);background:rgba(255,255,255,.7)">
+                  <span style="width:40px;height:40px;border-radius:12px;background:#FFE48A;border:2px solid #17131C;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v4a5 5 0 0 1-10 0z" fill="none" stroke="#17131C" stroke-width="2.4" stroke-linejoin="round"></path><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7" fill="none" stroke="#17131C" stroke-width="2.4" stroke-linecap="round"></path></svg></span>
+                  <span style="display:flex;flex-direction:column"><span style="font-size:13.5px;font-weight:800">Trang đủ: mọi cảnh ở quán Mei</span><span style="font-size:12px;font-weight:600;color:#5D5366">Còn 2 cảnh. Đủ trang, bạn nhận một món kỷ niệm trong hang.</span></span>
+                </div>
+              </div>
+            </sc-if>
+          </sc-if>
+
+          <sc-if value="{{ a.isDetail }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:58px;left:16px;display:flex;align-items:center;height:36px;padding:0 12px;border-radius:18px;background:#FFFFFF;border:1.5px solid rgba(23,19,28,.16);font-size:13px;font-weight:800">‹ Lễ hội Natterwick</div>
+            <div style="position:absolute;top:104px;left:85px;width:220px;height:220px;animation:yfloat 3s ease-in-out infinite">{{ lanternLimited }}</div>
+            <div style="position:absolute;top:330px;left:20px;right:20px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center">
+              <span style="font-size:11px;font-weight:800;letter-spacing:.06em;padding:4px 10px;border-radius:10px;background:#FFD66B;border:2px solid #17131C">THEO MÙA · ĐÊM LẠNH ĐẦU TIÊN</span>
+              <span style="font-size:36px;font-weight:900;letter-spacing:-0.05em;line-height:1.15">lantern</span>
+              <span style="font-family:'Kithfield Hand',cursive;font-size:22px;color:#5B4A8C">đèn lồng</span>
+              <span style="font-size:13.5px;font-weight:600;line-height:1.4;color:#3E3646;max-width:320px">Chỉ có trong lễ hội Đêm lạnh đầu tiên của Natterwick. Lỡ năm nay? Năm sau nó quay lại.</span>
+            </div>
+            <div style="position:absolute;top:548px;left:14px;right:14px;display:flex;flex-direction:column;gap:6px;padding:12px;border-radius:22px;background:#FFFFFF;border:2.5px solid #17131C">
+              <span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366;padding-left:2px">BA LOẠI, ĐỀU DO CHƠI MÀ CÓ</span>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+                <sc-for list="{{ tiers }}" as="tr" hint-placeholder-count="3">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><div style="width:72px;height:72px">{{ tr.el }}</div><span style="font-size:12.5px;font-weight:800">{{ tr.name }}</span><span style="font-size:10.5px;font-weight:600;line-height:1.3;color:#5D5366">{{ tr.how }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:12px;border-radius:40px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <button style="height:52px;border-radius:26px;border:3px solid #17131C;background:#FFE48A;box-shadow:0 4px 0 #17131C;font:800 15px Lexend,sans-serif;color:#17131C;cursor:pointer">Nghe Pip đọc</button>
+              <button style="height:52px;border-radius:26px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.85);font:800 15px Lexend,sans-serif;color:#17131C;cursor:pointer">Tìm thấy ở đâu</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ a.isDrop }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:#F9DAFB;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+            <div style="position:absolute;inset:0">{{ confetti }}</div>
+            <div style="position:absolute;top:84px;left:20px;right:20px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center">
+              <span style="font-size:12px;font-weight:800;letter-spacing:.06em;padding:4px 10px;border-radius:10px;background:#17131C;color:#fff;animation:ypop .5s ease-out both">BẤT NGỜ</span>
+              <span style="font-size:15px;font-weight:700;line-height:1.35;color:#3E3646">Hoá ra Hank mới là người cầm nhầm ô.</span>
+            </div>
+            <div style="position:absolute;top:168px;left:16px;right:16px;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:20px 20px 20px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;animation:yin .4s .3s ease-out both">
+              <span style="width:40px;height:40px;border-radius:20px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ hankFace }}</span>
+              <span style="display:flex;flex-direction:column;gap:1px"><span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800">Hank<span style="padding:1px 4px;border-radius:5px;background:#17131C;color:#fff;font-size:9px">AI</span></span><span style="font-size:16px;font-weight:700;line-height:1.3">Sorry, kid. A teapot for Mei, to say sorry.</span></span>
+            </div>
+            <div style="position:absolute;top:262px;left:65px;width:260px;height:260px;animation:yspin .9s .5s cubic-bezier(.3,.7,.4,1) both">{{ teapotRare }}</div>
+            <span style="position:absolute;top:262px;left:50px;font-size:30px;color:#22BFF2;animation:ysp 1.4s ease-out infinite">✦</span>
+            <span style="position:absolute;top:470px;left:318px;font-size:24px;color:#FFD66B;animation:ysp 1.6s .4s ease-out infinite">✦</span>
+            <div style="position:absolute;top:528px;left:20px;right:20px;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">
+              <span style="font-size:11px;font-weight:800;letter-spacing:.06em;padding:4px 10px;border-radius:10px;background:#CFF0FD;border:2px solid #17131C">HIẾM · CHỈ CÓ TRONG CẢNH BẤT NGỜ</span>
+              <span style="font-size:36px;font-weight:900;letter-spacing:-0.05em;line-height:1.2">teapot</span>
+              <span style="font-family:'Kithfield Hand',cursive;font-size:22px;color:#5B4A8C">ấm trà</span>
+            </div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <span style="font-size:12px;font-weight:700;text-align:center;color:#5D5366">Món hiếm chỉ đến từ việc chơi. Không bao giờ được bán.</span>
+              <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Cất vào album</button>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const AS=[
+  {id:'A1',label:'By topic · shelves, with rarity',k:'topics'},
+  {id:'A2',label:'By place · the sets you have visited',k:'places'},
+  {id:'A3',label:'A seasonal item · First Cold Night',k:'detail'},
+  {id:'A4',label:'A rare drop · right after the twist',k:'drop'}
+];
+const SHELVES=[
+  ['Đồ uống','4 / 12',[['bubble-tea','bubble tea','common'],['iced-coffee','iced coffee','common'],['teapot','teapot','rare','mint'],['kettle','kettle','common']]],
+  ['Thời tiết','1 / 8',[['umbrella','umbrella','common','butter'],null,null,null]],
+  ['Lễ hội Natterwick','1 / 6',[['lantern','lantern','limited','butter'],null,null,null]],
+  ['Nhà','5 / 40',[['desk-lamp','desk lamp','common'],['armchair','armchair','common'],['monstera','monstera','common'],['cactus','cactus','common']]]
+];
+const RAIN=[{id:'umbrella',x:182,y:410,s:.85,v:'butter'},{id:'umbrella',x:228,y:410,s:.68,v:'butter'},{id:'umbrella',x:268,y:410,s:.85,v:'cyan'}];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const A=window.YapArt, K=(window.YapDC&&A&&A.r7)?window.YapDC(React):null; if(!K) return {as:[],shelves:[],places:[],tiers:[]};
+    const t=K.tk(250);
+    const tab=on=>on?{bg:'#FFFFFF',bd:'2.5px solid #17131C',sh:'0 3px 0 #17131C'}:{bg:'transparent',bd:'none',sh:'none'};
+    const scene=(scn,so,props)=>K.sc('place',390,844,{scene:scn,so,props});
+    const set=(name,el,dy)=>({name,el,found:true,locked:false,dx:'-8px',dy:(dy||-58)+'px',bd:'2px solid #17131C'});
+    const lock=name=>({name,el:null,found:false,locked:true,dx:'0px',dy:'0px',bd:'1.5px dashed rgba(23,19,28,.3)'});
+    return {
+      pipFace:K.fc('redpanda',50,'happy','#F9DAFB'), hankFace:K.fc('raccoon',40,'happy','#E8E4EE'),
+      shelves:SHELVES.map(([title,n,items])=>({title,n,items:items.map((it,i)=>it?{word:it[1],ink:'#17131C',bd:'none',el:K.sc('collect',60,60,{id:it[0],rarity:it[2],v:it[3],season:'cold-night',t:it[2]==='common'?0:t})}:{word:'?',ink:'#B9B0C4',bd:'1.5px dashed rgba(23,19,28,.25)',el:null})})),
+      places:[
+        {name:'Quán Mei',n:'3 / 5 cảnh',sets:[set('Sáng',scene('cafe7',{look:'morning'},[{id:'teapot',x:184,y:410,s:.5,v:'lilac'},{id:'bubble-tea',x:228,y:410,s:.85}])),set('Tối mưa',scene('cafe7',{look:'rain'},RAIN)),set('Đêm lạnh',scene('cafe7',{look:'coldnight'},[{id:'lantern',x:182,y:410,s:.9,lit:true}])),lock('?'),lock('?')]},
+        {name:'Market Lane',n:'2 / 4 cảnh',sets:[set('Sáng',scene('market7',{tod:'morning'},[{id:'watermelon',x:176,y:513,s:.85}]),-80),set('Hội chợ mưa',scene('market7',{tod:'rain',fair:true},[{id:'umbrella',x:176,y:513,s:.85,v:'coral'}]),-80),lock('?'),lock('?')]}
+      ],
+      lanternLimited:K.sc('collect',220,220,{id:'lantern',v:'butter',rarity:'limited',season:'cold-night',t}),
+      tiers:[['common','Thường','gặp trong truyện'],['rare','Hiếm','cảnh bất ngờ, cột mốc'],['limited','Theo mùa','lễ hội Natterwick']].map(([r,name,how])=>({name,how,el:K.sc('collect',72,72,{id:'bubble-tea',rarity:r,season:'cold-night',t:r==='common'?0:t})})),
+      confetti:K.sc('confetti',390,844,{t}), teapotRare:K.sc('collect',260,260,{id:'teapot',v:'mint',rarity:'rare',t}),
+      as:AS.map(s=>({id:s.id,label:s.label,isList:s.k==='topics'||s.k==='places',isTopics:s.k==='topics',isPlaces:s.k==='places',isDetail:s.k==='detail',isDrop:s.k==='drop',
+        count:'41 món · 6 nơi đã ghé',tab1:tab(s.k==='topics'),tab2:tab(s.k==='places')}))
+    };
+  }
+}
+</script>
+</body>
+</html>

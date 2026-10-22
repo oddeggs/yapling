@@ -43,7 +43,7 @@ in calls    live          Haiku fills the `gen` beats, as today
 
 ### (a) The level guide
 
-The level guide is data in `packages/domain`: one record per stage. The agent reads its row, and code uses the same row to check the result. It extends the speech settings we already have (`SPEECH_SETTINGS`, the cast bible's stage table) and doesn't change them. The vocabulary bands come from an open-licence frequency list (NGSL 1.2 and its spoken list), plus Natterwick's names and the season's phrases. The CEFR-tagged English Vocabulary Profile would be better, but its licence doesn't let us bundle it.
+The level guide is data in `packages/domain`: one record per stage. The agent reads its row, and code uses the same row to check the result. It extends the speech settings we already have (`SPEECH_SETTINGS`, the cast bible's stage table) and doesn't change them. The vocabulary bands come from the CEFR-J Wordlist 1.6 (Tokyo University of Foreign Studies; bundling and changes allowed with a citation, recorded in `packages/domain/data/README.md`), plus Natterwick's own words (`town-words.json`: names, places, interjections, idioms). NGSL is share-alike with no CEFR bands, and the English Vocabulary Profile can't be bundled. Built: `LEVEL_GUIDE` in `packages/domain/src/level-guide.ts` and `checkLevel` in `packages/story/src/level-check.ts`.
 
 **Visitor** (A0–A1)
 

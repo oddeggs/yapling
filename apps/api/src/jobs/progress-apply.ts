@@ -16,7 +16,7 @@ import {
   noteRecurringError,
   recordPhraseUse,
   recordSelfCorrection,
-  ringWeeks,
+  seasonRingWeeks,
   tickCanDo,
   fromErrorTargetProgress,
   fromPhraseProgress,
@@ -24,8 +24,9 @@ import {
   toPhraseProgress,
   weekKeepsakeToWire,
   type ErrorTargetRecord,
+  type SeasonWeeks,
 } from '@yapling/domain';
-import { findPhrase } from '@yapling/story';
+import { EPISODES, findPhrase, VISITOR_VERSIONS } from '@yapling/story';
 
 import { ERROR_TARGETS } from '../call/targets';
 import type { LearnerLine } from '../call/transcript';
@@ -36,7 +37,23 @@ import type { Draft } from './summary';
  * scene's phrases met and the ones used growing, self-corrections on active error targets (and
  * recurring errors queued), can-dos ticked with their witness and keepsake, and the week's ring
  * slot filled.
+ *
+ * The ring follows the learning model's rule: the rings are opened to the story day the call ended
+ * on, each slot tied to its week's scene, and a call fills the open slot whose scene it played (a
+ * slot the story names no scene for takes any call of its kind, oldest first). So Episode 3
+ * played in week 4 fills ring 3, and a replay of Episode 1 finishes nothing.
  */
+
+/** The season's weeks the rings are read from, week 1 first. */
+export const SEASON_WEEKS: SeasonWeeks = EPISODES;
+
+/** A Visitor version stands in for its scene: it fills that scene's slot. */
+const STANDS_IN_FOR: ReadonlyMap<string, string> = new Map(
+  Object.entries(VISITOR_VERSIONS).map(([scene, version]) => [version, scene]),
+);
+
+/** The scene a call's slot is named by. */
+export const ringSceneOf = (sceneId: string): string => STANDS_IN_FOR.get(sceneId) ?? sceneId;
 
 export interface CallFacts {
   readonly callId: string;
@@ -44,6 +61,8 @@ export interface CallFacts {
   readonly kind: CallKind;
   readonly endedAt: number;
   readonly timezone: string;
+  /** The day of the story the call ended on (day 1 is the story's first), for the rings. */
+  readonly storyDay: number;
   readonly scenePhrases: readonly string[];
   readonly sceneCast: readonly CharacterId[];
   readonly learnerLines: readonly LearnerLine[];
@@ -142,15 +161,15 @@ export function applyCall(current: Progress, facts: CallFacts): ProgressChange {
     evidence.push({ canDoId: definition.id, quote: item.quote, witness });
   }
 
-  // The ring: an episode, real-week or practice call fills its week's slot.
-  let weeks = ringWeeks(current.weeks, current.dayIndex);
+  // The ring: an episode, real-week or practice call fills its scene's slot.
+  let weeks = seasonRingWeeks(current.weeks, facts.storyDay, SEASON_WEEKS);
   const kind = (RING_SLOT_KINDS as readonly string[]).includes(facts.kind)
     ? (facts.kind as (typeof RING_SLOT_KINDS)[number])
     : null;
   if (kind !== null) {
     const filled = fillRingSlot(
       weeks,
-      { kind, callRecordId: facts.callId, doneAt: endedAt },
+      { kind, callRecordId: facts.callId, doneAt: endedAt, sceneId: ringSceneOf(facts.sceneId) },
       timezone,
     );
     weeks = filled.weeks;

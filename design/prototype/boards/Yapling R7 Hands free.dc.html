@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R7 · Hands-free call</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes ylow{0%,100%{transform:scaleY(.18)}50%{transform:scaleY(.34)}}
+@keyframes ybar{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+@keyframes yorb{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 6px rgba(95,217,138,.45)}50%{box-shadow:0 4px 0 #17131C,0 0 0 14px rgba(95,217,138,.12)}}
+@keyframes ysoftpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-r7.js?v=1"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#5FD98A;border:2px solid #17131C"></span>Yapling · Round 7 · Calls · 9 · shipping now</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12"><span style="background:#5FD98A;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">Hands-free</span> call</div>
+      <div style="font-size:17px;font-weight:700;max-width:1100px;line-height:1.35;color:#3E3646">The call listens without you holding the mic. A gentle level shows it hears you, a pause never cuts you off, and "Xong" ends your turn when you're done. One tap switches back to hold-to-talk, for noisy places or for anyone who prefers it. Mint marks listening; the pink hold mic from Round 6 stays as it was.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R7 Shop.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ The shop</a>
+      <a href="Yapling R6 Hold.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Round 6 · Hold-to-talk</a>
+      <a href="Yapling R7 Flow.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Back to the flow strip ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ fs }}" as="f" hint-placeholder-count="4">
+      <div data-screen-label="{{ f.id }} Hands-free" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ f.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ f.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#F9DAFB;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+          <div style="position:absolute;inset:0">{{ rainBack }}</div>
+          <div style="position:absolute;left:-10px;top:258px">{{ f.mei }}</div>
+          <div style="position:absolute;left:286px;top:330px">{{ f.pip }}</div>
+          <div style="position:absolute;inset:0;pointer-events:none">{{ rainFront }}</div>
+
+          <div style="position:absolute;top:58px;left:62px;display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 5px;border-radius:20px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);z-index:4"><span style="width:30px;height:30px;border-radius:15px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ meiFace }}</span><span style="font-size:14px;font-weight:800">Mei</span><span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800">AI</span><span style="font-size:12px;font-weight:600;color:#5D5366">Tuần 14 · Umbrella Mix-up</span></div>
+          <div style="position:absolute;top:110px;left:16px;right:16px;display:flex;flex-direction:column;gap:3px;padding:11px 15px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;z-index:4"><span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800">Mei<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px">AI</span></span><span style="font-size:18px;font-weight:700;line-height:1.32">Two yellow umbrellas! Which one is yours, Lan?</span></div>
+
+          <sc-if value="{{ f.isCall }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;z-index:6">
+              <sc-if value="{{ f.hasYou }}" hint-placeholder-val="{{ false }}"><div style="align-self:flex-end;max-width:300px;padding:9px 14px;border-radius:20px 20px 6px 20px;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.95);box-shadow:0 8px 22px rgba(46,20,70,.14)"><span style="display:block;font-size:10.5px;font-weight:800;letter-spacing:.05em;color:#5D5366">BẠN · NGHE ĐƯỢC</span><span style="font-size:16.5px;font-weight:700;line-height:1.35">{{ f.you }}</span></div></sc-if>
+              <div style="align-self:center;display:flex;align-items:center;gap:8px;min-height:40px;padding:6px 14px;border-radius:20px;background:rgba(255,255,255,.85);border:1px solid #fff;box-shadow:0 6px 16px rgba(46,20,70,.14);animation:yin .4s ease-out both"><span style="width:10px;height:10px;border-radius:5px;background:#5FD98A;border:2px solid #17131C;flex:none"></span><span style="font-size:14px;font-weight:800;line-height:1.3">{{ f.status }}</span></div>
+              <div style="height:112px;border-radius:56px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+                <button aria-label="Chuyển sang giữ để nói" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:64px;width:92px;border-radius:24px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 11.5px Lexend,sans-serif;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="#17131C" stroke-width="2.4"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" fill="none" stroke="#17131C" stroke-width="2.4" stroke-linecap="round"></path></svg>Giữ để nói</button>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+                  <div role="img" aria-label="{{ f.levelAria }}" style="width:84px;height:84px;border-radius:50%;background:#D7F7E2;border:3px solid #17131C;animation:{{ f.orb }};display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box">
+                    <sc-for list="{{ f.bars }}" as="b" hint-placeholder-count="7"><span style="width:5px;height:{{ b.h }};border-radius:3px;background:#17131C;animation:{{ b.a }};animation-delay:{{ b.d }};transform-origin:50% 50%"></span></sc-for>
+                  </div>
+                  <span style="font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap">Đang nghe · rảnh tay</span>
+                </div>
+                <button style="height:64px;width:92px;border-radius:24px;border:{{ f.done.bd }};background:{{ f.done.bg }};box-shadow:{{ f.done.sh }};color:#17131C;font:800 16px Lexend,sans-serif;cursor:pointer;animation:{{ f.done.anim }}">Xong</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ f.isSheet }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:rgba(23,19,28,.3);z-index:5"></div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:20px 16px 16px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.95);border:1px solid #fff;box-shadow:0 -10px 40px rgba(46,20,70,.25);z-index:6;animation:yup .4s ease-out both">
+              <span style="font-size:22px;font-weight:800;letter-spacing:-0.03em;padding:0 4px">Cách nói trong cuộc gọi</span>
+              <sc-for list="{{ modes }}" as="m" hint-placeholder-count="2">
+                <button role="radio" aria-checked="{{ m.ariaOn }}" style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:22px;border:{{ m.bd }};background:{{ m.bg }};box-shadow:{{ m.sh }};text-align:left;cursor:pointer;font-family:Lexend,sans-serif;color:#17131C">
+                  <span style="width:46px;height:46px;border-radius:23px;background:{{ m.dot }};border:2.5px solid #17131C;display:flex;align-items:center;justify-content:center;gap:3px;flex:none"><sc-for list="{{ m.mini }}" as="x" hint-placeholder-count="3"><span style="width:4px;height:{{ x }};border-radius:2px;background:#17131C"></span></sc-for></span>
+                  <span style="display:flex;flex-direction:column;gap:2px;flex:1"><span style="font-size:16px;font-weight:800">{{ m.name }}</span><span style="font-size:12.5px;font-weight:600;line-height:1.35;color:#3E3646">{{ m.how }}</span></span>
+                  <span style="width:24px;height:24px;border-radius:12px;border:2.5px solid #17131C;background:#FFFFFF;display:flex;align-items:center;justify-content:center;box-sizing:border-box;flex:none"><span style="width:12px;height:12px;border-radius:6px;background:{{ m.tick }}"></span></span>
+                </button>
+              </sc-for>
+              <span style="font-size:12.5px;font-weight:700;color:#5D5366;padding:0 4px">Đổi bất cứ lúc nào, kể cả giữa cuộc gọi. Cài đặt mặc định ở trang Tôi.</span>
+              <button style="height:52px;border-radius:26px;border:3px solid #17131C;background:#5FD98A;box-shadow:0 4px 0 #17131C;font:800 16px Lexend,sans-serif;color:#17131C;cursor:pointer">Xong</button>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const FS=[
+  {id:'F1',label:'Your turn · listening, no mic to hold',k:'wait',status:'Đang nghe… nói xong mình sẽ trả lời',level:'low'},
+  {id:'F2',label:'You speak · a gentle level, live words',k:'speak',status:'Mình đang nghe bạn',level:'speak',you:'Mine is the small…',done:'hot'},
+  {id:'F3',label:'A long pause · still listening, no timer',k:'pause',status:'Cứ từ từ. Mình vẫn đang nghe.',level:'flat',you:'Mine is the small yellow… um…',done:'soft'},
+  {id:'F4',label:'Switch back to hold-to-talk',k:'sheet'}
+];
+const H=[18,30,40,48,40,30,18];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const A=window.YapArt, K=(window.YapDC&&A&&A.r7)?window.YapDC(React):null; if(!K) return {fs:[],modes:[]};
+    const {b1,b2}=K.blinkers(this.state.bt), t=K.tk(250);
+    const DONE={hot:{bg:'#5FD98A',bd:'3px solid #17131C',sh:'0 4px 0 #17131C',anim:'none'},soft:{bg:'#D7F7E2',bd:'3px solid #17131C',sh:'0 4px 0 #17131C',anim:'ysoftpulse 2.4s ease-in-out infinite'},off:{bg:'rgba(255,255,255,.8)',bd:'1px solid rgba(255,255,255,.9)',sh:'none',anim:'none'}};
+    const bars=lv=>H.map((h,i)=>({h:h+'px',a:lv==='speak'?'ybar .55s ease-in-out infinite':lv==='low'?'ylow 2.4s ease-in-out infinite':'none',d:(i*0.09)+'s'})).map(b=>lv==='flat'?Object.assign(b,{h:'6px'}):b);
+    const mode=(name,how,on,dot,mini)=>({name,how,ariaOn:on?'true':'false',bd:on?'3px solid #17131C':'1.5px solid rgba(23,19,28,.16)',bg:on?'#D7F7E2':'#FFFFFF',sh:on?'0 4px 0 #17131C':'none',tick:on?'#17131C':'transparent',dot,mini});
+    return {
+      rainBack:K.sc('place',390,844,{scene:'cafe7b',so:{look:'rain',t},props:[{id:'umbrella',x:182,y:410,s:.85,v:'butter'},{id:'umbrella',x:228,y:410,s:.68,v:'butter'},{id:'umbrella',x:268,y:410,s:.85,v:'cyan'}]}),
+      rainFront:K.sc('cafeFront7',390,844,{look:'rain'}), meiFace:K.fc('otter',30,'happy','#FFE9C2'),
+      modes:[mode('Rảnh tay','Tự nghe khi bạn nói. Chạm "Xong" khi nói hết, hoặc cứ im lặng một lúc.',true,'#D7F7E2',['8px','14px','8px']),mode('Giữ để nói','Giữ nút khi nói, thả ra là xong. Hợp chỗ ồn.',false,'#EFA3F4',['14px','14px','14px'])],
+      fs:FS.map((s,i)=>({id:s.id,label:s.label,isCall:s.k!=='sheet',isSheet:s.k==='sheet',status:s.status||'',hasYou:!!s.you,you:s.you||'',
+        bars:bars(s.level||'low'),orb:s.level==='flat'?'none':'yorb 2s ease-in-out infinite',levelAria:s.level==='speak'?'Đang nghe giọng bạn':'Đang chờ bạn nói',done:DONE[s.done||'off'],
+        mei:K.cr('otter',{size:170,mood:'listen',blink:b1,k:'hm'+i}),pip:K.cr('redpanda',{size:100,mood:'listen',blink:b2,k:'hp'+i})}))
+    };
+  }
+}
+</script>
+</body>
+</html>
