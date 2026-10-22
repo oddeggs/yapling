@@ -1,5 +1,9 @@
 import type { PipsMinuteLines, SeasonWeeks } from '@yapling/domain';
-import { EPISODES } from '@yapling/story';
+import {
+  PIPS_MINUTE_LINES as STORY_PIPS_MINUTE_LINES,
+  SEASON_1,
+  seasonWeeks,
+} from '@yapling/story';
 
 /*
  * The story the phone reads the learner's weeks from: the season's weeks, week 1 first (each one's
@@ -8,10 +12,7 @@ import { EPISODES } from '@yapling/story';
  */
 
 /** The season's weeks, week 1 first. */
-export const SEASON_WEEKS: SeasonWeeks = EPISODES;
+export const SEASON_WEEKS: SeasonWeeks = seasonWeeks(SEASON_1);
 
-/**
- * Which phrases have Pip's-minute lines (a set-up, a slightly-wrong line). Left empty, every phrase
- * has both, until the story names them.
- */
-export const PIPS_MINUTE_LINES: PipsMinuteLines = {};
+/** Which phrases have Pip's-minute lines (a set-up, a slightly-wrong line). */
+export const PIPS_MINUTE_LINES: PipsMinuteLines = STORY_PIPS_MINUTE_LINES;
