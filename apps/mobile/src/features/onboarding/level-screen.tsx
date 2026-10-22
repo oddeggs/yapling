@@ -13,6 +13,7 @@ import {
   translucent,
   type,
 } from '@yapling/theme';
+import { useState } from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -37,6 +38,12 @@ import { SheetScroll } from './sheets';
 
 /** Where the sheet starts; on a short screen what doesn't fit scrolls above "Continue". */
 const SHEET_TOP = 318;
+/**
+ * Under this height (the iPhone SE) the sheet starts right under Linh's bubble instead, so both
+ * choices are in sight above "Continue"; Linh peeks over its edge.
+ */
+const SHORT_SCREEN = 720;
+const UNDER_BUBBLE = 10;
 const CHOICE_ART = 56;
 
 /** The progress dots: this is step 3 of the 5 before the burrow. */
@@ -95,8 +102,16 @@ export function LevelScreen({
   onPick,
   onContinue,
 }: LevelScreenProps) {
-  const { u } = useScale();
+  const { u, height } = useScale();
   const shift = useTopShift();
+  const short = height < SHORT_SCREEN;
+  // Measured once, from Linh's first line: her later lines are no longer, so the sheet never moves.
+  const [bubbleBottom, setBubbleBottom] = useState<number | null>(null);
+  const sheetTop = !short
+    ? SHEET_TOP + shift
+    : bubbleBottom === null
+      ? null
+      : Math.min(SHEET_TOP + shift, bubbleBottom + UNDER_BUBBLE);
   const peek = useKeyframes(motion.screens.infoHero);
   // The bubble eases in after Linh, and again each time her line changes.
   const bubbleIn = useKeyframes(
@@ -119,63 +134,69 @@ export function LevelScreen({
           { position: 'absolute', top: 98 + shift, left: 18, width: 232, zIndex: 3 },
           bubbleIn,
         ]}
+        onLayout={(e) => {
+          const { y, height: h } = e.nativeEvent.layout;
+          if (bubbleBottom === null) setBubbleBottom(y + h);
+        }}
         accessible
         accessibilityLiveRegion="polite"
         accessibilityLabel={sentences(`${linh.name}, ${linh.aiTag}: ${linh.en}`, linh.gloss)}
       >
         <LinhBubble {...linh} />
       </Animated.View>
-      <GlassSheet
-        kind="info"
-        top={SHEET_TOP + shift}
-        entrance={motion.screens.infoSheet}
-        style={{ paddingHorizontal: 16, gap: 0 }}
-      >
-        <SheetScroll gap={10}>
-          <Txt variant="kicker" colour={colours.textMuted} style={{ paddingHorizontal: 4 }}>
-            {kicker}
-          </Txt>
-          <Txt
-            variant={{ ...type.sheetTitle, lineHeight: 1.18 }}
-            accessibilityRole="header"
-            style={{ paddingHorizontal: 4 }}
-          >
-            {title}
-          </Txt>
-          <Txt
-            variant={{ ...type.body, size: 14, lineHeight: 1.35 }}
-            colour={colours.textBody}
-            style={{ paddingHorizontal: 4 }}
-          >
-            {sub}
-          </Txt>
-          <View accessibilityRole="radiogroup" style={{ gap: 10, marginTop: 4 }}>
-            {choices.map((c) => (
-              <Choice
-                key={c.path}
-                choice={c}
-                picked={c.path === picked}
-                onPress={() => onPick(c.path)}
-              />
-            ))}
+      {sheetTop === null ? null : (
+        <GlassSheet
+          kind="info"
+          top={sheetTop}
+          entrance={motion.screens.infoSheet}
+          style={{ paddingHorizontal: 16, gap: 0 }}
+        >
+          <SheetScroll gap={10}>
+            <Txt variant="kicker" colour={colours.textMuted} style={{ paddingHorizontal: 4 }}>
+              {kicker}
+            </Txt>
+            <Txt
+              variant={{ ...type.sheetTitle, lineHeight: 1.18 }}
+              accessibilityRole="header"
+              style={{ paddingHorizontal: 4 }}
+            >
+              {title}
+            </Txt>
+            <Txt
+              variant={{ ...type.body, size: 14, lineHeight: 1.35 }}
+              colour={colours.textBody}
+              style={{ paddingHorizontal: 4 }}
+            >
+              {sub}
+            </Txt>
+            <View accessibilityRole="radiogroup" style={{ gap: 10, marginTop: 4 }}>
+              {choices.map((c) => (
+                <Choice
+                  key={c.path}
+                  choice={c}
+                  picked={c.path === picked}
+                  onPress={() => onPick(c.path)}
+                />
+              ))}
+            </View>
+            <Txt
+              variant={{ ...type.noteStrong, lineHeight: 1.35 }}
+              colour={colours.textMuted}
+              accessibilityLiveRegion="polite"
+              style={{ minHeight: 36, paddingTop: 2, paddingHorizontal: 6 }}
+            >
+              {note}
+            </Txt>
+          </SheetScroll>
+          <View style={{ paddingTop: 10 }}>
+            {picked === null ? (
+              <WaitingButton label={cta} />
+            ) : (
+              <StickerButton label={cta} onPress={onContinue} />
+            )}
           </View>
-          <Txt
-            variant={{ ...type.noteStrong, lineHeight: 1.35 }}
-            colour={colours.textMuted}
-            accessibilityLiveRegion="polite"
-            style={{ minHeight: 36, paddingTop: 2, paddingHorizontal: 6 }}
-          >
-            {note}
-          </Txt>
-        </SheetScroll>
-        <View style={{ paddingTop: 10 }}>
-          {picked === null ? (
-            <WaitingButton label={cta} />
-          ) : (
-            <StickerButton label={cta} onPress={onContinue} />
-          )}
-        </View>
-      </GlassSheet>
+        </GlassSheet>
+      )}
     </View>
   );
 }

@@ -17,12 +17,14 @@ import {
   useKeyframes,
   useLocale,
 } from '../../ui';
-import { BlurredScene, useScale } from './art';
+import { BlurredScene, useScale, useTopShift } from './art';
+import { SheetScroll } from './sheets';
 
 /*
  * Notifications, asked in context: "Want Pip to call when something happens in town?", the quiet
  * hours (on by default, 22:00–08:00, editable), "Allow notifications" and "Not now". Either way the
- * evening goes on.
+ * evening goes on. On a short screen (the iPhone SE) the rows scroll above the two buttons, which
+ * stay in reach.
  */
 
 /** The quiet hours offered when the learner changes them. */
@@ -56,6 +58,7 @@ export function NotificationsScreen({
 }: NotificationsScreenProps) {
   const { t } = useLocale();
   const { u } = useScale();
+  const shift = useTopShift();
   const hero = useKeyframes(motion.screens.infoHero);
   const [editing, setEditing] = useState(false);
   const range = t('common.timeRange', { from: quietHours.start, to: quietHours.end });
@@ -68,47 +71,52 @@ export function NotificationsScreen({
           accessibilityLabel={t('common.a11y.back')}
           style={{ position: 'absolute', top: layout.topBar, left: layout.marginScreen }}
         />
-        <Animated.View style={[{ position: 'absolute', top: 96, left: u(120) }, hero]}>
+        <Animated.View style={[{ position: 'absolute', top: 96 + shift, left: u(120) }, hero]}>
           <Critter character="pip" species={species} mood="excited" size={150} />
         </Animated.View>
-        <GlassSheet kind="info" top={300} entrance={motion.screens.infoSheet}>
-          <Txt variant="kicker" colour={colours.textMuted}>
-            {t('onboarding.notifications.kicker')}
-          </Txt>
-          <Txt variant="sheetTitle" accessibilityRole="header">
-            {t('onboarding.notifications.title', { name: roommateName })}
-          </Txt>
-          <Txt variant="body" colour={colours.textBody}>
-            {t('onboarding.notifications.body')}
-          </Txt>
-          <ToggleRow
-            title={t('onboarding.notifications.quietHours')}
-            subtitle={range}
-            on={quietOn}
-            onChange={onQuietOn}
-          />
-          {quietOn && !editing ? (
-            <View style={{ alignItems: 'flex-end' }}>
-              <Chip label={t('onboarding.notifications.change')} onPress={() => setEditing(true)} />
-            </View>
-          ) : null}
-          {quietOn && editing ? (
-            <View style={{ gap: 8 }}>
-              <TimeChoices
-                label={t('onboarding.notifications.from')}
-                options={STARTS}
-                chosen={quietHours.start}
-                onChoose={(start) => onQuietHours({ ...quietHours, start })}
-              />
-              <TimeChoices
-                label={t('onboarding.notifications.until')}
-                options={ENDS}
-                chosen={quietHours.end}
-                onChoose={(end) => onQuietHours({ ...quietHours, end })}
-              />
-            </View>
-          ) : null}
-          <View style={{ marginTop: 'auto', gap: 8 }}>
+        <GlassSheet kind="info" top={300 + shift} entrance={motion.screens.infoSheet}>
+          <SheetScroll gap={10}>
+            <Txt variant="kicker" colour={colours.textMuted}>
+              {t('onboarding.notifications.kicker')}
+            </Txt>
+            <Txt variant="sheetTitle" accessibilityRole="header">
+              {t('onboarding.notifications.title', { name: roommateName })}
+            </Txt>
+            <Txt variant="body" colour={colours.textBody}>
+              {t('onboarding.notifications.body')}
+            </Txt>
+            <ToggleRow
+              title={t('onboarding.notifications.quietHours')}
+              subtitle={range}
+              on={quietOn}
+              onChange={onQuietOn}
+            />
+            {quietOn && !editing ? (
+              <View style={{ alignItems: 'flex-end' }}>
+                <Chip
+                  label={t('onboarding.notifications.change')}
+                  onPress={() => setEditing(true)}
+                />
+              </View>
+            ) : null}
+            {quietOn && editing ? (
+              <View style={{ gap: 8 }}>
+                <TimeChoices
+                  label={t('onboarding.notifications.from')}
+                  options={STARTS}
+                  chosen={quietHours.start}
+                  onChoose={(start) => onQuietHours({ ...quietHours, start })}
+                />
+                <TimeChoices
+                  label={t('onboarding.notifications.until')}
+                  options={ENDS}
+                  chosen={quietHours.end}
+                  onChoose={(end) => onQuietHours({ ...quietHours, end })}
+                />
+              </View>
+            ) : null}
+          </SheetScroll>
+          <View style={{ gap: 8 }}>
             <StickerButton
               label={t('onboarding.notifications.allow')}
               onPress={onAllow}
