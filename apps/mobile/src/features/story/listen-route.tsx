@@ -4,7 +4,7 @@ import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 
 import { BURROW_ROUTES } from '../burrow/routes';
-import { useProgress, useSeen } from '../../data';
+import { useAppNow, useProgress, useSeen } from '../../data';
 import { useLocale } from '../../ui';
 import { useStoryLearner } from './learner';
 import { listenPlan } from './plan';
@@ -76,7 +76,9 @@ function StoryRoute({ sceneId, params }: { sceneId: string; params: Params }) {
     () => listenPlan(sceneId, learner.firstLanguage),
     [sceneId, learner.firstLanguage],
   );
-  const [postmark] = useState(() => postmarkDay(Date.now()));
+  // Stamped on the app's day (the test menu's, in the test builds).
+  const now = useAppNow(learner.timezone);
+  const [postmark] = useState(() => postmarkDay(now));
   const { markSeen } = useSeen();
   const { meetPhrase } = useProgress();
   const onSeed = useCallback(
