@@ -115,7 +115,8 @@
       "id": "s1-e2-08",
       "char": "pip",
       "text": "While you were away, I had my interview. Sol asked about me, then about you! And I got the job. Mostly thanks to you.",
-      "kind": "recap"
+      "kind": "recap",
+      "_vi": "Lúc bạn đi vắng, mình đã đi phỏng vấn. Sol hỏi về mình, rồi hỏi về bạn nữa! Và mình được nhận rồi. Phần lớn là nhờ bạn đó."
     },
     {
       "id": "s1-e3-01",
@@ -157,7 +158,8 @@
       "text": "Sit down. Someone wants to buy the café building, and you'll never guess who…",
       "kind": "voicemail",
       "name_splice": "before",
-      "_full": "{name}, sit down. … (beep SFX after)"
+      "_full": "{name}, sit down. … (beep SFX after)",
+      "_vi": "Ngồi xuống đã. Có người muốn mua lại toà nhà của quán, và bạn sẽ không đoán được là ai đâu…"
     },
     {
       "id": "s1-e3-08",
@@ -189,7 +191,8 @@
       "id": "s1-e4-05",
       "char": "nell",
       "text": "We need a hundred signatures by Friday. Pip's very excited. Pip's also never spoken to strangers. [amused] Good luck, love.",
-      "kind": "voicemail"
+      "kind": "voicemail",
+      "_vi": "Tụi mình cần một trăm chữ ký trước thứ Sáu. Pip háo hức lắm. Mà Pip cũng chưa từng nói chuyện với người lạ bao giờ. Chúc may mắn nhé."
     },
     {
       "id": "s1-e4-06",
@@ -227,7 +230,8 @@
       "id": "s1-e5-06",
       "char": "mei",
       "text": "A hundred names! The office says the town can vote on Saturday. In the square. In front of everyone. Will you speak for the café?",
-      "kind": "voicemail"
+      "kind": "voicemail",
+      "_vi": "Một trăm cái tên! Văn phòng nói thị trấn có thể bỏ phiếu vào thứ Bảy. Ở quảng trường. Trước mặt mọi người. Bạn sẽ lên tiếng cho quán chứ?"
     },
     {
       "id": "s1-e5-07",
@@ -264,7 +268,8 @@
       "id": "s1-e6-06",
       "char": "pip",
       "text": "While you were away… actually, no. I waited. The town meeting is today, and you're speaking. Ready?",
-      "kind": "recap"
+      "kind": "recap",
+      "_vi": "Lúc bạn đi vắng… à không, mình đã đợi bạn. Hôm nay là buổi họp thị trấn, và bạn sẽ phát biểu. Sẵn sàng chưa?"
     },
     {
       "id": "s1-e1-story-seagull",
