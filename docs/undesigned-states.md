@@ -65,3 +65,16 @@ States built from existing components because the design does not show them.
 | Residency card | First aims | The can-do catalogue's titles ("Ask someone what's wrong and offer help"), not the prototype's shorter wording |
 | Notifications | Changing the quiet hours | A small "Change" chip under the quiet hours row opens two rows of choice chips: from 21:00, 22:00 or 23:00, until 07:00, 08:00 or 09:00 |
 | Notifications | Pip's phone | The art's critter has no phone pose yet: Pip is drawn excited, without the phone |
+| Voice story | Before Pip reaches a line | The design shows the story's lines all at once. Each line of the story appears as Pip starts it, first line from the start; once the story has played they all stay |
+| Voice story | "Chờ chút" pressed | The design has the button, not the state. The audio and the caption stop where they are; the button inks over to "Tiếp tục" as in the call bar, and the story carries on from the same word |
+| Voice story | Duration in the top pill | The prototype says "0:40"; the pill shows the recording's own length ("0:29") |
+| Voice story | A line's gloss | The design shows the line cards closed. A tap opens the gloss under the line in the hand font (as the letter does) and toasts "Đã thêm vào hang thành gói hạt"; another tap closes it |
+| Postcard | Its gloss | A tap on the hand-written note opens the gloss under the signature, in the hand font |
+| Voicemail | Opening | Before the call's first frame the voicemail card shows with an idle waveform and the mic waits, white and grey |
+| Voicemail | Pip worked it out | The learner stayed quiet and Pip fixed its own phrase (the scene's fallback). The leaf sticker shows white with the phrase's current object and "Pip tự nhớ ra rồi"; nothing grows, nothing is lost |
+| Voicemail | Fix on the same day as the last use | The learning model keeps a sprout a sprout until another day: the sticker says "Đã nảy mầm" with the sprout, without the grow |
+| Voicemail | The line dropped or never opened | A glass note ("Đường dây đang rè. Thư thoại của Pip vẫn chờ bạn ở đây.") with a small "Thử lại" button under the pill; "Xem bản đồ mùa" stays available |
+| Season map | Finished episode | From the R5 journey board: a green pin with a small white keepsake card tilted at its top right |
+| Season map | Next episode already open | Without the day: "Help Wanted" alone, and "Tiếp tục" opens its call |
+| Season map | Season done | No next-episode card; the route is walked to the last pin |
+| End of an episode | Whole screen | Designed (hub/epend) but not built in this release: it needs a per-episode cliffhanger scene and a "Remind me" knock for the next episode. Release 2 |
