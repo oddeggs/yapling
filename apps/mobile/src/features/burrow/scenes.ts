@@ -1,9 +1,11 @@
 import type { Character, TimeOfDay } from '@yapling/art';
 import type { FirstLanguage, Roommate } from '@yapling/contracts';
+import { nextEpisodeWeek } from '@yapling/domain';
 import { translator } from '@yapling/i18n';
 import { CAST, getLine, glossFor, recapLine, SEASON_1 } from '@yapling/story';
 
 import type { BurrowInput, LineModel } from './model';
+import { SEASON_WEEKS } from './ring-scenes';
 import { timeOfDayAt } from './time-of-day';
 
 /*
@@ -68,9 +70,11 @@ export interface BackModel {
 
 const en = translator('en');
 
-/** Episodes finished: week N's episode call is Episode N. */
-export const finishedEpisodes = (input: Pick<BurrowInput, 'progress'>): number =>
-  input.progress.weeks.filter((w) => w.slots[0]?.status === 'done').length;
+/** The next episode to play (each episode fills its own week's ring); null after the season. */
+const nextEpisode = (input: Pick<BurrowInput, 'progress'>) => {
+  const week = nextEpisodeWeek(SEASON_WEEKS, input.progress.weeks);
+  return week === null ? null : (SEASON_1.episodes[week - 1] ?? null);
+};
 
 /**
  * Coming back. On day 8 Pip asks how the week was; after days away Pip tells the story so far (the
@@ -78,8 +82,7 @@ export const finishedEpisodes = (input: Pick<BurrowInput, 'progress'>): number =
  * is no story yet to recap, Pip just says it kept the learner's seat warm.
  */
 export function backModel(input: BurrowInput): BackModel {
-  const done = finishedEpisodes(input);
-  const next = SEASON_1.episodes[done] ?? null;
+  const next = nextEpisode(input);
   const guest = next?.cast.find((c) => c !== 'pip');
   const peek: EpisodePeek | null =
     next !== null

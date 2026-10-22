@@ -11,6 +11,7 @@ import {
   type,
 } from '@yapling/theme';
 import type { Href } from 'expo-router';
+import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -41,11 +42,14 @@ export interface BurrowHomeScreenProps {
   readonly onOpenWeek?: () => void;
   /** The card's button, and the primary button: where they lead. */
   readonly onNavigate?: (to: Href) => void;
+  /** The top card was shown (kept, so tomorrow's card is a different one). */
+  readonly onShown?: (cardId: string) => void;
 }
 
 /** Where the prototype puts the room's things, in its 390-point units. */
 const PLACE = {
   me: { size: 52, face: 46 },
+  chip: { height: 44, face: 30 },
   card: { top: 120 },
   shelves: { top: 323, labels: 412, left: { x: 22, slot: 56 }, right: { x: 216, slot: 52 } },
   mailbox: { left: 236, top: 515, size: 56 },
@@ -66,10 +70,16 @@ export function BurrowHomeScreen({
   onOpenMe,
   onOpenWeek,
   onNavigate,
+  onShown,
 }: BurrowHomeScreenProps) {
   const { t } = useLocale();
   const { u, y, height } = useStage();
   const pip = model.roommate;
+  const cardId = model.delta.id;
+  useEffect(() => {
+    onShown?.(cardId);
+    // Once per card: the callback's identity changes with every render of the route.
+  }, [cardId]);
   return (
     <BurrowBackdrop
       scene={model.scene}
@@ -138,6 +148,15 @@ export function BurrowHomeScreen({
         </Sticker>
       </Press>
 
+      {model.chip ? (
+        <PipsMinuteChip
+          label={t('burrow.chip.pipsMinute', { name: pip.name })}
+          accessibilityLabel={t('burrow.chip.a11y.pipsMinute', { name: pip.name })}
+          species={pip.species}
+          onPress={() => model.chip && onNavigate?.(model.chip.target)}
+        />
+      ) : null}
+
       <Delta card={model.delta} species={pip.species} onNavigate={onNavigate} />
 
       {model.ring ? (
@@ -164,6 +183,43 @@ export function BurrowHomeScreen({
         </GlassSheet>
       ) : null}
     </BurrowBackdrop>
+  );
+}
+
+/**
+ * Pip's minute on a day it isn't the card: a small chip by the top bar, Pip's face and the words.
+ * Never a badge or a count; it simply isn't there when no phrase is due.
+ */
+function PipsMinuteChip({
+  label,
+  accessibilityLabel,
+  species,
+  onPress,
+}: {
+  label: string;
+  accessibilityLabel: string;
+  species: Roommate['species'];
+  onPress: () => void;
+}) {
+  const enter = useKeyframes(motion.screens.listIn);
+  return (
+    <Animated.View style={[styles.chipPlace, enter]}>
+      <Press
+        onPress={onPress}
+        haptic="tap"
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel}
+      >
+        <GlassView glass={glass.panel} radius={pill(PLACE.chip.height)} style={styles.chip}>
+          <View style={styles.chipFace}>
+            <Face character="pip" species={species} size={PLACE.chip.face} mood="happy" />
+          </View>
+          <Txt variant="buttonSmall" numberOfLines={1}>
+            {label}
+          </Txt>
+        </GlassView>
+      </Press>
+    </Animated.View>
   );
 }
 
@@ -372,6 +428,28 @@ const styles = StyleSheet.create({
     borderColor: colours.outline,
   },
   cardButton: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  chipPlace: {
+    position: 'absolute',
+    top: layout.topBar + 4,
+    right: layout.marginScreen,
+    zIndex: 3,
+  },
+  chip: {
+    height: PLACE.chip.height,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingLeft: 7,
+    paddingRight: 14,
+  },
+  chipFace: {
+    width: PLACE.chip.face,
+    height: PLACE.chip.face,
+    borderRadius: PLACE.chip.face / 2,
+    overflow: 'hidden',
+    borderWidth: outline.thin,
+    borderColor: colours.outline,
+  },
   ring: {
     height: 46,
     flexDirection: 'row',

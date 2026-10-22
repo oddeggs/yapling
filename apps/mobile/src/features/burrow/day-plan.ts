@@ -9,7 +9,7 @@ import type { BurrowInput, DeltaCard, FaceSpec, LineModel, PrimaryAction } from 
 import { BURROW_ROUTES, callRoute, listenRoute } from './routes';
 
 /*
- * What each day of the first week puts in front of the learner: the card at the top (one new
+ * What each day of the first week puts in front of the learner (from week 2, `later-days.ts`): the card at the top (one new
  * thing every open, never the same card two days running), the roommate's line, and the one thing
  * to do. Everything a day opens stays open; when today's thing is done, the button offers the
  * oldest call still waiting in the ring, never a deadline.
@@ -121,25 +121,6 @@ export function planFor(input: BurrowInput, ring: WeekRing): DayPlan {
       line: null,
       action: null,
       pipMood: 'surprised',
-    };
-  }
-
-  if (day >= 8) {
-    const done = input.progress.weeks.filter((w) => w.slots[0]?.status === 'done').length;
-    const next = SEASON_1.episodes[done] ?? null;
-    const guest = next?.cast.find((c) => c !== 'pip') ?? 'pip';
-    return {
-      delta: news(
-        `next-episode-${next?.number ?? 'season-end'}`,
-        kicker,
-        copy('burrow.delta.nextEpisode', { episode: next?.number ?? done }),
-        copy('burrow.delta.nextEpisodeSub'),
-        guest === 'mags' || guest === 'office' ? null : { character: guest, mood: happy },
-        BURROW_ROUTES.week,
-      ),
-      line: null,
-      action: catchUp(input, ring),
-      pipMood: happy,
     };
   }
 
