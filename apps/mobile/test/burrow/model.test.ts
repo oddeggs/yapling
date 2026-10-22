@@ -163,6 +163,7 @@ describe('something new every open', () => {
     expect(label(4)).toBe('Dạy Pip giới thiệu bản thân');
     expect(label(5)).toBe('Ra bến xe buýt 45');
     expect(label(5, true)).toBe('Xem tuần này');
+    expect(label(8)).toBe('S1 · E2 · Help Wanted');
     // A learner who skipped the first call still finds it waiting on day 3.
     const skipped = input(3, { after: true });
     const waiting = {

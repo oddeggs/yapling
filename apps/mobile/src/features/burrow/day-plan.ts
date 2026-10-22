@@ -74,8 +74,16 @@ function ringCalls(
 }
 
 /** The label of a ring call's button, as the week view names it. */
-function callLabel(kind: 'episode' | 'real_week' | 'practice', name: string): Copy {
-  if (kind === 'episode') return copy('week.cta', { name });
+function callLabel(kind: 'episode' | 'real_week' | 'practice', name: string, week: number): Copy {
+  if (kind === 'episode') {
+    if (week === 1) return copy('week.cta', { name });
+    const episode = episodeOf(week);
+    return copy('week.slot.episodeTitle', {
+      season: SEASON_1.number,
+      episode: episode.number,
+      title: episode.title,
+    });
+  }
   if (kind === 'real_week') return copy('week.slot.teach', { name });
   return copy('burrow.action.practice');
 }
@@ -85,7 +93,7 @@ function catchUp(input: BurrowInput, ring: WeekRing): PrimaryAction {
   const calls = ringCalls(ring.week);
   const open = calls.find((c, i) => ring.slots[i]?.status === 'open' && c.to !== null);
   return open?.to
-    ? { label: callLabel(open.kind, input.roommate.name), target: open.to }
+    ? { label: callLabel(open.kind, input.roommate.name, ring.week), target: open.to }
     : { label: copy('burrow.action.week'), target: BURROW_ROUTES.week };
 }
 
