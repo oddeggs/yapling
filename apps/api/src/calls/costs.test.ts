@@ -102,7 +102,19 @@ describe('a call cost', () => {
       sttSeconds: 0,
       ttsChars: 0,
       llm: { input: 0, cacheRead: 0, cacheWrite: 0, output: 0 },
+      jevInputTokens: 0,
     });
+  });
+
+  it('prices the turn judge on its own line, in the total', () => {
+    const record = costRecordOf(inputs({ sttSeconds: 0, ttsChars: 0, jevInputTokens: 1_000_000 }));
+    expect(record.usd.judge).toBeCloseTo(0.042, 5);
+    expect(record.usd.total).toBeCloseTo(0.042, 5);
+    const own = callCost(10, 100, inputs().llm, 50_000);
+    expect(costRecordOf(inputs({ ...usageOf(own), samples: null })).usd.total).toBeCloseTo(
+      own.usd,
+      4,
+    );
   });
 });
 
@@ -121,14 +133,19 @@ const newCall = (userId: string, id: string, startedAt: number): NewCall => ({
   summaryPending: true,
   sceneState: null,
   safetyFlag: null,
-  cost: callCost(90, 800, { input: 5_000, cacheRead: 20_000, cacheWrite: 0, output: 400 }),
+  cost: callCost(90, 800, { input: 5_000, cacheRead: 20_000, cacheWrite: 0, output: 400 }, 20_000),
   timings: {},
   transcriptKey: `users/${userId}/calls/${id}.json`,
   samples: { ...noSamples(), replyOut: [1_300, 1_450, 1_900], phoneLag: [880] },
 });
 
 interface CostList {
-  calls: { callId: string; usd: { total: number; summary: number }; replyP90Ms: number | null }[];
+  calls: {
+    callId: string;
+    jevInputTokens: number;
+    usd: { total: number; summary: number; judge: number };
+    replyP90Ms: number | null;
+  }[];
   totals: { calls: number; usd: number; replyP50Ms: number | null };
 }
 
@@ -146,6 +163,8 @@ describe('the cost list', () => {
     expect(list.calls.map((c) => c.callId)).toEqual(['cost-b', 'cost-a']);
     expect(list.calls[0]).not.toHaveProperty('userId');
     expect(list.calls[0]?.replyP90Ms).toBe(1_900);
+    expect(list.calls[0]?.jevInputTokens).toBe(20_000);
+    expect(list.calls[0]?.usd.judge).toBeCloseTo(0.00084, 5);
     expect(list.totals).toMatchObject({ calls: 2, replyP50Ms: 1_450 });
 
     await storeSummary(env.DB, me.userId, 'cost-b', null, { usd: 0.0123 });
