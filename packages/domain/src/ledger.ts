@@ -50,11 +50,8 @@ export const PLUS_MONTHLY_SECONDS = 150 * 60;
 /** From this many seconds left, the character wraps the scene up. */
 export const WRAP_UP_SECONDS = 60;
 
-/**
- * The calls that never cost live minutes: Settling in is free, and so is Pip's minute. Pip's
- * minute joins this list as `'daily'` once that call kind exists; nothing else changes.
- */
-export const UNMETERED_CALL_KINDS: ReadonlySet<CallKind> = new Set<CallKind>(['settling']);
+/** The calls that never cost live minutes: Settling in is free, and so is Pip's minute. */
+export const UNMETERED_CALL_KINDS: ReadonlySet<CallKind> = new Set<CallKind>(['settling', 'daily']);
 
 /** Whether a call of this kind costs live minutes. */
 export const isMeteredCall = (kind: CallKind): boolean => !UNMETERED_CALL_KINDS.has(kind);

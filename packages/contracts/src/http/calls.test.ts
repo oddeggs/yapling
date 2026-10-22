@@ -73,6 +73,7 @@ describeSchemas('calls', calls, {
       pendingRecord,
       { ...record, kind: 'voicemail_reply', endReason: 'hangup' },
       { ...record, kind: 'settling', sceneId: 's1-set1', character: 'linh', endReason: 'too_hard' },
+      { ...record, kind: 'daily', sceneId: 's1-pm.can-i-help', character: 'pip' },
     ],
     [
       { ...record, endedAt: at - 1 },

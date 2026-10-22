@@ -63,8 +63,8 @@ describeSchemas('primitives', primitives, {
     ['en', 'vi-VN', ''],
   ],
   CallKind: [
-    ['placement', 'episode', 'real_week', 'practice', 'voicemail_reply', 'settling'],
-    ['real-week', 'camera', 'settling_in'],
+    ['placement', 'episode', 'real_week', 'practice', 'voicemail_reply', 'settling', 'daily'],
+    ['real-week', 'camera', 'settling_in', 'pips_minute'],
   ],
   RingSlotKind: [['episode', 'real_week', 'practice'], ['placement']],
   PhraseState: [
