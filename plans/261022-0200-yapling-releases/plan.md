@@ -8,6 +8,7 @@ Inputs: `docs/concept.md`, `docs/journey-and-story.md`, `docs/season-1-script.md
 | Release | Ships as | Name | The pitch | Ships | Proof it worked |
 |---|---|---|---|---|---|
 | 1 | Internal TestFlight (learner test) | **First Week** | The prototype's week, for real: live AI calls, recorded cast, the burrow changing day by day | Onboarding and placement call; burrow and week view; Episode 1 call with Mei; voice story and postcard; teach Pip; Pass it on; keepsake; voicemail; season map; the Plus paywall (sandbox); lock-screen knocks; Me sheet lite; safety and error states; a dev-only time-travel menu for test sessions | 5–8 Vietnamese professionals each run day 1–8 in a moderated session; the founder's checklist in `docs/prompts/claude-design-prototype.md` ("What we're testing") |
+| 1.1 | Over-the-air update to the TestFlight build | **Settling in** | A way in for true beginners: six short calls with Linh before the story, and an easier week 1 | The Visitor stage; the level question and a placement call that sets the stage; Settling-in Chapters 1–6; Visitor versions of week 1; "again" and "slowly" honoured in every call; "too hard" anywhere | 3 true beginners each finish Chapter 1 unaided and at least 2 finish Chapters 1–6 and the café call (measures in `docs/beginner-path.md` §9) |
 | 2 | **App Store launch (Vietnam)** | **Season One** | Six weeks of story and a reason to talk every day | Episodes 2–6 with Hank at every stage; real-week calls with Bring your homework (Dex); the full practice set; phrase lifecycle to bloom and fix graduation; the full Me sheet with the memory page; voicemail and voice notes; minutes resting, break reminder, crisis protocol; Sign in with Apple; Plus live; analytics; cost meters | Gates in `docs/concept.md` §15: D30 > 10%, ≥ 30 learner-talk minutes per weekly active, free → Plus ≥ 5% by day 30, AI cost ≤ 30% of net revenue |
 | 3 | Update | **Move-ins** | The town grows with you | Accent move-ins with listening checkpoints (Arjun first); stage-up to Neighbour; the monthly time capsule; incoming calls with a Live Activity; widgets; the town map | Median Flow +20% by week 6; call answer rate ≥ 20% |
 | 4 | Update | **The Mystery Boat** | Season 2, and Android | Season 2 (six episodes), Android launch, Indonesia's Home Neighbour | Store rating, D30 holds on Android |
@@ -103,9 +104,70 @@ Gate 3 (founder): run the 5–8 learner sessions.
 
 ---
 
+# Release 1.1 · Beginner path (Settling in)
+
+Design: [`docs/beginner-path.md`](../../docs/beginner-path.md). A beginner (A0–A1) couldn't get through days 1–8. This release adds a new lowest stage, Visitor, six short Settling-in calls with Linh before week 1, Visitor versions of week 1's hard turns, a placement call that actually sets the stage, and "again" / "slowly" honoured in every call. No new art. 66 recorded lines.
+
+Runs after the two call lanes now in flight (thinking time, line history) merge, because B1c and B2c own the same folders. Concurrency stays at 6 lanes at most.
+
+## Wave B0: Contracts and script · critical path 1 run
+
+| Lane | Owns | Does | Runs | Done when |
+|---|---|---|---|---|
+| B0a Contracts | `packages/contracts`; plus the mechanical Visitor rows (copied from Newcomer) in every `Record<Stage, …>` that the new stage breaks, so `main` stays green | `visitor` first in `STAGES`; `CallKind` gains `settling`; the `hint` frame gains `choices` (up to two, phrase + gloss), `modelLineId` and `persistent`; client frames `replay` (`slower`) and `pace`; profile gains `storyStartedOn` and the onboarding `startPath` (`visitor` or `placement`); a stage-request body (`to`, `reason`: self-select, too hard, too easy, stage-up, stay); progress gains the Settling-in chapters done; the call record's exit reason gains `too_hard` | 1 | Every new schema has a round-trip test; `pnpm typecheck && pnpm test` green across the repo |
+| B0b Script and copy | `docs/cast-bible.md`, `docs/journey-and-story.md`, `docs/season-1-script.md`, `docs/vi-copy-review.md`, `audio/season-1/lines.json` (text entries only) | Turns `beginner-path.md` §4 and §7 into the script of record after the founder's decisions: the Visitor row in the stage tables (cast bible, journey §1.1, §1.2 can-dos, §1.10 help, §2.4 scaling), Linh's Vietnamese in her bible entry, a Settling-in section in the season script; the 66 lines in `lines.json` with `speed: 0.7`; the review list with the 7 spoken Vietnamese lines first | 1 | `yap_voice.py estimate` lists the 66 new lines; the review list is with the reviewer |
+
+Gate B0: contracts frozen; the founder has answered decisions 1–4 in `beginner-path.md` §10; the 7 spoken Vietnamese lines are reviewed (the rest of the review can run alongside wave B1).
+
+## Wave B1: Engines · critical path 2 runs
+
+| Lane | Owns | Does | Runs | Done when |
+|---|---|---|---|---|
+| B1a Learning model | `packages/domain` | Visitor speech settings (about 85 wpm, TTS 0.7, 0.5 s phrase breaks, 8 words a turn, hints shown from the start); gloss policy at Visitor (meanings Vietnamese first); Pip at Visitor is a Visitor, otherwise at least Newcomer; "too hard" at Newcomer offers Visitor; the placement rule (Visitor when at most one of the three open boxes is fine) and the stage-up rule (at least 70% of week-1 turns passed without the generous pass); the six Visitor can-dos and the six phrases; week-1 days counted from `storyStartedOn`; the ledger leaves Settling-in calls unmetered and starts the first-week allowance on `storyStartedOn` (if decision 2 is yes) | 1 | Tests for each rule; every existing Newcomer-and-up test passes unchanged |
+| B1b Story | `packages/story` | `Answer` gains `choices`, `accept` (the beat's words), `showHint: 'always'` and `model` (the line to repeat); runner events `repeat_request` and `slower_request` (never a try), the generous pass (second English try) and `skip`; the six Settling-in scenes; Visitor beats in the placement call (warm-up box, three open boxes, early stop), Episode 1, the day-3 postcard, the real-week and practice calls and the voicemail; the Visitor row in persona prose; validation that every Visitor character line has at most 8 words | 2 | Runner tests: every Settling-in scene ends for each answer kind (word match, two English misses, Vietnamese, silence, again, slowly, skip); every Visitor line is in `lines.json`; Newcomer beat paths unchanged |
+| B1c Call server | `apps/api/src/call/**`, `apps/api/src/profile/**`, `apps/api/src/calls/**`, migrations `0300–0319` | Word-match judging for beats with `accept` (no model call), with a list of common mis-hearings; "again" and "slowly" detected from the transcript at every stage before the model runs, and the replay: the last line's text through live TTS one speed step slower with longer breaks; the `replay` and `pace` frames; Visitor prompt rules; Vietnamese-first meanings at Visitor; persistent hints with choices; the placement call's end sets the stage by the rule; the stage-request route; Settling-in calls unmetered; the turn log records outcome, pass kind (match, generous, skip) and replay requests; profile columns `story_started_on` and `start_path`. Check with the thinking-time lane that a short hold with a real word ("Yes") counts at Visitor | 2 | Protocol suite under `wrangler dev` with recorded beginner audio (one-word answers, a Vietnamese answer, a long silence, "Sorry? Again, please", "Slowly, please"): Chapters 1–3 end with every turn passed within two tries; placement with A0 audio sets Visitor and with A2 audio Newcomer; "again" replays in the Newcomer Episode 1 call; minutes unchanged after a Settling-in call; deployed to the dev Worker |
+| B1d Voice | `tools/voice`, `audio/season-1/lines/**` | `estimate` first; a 3-line audition for the founder of Linh speaking Vietnamese and of Pip and Linh at 0.7; after the founder's OK, render the 66 lines; a `pace` command that reads each timing file and fails any Visitor line over 100 wpm; re-render or split the ones that fail | 1 (after B0b and the founder's OK) | All 66 lines rendered; every Visitor line at or under 100 wpm; credits used reported |
+
+Merge order: B1a, B1b, B1c, then B1d whenever it's ready (until then the call speaks unrecorded lines with the live voice).
+Gate B1: under `wrangler dev`, a scripted Visitor plays placement, Chapters 1–6 and the Episode 1 call with recorded beginner audio, and every scene ends `complete`.
+
+## Wave B2: The app · critical path 2 runs · ends in an over-the-air update
+
+| Lane | Owns | Screens and behaviour | Runs |
+|---|---|---|---|
+| B2a Onboarding | `features/onboarding`, `app/(onboarding)/**`, `packages/i18n/src/onboarding.*` | The level question (a new step between the AI explainer and the roommate); the Visitor residency card ("Làm quen với Linh" / "Vào thẳng truyện"); the "Khó quá" sheet on the Newcomer card; day 1 for Visitors: Linh's knock is Chapter 1 as a live call, no letter at dusk | 2 |
+| B2b Burrow and week | `features/burrow`, `features/week`, `packages/i18n/src/burrow.*` | Settling-in day plans (chapter card, the day's button, "Để mai" / "Làm tiếp" after two chapters); one box unpacks per chapter; the letter after Chapter 6; week 1's days from `storyStartedOn`; the Settling-in list (replay any chapter, "Vào truyện luôn") | 2 |
+| B2c Calls | `features/call`, `packages/i18n/src/call.*` | The persistent say-this card with two choices and tap-to-hear; the "Nói lại" and "Chậm thôi" pills (one replay control with the line-history lane's); the Vietnamese task card; "Bỏ qua"; "Khó quá" in the exit sheet (slower from the next line, or practise with Linh, saving the scene's place) | 2 |
+| B2d Payoffs and Me | `features/payoff`, `features/me`, `packages/i18n/src/{payoff,me}.*` | The Visitor after-call card (the learner's own sentences, the phrase seed, a one-tap "Vừa / Khó quá"); the stage-up keepsake (Linh hands over the Newcomer card; "Ở lại thêm"); the Me sheet's stage row, "Làm quen lại với Linh" and "Thử nhanh hơn" | 1 |
+| B2e Knocks, test menu, analytics | `features/knocks`, `features/devmenu`, `apps/mobile/src/observability/**`, `packages/i18n/src/{knocks,devmenu}.*` | Five Settling-in knocks (from Yapling, in Vietnamese); test menu: start as a Visitor, jump to chapter N, jump to the letter day; PostHog events: path chosen, placement result, chapter start and end, turn pass kind, again and slowly used, "too hard" taps and choices, stage-up offered and accepted | 1 |
+
+Done when (every lane): built from existing components, with each new state logged in `docs/undesigned-states.md` (no renders exist for them); every interaction works against the dev Worker; copy comes from i18n; VoiceOver labels set.
+Merge order: B2a, B2b, B2c, B2d, B2e.
+Gate B2: on a phone, a fresh install that picks "Mình mới bắt đầu" plays Chapters 1–6 and the café call as a Visitor; one that picks "Mình nói được một chút" plays the placement call and lands where the rule says. Published with `pnpm --filter @yapling/mobile update:dev`.
+
+## Wave B3: Learner test · critical path 1 run
+
+| Lane | Owns | Does |
+|---|---|---|
+| B3a Test kit | `docs/learner-test.md` | The screener takes 3 true beginners (self-rated 1–2) alongside 3 testers like round 1; a beginner session script (day 1, Chapters 1–6, the café call, about 1 h 15 min); measures B1–B10 from `beginner-path.md` §9 in the synthesis sheet |
+
+Gate B3 (founder): run the 6 sessions.
+
+## What ships how
+
+| Change | Ships by |
+|---|---|
+| Call server, profile, migrations | Dev Worker deploy (migrations first, then the Worker) |
+| Contracts, domain, story data, screens, copy | EAS Update on channel `dev` (JS) |
+| The 66 recorded lines | EAS Update: bundled as assets through `@yapling/story` (short mp3s, about 1–2 MB) |
+| The slow replay | Server-side TTS, so the phone's native audio module doesn't change |
+| A new build | Only if a lane adds a native dependency or touches `app.config.ts` or `modules/`; none is planned. The runtime is fingerprinted, so any native change stops the update reaching installed builds. Testers need build 6 or later (the first that takes updates) |
+
+---
+
 # Release 2 · Season One (App Store, Vietnam) — outline
 
-Planned in detail after the learner test. Waves: content (Episodes 2–6 scripts compiled, Hank's stage takes, real-week and practice catalogues), features (Bring your homework with Dex, phrase lifecycle to bloom, fix graduation, memory page, voicemail and voice notes, minutes resting, break reminder, crisis protocol, Sign in with Apple), store (icon, screenshots, privacy labels, App Review notes with a demo account), launch (Plus live, analytics gates).
+Planned in detail after the learner test. Waves: content (Episodes 2–6 scripts compiled with a Visitor version of each hard turn, as `docs/beginner-path.md` §7 does for week 1; Hank's stage takes, real-week and practice catalogues), features (Bring your homework with Dex, phrase lifecycle to bloom, fix graduation, memory page, voicemail and voice notes, minutes resting, break reminder, crisis protocol, Sign in with Apple), store (icon, screenshots, privacy labels, App Review notes with a demo account), launch (Plus live, analytics gates).
 
 ## Founder gates
 
@@ -114,4 +176,5 @@ Planned in detail after the learner test. Waves: content (Episodes 2–6 scripts
 | Before wave 2's TestFlight | Done 22 Oct 2026 (see TestFlight setup above) |
 | Before wave 2f | RevenueCat project and the Plus products (monthly ₫149k, yearly ₫799k with ₫599k intro) in App Store Connect |
 | Before the learner test | ElevenLabs plan with enough credits for live calls (Creator has ~50k left this cycle); an Anthropic key for Yapling (reusing 6pm's for now) |
+| Before Release 1.1 wave B1 | Decisions 1–4 in `docs/beginner-path.md` §10 (Linh speaks Vietnamese; Settling-in calls free and the first week starting with the story; about 5,000 ElevenLabs credits; the Visitor name); native review of the 7 spoken Vietnamese lines |
 | Before Release 2 | yapling.app domain and trademark; native Vietnamese copy review; native-speaker review of every accent |
