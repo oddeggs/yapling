@@ -85,6 +85,7 @@ export function buildConfig(
   return {
     ...config,
     name: variant.name,
+    owner: 'yapling',
     slug: 'yapling',
     scheme: variant.scheme,
     version: '0.1.0',

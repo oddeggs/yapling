@@ -10,7 +10,10 @@
       "channel": "dev",
       "node": "24.21.0",
       "pnpm": "12.6.0",
-      "env": { "APP_VARIANT": "dev" }
+      "env": {
+        "APP_VARIANT": "dev",
+        "EAS_PROJECT_ID": "3a0b1da8-0906-4d5c-bba7-c4b639048e37"
+      }
     },
     "dev": {
       "distribution": "store",
@@ -18,7 +21,11 @@
       "autoIncrement": true,
       "node": "24.21.0",
       "pnpm": "12.6.0",
-      "env": { "APP_VARIANT": "dev" }
+      "env": {
+        "APP_VARIANT": "dev",
+        "EAS_PROJECT_ID": "3a0b1da8-0906-4d5c-bba7-c4b639048e37",
+        "API_BASE": "https://yapling-api-dev.bkdev98.workers.dev/api"
+      }
     },
     "prd": {
       "distribution": "store",
@@ -26,11 +33,23 @@
       "autoIncrement": true,
       "node": "24.21.0",
       "pnpm": "12.6.0",
-      "env": { "APP_VARIANT": "prd" }
+      "env": {
+        "APP_VARIANT": "prd",
+        "EAS_PROJECT_ID": "3a0b1da8-0906-4d5c-bba7-c4b639048e37"
+      }
     }
   },
   "submit": {
-    "dev": { "ios": {} },
-    "prd": { "ios": {} }
+    "dev": {
+      "ios": {
+        "ascAppId": "6825602448",
+        "appleTeamId": "YFND2EEW8S"
+      }
+    },
+    "prd": {
+      "ios": {
+        "appleTeamId": "YFND2EEW8S"
+      }
+    }
   }
 }
