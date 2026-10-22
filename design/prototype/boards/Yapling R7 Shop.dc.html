@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R7 · The shop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-r7.js?v=1"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#D3CCDC;border:2px solid #17131C"></span>Yapling · Round 7 · Shop · 8 · later release</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">The <span style="background:#D7F7E2;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">shop</span>, cosmetics only</div>
+      <div style="font-size:17px;font-weight:700;max-width:1100px;line-height:1.35;color:#3E3646">Opens in a later release, after retention is proven. What you learn is earned; what you wear can be bought. Clothes and jewellery for Pip and decor for the burrow, each at a direct price (25.000 ₫ an item, 49.000 ₫ an outfit, 99.000 ₫ a seasonal set). No loot boxes, no currency, no countdowns, nothing that helps you learn or changes Pip's mood or affection. Bought items are marked and never count toward the album or the town goal.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R7 Callbacks.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ Callbacks</a>
+      <a href="Yapling R7 Hands free.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · Hands-free call ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ hs }}" as="s" hint-placeholder-count="4">
+      <div data-screen-label="{{ s.id }} Shop" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ s.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ s.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFF7EE;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+
+          <sc-if value="{{ s.isHome }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:80px;left:20px;right:20px;display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#5D5366">Cho Pip và cho hang</span><span style="font-size:40px;font-weight:900;letter-spacing:-0.06em;line-height:1.1">Cửa hàng</span></div>
+              <span style="align-self:flex-start;padding:5px 10px;border-radius:12px;background:#D7F7E2;border:2px solid #17131C;font-size:12px;font-weight:800">Chỉ đồ trang trí · giá rõ ràng · không hộp quà ngẫu nhiên</span>
+            </div>
+            <div style="position:absolute;top:200px;left:14px;right:14px;display:flex;flex-direction:column;gap:12px">
+              <span style="font-size:15px;font-weight:800;padding-left:4px">Cho Pip mặc</span>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+                <sc-for list="{{ wearTiles }}" as="w" hint-placeholder-count="3">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 6px 10px;border-radius:20px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C">
+                    <div style="width:84px;height:100px;display:flex;justify-content:center">{{ w.el }}</div>
+                    <span style="font-size:13px;font-weight:800">{{ w.name }}</span>
+                    <span style="font-size:13px;font-weight:900;color:#5B4A8C">{{ w.price }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <span style="font-size:15px;font-weight:800;padding:4px 0 0 4px">Trang sức và trang trí hang</span>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+                <sc-for list="{{ decorTiles }}" as="d" hint-placeholder-count="3">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 6px 10px;border-radius:20px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C">
+                    <div style="width:72px;height:72px">{{ d.el }}</div>
+                    <span style="font-size:13px;font-weight:800">{{ d.name }}</span>
+                    <span style="font-size:13px;font-weight:900;color:#5B4A8C">{{ d.price }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:22px;background:#CFF0FD;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C">
+                <div style="width:64px;height:76px;flex:none">{{ bundlePip }}</div>
+                <span style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#3E3646">BỘ THEO MÙA · MÙA MƯA</span><span style="font-size:16px;font-weight:800;line-height:1.25">Áo mưa cho Pip, đèn bàn và giá sách</span><span style="font-size:14px;font-weight:900;color:#5B4A8C">99.000 ₫</span></span>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ s.isTry }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:0;left:0;right:0;height:470px;background:#F9DAFB;border-bottom:3px solid #17131C"></div>
+            <div style="position:absolute;top:58px;left:16px;display:flex;align-items:center;height:36px;padding:0 12px;border-radius:18px;background:#FFFFFF;border:1.5px solid rgba(23,19,28,.16);font-size:13px;font-weight:800">‹ Cửa hàng</div>
+            <div style="position:absolute;top:120px;left:85px">{{ pipTry }}</div>
+            <div style="position:absolute;top:116px;left:226px;right:14px;padding:9px 12px;border-radius:20px 20px 20px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;display:flex;flex-direction:column;gap:2px;animation:ypop .5s .3s ease-out both"><span style="display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800">Pip<span style="padding:1px 4px;border-radius:5px;background:#17131C;color:#fff;font-size:9px">AI</span></span><span style="font-size:14.5px;font-weight:800;line-height:1.28">Is it on right? Scarf!</span></div>
+            <div style="position:absolute;top:410px;left:0;right:0;display:flex;justify-content:center;gap:8px">
+              <span style="height:34px;padding:0 12px;border-radius:17px;background:#17131C;color:#fff;display:flex;align-items:center;font-size:12.5px;font-weight:800">Đang thử</span>
+              <span style="height:34px;padding:0 12px;border-radius:17px;background:#FFFFFF;border:1.5px solid rgba(23,19,28,.16);display:flex;align-items:center;font-size:12.5px;font-weight:800">Vừa cả 3 loài</span>
+            </div>
+            <div style="position:absolute;top:490px;left:20px;right:20px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:30px;font-weight:900;letter-spacing:-0.05em">scarf</span><span style="font-size:22px;font-weight:900">25.000 ₫</span></div>
+              <span style="font-family:'Kithfield Hand',cursive;font-size:20px;color:#5B4A8C;margin-top:-4px">khăn quàng cổ</span>
+              <div style="display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:16px;background:#FFFFFF;border:1.5px solid rgba(23,19,28,.16)">
+                <span style="font-size:13px;font-weight:700">· Mua một lần, của bạn mãi mãi</span>
+                <span style="font-size:13px;font-weight:700">· Không đổi tâm trạng hay tình cảm của Pip</span>
+                <span style="font-size:13px;font-weight:700">· Không tính vào album hay mục tiêu thị trấn</span>
+              </div>
+            </div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:12px;border-radius:40px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <button style="height:54px;border-radius:27px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.9);font:800 15px Lexend,sans-serif;color:#17131C;cursor:pointer">Thử món khác</button>
+              <button style="height:54px;border-radius:27px;border:3px solid #17131C;background:#5FD98A;box-shadow:0 4px 0 #17131C;font:800 15px Lexend,sans-serif;color:#17131C;cursor:pointer">Mua · 25.000 ₫</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ s.isBought }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0">{{ burrowPlain }}</div>
+            <div style="position:absolute;left:96px;top:430px">{{ pipBought }}</div>
+            <div style="position:absolute;top:96px;left:16px;right:16px;display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:24px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;animation:yin .4s ease-out both">
+              <span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">ĐÃ MUA</span>
+              <span style="font-size:22px;font-weight:800;letter-spacing:-0.03em">Khăn quàng cổ cho Pip</span>
+              <span style="font-size:13px;font-weight:600;color:#3E3646">25.000 ₫ · thanh toán qua App Store</span>
+              <span style="align-self:flex-start;padding:4px 9px;border-radius:10px;background:#E8E4EE;border:1.5px solid #17131C;font-size:12px;font-weight:800">Đồ mua · không tính vào album</span>
+            </div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,.75);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <span style="font-size:13px;font-weight:700;text-align:center;color:#3E3646">Đã vào tủ đồ của Pip. Mặc hay cất tuỳ bạn.</span>
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+                <button style="height:52px;border-radius:26px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.9);font:800 15px Lexend,sans-serif;color:#17131C;cursor:pointer">Cất đi</button>
+                <button style="height:52px;border-radius:26px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;font:800 15px Lexend,sans-serif;color:#17131C;cursor:pointer">Để Pip mặc</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ s.isDecor }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0">{{ burrowDecor }}</div>
+            <span style="position:absolute;left:30px;top:514px;padding:3px 8px;border-radius:9px;background:#E8E4EE;border:2px solid #17131C;font-size:11px;font-weight:800;z-index:3">Đã mua</span>
+            <span style="position:absolute;left:256px;top:316px;padding:3px 8px;border-radius:9px;background:#5FD98A;border:2px solid #17131C;font-size:11px;font-weight:800;z-index:3">Bạn nói được</span>
+            <div style="position:absolute;left:26px;top:530px;width:108px;height:118px;border-radius:20px;border:3px dashed #FFFFFF;box-shadow:0 0 0 2.5px #17131C"></div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:16px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.92);border:1px solid #fff;box-shadow:0 -10px 40px rgba(46,20,70,.2);animation:yup .4s ease-out both">
+              <div style="display:flex;align-items:center;gap:12px"><div style="width:64px;height:64px;border-radius:18px;background:#FFF7EE;border:2.5px solid #17131C;display:flex;align-items:center;justify-content:center;flex:none">{{ shelfTiny }}</div><div style="display:flex;flex-direction:column"><span style="font-size:24px;font-weight:900;letter-spacing:-0.04em">bookshelf</span><span style="font-family:'Kithfield Hand',cursive;font-size:18px;color:#5B4A8C">giá sách</span></div><button aria-label="Nghe từ này" style="margin-left:auto;width:44px;height:44px;border-radius:22px;border:2.5px solid #17131C;background:#FFE48A;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#17131C" stroke="#17131C" stroke-width="1.5" stroke-linejoin="round"></path><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="#17131C" stroke-width="2.2" stroke-linecap="round"></path></svg></button></div>
+              <span style="font-size:13px;font-weight:600;line-height:1.4;color:#3E3646">Đồ bạn mua: chạm để nghe từ như mọi đồ vật, nhưng nó không lớn và không vào album. Đồ vật bạn nói được thì vẫn lớn dần.</span>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const HS=[
+  {id:'H1',label:'The shop · direct prices, nothing random',k:'home'},
+  {id:'H2',label:'Pip tries on a scarf',k:'try'},
+  {id:'H3',label:'Bought · marked, outside the album',k:'bought'},
+  {id:'H4',label:'Bought decor in the burrow · tap for its word',k:'decor'}
+];
+const EARNED=[{id:'cactus',at:'shelf-l1'},{id:'bubble-tea',at:'shelf-l2',s:.9},{id:'iced-coffee',at:'shelf-r1',s:.9},{id:'umbrella',at:'shelf-r2',v:'butter'},{id:'desk-lamp',at:'desk-1',s:.8}];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const A=window.YapArt, K=(window.YapDC&&A&&A.r7)?window.YapDC(React):null; if(!K) return {hs:[],wearTiles:[],decorTiles:[]};
+    const {b1,b2,b3}=K.blinkers(this.state.bt);
+    const wc=(size,mood,wear,blink,k)=>K.h('div',{key:k,style:{width:size,height:size*1.2,animation:'ybreathe 3.2s ease-in-out infinite',transformOrigin:'50% 100%'}},K.h(K.Cv,{fn:'s_critter',w:size,hh:size*1.2,o:{sp:'redpanda',mood,mouth:'rest',blink:!!blink,look:0,wear}}));
+    return {
+      wearTiles:[['Khăn quàng',['scarf']],['Mũ rộng vành',['sun-hat']],['Kính',['glasses']]].map(([name,wear],i)=>({name,price:'25.000 ₫',el:wc(82,'happy',wear,[b1,b2,b3][i],'wt'+i)})),
+      decorTiles:[['Giá sách','bookshelf'],['Quạt bàn','electric-fan'],['Vòng cổ',null]].map(([name,id],i)=>({name,price:'25.000 ₫',el:id?K.sc('prop',72,72,{id,v:id==='bookshelf'?'mint':'cyan'}):wc(60,'happy',['necklace'],b2,'nk')})),
+      bundlePip:wc(64,'happy',['raincoat'],b3,'bp'),
+      pipTry:wc(220,'happy',['scarf'],b1,'tp'),
+      burrowPlain:K.sc('place',390,844,{scene:'burrow',so:{t:0},props:EARNED}), pipBought:wc(150,'happy',['scarf'],b2,'bb'),
+      burrowDecor:K.sc('place',390,844,{scene:'burrow',so:{t:0},props:EARNED.concat([{id:'bookshelf',x:80,y:640,s:.6,v:'mint'}])}), shelfTiny:K.sc('prop',56,56,{id:'bookshelf',v:'mint'}),
+      hs:HS.map(s=>({id:s.id,label:s.label,isHome:s.k==='home',isTry:s.k==='try',isBought:s.k==='bought',isDecor:s.k==='decor'}))
+    };
+  }
+}
+</script>
+</body>
+</html>

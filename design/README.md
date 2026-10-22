@@ -7,7 +7,7 @@ Source of truth: `design/prototype/` (Claude Design export, 22 Oct 2026). Open a
 | `Yapling Week 1.dc.html` | The clickable first week, day 1 to day 8. Open any step with `?step=<id>`. Shift+F hides the facilitator strip |
 | `Yapling Week 1 Map.dc.html` | Every step and branch on one page |
 | `Yapling Prototype.dc.html` | The earlier hub prototype: town map, incoming call, Me sheet, Plus, voice postcard, end of episode |
-| `boards/*.dc.html` | Rounds 4–5 boards: brand and components, onboarding, home and calls, town, journey, learning, real week, care and errors. Round 6 (`Yapling R6 *`, 23 Oct 2026): the beginner path and three call fixes |
+| `boards/*.dc.html` | Rounds 4–5 boards: brand and components, onboarding, home and calls, town, journey, learning, real week, care and errors. Round 6 (`Yapling R6 *`, 23 Oct 2026): the beginner path and three call fixes. Round 7 (`Yapling R7 *`, art in `art/yap-r7.js`, design-only and not synced into `@yapling/art`): the story-engine version |
 | `art/*.js` | Parametric generators for critters, cast, stickers, scenes. Synced into `@yapling/art`; never edit the copies |
 | `audio/` | Recorded lines used by the prototype (copies of `audio/season-1/lines/`) |
 | `fonts/` | Kithfield Hand Bold. Lexend comes from Google Fonts |
@@ -59,3 +59,13 @@ Release 1 is the first week (the learner-test build). Ids are `?step=` values in
 | R6 Calm: N1–N3 | No timers while you think (every call) | 1 (shipped) |
 | R6 Said | What was said: paging and the history sheet (every call) | 1 (shipped), polish 1.1 |
 | R6 Flow | Flow strip: level question → Visitor card → chapter 1 → after-call → burrow | 1.1 |
+| R7 Week | This week in Natterwick: the town story, real-week and practice calls, "Pip nghe kể" note, a missed week waiting | 3 |
+| R7 Place | Same place, a new story: café morning / rainy evening / First Cold Night, Market Lane | 3 |
+| R7 Props | Props are words: tap a prop, the notebook, the word arriving in the burrow | 3 |
+| R7 Album | The album, rarity tiers, a seasonal item, a rare drop after a twist | 3 |
+| R7 Share | Share cards: word shelf, story recap, outfit card | 3 |
+| R7 Town goal | A shared town goal and personal bests, no ranking | 3 |
+| R7 Callbacks | Callbacks, a twist landing, Pip's memory page | 3 |
+| R7 Shop | The cosmetic shop at direct prices | 4 |
+| R7 Hands free | Hands-free call states | 1.1 (shipped; polish) |
+| R7 Flow | Flow strip: this week → call → tap a prop → album | 3 |

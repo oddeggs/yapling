@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R7 · Flow strip</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes yglow{0%,100%{box-shadow:0 4px 0 #17131C,0 0 0 6px rgba(239,163,244,.45)}50%{box-shadow:0 4px 0 #17131C,0 0 0 12px rgba(239,163,244,.12)}}
+@keyframes yring{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.12);opacity:.5}}
+@keyframes ysp{0%{transform:scale(0) rotate(0);opacity:0}40%{transform:scale(1.2) rotate(20deg);opacity:1}100%{transform:scale(.8) rotate(45deg);opacity:0}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-r7.js?v=1"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:44px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#FFE48A;border:2px solid #17131C"></span>Yapling · Round 7 · Flow</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">From the week's story <span style="background:#FFE48A;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">to the album</span></div>
+      <div style="font-size:17px;font-weight:700;max-width:1100px;line-height:1.35;color:#3E3646">One week after Season One, at Neighbour. The week's town story opens in Mei's café on a rainy evening, a prop on the counter turns out to be a word, and the twist drops a rare sticker into the album. Each arrow shows the tap that moves you on. Open a step's board for all its states.</div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:0">
+    <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+      <div style="display:flex;align-items:flex-start">
+        <sc-if value="{{ s.hasArrow }}" hint-placeholder-val="{{ false }}">
+          <div style="width:104px;height:523px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex:none;margin-top:46px">
+            <span style="padding:5px 9px;border-radius:10px;background:#EFA3F4;border:2px solid #17131C;box-shadow:0 2px 0 #17131C;font-size:11px;font-weight:800;text-align:center;line-height:1.25;max-width:94px">{{ s.tap }}</span>
+            <svg width="70" height="24" viewBox="0 0 70 24" aria-hidden="true"><path d="M4 12h56M50 4l10 8-10 8" fill="none" stroke="#17131C" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+        </sc-if>
+        <a href="{{ s.href }}" style="display:flex;flex-direction:column;gap:10px;width:242px;flex:none;text-decoration:none;color:#17131C">
+          <div style="display:flex;align-items:baseline;gap:8px;height:36px"><span style="width:28px;height:28px;border-radius:14px;background:#17131C;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;align-self:center">{{ s.n }}</span><span style="font-size:16px;font-weight:800;letter-spacing:-0.02em;line-height:1.25">{{ s.title }}</span></div>
+          <div style="width:242px;height:523px;border-radius:35px;position:relative;overflow:hidden;background:#FBFAFD;box-shadow:0 0 0 7px #17131C,0 26px 44px -16px rgba(46,20,70,.4)">
+            <div style="position:absolute;left:0;top:0;width:390px;height:844px;transform:scale(.6205);transform-origin:0 0">
+
+              <sc-if value="{{ s.isWeek }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;background:#FFF7EE;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+                <div style="position:absolute;top:92px;left:22px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700;color:#5D5366">Tuần 14 · mùa mưa ở Natterwick</span><span style="font-size:44px;font-weight:900;letter-spacing:-0.06em;line-height:1.15">Tuần này</span></div>
+                <div style="position:absolute;top:186px;left:16px;right:16px;border-radius:26px;background:#FFFFFF;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;overflow:hidden">
+                  <div style="position:relative;height:190px;overflow:hidden;border-bottom:3px solid #17131C"><div style="position:absolute;left:-12px;top:-180px;width:390px;height:844px;transform:scale(.918);transform-origin:0 0">{{ rainBack }}</div></div>
+                  <div style="display:flex;flex-direction:column;gap:4px;padding:12px 16px 16px"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">TRUYỆN THỊ TRẤN · 6 PHÚT</span><span style="font-size:24px;font-weight:800;letter-spacing:-0.03em">The Umbrella Mix-up</span><span style="font-size:14px;font-weight:600;color:#3E3646">Trời mưa cả tuần, ai cũng cầm nhầm ô ở quán Mei.</span></div>
+                </div>
+                <div style="position:absolute;top:500px;left:16px;right:16px;display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:20px;background:#CFF0FD;border:2.5px solid #17131C"><span style="font-size:11px;font-weight:800;padding:3px 7px;border-radius:7px;background:#17131C;color:#fff">TUẦN THẬT</span><span style="font-size:16px;font-weight:800">Phỏng vấn thứ Năm · với Dex</span></div>
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:20px;background:#D7F7E2;border:2.5px solid #17131C"><span style="font-size:11px;font-weight:800;padding:3px 7px;border-radius:7px;background:#17131C;color:#fff">LUYỆN TẬP</span><span style="font-size:16px;font-weight:800">Chuyện thời tiết · với Nell</span></div>
+                </div>
+                <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9)"><div style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800">Nghe truyện</div></div>
+              </sc-if>
+
+              <sc-if value="{{ s.isCall }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0">{{ rainBack }}</div>
+                <div style="position:absolute;left:-10px;top:258px">{{ mei }}</div>
+                <div style="position:absolute;left:286px;top:330px">{{ pip }}</div>
+                <div style="position:absolute;inset:0">{{ rainFront }}</div>
+                <div style="position:absolute;top:110px;left:16px;right:16px;padding:11px 15px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;font-size:18px;font-weight:700;line-height:1.3">Aiyah, two yellow umbrellas! Which one is yours, Lan?</div>
+                <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px">
+                  <div style="align-self:flex-end;padding:9px 14px;border-radius:20px 20px 6px 20px;background:rgba(255,255,255,.92);font-size:16.5px;font-weight:700">Mine is the small yellow one.</div>
+                  <div style="height:104px;border-radius:52px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.9)"><div style="width:72px;height:72px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;box-sizing:border-box;animation:yglow 1.6s ease-in-out infinite"></div></div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ s.isTap }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0">{{ rainBack }}</div>
+                <div style="position:absolute;left:-10px;top:258px">{{ mei }}</div>
+                <div style="position:absolute;inset:0">{{ rainFront }}</div>
+                <div style="position:absolute;left:190px;top:350px;width:66px;height:66px;border-radius:33px;border:3px dashed #FFFFFF;box-shadow:0 0 0 3px #17131C;animation:yring 1.4s ease-in-out infinite"></div>
+                <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:18px 16px 16px;border-radius:40px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.95)">
+                  <div style="display:flex;align-items:center;gap:14px"><div style="width:96px;height:96px;border-radius:24px;background:#FFF7EE;border:2.5px solid #17131C;display:flex;align-items:center;justify-content:center;flex:none">{{ umbrella }}</div><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:34px;font-weight:900;letter-spacing:-0.05em">umbrella</span><span style="font-family:'Kithfield Hand',cursive;font-size:22px;color:#5B4A8C">cái ô</span></div></div>
+                  <div style="height:52px;border-radius:26px;border:3px solid #17131C;background:#FFE48A;box-shadow:0 4px 0 #17131C;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800">Nghe Pip đọc</div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ s.isAlbum }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;background:#F9DAFB;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+                <div style="position:absolute;top:96px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-size:14px;font-weight:800;padding:4px 10px;border-radius:10px;background:#17131C;color:#fff">BẤT NGỜ</span><span style="font-size:40px;font-weight:900;letter-spacing:-0.06em">Một món hiếm!</span></div>
+                <div style="position:absolute;top:210px;left:75px;width:240px;height:240px">{{ rareTeapot }}</div>
+                <span style="position:absolute;top:200px;left:60px;font-size:30px;color:#22BFF2;animation:ysp 1.4s ease-out infinite">✦</span>
+                <div style="position:absolute;top:470px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:30px;font-weight:900;letter-spacing:-0.04em">teapot</span><span style="font-family:'Kithfield Hand',cursive;font-size:22px;color:#5B4A8C">ấm trà</span><span style="font-size:14px;font-weight:700;color:#3E3646;margin-top:6px">Hiếm · chỉ có trong cảnh bất ngờ</span></div>
+                <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;background:rgba(255,255,255,.75)"><div style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;box-shadow:0 4px 0 #17131C;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800">Cất vào album</div></div>
+              </sc-if>
+
+            </div>
+          </div>
+          <span style="font-size:13.5px;font-weight:600;line-height:1.4;color:#3E3646;margin-top:12px">{{ s.note }}</span>
+        </a>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const STEPS=[
+  {n:1,title:'This week in Natterwick',href:'Yapling R7 Week.dc.html',k:'isWeek',note:'One town story, one call about your real week, one practice call.'},
+  {n:2,title:'Same place, a new story',href:'Yapling R7 Place.dc.html',k:'isCall',tap:'Nghe truyện',note:"Mei's café, but a rainy evening with new props on the counter."},
+  {n:3,title:'Props are words',href:'Yapling R7 Props.dc.html',k:'isTap',tap:'Chạm chiếc ô',note:'Tap a prop: the word, its Vietnamese, Pip says it.'},
+  {n:4,title:'The album',href:'Yapling R7 Album.dc.html',k:'isAlbum',tap:'Xong cuộc gọi',note:'The twist drops a rare foil sticker. Earned, never bought.'}
+];
+const RAIN=[{id:'umbrella',x:182,y:410,s:.85,v:'butter'},{id:'umbrella',x:228,y:410,s:.68,v:'butter'},{id:'umbrella',x:268,y:410,s:.85,v:'cyan'}];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const A=window.YapArt, K=(window.YapDC&&A&&A.r7)?window.YapDC(React):null; if(!K) return {steps:[]};
+    const {b1,b2}=K.blinkers(this.state.bt), t=K.tk(250);
+    return {
+      rainBack:K.sc('place',390,844,{scene:'cafe7b',so:{look:'rain',t},props:RAIN}), rainFront:K.sc('cafeFront7',390,844,{look:'rain'}),
+      mei:K.cr('otter',{size:170,mood:'laugh',blink:b1,k:'fm'}), pip:K.cr('redpanda',{size:100,mood:'listen',blink:b2,k:'fp'}),
+      umbrella:K.sc('prop',78,78,{id:'umbrella',v:'butter'}), rareTeapot:K.sc('collect',240,240,{id:'teapot',v:'mint',rarity:'rare',t}),
+      steps:STEPS.map((s,i)=>({n:s.n,title:s.title,href:s.href,note:s.note,tap:s.tap||'',hasArrow:i>0,isWeek:s.k==='isWeek',isCall:s.k==='isCall',isTap:s.k==='isTap',isAlbum:s.k==='isAlbum'}))
+    };
+  }
+}
+</script>
+</body>
+</html>

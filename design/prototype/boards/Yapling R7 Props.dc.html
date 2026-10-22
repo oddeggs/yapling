@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapling R7 · Props are words</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Kithfield Hand';src:url('../fonts/KithfieldHand-Bold.ttf') format('truetype');font-weight:100 900;font-display:swap}
+body{margin:0;background:#EDE8F2;-webkit-font-smoothing:antialiased}
+a{color:#17131C;text-decoration-color:#EFA3F4;text-decoration-thickness:3px}a:hover{color:#7A3B86}
+@keyframes ypop{0%{transform:scale(0,0)}45%{transform:scale(1.25,.8)}65%{transform:scale(.88,1.12)}82%{transform:scale(1.05,.96)}100%{transform:scale(1,1)}}
+@keyframes yup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes yring{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.14);opacity:.45}}
+@keyframes ytype{0%{letter-spacing:-0.2em;opacity:0}60%{letter-spacing:-0.04em;opacity:1}100%{letter-spacing:-0.06em}}
+@keyframes ysp{0%{transform:scale(0) rotate(0);opacity:0}40%{transform:scale(1.2) rotate(20deg);opacity:1}100%{transform:scale(.8) rotate(45deg);opacity:0}}
+@keyframes ydrop{0%{transform:translateY(-60px) scale(.6);opacity:0}60%{transform:translateY(6px) scale(1.05);opacity:1}100%{transform:none;opacity:1}}
+</style>
+<script src="../art/yap-art.js?v=5"></script>
+<script src="../art/yap-cast.js?v=9"></script>
+<script src="../art/yap-sticker.js?v=4"></script>
+<script src="../art/yap-r4.js?v=5"></script>
+<script src="../art/yap-r5.js?v=3"></script>
+<script src="../art/yap-r6.js?v=4"></script>
+<script src="../art/yap-r7.js?v=1"></script>
+<script src="../art/yap-dc.js?v=3"></script>
+</helmet>
+<div style="min-height:100vh;padding:56px 64px 120px;font-family:Lexend,'Be Vietnam Pro',ui-rounded,system-ui,sans-serif;color:#17131C;box-sizing:border-box;background-image:radial-gradient(rgba(23,19,28,.1) 1.1px,transparent 1.4px);background-size:22px 22px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 8px;border-radius:14px;background:#fff;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase"><span style="width:10px;height:10px;border-radius:5px;background:#5FD98A;border:2px solid #17131C"></span>Yapling · Round 7 · Story engine · 3</div>
+      <div style="font-size:56px;font-weight:800;letter-spacing:-0.05em;line-height:1.12">Props are <span style="background:#5FD98A;padding:0 10px;border-radius:12px;-webkit-box-decoration-break:clone;box-decoration-break:clone">words</span></div>
+      <div style="font-size:17px;font-weight:700;max-width:1100px;line-height:1.35;color:#3E3646">Every prop in a scene is a word. Tap it: the word, its Vietnamese, Pip says it, and it drops into your notebook as a seed packet (Đã gặp). Say the word in a call and the same drawing moves into your burrow, then grows with the phrase: Đã gặp, Nảy mầm, Ra lá, Nở hoa. The town and the burrow use one drawing per word.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <a href="Yapling R7 Place.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">‹ Same place</a>
+      <a href="Yapling R7 Flow.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#fff;box-shadow:0 3px 0 #17131C;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Flow strip</a>
+      <a href="Yapling R7 Album.dc.html" style="height:38px;padding:0 14px;border-radius:19px;border:2.5px solid #17131C;background:#17131C;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;text-decoration:none">Next · The album ›</a>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 44px;align-items:flex-start">
+    <sc-for list="{{ rs }}" as="r" hint-placeholder-count="4">
+      <div data-screen-label="{{ r.id }} Props are words" style="display:flex;flex-direction:column;gap:12px;width:390px;flex:none">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-weight:800;font-size:14px;color:#9A5AA6">{{ r.id }}</span><span style="font-weight:800;font-size:18px;letter-spacing:-0.02em">{{ r.label }}</span></div>
+        <div style="width:390px;height:844px;border-radius:56px;position:relative;overflow:hidden;background:#FFF7EE;box-shadow:0 0 0 11px #17131C,0 40px 70px -24px rgba(46,20,70,.4)">
+
+          <sc-if value="{{ r.isScene }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0">{{ rainBack }}</div>
+            <div style="position:absolute;left:-10px;top:258px">{{ mei }}</div>
+            <div style="position:absolute;left:286px;top:330px">{{ pip }}</div>
+            <div style="position:absolute;inset:0;pointer-events:none">{{ rainFront }}</div>
+            <div style="position:absolute;top:58px;left:62px;display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 5px;border-radius:20px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);z-index:4"><span style="width:30px;height:30px;border-radius:15px;overflow:hidden;border:2px solid #17131C;box-sizing:border-box;flex:none">{{ meiFace }}</span><span style="font-size:14px;font-weight:800">Mei</span><span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:10px;font-weight:800">AI</span><span style="font-size:12px;font-weight:600;color:#5D5366">Tuần 14 · Umbrella Mix-up</span></div>
+            <div style="position:absolute;top:110px;left:16px;right:16px;display:flex;flex-direction:column;gap:3px;padding:11px 15px;border-radius:22px 22px 22px 6px;background:#FFFFFF;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;z-index:4"><span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800">Mei<span style="padding:1px 5px;border-radius:6px;background:#17131C;color:#fff;font-size:9.5px">AI</span></span><span style="font-size:18px;font-weight:700;line-height:1.32">So many umbrellas tonight. Which one is yours?</span></div>
+            <sc-for list="{{ r.rings }}" as="g" hint-placeholder-count="3"><button aria-label="{{ g.aria }}" style="position:absolute;left:{{ g.x }};top:{{ g.y }};width:{{ g.d }};height:{{ g.d }};border-radius:50%;border:3px dashed #FFFFFF;background:rgba(255,255,255,.12);box-shadow:0 0 0 2.5px #17131C;animation:yring 1.6s ease-in-out infinite;animation-delay:{{ g.delay }};cursor:pointer;z-index:5;padding:0"></button></sc-for>
+            <sc-if value="{{ r.isHint }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;left:14px;right:14px;bottom:24px;display:flex;flex-direction:column;gap:10px;z-index:6">
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 10px 10px 12px;border-radius:20px;background:#17131C;color:#FFFFFF;box-shadow:0 6px 0 #5FD98A;animation:yup .45s ease-out both">
+                  <span style="font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 7px;border-radius:7px;background:#5FD98A;color:#17131C;flex:none;white-space:nowrap">MẸO</span>
+                  <span style="font-size:15px;font-weight:700;line-height:1.3;flex:1">Chạm vào đồ vật để nghe từ. Cuộc gọi sẽ chờ bạn.</span>
+                </div>
+                <div style="height:104px;border-radius:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+                  <button style="height:50px;width:96px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 14px Lexend,sans-serif;cursor:pointer">Chờ chút</button>
+                  <button aria-label="Giữ để nói" style="width:72px;height:72px;border-radius:50%;background:#EFA3F4;border:3px solid #17131C;box-shadow:0 4px 0 #17131C;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box;cursor:pointer"><span style="width:5px;height:26px;border-radius:3px;background:#17131C"></span><span style="width:5px;height:26px;border-radius:3px;background:#17131C"></span><span style="width:5px;height:26px;border-radius:3px;background:#17131C"></span></button>
+                  <button style="height:50px;width:96px;border-radius:25px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.8);color:#17131C;font:800 14px Lexend,sans-serif;cursor:pointer">Rời đi</button>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ r.isSheet }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;inset:0;background:rgba(23,19,28,.28);z-index:5"></div>
+              <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:20px 18px 16px;border-radius:40px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.94);border:1px solid #fff;box-shadow:0 -10px 40px rgba(46,20,70,.25);z-index:6;animation:yup .4s ease-out both">
+                <div style="display:flex;align-items:center;gap:14px">
+                  <div style="width:104px;height:104px;border-radius:26px;background:#FFF7EE;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;display:flex;align-items:center;justify-content:center;flex:none;animation:ypop .5s ease-out both">{{ umbrellaBig }}</div>
+                  <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+                    <span style="font-size:38px;font-weight:900;letter-spacing:-0.055em;line-height:1.1">umbrella</span>
+                    <span style="font-family:'Kithfield Hand',cursive;font-size:24px;line-height:1.2;color:#5B4A8C">cái ô</span>
+                    <span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">TỪ MỚI · VỪA VỚI MỨC CỦA BẠN</span>
+                  </div>
+                </div>
+                <button style="display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border-radius:26px;border:3px solid #17131C;background:#FFE48A;box-shadow:0 4px 0 #17131C;font:800 16px Lexend,sans-serif;color:#17131C;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#17131C" stroke="#17131C" stroke-width="1.5" stroke-linejoin="round"></path><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="#17131C" stroke-width="2.2" stroke-linecap="round"></path></svg>Nghe Pip đọc</button>
+                <div style="display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:16px;background:#F4F1F7"><span style="font-size:15.5px;font-weight:800">Mine is the small yellow umbrella.</span><span style="font-family:'Kithfield Hand',cursive;font-size:17px;line-height:1.22;color:#5B4A8C">Ô của mình là cái màu vàng nhỏ.</span></div>
+                <div style="display:flex;align-items:center;gap:10px;padding:4px 2px">
+                  <div style="width:36px;height:48px;flex:none">{{ seed }}</div>
+                  <span style="display:flex;flex-direction:column;flex:1"><span style="font-size:13px;font-weight:800">Đã vào sổ tay · Đã gặp</span><span style="font-size:12px;font-weight:600;color:#5D5366">Nói từ này trong cuộc gọi để mang nó về hang.</span></span>
+                  <button style="height:44px;padding:0 16px;border-radius:22px;border:1.5px solid rgba(23,19,28,.16);background:#FFFFFF;font:800 14px Lexend,sans-serif;color:#17131C;cursor:pointer">Tiếp tục</button>
+                </div>
+              </div>
+            </sc-if>
+          </sc-if>
+
+          <sc-if value="{{ r.isAfter }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(23,19,28,.12) 1.1px,transparent 1.4px);background-size:18px 18px"></div>
+            <div style="position:absolute;top:96px;left:22px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700;color:#5D5366">Tuần 14 · The Umbrella Mix-up</span><span style="font-size:54px;font-weight:900;letter-spacing:-0.06em;line-height:1.15;animation:ytype 1s ease-out both">Xong rồi!</span></div>
+            <div style="position:absolute;top:84px;right:22px;width:84px;height:84px;border-radius:24px;overflow:hidden;border:3px solid #17131C;box-shadow:3px 5px 0 #17131C;transform:rotate(6deg);box-sizing:border-box;animation:ypop .6s .3s ease-out both">{{ meiSticker }}</div>
+            <div style="position:absolute;top:200px;left:16px;right:16px;display:flex;flex-direction:column;gap:10px">
+              <span style="font-size:13px;font-weight:800;padding-left:4px">Bạn đã dùng từ này:</span>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px 12px 10px;border-radius:22px;background:#D7F7E2;border:3px solid #17131C;box-shadow:0 5px 0 #17131C;animation:yin .4s .2s ease-out both">
+                <div style="width:78px;height:78px;flex:none;animation:ypop .6s .4s ease-out both">{{ umbrellaMid }}</div>
+                <div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:22px;font-weight:900;letter-spacing:-0.04em">umbrella</span><span style="font-family:'Kithfield Hand',cursive;font-size:17px;color:#5B4A8C">cái ô</span><span style="font-size:13px;font-weight:700;line-height:1.35;color:#3E3646">Bạn nói: "Mine is the small yellow umbrella."</span></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:18px;background:#FFFFFF;border:2.5px solid #17131C"><span style="width:38px;height:38px;border-radius:12px;background:#D7F7E2;border:2px solid #17131C;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5L12 5l8 6.5V20H4z" fill="none" stroke="#17131C" stroke-width="2.4" stroke-linejoin="round"></path><path d="M10 20v-5h4v5" fill="none" stroke="#17131C" stroke-width="2.4" stroke-linejoin="round"></path></svg></span><span style="font-size:14.5px;font-weight:800;line-height:1.3">Chiếc ô đang về hang của bạn</span></div>
+              <span style="font-size:13px;font-weight:800;padding:6px 4px 0">Đã gặp tuần này, chưa dùng:</span>
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 12px 8px 8px;border-radius:18px;background:rgba(255,255,255,.7);border:1.5px solid rgba(23,19,28,.16)">
+                <div style="width:52px;height:52px;flex:none">{{ teapotSmall }}</div>
+                <span style="display:flex;flex-direction:column;flex:1"><span style="font-size:15px;font-weight:800">teapot · <span style="font-family:'Kithfield Hand',cursive;font-weight:700;color:#5B4A8C">ấm trà</span></span><span style="font-size:12px;font-weight:600;color:#5D5366">Nói nó trong một cuộc gọi để mang về hang.</span></span>
+              </div>
+            </div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:40px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.6);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <button style="height:56px;border-radius:28px;border:3px solid #17131C;background:#EFA3F4;color:#17131C;font:800 17px Lexend,sans-serif;box-shadow:0 4px 0 #17131C;cursor:pointer">Về hang</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ r.isBurrow }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0">{{ burrow }}</div>
+            <div style="position:absolute;left:262px;top:342px;width:60px;height:60px;animation:ydrop .8s .2s cubic-bezier(.3,.7,.4,1) both">{{ umbrellaShelf }}<span style="position:absolute;top:-10px;left:50px;font-size:22px;color:#FFD66B;animation:ysp 1.2s ease-out infinite">✦</span><span style="position:absolute;top:18px;left:-14px;font-size:16px;color:#22BFF2;animation:ysp 1.4s .3s ease-out infinite">✦</span></div>
+            <div style="position:absolute;left:24px;top:430px">{{ pipBurrow }}</div>
+            <div style="position:absolute;top:338px;left:132px;width:118px;padding:9px 12px;border-radius:20px 20px 20px 6px;background:#EFA3F4;border:2.5px solid #17131C;box-shadow:0 4px 0 #17131C;display:flex;flex-direction:column;gap:2px;animation:ypop .5s .5s ease-out both"><span style="display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800">Pip<span style="padding:1px 4px;border-radius:5px;background:#17131C;color:#fff;font-size:9px">AI</span></span><span style="font-size:14px;font-weight:800;line-height:1.28">Umbrella! You said it!</span></div>
+            <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:16px;border-radius:40px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.72);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1.5px 0 #fff,0 12px 30px rgba(46,20,70,.16)">
+              <div style="display:flex;align-items:center;gap:12px"><div style="width:56px;height:56px;border-radius:16px;background:#FFF7EE;border:2.5px solid #17131C;display:flex;align-items:center;justify-content:center;flex:none">{{ umbrellaTiny }}</div><div style="display:flex;flex-direction:column"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:#5D5366">MỚI TRONG HANG</span><span style="font-size:22px;font-weight:800;line-height:1.15">umbrella · <span style="font-family:'Kithfield Hand',cursive;font-weight:700;color:#5B4A8C">cái ô</span></span></div></div>
+              <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+                <span style="height:34px;border-radius:12px;background:#D7F7E2;border:2px solid #17131C;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800">Đã gặp</span>
+                <span style="height:34px;border-radius:12px;background:#5FD98A;border:2.5px solid #17131C;box-shadow:0 3px 0 #17131C;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800">Nảy mầm</span>
+                <span style="height:34px;border-radius:12px;background:#FFFFFF;border:1.5px dashed rgba(23,19,28,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#5D5366">Ra lá</span>
+                <span style="height:34px;border-radius:12px;background:#FFFFFF;border:1.5px dashed rgba(23,19,28,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#5D5366">Nở hoa</span>
+              </div>
+              <span style="font-size:12.5px;font-weight:600;line-height:1.4;color:#3E3646">Dùng lại vào một ngày khác để nó ra lá. Không dùng một thời gian? Nó vẫn ở đây.</span>
+            </div>
+          </sc-if>
+
+          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-weight:700;font-size:16px;z-index:8"><span>9:41</span><div style="width:25px;height:12px;border:1.5px solid #17131C;border-radius:4px;padding:1.5px;box-sizing:border-box"><div style="width:80%;height:100%;background:#17131C;border-radius:1.5px"></div></div></div>
+          <div style="position:absolute;top:11px;left:133px;width:124px;height:36px;border-radius:20px;background:#000;z-index:9"></div>
+          <div style="position:absolute;bottom:8px;left:128px;width:134px;height:5px;border-radius:3px;background:#17131C;z-index:9"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const RS=[
+  {id:'R1',label:'In the call · props you can tap',k:'hint'},
+  {id:'R2',label:'Tapped · word, Vietnamese, hear it',k:'sheet'},
+  {id:'R3',label:'After the call · you used it',k:'after'},
+  {id:'R4',label:'In the burrow · the same drawing arrives',k:'burrow'}
+];
+const RAIN=[{id:'umbrella',x:182,y:410,s:.85,v:'butter'},{id:'umbrella',x:228,y:410,s:.68,v:'butter'},{id:'umbrella',x:268,y:410,s:.85,v:'cyan'}];
+const RINGS=[[148,352,66,'0s','Chiếc ô vàng to'],[200,362,56,'.3s','Chiếc ô vàng nhỏ'],[234,352,66,'.6s','Chiếc ô xanh']];
+const HOME=[{id:'cactus',at:'shelf-l1'},{id:'bubble-tea',at:'shelf-l2',s:.9},{id:'iced-coffee',at:'shelf-r1',s:.9},{id:'desk-lamp',at:'desk-1',s:.8},{id:'monstera',at:'floor-r',s:.9}];
+class Component extends DCLogic {
+  state={bt:0};
+  componentDidMount(){ this.iv=setInterval(()=>this.setState(s=>({bt:s.bt+1})),120); }
+  componentWillUnmount(){ clearInterval(this.iv); }
+  renderVals(){
+    const A=window.YapArt, K=(window.YapDC&&A&&A.r7)?window.YapDC(React):null; if(!K) return {rs:[]};
+    const {b1,b2,b3}=K.blinkers(this.state.bt), t=K.tk(250);
+    return {
+      rainBack:K.sc('place',390,844,{scene:'cafe7b',so:{look:'rain',t},props:RAIN}), rainFront:K.sc('cafeFront7',390,844,{look:'rain'}),
+      mei:K.cr('otter',{size:170,mood:'happy',blink:b1,k:'rm'}), pip:K.cr('redpanda',{size:100,mood:'listen',blink:b2,k:'rp'}), meiFace:K.fc('otter',30,'happy','#FFE9C2'),
+      meiSticker:K.fc('otter',84,'happy','#FFE9C2'),
+      umbrellaBig:K.sc('prop',88,88,{id:'umbrella',v:'butter'}), umbrellaMid:K.sc('prop',78,78,{id:'umbrella',v:'butter'}), umbrellaTiny:K.sc('prop',48,48,{id:'umbrella',v:'butter'}),
+      umbrellaShelf:K.sc('prop',60,60,{id:'umbrella',v:'butter'}), teapotSmall:K.sc('prop',52,52,{id:'teapot',v:'lilac'}), seed:K.obj('seed',0,'rseed',36),
+      burrow:K.sc('place',390,844,{scene:'burrow',so:{t:0},props:HOME}), pipBurrow:K.cr('redpanda',{size:120,mood:'excited',blink:b3,k:'rpb'}),
+      rs:RS.map(s=>({id:s.id,label:s.label,isScene:s.k==='hint'||s.k==='sheet',isHint:s.k==='hint',isSheet:s.k==='sheet',isAfter:s.k==='after',isBurrow:s.k==='burrow',
+        rings:s.k==='hint'?RINGS.map(([x,y,d,delay,aria])=>({x:x+'px',y:y+'px',d:d+'px',delay,aria})):(s.k==='sheet'?[{x:'200px',y:'362px',d:'56px',delay:'0s',aria:'Chiếc ô vàng nhỏ'}]:[])}))
+    };
+  }
+}
+</script>
+</body>
+</html>
