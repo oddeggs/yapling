@@ -1,7 +1,8 @@
 import { describe, expect, it } from '@jest/globals';
+import { findScene } from '@yapling/story';
 
 import { CACHE_KEYS, memoryCacheStorage } from '../../src/data/storage';
-import { OpenLog, SeenMoments } from '../../src/data/moments';
+import { MOMENT_SCENES, OpenLog, SeenMoments } from '../../src/data/moments';
 import { FakeApi, launch, newPhone } from './fake-api';
 
 describe('the moments seen on this phone', () => {
@@ -20,6 +21,70 @@ describe('the moments seen on this phone', () => {
     const again = new SeenMoments(cache, () => 9);
     await again.load();
     expect(again.has('linh_welcome')).toBe(true);
+  });
+});
+
+describe('the moments seen, by scene', () => {
+  it('reads the first week’s moments seen before scenes were kept as their scenes', async () => {
+    const before = {
+      placement_chat: 1,
+      linh_welcome: 1,
+      pip_story: 2,
+      voicemail: 3,
+      plus_offer: 4,
+    };
+    const cache = memoryCacheStorage({ [CACHE_KEYS.seen]: JSON.stringify(before) });
+    const seen = new SeenMoments(cache, () => 5);
+    await seen.load();
+    const state = seen.store.get();
+    expect([...state.seen].sort()).toEqual([
+      'linh_welcome',
+      'pip_story',
+      'placement_chat',
+      'plus_offer',
+      'voicemail',
+    ]);
+    expect([...state.scenes].sort()).toEqual([
+      's1-e1-story',
+      's1-e1-voicemail',
+      's1-pro-knock',
+      's1-pro-unpack',
+    ]);
+    expect(seen.hasScene('s1-e1-story')).toBe(true);
+    expect(seen.hasScene('s1-e1-postcard')).toBe(false);
+    // Marking a scene already seen by its name writes nothing.
+    await seen.markScenes(['s1-e1-story']);
+    expect(JSON.parse(cache.values.get(CACHE_KEYS.seen) ?? '{}')).toEqual(before);
+  });
+
+  it('marks later weeks’ scenes by id, and a first-week scene under its name too', async () => {
+    const cache = memoryCacheStorage();
+    const seen = new SeenMoments(cache, () => 7);
+    await seen.markScenes(['s1-e2-story', 's1-e1-postcard']);
+    expect(seen.hasScene('s1-e2-story')).toBe(true);
+    expect(seen.has('linh_postcard')).toBe(true);
+    expect(seen.has('pip_story')).toBe(false);
+    expect(JSON.parse(cache.values.get(CACHE_KEYS.seen) ?? '{}')).toEqual({
+      's1-e2-story': 7,
+      's1-e1-postcard': 7,
+      linh_postcard: 7,
+    });
+    const again = new SeenMoments(cache, () => 9);
+    await again.load();
+    expect([...again.store.get().scenes].sort()).toEqual(['s1-e1-postcard', 's1-e2-story']);
+    expect([...again.store.get().seen]).toEqual(['linh_postcard']);
+  });
+
+  it('counts a Visitor version as its scene', async () => {
+    const seen = new SeenMoments(memoryCacheStorage(), () => 1);
+    await seen.markScenes(['s1-e1-voicemail-visitor']);
+    expect(seen.hasScene('s1-e1-voicemail')).toBe(true);
+    expect(seen.hasScene('s1-e1-voicemail-visitor')).toBe(true);
+    expect(seen.has('voicemail')).toBe(true);
+  });
+
+  it('maps the first week’s names onto scenes the story has', () => {
+    for (const scene of Object.values(MOMENT_SCENES)) expect(findScene(scene ?? '')).toBeDefined();
   });
 });
 

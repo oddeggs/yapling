@@ -1,7 +1,7 @@
 import type { MemoryItem, Profile, Progress, TimeZone } from '@yapling/contracts';
 
 import type { Schedule } from '../../src/data/connectivity';
-import { Data } from '../../src/data/data';
+import { Data, type DataOptions } from '../../src/data/data';
 import {
   memoryCacheStorage,
   memorySecretStorage,
@@ -261,8 +261,10 @@ export function launch(
   phone: Phone,
   schedule?: Schedule,
   timeZone: () => TimeZone | null = () => 'Asia/Ho_Chi_Minh',
+  extra: Pick<DataOptions, 'season' | 'pipsMinuteLines'> = {},
 ): Data {
   return new Data({
+    ...extra,
     base: BASE,
     fetch: api.fetch,
     secrets: phone.secrets,
