@@ -1,5 +1,12 @@
-import { LocalDate, MinutesSummary, Plan, QuietHours, TimeZone } from '@yapling/contracts';
-import { localDateOf } from '@yapling/domain';
+import {
+  CallKind,
+  LocalDate,
+  MinutesSummary,
+  Plan,
+  QuietHours,
+  TimeZone,
+} from '@yapling/contracts';
+import { isMeteredCall, localDateOf } from '@yapling/domain';
 import { DurableObject } from 'cloudflare:workers';
 import { z } from 'zod';
 
@@ -14,6 +21,7 @@ import {
   type LedgerRules,
   type LedgerState,
   type TalkKind,
+  unmeteredResult,
 } from './ledger';
 import { isQuiet, quietEnds } from './quiet';
 import { UserStorage, type ScheduledPush } from './storage';
@@ -36,6 +44,35 @@ export interface Scheduled {
   readonly due: number;
 }
 
+/** What the ledger reads about the learner from D1. */
+interface LedgerFacts {
+  readonly created_at: string | number;
+  readonly phone_timezone: string | null;
+  readonly timezone: string | null;
+  /** Null when there is no profile yet. */
+  readonly profile: string | null;
+  readonly story_started_on: string | null;
+  readonly start_path: string | null;
+  readonly installed_on: string | null;
+}
+
+/**
+ * The day the story started, once it has, from the profile: its story start, never before the
+ * install day; the install day for a profile from before the start path was asked. Null with no
+ * profile, or while the story hasn't started (a Visitor settling in, or a start still to come).
+ */
+function storyStart(
+  facts: LedgerFacts,
+  zone: { readonly timezone: string; readonly installedOn: string },
+  now: number,
+): string | null {
+  if (facts.profile === null) return null;
+  const started = LocalDate.safeParse(facts.story_started_on);
+  if (!started.success) return facts.start_path === null ? zone.installedOn : null;
+  if (started.data > localDateOf(now, zone.timezone)) return null;
+  return started.data < zone.installedOn ? zone.installedOn : started.data;
+}
+
 interface QuietFacts {
   readonly quiet: QuietHours | null;
   readonly timeZone: string;
@@ -45,7 +82,10 @@ interface QuietFacts {
  * One per learner, named by the user id (`userObject`): the live-minute ledger and the pushes the
  * server sends later. Other code calls it over RPC:
  *
- * - `charge(seconds, kind)`: the call object meters learner and character talk into the period.
+ * - `charge(seconds, kind, callKind?)`: the call object meters learner and character talk into
+ *   the period. A Settling-in call (`callKind` `settling`) charges nothing and never wraps up or
+ *   runs out; a charge without a call kind is metered, as before call kinds were passed.
+ * - `canStart(callKind)`: whether a call of that kind may start now (an unmetered one always may).
  * - `balance()`: the period's `MinutesSummary`.
  * - `setPlan(plan, periodStart)`: purchases move the learner between free and Plus (Plus periods
  *   are calendar months in the learner's timezone; `periodStart` is kept for support).
@@ -84,55 +124,77 @@ export class UserDO extends DurableObject<Bindings> {
    * timezone and install day come from the learner's profile and progress, and are pinned once
    * the profile exists, so editing the timezone can't open a fresh allowance. Until then the
    * phone's timezone from the guest session (or the launch timezone) stands in.
+   *
+   * The free weeks count from the day the story started, pinned once that day has come, so moving
+   * it can't open a fresh first week either. A profile saved before the start path was asked (an
+   * older app's) started its story on the install day. Until the story starts (a Visitor settling
+   * in), the weeks count from the install day.
    */
   private async ledger(): Promise<LedgerState> {
     let stored = this.store.ledger();
     let standIn: string = DEFAULT_LEDGER_TIMEZONE;
-    if (stored === null || stored.zone === null) {
+    if (stored === null || stored.zone === null || stored.storyStartedOn === null) {
       const row = await this.env.DB.prepare(
-        `SELECT u.created_at, u.timezone AS phone_timezone, p.timezone, g.installed_on FROM users u
+        `SELECT u.created_at, u.timezone AS phone_timezone, p.timezone, p.user_id AS profile,
+           p.story_started_on, p.start_path, g.installed_on FROM users u
          LEFT JOIN profiles p ON p.user_id = u.id
          LEFT JOIN progress g ON g.user_id = u.id
          WHERE u.id = ?`,
       )
         .bind(this.userId())
-        .first<{
-          created_at: string | number;
-          phone_timezone: string | null;
-          timezone: string | null;
-          installed_on: string | null;
-        }>();
+        .first<LedgerFacts>();
       if (stored === null) {
         const created = row === null ? NaN : new Date(row.created_at).getTime();
         stored = this.store.startLedger(Number.isFinite(created) ? created : userClock.now());
       }
-      const timezone = TimeZone.safeParse(row?.timezone);
-      if (timezone.success) {
-        const installed = LocalDate.safeParse(row?.installed_on);
-        this.store.pinZone(
-          timezone.data,
-          installed.success ? installed.data : localDateOf(stored.startedAt, timezone.data),
-        );
-        stored = this.store.ledger() ?? stored;
+      if (stored.zone === null) {
+        const timezone = TimeZone.safeParse(row?.timezone);
+        if (timezone.success) {
+          const installed = LocalDate.safeParse(row?.installed_on);
+          this.store.pinZone(
+            timezone.data,
+            installed.success ? installed.data : localDateOf(stored.startedAt, timezone.data),
+          );
+          stored = this.store.ledger() ?? stored;
+        }
+      }
+      if (stored.zone !== null && stored.storyStartedOn === null && row !== null) {
+        const started = storyStart(row, stored.zone, userClock.now());
+        if (started !== null) {
+          this.store.pinStoryStart(started);
+          stored = this.store.ledger() ?? stored;
+        }
       }
       const phone = TimeZone.safeParse(row?.phone_timezone);
       if (phone.success) standIn = phone.data;
     }
     const timezone = stored.zone?.timezone ?? standIn;
+    const storyStartedOn = LocalDate.safeParse(stored.storyStartedOn);
     return {
       plan: stored.plan,
       timezone,
       installedOn: stored.zone?.installedOn ?? localDateOf(stored.startedAt, timezone),
+      storyStartedOn: storyStartedOn.success ? storyStartedOn.data : null,
     };
   }
 
-  async charge(seconds: number, kind: TalkKind): Promise<ChargeResult> {
+  async charge(seconds: number, kind: TalkKind, callKind?: CallKind): Promise<ChargeResult> {
     const amount = ChargeSeconds.parse(seconds);
     const talk = TalkKindSchema.parse(kind);
+    const metered = callKind === undefined || isMeteredCall(CallKind.parse(callKind));
     const now = userClock.now();
     const period = rules.period(await this.ledger(), now);
+    if (!metered) return unmeteredResult(period, this.store.usedSeconds(period.start, period.plan));
     if (amount > 0) this.store.addUsage(period.start, period.plan, talk, amount, now);
     return chargeResult(period, this.store.usedSeconds(period.start, period.plan));
+  }
+
+  async canStart(callKind: CallKind): Promise<boolean> {
+    if (!isMeteredCall(CallKind.parse(callKind))) return true;
+    const period = rules.period(await this.ledger(), userClock.now());
+    return (
+      chargeResult(period, this.store.usedSeconds(period.start, period.plan)).exhausted === false
+    );
   }
 
   async balance(): Promise<MinutesSummary> {
