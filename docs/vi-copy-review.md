@@ -2,7 +2,7 @@
 
 Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here, except the beginner path's Vietnamese (Release 1.1), which comes first because Linh's spoken lines gate the recording.
 
-478 strings in 15 catalogues; 89 flagged.
+513 strings in 15 catalogues; 89 flagged.
 
 ## How to review
 
@@ -622,7 +622,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## Lock-screen knocks (local notifications)
 
-`packages/i18n/src/knocks.vi.ts` · 9 strings
+`packages/i18n/src/knocks.vi.ts` · 14 strings
 
 | Key | English | Tiếng Việt | Flag | Notes |
 |---|---|---|---|---|
@@ -635,6 +635,11 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `knocks.day7` | Your first week is done. One small thing to tell you. | Tuần đầu tiên của bạn đã xong. Có một điều nhỏ muốn nói với bạn. |  |  |
 | `knocks.day8` | How was your week? | How was your week? | English on purpose? | As day 2 |
 | `knocks.day8_back` | You’re back? I kept your seat warm. | You’re back? I kept your seat warm. | English on purpose? | As day 2 |
+| `knocks.settling.2` | Linh’s coming over to help you unpack. | Linh sang phụ bạn dỡ thùng đồ đây. | New | Chapter 2 (Boxes). From Yapling, the morning after a chapter; the draft "nè" changed to "đây" (register) |
+| `knocks.settling.3` | Linh has two lifesavers to show you. | Linh có hai câu cứu nguy muốn chỉ bạn. | New | Chapter 3 (Again, please) |
+| `knocks.settling.4` | Linh is waiting for you at the bus stop. | Linh đang đợi bạn ở bến xe buýt. | New | Chapter 4 (Bus 45). From the design; "bến xe buýt" vs "trạm xe buýt" in the line gloss `s1-set4-01`: pick one |
+| `knocks.settling.5` | Mei’s café is open. Come for a cup of tea. | Quán của Mei mở cửa rồi. Ghé uống tách trà nhé. | New | Chapter 5 (Mei’s café) |
+| `knocks.settling.6` | {name} is writing a page about you. | {name} đang viết một trang về bạn. | New | Chapter 6 (About me); `{name}` is the roommate |
 
 ## Yapling Plus paywall
 
@@ -808,7 +813,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 Seen only in development builds by the team: no review needed; listed for completeness.
 
-`packages/i18n/src/devmenu.vi.ts` · 18 strings
+`packages/i18n/src/devmenu.vi.ts` · 48 strings
 
 | Key | English | Tiếng Việt | Flag | Notes |
 |---|---|---|---|---|
@@ -830,4 +835,34 @@ Seen only in development builds by the team: no review needed; listed for comple
 | `devmenu.cost.callCost` | ${usd}: speech-to-text ${stt} · voice ${tts} · model ${llm} · summary ${summary} | ${usd}: nhận giọng ${stt} · giọng nói ${tts} · mô hình ${llm} · tóm tắt ${summary} |  |  |
 | `devmenu.cost.callLatency` | P50 {p50} ms · P90 {p90} ms · {turns} turns · learner {learner} s | P50 {p50} ms · P90 {p90} ms · {turns} lượt · người học {learner} giây |  |  |
 | `devmenu.cost.none` | – | – |  |  |
+| `devmenu.settling.heading` | SETTLING IN | LÀM QUEN | New |  |
+| `devmenu.settling.status.none` | No learner yet: onboarding hasn’t made one. | Chưa có người học: phần mở đầu chưa tạo người học. | New |  |
+| `devmenu.settling.status.notVisitor` | Not a Visitor: the story runs from the install day. | Không phải Khách mới đến: truyện tính từ ngày cài. | New |  |
+| `devmenu.settling.status.settling` | Settling in · {done} of 6 chapters done · chapter {next} next | Đang làm quen · xong {done}/6 chương · tiếp theo chương {next} | New |  |
+| `devmenu.settling.status.letter` | Settled in · the letter came on {date} (week 1, day 1) | Đã làm quen xong · lá thư đến ngày {date} (tuần 1, ngày 1) | New |  |
+| `devmenu.settling.startVisitor` | Start as a Visitor | Bắt đầu là Khách mới đến | New |  |
+| `devmenu.settling.startVisitorHint` | Clears this phone’s learner, then makes a new one at Visitor and opens the burrow with Chapter 1 next | Xoá người học trên máy này, tạo người học mới ở chặng Khách mới đến và mở hang với chương 1 | New |  |
+| `devmenu.settling.jumpHeading` | JUMP TO CHAPTER | CHUYỂN TỚI CHƯƠNG | New |  |
+| `devmenu.settling.a11y.jumpChapter` | Jump to chapter {chapter} | Chuyển tới chương {chapter} | New |  |
+| `devmenu.settling.jumpHint` | The chapters before it done, one a day; the clock on its day | Các chương trước coi như đã xong, mỗi ngày một chương; đồng hồ chuyển tới ngày của chương | New |  |
+| `devmenu.settling.letterDay` | Jump to the letter day | Chuyển tới ngày lá thư | New |  |
+| `devmenu.settling.letterDayHint` | All six chapters done and the clock on the day the letter comes, week 1’s day 1 | Xong cả sáu chương, đồng hồ chuyển tới ngày lá thư đến, tức ngày 1 của tuần 1 | New |  |
+| `devmenu.settling.needsVisitor` | Start as a Visitor first: the jumps work on a Visitor. | Hãy bắt đầu là Khách mới đến trước: các nút chuyển chỉ dùng cho Khách mới đến. | New |  |
+| `devmenu.settling.working` | Working… | Đang làm… | New |  |
+| `devmenu.settling.failed` | Didn’t work: {reason} | Không được: {reason} | New |  |
+| `devmenu.settling.done.visitor` | A new Visitor. Chapter 1 is next, on day 1. | Đã có Khách mới đến. Chương 1 là chương tiếp theo, ngày 1. | New |  |
+| `devmenu.settling.done.chapter` | Chapter {chapter} is next, on day {chapter}. | Chương {chapter} là chương tiếp theo, ngày {chapter}. | New |  |
+| `devmenu.settling.done.letter` | The letter comes today, settling day 6. | Lá thư đến hôm nay, ngày làm quen thứ 6. | New |  |
+| `devmenu.settling.knocksHeading` | SETTLING-IN KNOCKS | THÔNG BÁO KHI LÀM QUEN | New |  |
+| `devmenu.settling.knockChip` | Chapter {chapter} | Chương {chapter} | New |  |
+| `devmenu.settling.a11y.knockChip` | Preview chapter {chapter}’s knock | Xem trước thông báo của chương {chapter} | New |  |
+| `devmenu.settling.previewHint` | Opens chapter {chapter}’s call, as the tapped knock would | Mở cuộc gọi của chương {chapter}, như khi chạm vào thông báo | New |  |
+| `devmenu.settling.ringSoon` | Chapter {chapter}, a minute before its knock | Chương {chapter}, một phút trước thông báo | New |  |
+| `devmenu.settling.ringSoonHint` | Jumps to chapter {chapter} and moves the clock to a minute before its morning knock | Chuyển tới chương {chapter} và đưa đồng hồ tới một phút trước thông báo buổi sáng | New |  |
+| `devmenu.settling.ringNote` | Chapter {chapter}’s scheduled knock rings in a minute. Lock the phone or leave the app. | Thông báo đã hẹn của chương {chapter} sẽ reo sau một phút. Khoá máy hoặc thoát ứng dụng. | New |  |
+| `devmenu.settling.fire` | Fire chapter {chapter}’s knock in 5 s | Gửi thông báo chương {chapter} sau 5 giây | New |  |
+| `devmenu.settling.fireNote` | Chapter {chapter}’s knock rings in 5 s. Lock the phone or leave the app. | Thông báo chương {chapter} sẽ reo sau 5 giây. Khoá máy hoặc thoát ứng dụng. | New |  |
+| `devmenu.settling.tag` | Chapter {chapter} | Chương {chapter} | New |  |
+| `devmenu.settling.day` | Settling day {day} | Ngày làm quen {day} | New |  |
+| `devmenu.settling.noWeekKnock` | No week-1 knock while settling in | Chưa có thông báo tuần 1 khi đang làm quen | New |  |
 
