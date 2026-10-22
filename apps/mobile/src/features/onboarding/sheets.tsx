@@ -9,9 +9,16 @@ import {
   withAlpha,
   type Glass,
 } from '@yapling/theme';
-import { useRef, type ReactNode } from 'react';
-import { ScrollView, StyleSheet, View, type ScrollViewInstance } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Canvas, LinearGradient, Rect, vec } from '@shopify/react-native-skia';
+import { useRef, useState, type ReactNode } from 'react';
+import { StyleSheet, View } from 'react-native';
+import Animated, {
+  interpolate,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 import { GlassView, Press, Txt, useKeyframes } from '../../ui';
 import type { ViewStyleProp } from '../../ui/style';
@@ -131,31 +138,79 @@ export function QuietButton({
   );
 }
 
+/** How tall the fade over the last of a sheet's rows is, while there are more below. */
+const MORE_FADE = 36;
+
 /**
- * What a sheet holds above its buttons. On a short screen (the iPhone SE) it scrolls, and its
- * scroll bar shows once so the learner sees there is more.
+ * What a sheet holds above its buttons. On a short screen (the iPhone SE) it scrolls: its scroll
+ * bar shows once, and while there is more below, the last rows fade into the sheet so the learner
+ * sees there is more to scroll to.
  */
-export function SheetScroll({ gap, children }: { gap: number; children: ReactNode }) {
-  const ref = useRef<ScrollViewInstance>(null);
+export function SheetScroll({
+  gap,
+  fill = true,
+  children,
+}: {
+  gap: number;
+  /** Takes the sheet's room above its buttons; false: only what the rows need, shrinking to fit. */
+  fill?: boolean;
+  children: ReactNode;
+}) {
+  const ref = useAnimatedRef<Animated.ScrollView>();
   const flashed = useRef(false);
-  const viewport = useRef(0);
-  const flash = (content: number) => {
-    if (flashed.current || viewport.current === 0 || content <= viewport.current) return;
+  const viewport = useSharedValue(0);
+  const content = useSharedValue(0);
+  const offset = useSharedValue(0);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const flash = () => {
+    if (flashed.current || viewport.value === 0 || content.value <= viewport.value) return;
     flashed.current = true;
     ref.current?.flashScrollIndicators();
   };
+  const onScroll = useAnimatedScrollHandler((e) => {
+    offset.value = e.contentOffset.y;
+  });
+  const fade = useAnimatedStyle(() => {
+    const left = content.value - viewport.value - offset.value;
+    return { opacity: interpolate(left, [0, MORE_FADE], [0, 1], 'clamp') };
+  });
   return (
-    <ScrollView
-      ref={ref}
-      style={{ flex: 1 }}
-      contentContainerStyle={{ gap }}
-      bounces={false}
-      onLayout={(e) => {
-        viewport.current = e.nativeEvent.layout.height;
-      }}
-      onContentSizeChange={(_, h) => flash(h)}
-    >
-      {children}
-    </ScrollView>
+    <View style={fill ? { flex: 1 } : { flexShrink: 1 }}>
+      <Animated.ScrollView
+        ref={ref}
+        style={fill ? { flex: 1 } : { flexGrow: 0, flexShrink: 1 }}
+        contentContainerStyle={{ gap }}
+        bounces={false}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        onLayout={(e) => {
+          viewport.value = e.nativeEvent.layout.height;
+          setSize({ width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height });
+          flash();
+        }}
+        onContentSizeChange={(_, h) => {
+          content.value = h;
+          flash();
+        }}
+      >
+        {children}
+      </Animated.ScrollView>
+      <Animated.View
+        pointerEvents="none"
+        style={[{ position: 'absolute', left: 0, right: 0, bottom: 0, height: MORE_FADE }, fade]}
+      >
+        {size.width > 0 ? (
+          <Canvas style={{ width: size.width, height: MORE_FADE }}>
+            <Rect x={0} y={0} width={size.width} height={MORE_FADE}>
+              <LinearGradient
+                start={vec(0, 0)}
+                end={vec(0, MORE_FADE)}
+                colors={[withAlpha(palette.paper, 0), withAlpha(palette.paper, 0.92)]}
+              />
+            </Rect>
+          </Canvas>
+        ) : null}
+      </Animated.View>
+    </View>
   );
 }

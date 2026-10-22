@@ -1,5 +1,5 @@
 import type { SettlingChapter } from '@yapling/domain';
-import { MINUTE_MS, instantOf } from '@yapling/domain';
+import { MINUTE_MS, instantOf, localDateOf } from '@yapling/domain';
 import { colours } from '@yapling/theme';
 import { router } from 'expo-router';
 import { useState, type ReactNode } from 'react';
@@ -13,10 +13,10 @@ import { Txt } from '../../ui/text';
 import { letterDayOf, nextSettlingChapter, settlingCallPath, type KnockedChapter } from '../knocks';
 import { settlingKnockOf } from '../knocks/plan';
 import { fireTestKnock } from '../knocks/scheduler';
-import { jumpToInstant } from './debug-clock';
+import { jumpToInstant, now } from './debug-clock';
 import { KnockPreview } from './knock-preview';
 import { jumpToChapter, jumpToLetterDay } from './settling-tools';
-import { settlingOf, type TestLearner } from './test-learner';
+import { letterAhead, settlingOf, type TestLearner } from './test-learner';
 
 const CHAPTERS: readonly SettlingChapter[] = [1, 2, 3, 4, 5, 6];
 const KNOCKED: readonly KnockedChapter[] = [2, 3, 4, 5, 6];
@@ -68,7 +68,9 @@ export function SettlingSection({
             done: settling.chapters.length,
             next: next ?? 6,
           })
-        : t('devmenu.settling.status.letter', { date: letterDayOf(settling) ?? '' });
+        : letterAhead(learner, localDateOf(now(), learner.timezone))
+          ? t('devmenu.settling.status.letterAhead', { date: letterDayOf(settling) ?? '' })
+          : t('devmenu.settling.status.letter', { date: letterDayOf(settling) ?? '' });
 
   /** Runs a jump with a note while it works and after. */
   const run = (task: () => Promise<string>) => {

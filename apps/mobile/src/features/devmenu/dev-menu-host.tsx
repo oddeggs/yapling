@@ -11,6 +11,7 @@ import { Txt } from '../../ui/text';
 import { useKnockInputs } from '../knocks/knocks-provider';
 import { now, useDebugClock } from './debug-clock';
 import { devToolsEnabled } from './dev-tools';
+import { openMenuOnce } from './menu-once';
 import { dayOf, testLearnerOf } from './test-learner';
 
 /** Clears the learner's local data (the data layer's reset); the test menu clears its own. */
@@ -23,7 +24,8 @@ export const useResetLocalData = (): ResetLocalData | null => useContext(ResetCo
 
 export const DEV_MENU_PATH = '/devmenu';
 
-const openMenu = () => router.push(DEV_MENU_PATH);
+/** Opens the test menu, unless it is open already. */
+const openMenu = () => openMenuOnce(() => router.push(DEV_MENU_PATH));
 
 /**
  * Wraps the app in the test builds: a three-finger tap anywhere opens the test menu, as does a

@@ -18,6 +18,7 @@ import {
   DashedRule,
   GlassSheet,
   Press,
+  sentences,
   Sticker,
   StickerButton,
   Txt,
@@ -74,7 +75,7 @@ function LinhBubble({ line, gloss }: { line: string; gloss: string | null }) {
     <Animated.View
       style={easeIn}
       accessible
-      accessibilityLabel={`${name}, ${t('common.aiTag')}: ${line}${gloss ? `. ${gloss}` : ''}`}
+      accessibilityLabel={sentences(`${name}, ${t('common.aiTag')}: ${line}`, gloss)}
     >
       <View
         style={[

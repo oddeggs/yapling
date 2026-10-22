@@ -43,7 +43,7 @@ describe('the Visitor’s after-call card', () => {
         progress: progress(),
         learner,
         firstLanguage: 'vi',
-        heard: ['hi!', "I'm Lan.", 'Nice to meet you, too.'],
+        heard: ['hi!', "I'm Lan.", 'Nice to meet you, too.', 'Bye!'],
       },
       vi,
     );
@@ -51,7 +51,10 @@ describe('the Visitor’s after-call card', () => {
       kicker: 'Làm quen · 1/6 · Hello',
       title: 'Xong rồi!',
       host: 'linh',
-      said: { title: 'Bạn đã nói được:', lines: ['Hi!', "I'm Lan.", 'Nice to meet you, too.'] },
+      said: {
+        title: 'Bạn đã nói được:',
+        lines: ['Hi!', "I'm Lan.", 'Nice to meet you, too.', 'Bye!'],
+      },
       seed: {
         tag: 'GÓI HẠT · CHƯƠNG 1',
         phrase: 'Nice to meet you',
@@ -72,7 +75,7 @@ describe('the Visitor’s after-call card', () => {
     });
   });
 
-  it('leaves the box packed when the chapter was left before its end', () => {
+  it('leaves the box packed, the seed unearned and “done” unsaid when the chapter was left', () => {
     for (const endReason of ['hangup', 'too_hard'] as const) {
       const card = buildVisitorAfterCall(
         {
@@ -85,7 +88,40 @@ describe('the Visitor’s after-call card', () => {
         vi,
       );
       expect(card.box).toBeNull();
+      expect(card.seed).toBeNull();
+      expect(card.title).toBe('Tạm nghỉ');
+      // Only the turns reached: Hi! passed, nothing after it was.
+      expect(card.said?.lines).toEqual(['Hi!']);
     }
+  });
+
+  it('gives back only what passed on its words; a generous or skipped turn shows its card', () => {
+    // "Banana sandwich" twice passes the name turn generously: the card says the card's line.
+    expect(
+      saidLines(
+        ['Hi!', 'Banana sandwich', 'Banana sandwich', 'Nice to meet you too', 'see you'],
+        chapterOne,
+        null,
+        'Lan',
+      ),
+    ).toEqual(['Hi!', "I'm Lan.", 'Nice to meet you too', 'See you']);
+    // Asking again is never a try, so it's no sentence passed either.
+    expect(
+      saidLines(['Sorry? Again, please.', 'high'], { ...chapterOne, endReason: 'hangup' }, null),
+    ).toEqual(['High']);
+    // A turn that teaches the phrase passes on it.
+    const chapterThree = { ...chapterOne, sceneId: 's1-set3' };
+    expect(saidLines(['Sorry? Again, please.'], chapterThree, null, 'Lan')[0]).toBe(
+      'Sorry? Again, please.',
+    );
+  });
+
+  it('keeps every heard line for a call whose turns are not all cards', () => {
+    const practice = call({ kind: 'practice', sceneId: 's1-e1-practice' });
+    expect(saidLines(['Banana sandwich', 'It means money'], practice, null, 'Lan')).toEqual([
+      'Banana sandwich',
+      'It means money',
+    ]);
   });
 
   it('never scores or fixes: no wins, no fix, no receipt on the card', () => {
@@ -103,8 +139,13 @@ describe('the Visitor’s after-call card', () => {
 
   it('leaves out repeats, empty turns and turns said in Vietnamese', () => {
     expect(
-      saidLines(['hi', 'Hi!', '', 'Mình là Lan', "i'm Lan", 'Nice to meet you'], chapterOne, null),
-    ).toEqual(['Hi', "I'm Lan", 'Nice to meet you']);
+      saidLines(
+        ['hi', 'Hi!', '', 'Mình là Lan', "i'm Lan", 'Nice to meet you', 'bye'],
+        chapterOne,
+        null,
+        'Lan',
+      ),
+    ).toEqual(['Hi', "I'm Lan", 'Nice to meet you', 'Bye']);
   });
 
   it('shows no seed for a chapter that seeds none, and no meaning without a language for it', () => {

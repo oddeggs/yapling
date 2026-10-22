@@ -38,6 +38,9 @@ export const devmenuEn = {
   'devmenu.settling.status.settling':
     'Settling in · {done} of 6 chapters done · chapter {next} next',
   'devmenu.settling.status.letter': 'Settled in · the letter came on {date} (week 1, day 1)',
+  /** The letter is out in the burrow, but its day is after the clock (the clock went back). */
+  'devmenu.settling.status.letterAhead':
+    'Settled in · the burrow shows the letter, but week 1 counts from {date}, after the clock. To go back, start a new Visitor.',
   'devmenu.settling.startVisitor': 'Start as a Visitor',
   /** VoiceOver hint and the note under the button. */
   'devmenu.settling.startVisitorHint':

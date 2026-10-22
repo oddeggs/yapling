@@ -67,6 +67,26 @@ describe('the keepsake', () => {
     expect(earned?.certificates[0]?.heading).toBe('Minh can now…');
   });
 
+  it('names the office’s receptionist in the learner’s language when they signed it', () => {
+    const office = { ...introduced, witness: 'office' } as const;
+    const earned = earnedKeepsakes(
+      { id: CALL_ID },
+      progress({
+        canDos: [office],
+        keepsakes: [{ ...canDoKeepsake, signedBy: 'office' }],
+        weeks: [RING_ONE],
+      }),
+      learner,
+    );
+    expect(earned?.certificates[0]).toMatchObject({ witness: null });
+    expect(keepsakeScreenCopy(earned!, 0, vi)?.roommateSays).toBe(
+      'Mình tự vẽ đó. Cô lễ tân đã ký!',
+    );
+    expect(keepsakeScreenCopy(earned!, 0, en)?.roommateSays).toBe(
+      'I drew it myself. The receptionist signed it!',
+    );
+  });
+
   it('shows a can-do ticked mid-week with its track and count instead of the ring', () => {
     const earned = earnedKeepsakes(
       { id: CALL_ID },

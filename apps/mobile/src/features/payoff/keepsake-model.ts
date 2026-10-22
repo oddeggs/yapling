@@ -240,7 +240,10 @@ export function keepsakeScreenCopy(
             }),
           }
         : null,
-    roommateSays: t('payoff.keepsake.roommateSays', { witness: cert.witnessName }),
+    // A voice with no face (the office's receptionist) is named in the learner's language.
+    roommateSays: t('payoff.keepsake.roommateSays', {
+      witness: cert.witness === null ? t('payoff.keepsake.officeWitness') : cert.witnessName,
+    }),
     cta: t('payoff.keepsake.cta'),
     hungToast: t('payoff.keepsake.hung'),
   };

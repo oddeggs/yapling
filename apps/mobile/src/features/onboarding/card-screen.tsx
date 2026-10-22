@@ -114,8 +114,8 @@ export function CardScreen({
           <Stamp town={view.stampTown} date={view.stampDate} />
         </Animated.View>
         <GlassSheet kind="card" top={SHEET_TOP + shift} entrance={motion.screens.residencySheet}>
-          {/* On a short screen the rows scroll above "Continue". */}
-          <SheetScroll gap={8}>
+          {/* On a short screen the rows scroll above the adjust chips and "Continue". */}
+          <SheetScroll gap={8} fill={false}>
             <Txt variant="section" style={{ paddingHorizontal: 4 }}>
               {t('onboarding.card.strengthsTitle')}
             </Txt>
@@ -132,16 +132,18 @@ export function CardScreen({
             {view.aims.map((a) => (
               <CheckRow key={a.id} kind="aim" text={a.text} />
             ))}
-            <View
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 4 }}
-            >
-              <Txt variant="noteStrong" colour={colours.textMuted} style={{ flex: 1 }}>
-                {t('onboarding.card.adjust')}
-              </Txt>
-              <Chip label={t('onboarding.card.tooEasy')} onPress={onTooEasy} />
-              <Chip label={t('onboarding.card.tooHard')} onPress={onTooHard} />
-            </View>
           </SheetScroll>
+          {/* Kept out of the scroll, so "Dễ quá / Khó quá" are in reach on a short screen too. */}
+          <View
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 4 }}
+          >
+            <Txt variant="noteStrong" colour={colours.textMuted} style={{ flex: 1 }}>
+              {t('onboarding.card.adjust')}
+            </Txt>
+            <Chip label={t('onboarding.card.tooEasy')} onPress={onTooEasy} />
+            <Chip label={t('onboarding.card.tooHard')} onPress={onTooHard} />
+          </View>
+          <View style={{ flex: 1 }} />
           <StickerButton label={t('common.continue')} onPress={onContinue} />
         </GlassSheet>
       </View>

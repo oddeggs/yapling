@@ -216,12 +216,28 @@ const praiseEffects = (scene: Scene, beat: Beat, answer: Answer): SceneEffect[] 
 const passTurn = (scene: Scene, state: RunnerState, beat: Beat, answer: Answer): Step =>
   leaveTurn(scene, state, beat, 'match', answer.exits.fine.to, praiseEffects(scene, beat, answer));
 
-/** The second English try without the words: the listener says it properly, and on we go. */
+/**
+ * The listener's quiet "Okay!" after a generous pass: one of their recorded lines, picked by the
+ * beat's place, or the text in their live voice. Never praise: the try didn't have the words.
+ */
+const okayEffect = (scene: Scene, beat: Beat, listener: CharacterId): SceneEffect => {
+  const pool = S1_SHARED_LINES.okay[listener] ?? [];
+  const id = pool[scene.beats.indexOf(beat) % Math.max(pool.length, 1)];
+  return sayShared(beat, listener, id, S1_SHARED_LINES.okayText);
+};
+
+/**
+ * The second English try without the words: the listener says it properly (the recast) or a
+ * plain "Okay!" where a pass would bring praise, and on we go. Praise is kept for a try that had
+ * the words; a turn with nothing said after a pass (the next line answers it) stays quiet.
+ */
 const generousPass = (scene: Scene, state: RunnerState, beat: Beat, answer: Answer): Step => {
   const said =
-    answer.recast === null
-      ? praiseEffects(scene, beat, answer)
-      : [sayText(beat, answer.listener, { en: answer.recast, glosses: {} })];
+    answer.recast !== null
+      ? [sayText(beat, answer.listener, { en: answer.recast, glosses: {} })]
+      : answer.praise.length > 0
+        ? [okayEffect(scene, beat, answer.listener)]
+        : [];
   return leaveTurn(scene, state, beat, 'generous', answer.exits.fine.to, said);
 };
 

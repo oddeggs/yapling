@@ -14,6 +14,7 @@ import { useLanguageOverride, useLocale } from '../../ui/locale';
 import { StickerButton } from '../../ui/sticker-button';
 import { Txt } from '../../ui/text';
 import { ToggleRow } from '../../ui/toggle';
+import { useSettlingLive } from '../burrow/settling-live';
 import { useKnockInputs } from '../knocks/knocks-provider';
 import { hasKnockPermission, requestKnockPermission } from '../knocks/permission';
 import { knockHref, knockOfDay } from '../knocks/plan';
@@ -33,9 +34,16 @@ import { CostPage } from './cost-page';
 import { useResetLocalData } from './dev-menu-host';
 import { devStorage } from './dev-storage';
 import { KnockPreview } from './knock-preview';
+import { menuShown } from './menu-once';
 import { SettlingSection } from './settling-section';
 import { createVisitor, seedOf } from './settling-tools';
-import { dayOf, deviceTimeZone, settlingOf, testLearnerOf } from './test-learner';
+import {
+  dayOf,
+  deviceTimeZone,
+  settlingOf,
+  testLearnerOf,
+  withBurrowSettling,
+} from './test-learner';
 import { WeeksSection } from './weeks-section';
 
 const DAYS = WEEK_ONE_PLAN.map((d) => d.day);
@@ -82,7 +90,12 @@ export function DevMenu() {
   const clock = useDebugClock();
   const resetLocalData = useResetLocalData();
   const { turnMode, setTurnMode } = useTurnMode();
-  const learner = testLearnerOf(useKnockInputs(), Date.now());
+  // Settling in as the burrow sees it, so the menu and the burrow agree on the letter's day.
+  const burrow = useSettlingLive();
+  const learner = withBurrowSettling(
+    testLearnerOf(useKnockInputs(), Date.now()),
+    burrow && { visitorPath: burrow.visitorPath, ...burrow.day },
+  );
   const appNow = now();
   const day = dayOf(learner, appNow);
   const [previewDay, setPreviewDay] = useState(() => Math.min(Math.max(day, 2), 8));
@@ -91,6 +104,8 @@ export function DevMenu() {
   const [note, setNote] = useState<string | null>(null);
   const [page, setPage] = useState<'menu' | 'cost'>('menu');
   const opened = useRef(false);
+  // While it is up, the build label and the three-finger tap open no second copy.
+  useEffect(() => menuShown(), []);
   useEffect(() => {
     if (opened.current) return;
     opened.current = true;

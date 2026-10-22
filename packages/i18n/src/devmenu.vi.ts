@@ -28,6 +28,8 @@ export const devmenuVi = {
   'devmenu.settling.status.settling':
     'Đang làm quen · xong {done}/6 chương · tiếp theo chương {next}',
   'devmenu.settling.status.letter': 'Đã làm quen xong · lá thư đến ngày {date} (tuần 1, ngày 1)',
+  'devmenu.settling.status.letterAhead':
+    'Đã làm quen xong · hang đang có lá thư, nhưng tuần 1 tính từ ngày {date}, sau đồng hồ. Muốn quay lại thì bắt đầu Khách mới đến mới.',
   'devmenu.settling.startVisitor': 'Bắt đầu là Khách mới đến',
   'devmenu.settling.startVisitorHint':
     'Xoá người học trên máy này, tạo người học mới ở chặng Khách mới đến và mở hang với chương 1',

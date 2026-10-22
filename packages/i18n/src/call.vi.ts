@@ -88,6 +88,7 @@ export const callVi = {
   'call.exit.where': '{place} · {time}.',
   'call.exit.tooHard': 'Khó quá?',
   'call.exit.tooHardSub': 'Nói chậm hơn, hoặc tập với Linh trước',
+  'call.exit.tooHardSubSlower': 'Mọi người sẽ nói chậm hơn',
   'call.exit.stay': 'Tiếp tục gọi',
   'call.exit.leave': 'Rời đi',
   'call.tooHard.slowerSub': 'Ở lại cuộc gọi. Mọi người sẽ nói chậm hơn.',
