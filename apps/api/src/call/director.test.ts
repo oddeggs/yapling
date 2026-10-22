@@ -31,11 +31,21 @@ describe('the director', () => {
       const plan = director.plan();
       if (!plan) throw new Error('no plan');
       const applied = director.apply(plan, outcome);
-      expect(applied.event).toBe('silent');
+      expect(applied.event).toBe('unclear');
       expect(director.state.beatId).toBe('ask-work');
       expect(director.state.tries).toBe(1);
       expect(applied.effects.some((e) => e.type === 'beat_changed')).toBe(false);
     }
+  });
+
+  it('offers the hint on a long quiet once, and never as a try', () => {
+    const director = new Director(UNPACK, listening(UNPACK.id, 'ask-work'), 'newcomer');
+    expect(director.offersOnQuiet()).toBe(true);
+    const effects = director.dispatch({ type: 'silent' });
+    expect(effects.map((e) => e.type)).toEqual(['hint']);
+    expect(director.state).toMatchObject({ beatId: 'ask-work', tries: 0, phase: 'listening' });
+    expect(director.offersOnQuiet()).toBe(false);
+    expect(director.dispatch({ type: 'silent' })).toEqual([]);
   });
 
   it('falls back after the beat’s tries, so nobody is stuck', () => {

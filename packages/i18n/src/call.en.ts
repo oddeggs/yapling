@@ -55,6 +55,10 @@ export const callEn = {
    * English in every language, as the character says it.
    */
   'call.didntCatch': "Sorry, I didn't catch that. Say it another way?",
+  /** The tip over the mic after a tap too short to be a turn (nothing was sent). */
+  'call.tip.holdLonger': 'Hold the button while you talk',
+  /** The tip over the mic after a hold with no words in it (nothing was answered). */
+  'call.tip.notHeard': "I didn't catch that. Hold and try again.",
   /** The pill while the line drops and the phone dials back in. */
   'call.reconnecting': 'Reconnecting…',
   /** The pill while a phone call or Siri has the audio. */

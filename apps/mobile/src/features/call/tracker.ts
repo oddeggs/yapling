@@ -45,7 +45,7 @@ export interface TimerState {
   readonly beatId: string;
   /** Seconds for this round at the learner's stage. */
   readonly total: number;
-  /** The learner started speaking: the ring counts down. */
+  /** The learner started speaking: the ring counts down while they talk. */
   readonly started: boolean;
   /** It reached zero, or the turn was heard. */
   readonly done: boolean;
@@ -155,9 +155,10 @@ export function reduceTracker(
     case 'meaning_closed':
       return { ...state, meaning: null };
     case 'speech_started':
+      // The hint stays until the turn is heard (hidden while the learner talks), so a tap or a
+      // hold with no words in it never takes it away.
       return {
         ...state,
-        hint: null,
         heardAtSpeech: state.heard.length,
         timer: state.timer && !state.timer.done ? { ...state.timer, started: true } : state.timer,
       };
@@ -231,6 +232,7 @@ function onFrame(
         : state;
     case 'ready':
     case 'partial':
+    case 'not_heard':
     case 'alignment':
     case 'say_end':
     case 'minutes':

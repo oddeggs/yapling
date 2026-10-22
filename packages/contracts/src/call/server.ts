@@ -58,6 +58,14 @@ export const HeardFrame = z.object({
 });
 export type HeardFrame = z.infer<typeof HeardFrame>;
 
+/**
+ * The learner's turn had no real words (only noise, or only "uh", "um", "ờ"): it is not a turn.
+ * Nothing was answered, the beat stays and no try counts; the phone asks them to hold and say it
+ * again. Sent for hold-to-talk releases only.
+ */
+export const NotHeardFrame = z.object({ type: z.literal('not_heard'), seq: Seq });
+export type NotHeardFrame = z.infer<typeof NotHeardFrame>;
+
 /** A character starts a generated line; its audio follows on `streamId`. */
 export const SayStartFrame = z.object({
   type: z.literal('say_start'),
@@ -286,6 +294,7 @@ export const CALL_SERVER_FRAME_TYPES = [
   'ready',
   'partial',
   'heard',
+  'not_heard',
   'say_start',
   'alignment',
   'say_end',
@@ -307,6 +316,7 @@ const callServerFrames = z.discriminatedUnion('type', [
   ReadyFrame,
   PartialFrame,
   HeardFrame,
+  NotHeardFrame,
   SayStartFrame,
   AlignmentFrame,
   SayEndFrame,

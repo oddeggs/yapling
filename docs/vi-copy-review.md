@@ -2,7 +2,7 @@
 
 Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here, except the beginner path's Vietnamese (Release 1.1), which comes first because Linh's spoken lines gate the recording.
 
-466 strings in 15 catalogues; 77 flagged.
+468 strings in 15 catalogues; 79 flagged.
 
 ## How to review
 
@@ -428,6 +428,8 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `call.done.hopOff` | Hop off | Xuống xe |  |  |
 | `call.done.seasonMap` | See the season map | Xem bản đồ mùa |  |  |
 | `call.didntCatch` | Sorry, I didn't catch that. Say it another way? | Sorry, I didn't catch that. Say it another way? | English on purpose? | English on purpose: the character says it. New |
+| `call.tip.holdLonger` | Hold the button while you talk | Giữ nút trong lúc nói nhé | New | New: the tip over the mic after a tap too short to be a turn |
+| `call.tip.notHeard` | I didn't catch that. Hold and try again. | Mình chưa nghe rõ. Giữ nút và nói lại nhé. | New | New: the tip over the mic after a hold with no words in it |
 | `call.reconnecting` | Reconnecting… | Đang nối lại… | New | New: the pill while the line drops and reconnects |
 | `call.interrupted` | Paused while you take that call | Tạm dừng trong lúc bạn nghe máy | New | New: the pill while a phone call or Siri has the audio |
 | `call.fixedIt` | You fixed it yourself | Bạn tự sửa được rồi |  |  |

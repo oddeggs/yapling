@@ -11,6 +11,7 @@ import {
   type HintFrame,
   type MeaningFrame,
   type MinutesFrame,
+  type NotHeardFrame,
   type PartialFrame,
   type PlayRecFrame,
   type ReadyFrame,
@@ -30,6 +31,7 @@ type ServerFrame =
   | ReadyFrame
   | PartialFrame
   | HeardFrame
+  | NotHeardFrame
   | SayStartFrame
   | AlignmentFrame
   | SayEndFrame

@@ -4,7 +4,7 @@ import { getLine, glossFor, type Scene } from '@yapling/story';
 import { RECORDED_LINE_ASSETS } from '@yapling/story/assets';
 import type { FirstLanguage } from '@yapling/contracts';
 import { colours, corners, glass, layout, motion, outline, palette, radii } from '@yapling/theme';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { useDerivedValue, type SharedValue } from 'react-native-reanimated';
 
@@ -23,8 +23,12 @@ import {
   type CaptionClock,
   type MicState,
 } from '../../ui';
+import { haptics } from '../../ui/haptics';
 import { useLipsyncClock, type CallState, type Lipsync } from '../../voice';
 import { createLipsync } from '../../voice/lipsync';
+import { MIN_HOLD_MS } from '../../voice/turns';
+import { CritterFace } from '../call/call-art';
+import { CallTip } from '../call/call-tip';
 import type { VoicemailCall } from './voicemail-call';
 import {
   BlurredBurrow,
@@ -40,9 +44,10 @@ import { PHRASE_OBJECT, type Growth } from './voicemail-model';
 
 /*
  * Pip's voicemail and the fix: the voicemail card while the message plays, then Pip in the burrow
- * saying its phrase slightly wrong, the learner's turn to fix it (hints from the call when they
- * pause), and the phrase's sticker growing a leaf as Pip thanks them. If the learner stays quiet,
- * Pip works it out on its own and the scene ends just as warmly.
+ * saying its phrase slightly wrong, the learner's turn to fix it (the hint offered once after a
+ * long quiet; they can think as long as they like), and the phrase's sticker growing a leaf as Pip
+ * thanks them. If their tries don't get there, Pip works it out on its own and the scene ends just
+ * as warmly.
  */
 
 export interface VoicemailScreenProps {
@@ -114,6 +119,18 @@ export function VoicemailScreen({
   const turn = phase === 'turn';
   const mic = micStateOf(call, turn);
   const grown = (phase === 'grown' || phase === 'done') && voicemail.outcome !== null;
+  // A tap too short to be a turn, or a hold with no words: the retry tip and a light tap.
+  const tip =
+    turn && call && !call.playing
+      ? call.notice === 'hold_longer'
+        ? t('call.tip.holdLonger')
+        : call.notice === 'not_heard'
+          ? t('call.tip.notHeard')
+          : null
+      : null;
+  useEffect(() => {
+    if (tip !== null) haptics.play('tap');
+  }, [tip]);
 
   const mood: Mood = pipTalking
     ? phase === 'oops'
@@ -210,6 +227,13 @@ export function VoicemailScreen({
         {turn && call && call.learnerText !== '' ? (
           <YouBubble text={call.learnerText} heard={call.learnerFinal} />
         ) : null}
+        {tip !== null ? (
+          <CallTip
+            key={tip}
+            text={tip}
+            art={<CritterFace character="pip" species={species} size={30} />}
+          />
+        ) : null}
         <CallBar
           mic={mic}
           speaker={roommateName}
@@ -219,6 +243,7 @@ export function VoicemailScreen({
           onExit={onSeasonMap}
           onTalkStart={() => engine?.pressTalk()}
           onTalkEnd={() => engine?.releaseTalk()}
+          holdMs={MIN_HOLD_MS}
         />
       </View>
     </BlurredBurrow>

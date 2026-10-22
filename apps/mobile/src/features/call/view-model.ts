@@ -3,7 +3,7 @@ import type { CharacterId, FirstLanguage, Stage } from '@yapling/contracts';
 import { findLine, glossFor, type Letter, type Scene } from '@yapling/story';
 
 import type { MicState } from '../../ui/mic-button';
-import type { CallState } from '../../voice/call-state';
+import type { CallNotice, CallState } from '../../voice/call-state';
 import { currentRound, mirrorFor, roundsOf, type Mirror } from './fluency-mirror';
 import type { CallLayout } from './scene-layout';
 import {
@@ -49,8 +49,12 @@ export interface BubbleView {
 export interface TimerView {
   readonly key: string;
   readonly total: number;
+  /** Counting down: only while the learner talks, never while they think. */
   readonly running: boolean;
 }
+
+/** A retry tip over the mic: a tap too short to be a turn, or a hold with no real words. */
+export type CallTip = Extract<CallNotice, 'hold_longer' | 'not_heard'>;
 
 export interface RoundView {
   readonly listener: CharacterId;
@@ -69,6 +73,8 @@ export interface CallView {
   /** What the learner said: the partial while talking, then the heard line. */
   readonly you: { readonly text: string; readonly heard: boolean } | null;
   readonly hint: { readonly phrase: string; readonly gloss: string | null } | null;
+  /** The retry tip, while it is the learner's turn again. */
+  readonly tip: CallTip | null;
   readonly meaningChip: boolean;
   readonly meaning: MeaningState | null;
   /** The correction's first beat: the character asked it back and waits for the second try. */
@@ -150,13 +156,19 @@ export function callView(input: CallViewInput): CallView {
   const yourTurn = mic === 'yourTurn' || (mic === 'listening' && call.turnMode === 'hands_free');
   const hint = live && yourTurn && call.phase === 'your_turn' ? tracker.hint : null;
 
+  // A timed round counts only while the learner talks: thinking time is never on the clock.
+  const learnerTalking = call.talkHeld || (call.turnMode === 'hands_free' && call.learnerSpeaking);
   const timer =
     tracker.timer && live && !tracker.timer.done
       ? {
           key: `${tracker.beatSeq}:${tracker.timer.beatId}`,
           total: tracker.timer.total,
-          running: tracker.timer.started,
+          running: tracker.timer.started && learnerTalking,
         }
+      : null;
+  const tip =
+    live && (call.notice === 'hold_longer' || call.notice === 'not_heard') && !call.playing
+      ? call.notice
       : null;
 
   const rounds = layout.rounds ? roundsOf(scene, stage) : [];
@@ -191,6 +203,7 @@ export function callView(input: CallViewInput): CallView {
     bubble,
     you,
     hint,
+    tip,
     meaningChip,
     meaning: live ? tracker.meaning : null,
     correcting: live && tracker.correction !== null,

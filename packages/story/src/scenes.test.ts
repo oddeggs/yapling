@@ -16,7 +16,7 @@ import { reachableBeats, validateScene } from './validate';
 
 type Outcome = Extract<
   SceneEvent['type'],
-  'fine' | 'target_error' | 'silent' | 'meaning_request' | 'hint_request' | 'timer_end'
+  'fine' | 'target_error' | 'unclear' | 'silent' | 'meaning_request' | 'hint_request' | 'timer_end'
 >;
 
 /** A tiny seeded generator, so mixed runs are reproducible. */
@@ -28,6 +28,7 @@ const seeded = (seed: number) => () => {
 const MIXED: readonly Outcome[] = [
   'fine',
   'target_error',
+  'unclear',
   'silent',
   'meaning_request',
   'hint_request',
@@ -39,7 +40,7 @@ type Strategy = (state: RunnerState) => Outcome;
 const strategies: Record<string, () => Strategy> = {
   'all fine': () => () => 'fine',
   'all target errors': () => () => 'target_error',
-  'all silent': () => () => 'silent',
+  'all unclear': () => () => 'unclear',
   'all meaning requests': () => () => 'meaning_request',
   mixed: () => {
     const next = seeded(7);
@@ -77,8 +78,9 @@ describe.each(SCENES.map((s) => [s.id, s] as const))('scene %s', (_id, scene) =>
     expect(scene.beats.filter((b) => !reachable.has(b.id)).map((b) => b.id)).toEqual([]);
   });
 
-  // Each beat takes at most: its audio, a correction, three tries, the asks and a fallback.
-  const bound = scene.beats.length * 12 + 4;
+  // Each beat takes at most: its audio, a correction, three tries, the asks and a fallback (and
+  // the quiet a mixed run spends on the way).
+  const bound = scene.beats.length * 16 + 4;
 
   for (const stage of STAGES) {
     for (const [name, make] of Object.entries(strategies)) {
@@ -90,6 +92,23 @@ describe.each(SCENES.map((s) => [s.id, s] as const))('scene %s', (_id, scene) =>
       });
     }
   }
+
+  it('waits on its first turn for as long as the learner stays quiet', () => {
+    for (const stage of STAGES) {
+      const run = simulate(scene, stage, () => 'silent', bound);
+      const first = activeBeats(scene, stage).find(
+        (b) => (b.kind === 'learner' || b.kind === 'gen') && b.answer !== null,
+      );
+      if (!first) {
+        // Nothing to answer: the scene plays through.
+        expect(run.ended).toBe(true);
+        continue;
+      }
+      expect(run.ended).toBe(false);
+      expect(run.effects.filter((e) => e.type === 'gen' && e.purpose !== 'line')).toEqual([]);
+      expect(run.effects.filter((e) => e.type === 'hint').length).toBeLessThanOrEqual(1);
+    }
+  });
 
   it('plays every rec beat of the stage, in order, when all goes well', () => {
     for (const stage of STAGES) {

@@ -14,31 +14,16 @@ export interface StageSpeech {
   readonly idioms: string;
   readonly interruptions: string;
   readonly hints: string;
-  /** Whether silence brings the phrase hint (otherwise hints come only when asked). */
-  readonly hintsOnSilence: boolean;
   /**
-   * The pause after which the learner counts as silent: the hint pause where silence hints; where
-   * hints come only when asked, a longer pause before the listener's kind nudge.
+   * Whether a long quiet offers the phrase hint, once and silently (otherwise hints come only when
+   * asked). Silence never counts as a try and never brings a spoken nudge.
    */
-  readonly silenceMs: number;
+  readonly hintsOnSilence: boolean;
   /** Whether hints carry the first-language gloss (line-level help fades from Regular). */
   readonly glossHints: boolean;
 }
 
-/** The pause before a nudge at stages that hint only when asked (the model sets none). */
-const NUDGE_AFTER_MS: Readonly<Record<Stage, number>> = {
-  // Visitor: Newcomer's value until its own is set.
-  visitor: 8_000,
-  newcomer: 8_000,
-  neighbour: 8_000,
-  regular: 8_000,
-  local: 8_000,
-  voice: 10_000,
-};
-
-const PROSE: Readonly<
-  Record<Stage, Omit<StageSpeech, 'hintsOnSilence' | 'silenceMs' | 'glossHints'>>
-> = {
+const PROSE: Readonly<Record<Stage, Omit<StageSpeech, 'hintsOnSilence' | 'glossHints'>>> = {
   // Visitor: Newcomer's prose until its own row is written.
   visitor: {
     label: 'Visitor',
@@ -46,7 +31,7 @@ const PROSE: Readonly<
     sentences: 'short, one idea',
     idioms: 'none',
     interruptions: 'never',
-    hints: 'phrase hint after a 4 s pause',
+    hints: 'phrase hint offered quietly after a long pause, or when asked',
   },
   newcomer: {
     label: 'Newcomer',
@@ -54,7 +39,7 @@ const PROSE: Readonly<
     sentences: 'short, one idea',
     idioms: 'none',
     interruptions: 'never',
-    hints: 'phrase hint after a 4 s pause',
+    hints: 'phrase hint offered quietly after a long pause, or when asked',
   },
   neighbour: {
     label: 'Neighbour',
@@ -62,7 +47,7 @@ const PROSE: Readonly<
     sentences: 'one or two ideas',
     idioms: 'rare, explained',
     interruptions: 'never',
-    hints: 'hint after 6 s',
+    hints: 'hint offered quietly after a long pause, or when asked',
   },
   regular: {
     label: 'Regular',
@@ -95,7 +80,6 @@ const speech = (stage: Stage): StageSpeech => {
   return {
     ...PROSE[stage],
     hintsOnSilence: hint.kind === 'after_pause',
-    silenceMs: hint.kind === 'after_pause' ? hint.pauseMs : NUDGE_AFTER_MS[stage],
     glossHints: glossPolicy(stage, 'captions', { firstLanguage: 'vi' }).unit === 'line',
   };
 };

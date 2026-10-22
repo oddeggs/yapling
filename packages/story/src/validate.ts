@@ -6,7 +6,7 @@ import { findLine } from './lines';
 import { activeBeats, nextBeat } from './runner';
 import type { Beat, Scene } from './types';
 
-/** Where a beat can go next: its own next, the fine exit and the fallback exit. */
+/** Where a beat can go next: its own next, the fine exit and the fallback exit (after real tries). */
 const targetsOf = (beat: Beat): Id[] => {
   const answer = beat.kind === 'learner' || beat.kind === 'gen' ? beat.answer : null;
   return [beat.next, answer?.exits.fine.to, answer?.exits.silent.fallback.to].filter(
@@ -65,6 +65,7 @@ export const validateScene = (scene: Scene): string[] => {
     const answer = beat.kind === 'learner' || beat.kind === 'gen' ? beat.answer : null;
     if (answer) {
       speakers.push(answer.listener, answer.exits.silent.fallback.speaker);
+      // Real tries always find a way out: the fallback after `maxTries` (silence is never a try).
       if (answer.exits.silent.maxTries < 1) at(beat, 'maxTries below 1');
       for (const id of answer.phrases) {
         if (!findPhrase(id)) at(beat, `unknown phrase ${id}`);

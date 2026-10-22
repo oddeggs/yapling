@@ -56,6 +56,8 @@ export interface VoiceEngineOptions {
   readonly voiceProcessing?: boolean;
   /** Diagnostics for the dev lab. */
   readonly onLog?: (message: string) => void;
+  /** The clock mic presses are timed on (`performance.now` by default). */
+  readonly now?: () => number;
 }
 
 export { storyRecordedLines } from './recorded-lines';
@@ -118,7 +120,10 @@ export class VoiceEngine {
           this.patch({ awaitingReply: true });
         },
       },
-      options.micChunkMs === undefined ? {} : { chunkMs: options.micChunkMs },
+      {
+        ...(options.micChunkMs === undefined ? {} : { chunkMs: options.micChunkMs }),
+        ...(options.now ? { now: options.now } : {}),
+      },
     );
     this.socket = new CallSocket({
       url: options.url,
@@ -224,11 +229,18 @@ export class VoiceEngine {
     this.patch({ talkHeld: true, awaitingReply: false, onHold: false, notice: null });
   }
 
-  /** Hold-to-talk: the mic button came up; `end_turn` follows once the learner stops. */
+  /**
+   * Hold-to-talk: the mic button came up; `end_turn` follows once the learner stops. A tap too
+   * short to be a turn sends nothing and shows the tip to hold while talking.
+   */
   releaseTalk(): void {
     if (!this.turns.isHeld) return;
     const speaking = this.vad.speaking;
-    this.turns.release(speaking);
+    if (this.turns.release(speaking) === 'tap') {
+      this.log('a tap, not a turn: nothing sent');
+      this.patch({ talkHeld: false, notice: 'hold_longer' });
+      return;
+    }
     if (!speaking) this.meter.speechEnded(this.vad.lastVoicedMs ?? performance.now());
     this.patch({ talkHeld: false });
   }
@@ -324,8 +336,13 @@ export class VoiceEngine {
     const r = this.vad.push(frame, endMs - MIC_FRAME_MS);
     if (r.event?.type === 'speech_start') {
       this.meter.speechStarted();
-      this.replies.on({ type: 'settled' });
-      this.patch({ learnerSpeaking: true, awaitingReply: false, onHold: false, notice: null });
+      if (this.turns.mode === 'hands_free' || this.turns.isHeld) {
+        this.replies.on({ type: 'settled' });
+        this.patch({ learnerSpeaking: true, awaitingReply: false, onHold: false, notice: null });
+      } else {
+        // Hold-to-talk with the button up: nothing is sent, so nothing is answered or cleared.
+        this.patch({ learnerSpeaking: true });
+      }
     } else if (r.event?.type === 'speech_end') {
       this.meter.speechEnded(r.event.atMs);
       this.patch({ learnerSpeaking: false });
@@ -421,6 +438,12 @@ export class VoiceEngine {
         break;
       case 'partial':
         this.patch({ learnerText: frame.text, learnerFinal: false });
+        break;
+      case 'not_heard':
+        // No real words in the turn: nothing is coming, the turn is the learner's again.
+        this.log('not heard: no words in the turn');
+        this.replies.on({ type: 'settled' });
+        this.patch({ awaitingReply: false, serverThinking: false, notice: 'not_heard' });
         break;
       case 'heard':
         this.replies.on({ type: 'answering', atMs: Date.now() });

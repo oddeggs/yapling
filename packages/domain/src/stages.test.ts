@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import {
   adjustStage,
   hintPolicy,
+  LONG_QUIET_MS,
   isStageAtLeast,
   nextStage,
   pipStage,
@@ -33,16 +34,18 @@ describe('stage speech settings', () => {
     expect(ttsSpeedFactor(s)).toBe(speed);
   });
 
-  it('hints after 4 s at Newcomer, 6 s at Neighbour, and only on request after', () => {
-    expect(hintPolicy('newcomer')).toEqual({ kind: 'after_pause', pauseMs: 4_000 });
-    expect(hintPolicy('neighbour')).toEqual({ kind: 'after_pause', pauseMs: 6_000 });
+  it('offers the hint after the long quiet at Newcomer and Neighbour, and only on request after', () => {
+    expect(hintPolicy('newcomer')).toEqual({ kind: 'after_pause', pauseMs: LONG_QUIET_MS });
+    expect(hintPolicy('neighbour')).toEqual({ kind: 'after_pause', pauseMs: LONG_QUIET_MS });
     for (const s of ['regular', 'local', 'voice'] as const) {
       expect(hintPolicy(s)).toEqual({ kind: 'on_request' });
     }
-    expect(shouldShowHint('newcomer', 3_999, false)).toBe(false);
-    expect(shouldShowHint('newcomer', 4_000, false)).toBe(true);
-    expect(shouldShowHint('neighbour', 5_000, false)).toBe(false);
-    expect(shouldShowHint('neighbour', 6_000, false)).toBe(true);
+    expect(LONG_QUIET_MS).toBeGreaterThanOrEqual(15_000);
+    expect(LONG_QUIET_MS).toBeLessThanOrEqual(20_000);
+    expect(shouldShowHint('newcomer', 6_000, false)).toBe(false);
+    expect(shouldShowHint('newcomer', LONG_QUIET_MS, false)).toBe(true);
+    expect(shouldShowHint('neighbour', LONG_QUIET_MS - 1, false)).toBe(false);
+    expect(shouldShowHint('neighbour', LONG_QUIET_MS, false)).toBe(true);
     expect(shouldShowHint('regular', 60_000, false)).toBe(false);
   });
 

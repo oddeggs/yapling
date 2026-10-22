@@ -193,7 +193,8 @@ export function useCall(setup: CallSetup) {
   }, [state.connected]);
 
   // The tracker hears when the learner starts talking (hints hide, a round's timer starts).
-  const talking = state.learnerSpeaking || state.talkHeld;
+  // Hold-to-talk hears only a held button: talking with it up sends nothing.
+  const talking = state.talkHeld || (state.turnMode === 'hands_free' && state.learnerSpeaking);
   useEffect(() => {
     if (talking) dispatch({ type: 'speech_started' });
   }, [talking, dispatch]);

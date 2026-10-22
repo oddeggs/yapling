@@ -10,8 +10,9 @@ import { z } from 'zod';
  *   `target_error` (one of their active error targets, named by `targetId`), `unclear` (they
  *   don't know or understand, ask to repeat, answer in their own language, or the words make no
  *   sense), `question` (they ask the character something instead), `off_topic`, or `silent`
- *   (nothing usable was said). Every outcome but the first two keeps the beat: it counts as a
- *   silence for the runner (a hint or a nudge, then the fallback after the beat's tries).
+ *   (nothing usable was said). Every outcome but the first two keeps the beat: it is an unclear
+ *   try for the runner (a hint or a nudge, then the fallback after the beat's tries). A turn with
+ *   no real words never gets this far: it is not a turn (`hasRealWords`).
  * - `phrasesUsed`: target phrase ids the learner used correctly in that turn.
  * - `canDo`: the can-do the turn evidences, if it does.
  * - `safety`: `crisis` when the learner seems distressed or unsafe.

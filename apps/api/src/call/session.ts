@@ -4,7 +4,7 @@ import type {
   CharacterId,
   MeaningSubject,
 } from '@yapling/contracts';
-import { speechSettings, WRAP_UP_SECONDS } from '@yapling/domain';
+import { LONG_QUIET_MS, speechSettings, WRAP_UP_SECONDS } from '@yapling/domain';
 import {
   findLine,
   glossFor,
@@ -32,7 +32,7 @@ import { AI_DISCLOSURE_EVERY_MS, BREAK_REMINDER_AFTER_MS, crisisResourcesKey } f
 import type { TtsVoice } from './tts';
 import { logGuardedLine } from './turn-log';
 import type { CharacterLine } from './transcript';
-import { paceSilenceMs, stageVoice, VoicePool } from './voice-pool';
+import { stageVoice, VoicePool } from './voice-pool';
 
 /*
  * One live call while a phone is attached: the director's effects carried out in order (recorded
@@ -44,6 +44,12 @@ import { paceSilenceMs, stageVoice, VoicePool } from './voice-pool';
 const PLAYED_GRACE_MS = 3_000;
 const THINKING_AFTER_MS = 600;
 const HOUSEKEEPING_MS = 15_000;
+
+/**
+ * The long quiet before the hint is offered, once and silently; tests shorten it. Thinking time is
+ * otherwise unlimited: silence never ends or counts as a turn, and no line is spoken for it.
+ */
+export const quietTiming = { offerMs: LONG_QUIET_MS };
 
 type QueueItem =
   SceneEffect | { readonly type: 'say'; readonly speaker: CharacterId; readonly text: string };
@@ -118,6 +124,7 @@ export class CallSession {
       partial: (text) => this.frames.send({ type: 'partial', text: text.slice(0, 2_000) }),
       answer: (text, speechEndAt, gated) => this.replies.answer(text, speechEndAt, gated),
       silence: () => this.run(this.director.dispatch({ type: 'silent' })),
+      notHeard: () => this.frames.send({ type: 'not_heard' }),
       released: (line) => this.replies.released(line),
       talked: (ms) => {
         this.meter.addLearner(ms);
@@ -312,14 +319,9 @@ export class CallSession {
           continue;
       }
     }
-    if (this.director.listening() !== null) {
-      this.learner?.openWindow(
-        paceSilenceMs(
-          STAGE_SPEECH[this.data.learner.stage].silenceMs,
-          this.data.learner.pace ?? null,
-        ),
-      );
-    }
+    // The learner thinks for as long as they like: the quiet is only watched for the hint offer.
+    if (this.director.offersOnQuiet()) this.learner?.openWindow(quietTiming.offerMs);
+    else this.learner?.closeWindow();
   }
 
   private accepting(): boolean {

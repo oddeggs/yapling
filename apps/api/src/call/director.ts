@@ -22,7 +22,7 @@ import { CONTROL_RULE, type Outcome } from './control';
  *
  * A learner turn is answered by one generated line from the beat's listener, started the moment
  * the learner pauses (before the call knows how the turn went). So the line's direction covers
- * every outcome: the runner is asked ahead what `fine`, `target_error` and `silent` would lead to,
+ * every outcome: the runner is asked ahead what `fine`, `target_error` and `unclear` would lead to,
  * and when that next step is the listener speaking again (the next beat, a nudge), its intent is
  * folded into this line. The model picks the case and says which in its control line; the
  * director then applies that outcome, and any effect the line already did is skipped.
@@ -49,7 +49,7 @@ export interface ReplyPlan {
   readonly fine: Branch;
   /** Null when a target error counts as fine on this beat. */
   readonly error: Branch | null;
-  /** Unclear, a question back, off topic or silent: the beat stays (or falls back). */
+  /** Unclear, a question back or off topic: the beat stays (or falls back after its tries). */
   readonly offTopic: Branch;
 }
 
@@ -108,6 +108,12 @@ export class Director {
     return answer ? { beatId, answer } : null;
   }
 
+  /** Whether a long quiet would offer something now (the hint card, once, where the stage does). */
+  offersOnQuiet(): boolean {
+    if (this.listening() === null) return false;
+    return reduceScene(this.scene, this.current, { type: 'silent' }).effects.length > 0;
+  }
+
   /** How the listener's line answers the learner's turn, per outcome. */
   plan(): ReplyPlan | null {
     const now = this.listening();
@@ -137,7 +143,7 @@ export class Director {
       correcting,
       fine,
       error: correcting || mode === 'accept' ? null : branch('target_error'),
-      offTopic: branch('silent'),
+      offTopic: branch('unclear'),
     };
   }
 
@@ -151,7 +157,7 @@ export class Director {
         ? 'fine'
         : outcome === 'target_error'
           ? 'target_error'
-          : 'silent';
+          : 'unclear';
     const branch =
       event === 'fine' ? plan.fine : event === 'target_error' ? plan.error : plan.offTopic;
     const effects = [...this.dispatch({ type: event })];

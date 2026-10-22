@@ -31,6 +31,8 @@ export interface CallBarProps {
   readonly onExit?: () => void;
   readonly onTalkStart?: () => void;
   readonly onTalkEnd?: () => void;
+  /** Hold-to-talk: the shortest hold that is a turn, shown as a ring filling around the mic. */
+  readonly holdMs?: number;
   readonly style?: ViewStyleProp;
 }
 
@@ -50,6 +52,7 @@ export function CallBar({
   onExit,
   onTalkStart,
   onTalkEnd,
+  holdMs,
   style,
 }: CallBarProps) {
   const { t } = useLocale();
@@ -108,6 +111,7 @@ export function CallBar({
           accessibilityLabel={t('call.a11y.mic')}
           {...(onTalkStart ? { onTalkStart } : {})}
           {...(onTalkEnd ? { onTalkEnd } : {})}
+          {...(holdMs ? { holdMs } : {})}
         />
         <Txt
           maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}

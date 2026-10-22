@@ -214,9 +214,16 @@ describe('hints', () => {
     });
   });
 
-  it('hides on a tap, when the learner speaks, and on the next beat', () => {
+  it('hides on a tap, while the learner talks, once heard, and on the next beat', () => {
     expect(track(episode, [{ type: 'hint_dismissed' }], asked).hint).toBeNull();
-    expect(track(episode, [{ type: 'speech_started' }], asked).hint).toBeNull();
+    const talking = track(episode, [{ type: 'speech_started' }], asked);
+    expect(view(connected({ talkHeld: true }), talking).hint).toBeNull();
+    // A tap or a hold with no words: the hint is still there for the next try.
+    const notHeard = track(episode, [frame({ type: 'not_heard' })], talking);
+    expect(view(connected({ notice: 'not_heard' }), notHeard).hint).not.toBeNull();
+    expect(
+      track(episode, [frame({ type: 'heard', turn: 1, text: 'Hi', words: [] })], talking).hint,
+    ).toBeNull();
     expect(
       track(episode, [frame({ type: 'beat', beatId: 'mei-deflects', progress: 0.2 })], asked).hint,
     ).toBeNull();
@@ -376,6 +383,13 @@ describe('in-call beats', () => {
     expect(v.timer?.running).toBe(false);
     const talking = track(teach, [{ type: 'speech_started' }], t);
     expect(view(connected({ talkHeld: true }), talking, teach).timer?.running).toBe(true);
+    // Thinking time is never on the clock: the ring holds while the learner is quiet.
+    expect(view(connected(), talking, teach).timer?.running).toBe(false);
+    expect(view(connected({ learnerSpeaking: true }), talking, teach).timer?.running).toBe(false);
+    const handsFree = (patch: Partial<CallState>) =>
+      view(connected(patch, 'hands_free'), talking, teach).timer?.running;
+    expect(handsFree({ learnerSpeaking: true })).toBe(true);
+    expect(handsFree({ learnerSpeaking: false })).toBe(false);
     const done = track(teach, [{ type: 'timer_done' }], talking);
     expect(view(connected(), done, teach).timer).toBeNull();
   });
@@ -472,6 +486,23 @@ describe('a turn with no answer, a dropped line, a phone call', () => {
     expect(v.bubble).toMatchObject({ speaker: 'mei', didntCatch: true, thinking: false });
     expect(v.mic).toBe('yourTurn');
     expect(v.moods.mei).toBe('confused');
+  });
+
+  it('shows the hold tip after a tap and the not-heard tip after a hold with no words', () => {
+    expect(view(connected({ notice: 'hold_longer' }), onTurn()).tip).toBe('hold_longer');
+    const notHeard = view(connected({ notice: 'not_heard' }), onTurn());
+    expect(notHeard).toMatchObject({ tip: 'not_heard', mic: 'yourTurn' });
+    // No character speaks for it: no bubble, nobody confused.
+    expect(notHeard.bubble).toBeNull();
+    expect(notHeard.moods.mei).not.toBe('confused');
+    expect(view(connected({ notice: 'didnt_catch' }), onTurn()).tip).toBeNull();
+    expect(view(connected(), onTurn()).tip).toBeNull();
+  });
+
+  it('keeps the beat and the turn on a not-heard frame', () => {
+    const t = track(episode, [frame({ type: 'not_heard' })], onTurn());
+    expect(t.beatId).toBe('ask-whats-wrong');
+    expect(t.heard).toEqual([]);
   });
 
   it('shows the next line instead once a character speaks', () => {

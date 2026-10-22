@@ -8,10 +8,19 @@ import {
   stickerCss,
   stickerShadows,
 } from '@yapling/theme';
+import { Canvas, Path, Skia } from '@shopify/react-native-skia';
 import { useEffect, useMemo, useRef } from 'react';
 import { View, type AccessibilityActionEvent } from 'react-native';
 import { GestureDetector, useLongPressGesture } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  ReduceMotion,
+  cancelAnimation,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
 import { haptics } from './haptics';
@@ -34,6 +43,21 @@ const SIZE = controls.mic.size;
 const BAR = { width: 5, height: 26, gap: 4 } as const;
 /** The mic's swell while it records. */
 const LISTEN_SCALE = 1.08;
+/** The hold ring around the mic: its gap from the mic's edge and its stroke. */
+const RING = { gap: 3, stroke: 4 } as const;
+const RING_BOX = SIZE + 2 * (RING.gap + RING.stroke);
+const RING_PATH = Skia.PathBuilder.Make()
+  .addArc(
+    {
+      x: RING.stroke / 2,
+      y: RING.stroke / 2,
+      width: RING_BOX - RING.stroke,
+      height: RING_BOX - RING.stroke,
+    },
+    -90,
+    359.999,
+  )
+  .build();
 
 const glow = glowTracks(motion.call.micGlow.keyframes.tracks.boxShadow ?? []);
 
@@ -44,11 +68,27 @@ export interface MicButtonProps {
   /** The finger came up (or slid away): the turn is theirs to end. */
   readonly onTalkEnd?: () => void;
   readonly accessibilityLabel: string;
+  /**
+   * Hold-to-talk: the shortest hold that is a turn. While held, a ring fills around the mic over
+   * this long, so the learner learns to hold (under Reduce Motion it appears whole once reached).
+   */
+  readonly holdMs?: number;
 }
 
 /** The round mic in the call bar: hold to talk on your turn. */
-export function MicButton({ state, onTalkStart, onTalkEnd, accessibilityLabel }: MicButtonProps) {
+export function MicButton({
+  state,
+  onTalkStart,
+  onTalkEnd,
+  accessibilityLabel,
+  holdMs,
+}: MicButtonProps) {
   const reduce = useReduceMotion();
+  const ringFill = useSharedValue(0);
+  const ring = useSharedValue({ ms: holdMs ?? 0, reduce });
+  useEffect(() => {
+    ring.set({ ms: holdMs ?? 0, reduce });
+  }, [holdMs, reduce, ring]);
   const live = state === 'yourTurn' || state === 'listening';
   const listening = state === 'listening';
 
@@ -77,10 +117,26 @@ export function MicButton({ state, onTalkStart, onTalkEnd, accessibilityLabel }:
     maxDistance: 2000,
     onActivate: () => {
       'worklet';
+      const { ms, reduce: still } = ring.get();
+      if (ms > 0) {
+        ringFill.set(0);
+        // The fill is a change of state, not a move: under Reduce Motion the whole ring appears.
+        ringFill.set(
+          still
+            ? withDelay(ms, withTiming(1, { duration: 0, reduceMotion: ReduceMotion.Never }))
+            : withTiming(1, {
+                duration: ms,
+                easing: Easing.linear,
+                reduceMotion: ReduceMotion.Never,
+              }),
+        );
+      }
       scheduleOnRN(start);
     },
     onFinalize: () => {
       'worklet';
+      cancelAnimation(ringFill);
+      ringFill.set(0);
       scheduleOnRN(end);
     },
   });
@@ -90,6 +146,7 @@ export function MicButton({ state, onTalkStart, onTalkEnd, accessibilityLabel }:
     if (holding.current) end();
     else start();
   };
+  const ringStyle = useAnimatedStyle(() => ({ opacity: ringFill.get() > 0 ? 1 : 0 }));
 
   const glowClock = useClock(motion.call.micGlow, { active: state === 'yourTurn' && !reduce });
   const glowStyle = useAnimatedStyle(() => {
@@ -113,6 +170,33 @@ export function MicButton({ state, onTalkStart, onTalkEnd, accessibilityLabel }:
         onAccessibilityAction={onAction}
         style={[{ width: SIZE, height: SIZE }, faceStyle]}
       >
+        {holdMs ? (
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              {
+                position: 'absolute',
+                left: -(RING.gap + RING.stroke),
+                top: -(RING.gap + RING.stroke),
+                width: RING_BOX,
+                height: RING_BOX,
+              },
+              ringStyle,
+            ]}
+          >
+            <Canvas style={{ width: RING_BOX, height: RING_BOX }}>
+              <Path
+                path={RING_PATH}
+                color={colours.outline}
+                style="stroke"
+                strokeWidth={RING.stroke}
+                strokeCap="round"
+                start={0}
+                end={ringFill}
+              />
+            </Canvas>
+          </Animated.View>
+        ) : null}
         {state === 'yourTurn' ? (
           <Animated.View
             pointerEvents="none"

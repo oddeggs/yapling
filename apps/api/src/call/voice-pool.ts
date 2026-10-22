@@ -39,14 +39,6 @@ export const stageVoice = (
   return { character, speed, breakSeconds };
 };
 
-/** The quiet before the stage's hint or nudge: sooner for a slower pace, later for a faster one. */
-export const paceSilenceMs = (silenceMs: number, pace: Pace | null = null): number =>
-  pace === 'slower'
-    ? Math.round(silenceMs * 0.75)
-    : pace === 'faster'
-      ? Math.round(silenceMs * 1.5)
-      : silenceMs;
-
 /**
  * Flash sockets opened ahead of time, one spare per voice in use, so a line never waits for the
  * TLS and WebSocket handshake. A spare that closed meanwhile (Flash drops idle sockets after

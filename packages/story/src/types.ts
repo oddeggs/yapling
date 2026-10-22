@@ -11,8 +11,9 @@ import type { CallKind, CharacterId, FirstLanguage, Id, Stage } from '@yapling/c
  * - `ui`: something the app shows (the letter, the notebook, the phone, the fluency mirror).
  *
  * A `gen` beat may also wait for the learner's answer; `learner` beats always do. Every answer has
- * exits for each outcome, and silence always ends in a guaranteed fallback, so no scene can stall:
- * the learner can take longer, never lose.
+ * exits for each outcome, and tries that don't get there always end in a guaranteed fallback, so
+ * no scene stalls on a learner who keeps trying. Silence is thinking time: it waits, for as long as
+ * the learner likes, and never counts as a try. The learner can take longer, never lose.
  */
 
 /** A first language with glosses. `other` learners get none. */
@@ -145,10 +146,14 @@ export interface Answer {
 export interface AnswerExits {
   readonly fine: { readonly to?: Id };
   readonly targetError: { readonly mode: TargetErrorMode };
+  /** Not there yet: an unclear try, a hinted error, or (for the hint offer alone) a long quiet. */
   readonly silent: {
-    /** The phrase hint, at stages that hint (null: the listener nudges instead). */
+    /**
+     * The phrase hint: shown after a try at stages that hint, offered once after a long quiet,
+     * and when asked (null: the listener asks again in simpler words instead).
+     */
     readonly hint: GlossedText | null;
-    /** Tries (silences, hinted errors) before the fallback. */
+    /** Tries (unclear answers, hinted errors; never silence) before the fallback. */
     readonly maxTries: number;
     readonly fallback: Fallback;
   };
