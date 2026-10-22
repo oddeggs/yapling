@@ -1,7 +1,7 @@
 # Yapling: releases
 
 Status: in progress · Started 22 Oct 2026
-Inputs: `docs/concept.md`, `docs/journey-and-story.md`, `docs/season-1-script.md`, `docs/cast-bible.md`, `docs/tech-decisions.md`, `docs/design-review.md`, `design/README.md` (screen index with the release for every screen), `CLAUDE.md` (the agent contract).
+Inputs: `docs/concept.md`, `docs/journey-and-story.md`, `docs/season-1-script.md`, `docs/cast-bible.md`, `docs/tech-decisions.md`, `docs/design-review.md`, `docs/story-engine.md` (the engine, the visual library, collecting and the shop; Releases 2–4), `design/README.md` (screen index with the release for every screen), `CLAUDE.md` (the agent contract).
 
 ## The releases
 
@@ -9,9 +9,9 @@ Inputs: `docs/concept.md`, `docs/journey-and-story.md`, `docs/season-1-script.md
 |---|---|---|---|---|---|
 | 1 | Internal TestFlight (learner test) | **First Week** | The prototype's week, for real: live AI calls, recorded cast, the burrow changing day by day | Onboarding and placement call; burrow and week view; Episode 1 call with Mei; voice story and postcard; teach Pip; Pass it on; keepsake; voicemail; season map; the Plus paywall (sandbox); lock-screen knocks; Me sheet lite; safety and error states; a dev-only time-travel menu for test sessions | 5–8 Vietnamese professionals each run day 1–8 in a moderated session; the founder's checklist in `docs/prompts/claude-design-prototype.md` ("What we're testing") |
 | 1.1 | Over-the-air update to the TestFlight build | **Settling in** | A way in for true beginners: six short calls with Linh before the story, and an easier week 1 | The Visitor stage; the level question and a placement call that sets the stage; Settling-in Chapters 1–6; Visitor versions of week 1; "again" and "slowly" honoured in every call; "too hard" anywhere | 3 true beginners each finish Chapter 1 unaided and at least 2 finish Chapters 1–6 and the café call (measures in `docs/beginner-path.md` §9) |
-| 2 | **App Store launch (Vietnam)** | **Season One** | Six weeks of story and a reason to talk every day | Episodes 2–6 with Hank at every stage; real-week calls with Bring your homework (Dex); the full practice set; phrase lifecycle to bloom and fix graduation; the full Me sheet with the memory page; voicemail and voice notes; minutes resting, break reminder, crisis protocol; Sign in with Apple; Plus live; analytics; cost meters | Gates in `docs/concept.md` §15: D30 > 10%, ≥ 30 learner-talk minutes per weekly active, free → Plus ≥ 5% by day 30, AI cost ≤ 30% of net revenue |
-| 3 | Update | **Move-ins** | The town grows with you | Accent move-ins with listening checkpoints (Arjun first); stage-up to Neighbour; the monthly time capsule; incoming calls with a Live Activity; widgets; the town map | Median Flow +20% by week 6; call answer rate ≥ 20% |
-| 4 | Update | **The Mystery Boat** | Season 2, and Android | Season 2 (six episodes), Android launch, Indonesia's Home Neighbour | Store rating, D30 holds on Android |
+| 2 | **App Store launch (Vietnam)** | **Season One** | Six weeks of story and a reason to talk every day | Episodes 2–6 with Hank at every stage; real-week calls with Bring your homework (Dex); the full practice set; the level guide (checks every hand-written line); the content cache and share sheet in the store build; the library's first 30 scenes and 300 props (long lead, shown in Release 3); phrase lifecycle to bloom and fix graduation; the full Me sheet with the memory page; voicemail and voice notes; minutes resting, break reminder, crisis protocol; Sign in with Apple; Plus live; analytics; cost meters | Gates in `docs/concept.md` §15: D30 > 10%, ≥ 30 learner-talk minutes per weekly active, free → Plus ≥ 5% by day 30, AI cost ≤ 30% of net revenue |
+| 3 | Update | **Town Weeks** | The town keeps living after Season One | The story engine (a shared town week per stage, a personal pass, the safety filter, a review page); the visual library (~100 scenes, ~1,000 props, each prop a word); the album with rarity and achievements; share cards and a shared town goal; accent move-ins with listening checkpoints (Arjun first); stage-up to Neighbour; the monthly time capsule; incoming calls with a Live Activity; widgets; the town map | Learners who finish Season One keep a weekly ring (≥ 60% of finishers fill a ring in the 4 weeks after); engine cost ≤ $0.15 per learner per month; zero unsafe items reach a learner; median Flow +20% by week 6; call answer rate ≥ 20% |
+| 4 | Update and Android build | **The Mystery Boat** | Season 2, Android, and the shop | Season 2 (six hand-written episodes) with the engine filling the weeks around it; the cosmetic shop (wearables for Pip's three species, burrow decor); opt-in friends boards; Android launch; Indonesia's Home Neighbour | Store rating, D30 holds on Android; shop revenue per payer offsets ≥ 50% of AI cost per payer with no drop in D30 |
 
 ## How this plan runs
 
@@ -165,9 +165,147 @@ Gate B3 (founder): run the 6 sessions.
 
 ---
 
-# Release 2 · Season One (App Store, Vietnam) — outline
+# Release 2 · Season One (App Store, Vietnam)
 
-Planned in detail after the learner test. Waves: content (Episodes 2–6 scripts compiled with a Visitor version of each hard turn, as `docs/beginner-path.md` §7 does for week 1; Hank's stage takes, real-week and practice catalogues), features (Bring your homework with Dex, phrase lifecycle to bloom, fix graduation, memory page, voicemail and voice notes, minutes resting, break reminder, crisis protocol, Sign in with Apple), store (icon, screenshots, privacy labels, App Review notes with a demo account), launch (Plus live, analytics gates).
+Season One launches hand-written: Episodes 2–6 are scripted, recorded and checked like Episode 1. The engine isn't live yet. Release 2 lays three cheap foundations for it, so Release 3 can arrive server-side and over the air:
+
+- the level guide, as data that also checks the hand-written episodes;
+- a content cache and the share sheet in the store build;
+- the visual library's first 30 scenes and 300 props, as a long-lead lane.
+
+The lanes below are refined after the learner test. Design for the engine pieces: [`docs/story-engine.md`](../../docs/story-engine.md). Migrations: `0400–0499`.
+
+## Wave S0: Script, contracts, level guide · critical path 2 runs
+
+| Lane | Owns | Does | Runs | Done when |
+|---|---|---|---|---|
+| S0a Contracts | `packages/contracts` | Bodies for Bring your homework (pasted text or a calendar event), memory edits with an `interests` list, voice notes, minutes resting, Apple sign-in linking; remote line audio (file URL and timing URL) so Episodes 2–6 can be served from R2 | 1 | Every new schema has a round-trip test; repo green |
+| S0b Script | `docs/season-1-script.md`, `docs/cast-bible.md`, `packages/story/src/season-1/**`, `audio/season-1/lines.json` (text entries) | Episodes 2–6 as typed data with a Visitor version of each hard turn (as `beginner-path.md` §7 does for week 1); Hank's opener at every stage speed; the between-call content; the real-week and practice catalogues, written by hand | 2 | Every Episode 2–6 scene ends for each answer kind at every stage; every line passes the level check (S0c) |
+| S0c Level guide | `packages/domain/src/level-guide.ts`, `packages/domain/data/**` (word list), `packages/story/src/level-check.ts` and their tests | `LEVEL_GUIDE` per `story-engine.md` (a): vocabulary bands, grammar, sentence and turn limits, learner turn length, task types; `checkLevel(stage, lines)`; a test running it over every hand-written scene. Records the word list's licence | 1 | Season One and Settling in pass, or the failures are listed for S0b; the licence is recorded in the data folder |
+| S0d Voice | `tools/voice`, `audio/season-1/lines/**` | `estimate`, Hank's stage takes auditioned, then Episodes 2–6 rendered (Visitor lines at 0.7 under the pace gate) | 1 (after S0b and the founder's OK) | All lines rendered; credits used reported |
+
+## Wave S1: Features · critical path 3 runs
+
+| Lane | Owns | Does | Runs | Done when |
+|---|---|---|---|---|
+| S1a Bring your homework | `apps/api/src/homework/**`, `features/homework`, migrations `0400–0419` | Paste a job post, agenda or email (or pick a calendar event); a real-week scene for Dex built from it; the pasted text screened first (crisis → safety flow, sensitive → no scene); one free trial, unlimited on Plus | 2 | Protocol test with a sample job post plays a full real-week call; a sensitive paste gives the kind check-in |
+| S1b Learning model | `packages/domain` (except S0c's files) | The phrase lifecycle to bloom; fix graduation and its celebration; "back after N days" for Episodes 2–6 | 1 | Unit tests for each rule |
+| S1c Me and memory | `features/me`, `apps/api/src/memory/**`, migrations `0420–0429` | The full Me sheet: can-dos, the memory page (view, edit, delete, plus an interests list the engine reads later), settings | 2 | Every memory item round-trips and deletes; renders match |
+| S1d Voicemail and voice notes | `features/voicenotes`, `apps/api/src/voicenotes/**`, migrations `0430–0439` | Voice notes on the free tier (batch STT), voicemail replies | 2 | A note records, sends and gets a reply; minutes unchanged |
+| S1e Guardrails | `apps/api/src/call/safety.ts`, `features/safety` | Minutes resting, the 3-hour break reminder, the crisis protocol end to end, AI disclosure cadence | 1 | Protocol tests for each |
+| S1f Accounts and Plus | `apps/api/src/auth/**`, `apps/api/src/purchases/**`, `features/plus`, migrations `0440–0449` | Sign in with Apple linking a guest; Plus live in production | 2 | Guest → Apple keeps progress; sandbox and production purchases verified |
+| S1g Content cache and sharing | `apps/mobile/src/content/**`, `apps/mobile/src/share/**`, the native config for a file store and image sharing (through the integration agent) | Downloads each week's line audio, timing files and scene data ahead and keeps them offline; Episodes 2–6 audio served from R2 this way (a smaller bundle, and proof of the path the engine needs); the share sheet helper with one real card (a neighbour's postcard) | 2 | Episodes 2–6 play in airplane mode after one download; a postcard shares as an image; the native change is in the store build |
+| S1h Analytics and cost meters | `apps/mobile/src/observability/**`, `apps/api/src/costs/**` | The launch gates (D30, talk minutes, conversion, AI cost per payer), with an engine line that reads zero for now | 1 | The dashboard shows each gate from real events |
+| S1i Library base (long lead; ships in Release 3) | `packages/art/src/library/**`, `tools/library/**` | The catalogue schema (sets, slots, props with word, gloss, category, level, burrow family, fits, rarity); the 13 existing scenes and burrow objects tagged; the generator pipeline as the art spike confirms it; the first 30 sets and 300 props | 3 | Founder's style check at 30 sets and 300 props; goldens within 2/255; nothing shown in the app yet |
+
+## Wave S2: Store · critical path 1 run
+
+| Lane | Does |
+|---|---|
+| S2a Store kit | Icon, screenshots, privacy labels, App Review notes with a demo account, age rating (18+) |
+| S2b Release build | Store variant build with the S1g native modules; production Worker, D1 and R2; EAS Update channel `production` |
+
+## Wave S3: Launch
+
+Plus live, the analytics gates watched. Gate: `concept.md` §15.
+
+## What ships how (Release 2)
+
+| Change | Ships by |
+|---|---|
+| Everything native (file store, image sharing, Apple sign-in) | The store build. Put every native module the engine, album and share cards will need in this build, so Release 3 needs no new build for them |
+| Episodes 2–6 audio | Served from R2 through the content cache |
+| Server, migrations | Production Worker deploy |
+
+---
+
+# Release 3 · Town Weeks (update)
+
+The story engine goes live, with the visual library, the album and share cards. Release 3 also brings Move-ins (accent move-ins, stage-up to Neighbour), the time capsule, incoming calls and widgets. **Deadline:** the first launch-day learners finish Season One about 7 weeks after launch (six episodes and the festival interlude). Until Release 3 is live, finishers get the evergreen shelf from M3a. Design: [`docs/story-engine.md`](../../docs/story-engine.md). Migrations: `0500–0599`.
+
+## Wave M0: Contracts, canon, gold scenes · critical path 2 runs
+
+| Lane | Owns | Does | Runs | Done when |
+|---|---|---|---|---|
+| M0a Contracts | `packages/contracts`; the mechanical updates where `Scene.place` is matched | The week pack (`story-engine.md` Appendix B), `Scene.set`, place ids from the library, album items with rarity, share invite codes, the town goal | 1 | Round-trip tests; repo green; Season One unchanged |
+| M0b Canon and gold scenes | `docs/town-canon.md` (new), `packages/story/src/canon/**`, `docs/story-engine.md` | The hand-made town canon as data (cast facts, places, who knows whom, what's open); the backbone prompt finalised; the named payoff and twist lists; one gold scene each for Neighbour, Regular, Local and Voice | 2 | The founder approves the four gold scenes; they pass the level check |
+
+## Wave M1: Engines · critical path 3 runs
+
+| Lane | Owns | Does | Runs | Done when |
+|---|---|---|---|---|
+| M1a Story packs | `packages/story/src/pack/**` | Lines and phrases looked up from a pack as well as the season (`validateScene(scene, lookup)`); `checkPack`, which runs shape, level, targets, canon ids, assets and budget; the phrase bank per stage | 2 | Season One tests unchanged; a fixture pack passes; each broken fixture fails with the right problem |
+| M1b Prep jobs | `apps/api/src/prep/**`, migrations `0500–0529` | The town week (Opus 5.5 with web search), stage passes (Sonnet 5.5, Batch API), the personal pass (Haiku 5.5); the `find_assets` and `canon_facts` tools; structured output; one repair run, then the evergreen shelf; cost caps and a cost record per job; model calls from a Durable Object pinned to US West; Cron and Queues; packs in R2, pack ids in D1 | 3 | Against the dev Worker, one real town week yields six packs that pass `checkPack`; a seeded learner's personal pass passes; every job's cost is within `story-engine.md`'s budget |
+| M1c Safety filter | `apps/api/src/screen/**` | Jev routes (reference topic, the pack's never list, the learner's text) with Haiku 5.5 as the fallback; thresholds in code; an English and Vietnamese eval set | 2 | On the eval set no unsafe reference or pack passes; false drops are reported; a missing answer counts as a fail |
+| M1d Pack voices | `apps/api/src/voice-render/**`, `tools/voice` | Shared lines rendered with v4 after review, at each stage's speed, with timing files, into R2; personal lines rendered by Flash on first play and cached per learner (deleted with the account); prop words recorded once | 2 | A reviewed pack is fully voiced with lipsync timing; a personal line plays within the latency budget and replays from cache; credits per week reported |
+| M1e Review page | `apps/api/src/review/**` | A small guarded page on the Worker: read and listen to the six packs, approve, or send one back with a note; manage the evergreen shelf | 1 | The founder approves a week from a phone |
+| M1f Library to 100 / 1,000 | `packages/art/src/library/**`, `tools/library/**` | The remaining sets and props after the style check; rarity and limited (festival) items; goldens | 3 | About 100 sets and 1,000 props tagged and golden-tested; `find_assets` answers every place at every stage |
+
+## Wave M2: The app · critical path 2 runs
+
+| Lane | Owns | Screens and behaviour | Runs |
+|---|---|---|---|
+| M2a Town weeks | `features/week`, `features/season` | The town week on the week view after Season One; past weeks on the season map, replayable any time; packs come through the content cache | 2 |
+| M2b Album and achievements | `features/album` (new), `features/burrow` (prop objects), migrations `0530–0549` | Album shelves by category, places and sets, rarity, achievements that become keepsakes; tap any prop to see its word and gloss and hear Pip say it; words become things: a prop moves into the burrow when its word is used | 2 |
+| M2c Share cards and the town goal | `features/share`, `features/town-goal` | Share cards (album shelf, story recap, postcards, time capsule) with the AI tag, the Yapling mark and an invite link, and no transcripts; the shared town goal; personal bests | 2 |
+| M2d Move-ins | `features/movein`, `packages/story/src/movein/**` | Accent move-ins with listening checkpoints (Arjun first); the stage-up to Neighbour | 2 |
+| M2e Time capsule and town map | `features/capsule`, `features/map` | The monthly time capsule; the town map | 1 |
+| M2f Incoming calls and widgets | `apps/mobile/targets/**`, native config (through the integration agent) | Incoming calls with a Live Activity; home-screen widgets | 2 |
+
+Done when (every lane): built from existing components or the library, with new states logged in `docs/undesigned-states.md`; copy comes from i18n; VoiceOver labels set.
+
+## Wave M3: Shadow weeks and go-live
+
+| Lane | Does |
+|---|---|
+| M3a Shadow weeks | Four weeks of real town weeks generated, reviewed on the review page and never shown to learners; four standalone weeks per stage recorded as the evergreen shelf; checks tuned on what review catches |
+
+Gate M3 (founder): the shadow weeks read well and pass review; the engine goes live for learners who finish Season One.
+
+## What ships how (Release 3)
+
+| Change | Ships by |
+|---|---|
+| Prep jobs, safety filter, review page, voices | Production Worker deploy |
+| Each week's packs | Server content through the content cache: no app update |
+| Town weeks, album, share cards, town goal, move-ins, capsule, map, library | EAS Update (JS and Skia generators), because Release 2's build has the native modules |
+| Live Activity and widgets | A new store build (native targets); it can follow the rest |
+
+---
+
+# Release 4 · The Mystery Boat (update and Android build)
+
+Season 2 is hand-written, with the engine filling the weeks around it. The cosmetic shop opens once retention is proven. Android launches. Migrations: `0600–0699`.
+
+## Wave T0: Season 2 · critical path 2 runs
+
+| Lane | Owns | Does | Runs | Done when |
+|---|---|---|---|---|
+| T0a Season 2 script | `docs/season-2-script.md` (new), `packages/story/src/season-2/**`, `audio/season-2/lines.json` | Six episodes written by us (the agent may draft; a person edits every line), with a Visitor version of each hard turn and stage scaling; recaps and cliffhangers | 2 | Every scene ends for each answer kind at every stage; the level check passes |
+| T0b Season 2 voices | `tools/voice`, `audio/season-2/lines/**` | Render, pace gate, served through the content cache | 1 | All lines rendered; credits reported |
+| T0c Engine around Season 2 | `apps/api/src/prep/**`, `packages/art/src/library/**` | Town weeks pause during a learner's Season 2 episode weeks; the personal pass fills real-week and practice calls around them; boat and festival sets and props; festival limited items | 2 | A learner in Season 2 gets episode weeks with personal calls around them, and no town week clashes |
+
+## Wave T1: Shop, friends, Android · critical path 2 runs
+
+| Lane | Owns | Does | Runs | Done when |
+|---|---|---|---|---|
+| T1a Shop | `features/shop`, `apps/api/src/purchases/**` (shop products), migrations `0600–0619` | Cosmetic items as non-consumables in RevenueCat at direct prices (about ₫25k / ₫49k / ₫99k at Apple's Vietnam price points); a wardrobe and decor slots; restore purchases; bought items kept out of the album and boards; no currency, no random items | 2 | Sandbox purchase, restore and refund paths; ownership is server-side; a bought item never changes Pip's mood or counts toward an achievement (tests) |
+| T1b Wearables | `packages/art/src/wearables/**` | Fit points on each starter species' generator; about 60 wearables × red panda, capybara and cat; goldens per item, species and mood | 3 | Goldens pass; the founder approves the first 10 on all three species |
+| T1c Outfit card and friends boards | `features/friends`, `features/share` (outfit card), migrations `0620–0639` | An opt-in friends list by invite code; friends-only boards on album items and stories finished (never live minutes); hide yourself any time; the outfit share card | 2 | Boards show only opted-in friends; no last-place styling; nothing ranks on minutes |
+| T1d Android | Android config in `apps/mobile` (through the integration agent) | The Android build and store launch | 3 | Plays Settling in, Season One and a town week on a mid-range Android phone |
+| T1e Indonesia's Home Neighbour | `packages/story/src/neighbours/**`, Indonesian glosses in packs | Sari, and glosses per first language in the stage and personal passes | 2 | An Indonesian learner's week has Indonesian glosses throughout |
+
+Gate T1 (founder): the shop opens only if D30 > 10% has held since launch, after decision 7 in `story-engine.md` (the "never sell care" amendment) is made and CLAUDE.md and `concept.md` §13 are updated.
+
+## What ships how (Release 4)
+
+| Change | Ships by |
+|---|---|
+| Season 2 lines and data | Content cache (audio from R2) and EAS Update |
+| Shop, wearables, friends boards | EAS Update and server, if the purchases SDK in the Release 2 build handles non-consumables (it does for Plus); the products are set up in App Store Connect |
+| Android | A new Android build and store submission |
+
+---
 
 ## Founder gates
 
@@ -178,3 +316,7 @@ Planned in detail after the learner test. Waves: content (Episodes 2–6 scripts
 | Before the learner test | ElevenLabs plan with enough credits for live calls (Creator has ~50k left this cycle); an Anthropic key for Yapling (reusing 6pm's for now) |
 | Before Release 1.1 wave B1 | Decisions 1–4 in `docs/beginner-path.md` §10 (Linh speaks Vietnamese; Settling-in calls free and the first week starting with the story; about 5,000 ElevenLabs credits; the Visitor name); native review of the 7 spoken Vietnamese lines |
 | Before Release 2 | yapling.app domain and trademark; native Vietnamese copy review; native-speaker review of every accent |
+| Before Release 2 wave S1 | The art spike's verdict on the library pipeline (`story-engine.md` (e)); the style check at 30 scenes and 300 props during S1i |
+| Before Release 3 wave M1 | Decisions 1–6 and 9 in `docs/story-engine.md` (the engine's shape, weekly review, festivals, about 70,000 ElevenLabs credits a month, the library at go-live, Jev, leaderboards); a TypeSafe key for Yapling if Jev is chosen |
+| Before Release 3 go-live | The four shadow weeks reviewed (gate M3) |
+| Before Release 4 wave T1 | Decisions 7, 8 and 10 in `docs/story-engine.md` (the "never sell care" amendment, direct prices, the shop after the retention gate); shop products in App Store Connect |

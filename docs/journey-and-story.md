@@ -225,6 +225,10 @@ Every episode script gets a Visitor row like this one: the turn becomes one or t
 
 Key story beats are **pre-written and pre-recorded** where possible (cheaper, consistent, better acting). Free conversation inside a beat is generated.
 
+### 2.6 After Season One: the story engine
+
+From Release 3, the weeks between hand-written seasons come from the story engine ([`story-engine.md`](story-engine.md)). Each week a strong model writes one town week per stage from a fixed backbone prompt, the level guide, the town canon and a few screened, Natterwick-ised news items. Code checks it, a person reviews it, and the cast voices record it. A cheap personal pass then adds each learner's real-week and practice calls, their phrases and their burrow props. The scenes use the same `Scene` format and runner as Season One. The table in §2.5 still holds: seasons, tentpoles, the cast and the rules stay written by us. The engine also feeds the visual library (~100 scenes and ~1,000 props, each prop a word), the album and the share cards. Whether town festivals may follow the real calendar's big moments (§2.3 says not) is decision 3 in that doc.
+
 ---
 
 ## 3. Feature priorities for the MVP (iOS, Vietnam)
