@@ -162,6 +162,29 @@ describe('progress sync', () => {
     );
   });
 
+  it("keeps when Pip last reused a phrase through an older app's write, which never sends it", async () => {
+    const { token } = await newGuest();
+    const fresh = await read(token);
+    const [phrase] = lists.phrases;
+    if (!phrase) throw new Error('no phrase');
+    const reused = { ...phrase, pipReusedAt: at + 5 };
+    const saved = Progress.parse(
+      await expectJson(await put(token, { ...fresh, ...lists, phrases: [reused] })),
+    );
+    expect(saved.phrases[0]?.pipReusedAt).toBe(at + 5);
+
+    // An older app's body: the phrase without the field, and with a use the phone added.
+    const { pipReusedAt: _left, ...older } = { ...reused, lastUsedAt: at + 9 };
+    const kept = Progress.parse(await expectJson(await put(token, { ...saved, phrases: [older] })));
+    expect(kept.phrases[0]).toMatchObject({ lastUsedAt: at + 9, pipReusedAt: at + 5 });
+
+    // A newer app's body sets it, null included.
+    const cleared = Progress.parse(
+      await expectJson(await put(token, { ...kept, phrases: [{ ...older, pipReusedAt: null }] })),
+    );
+    expect(cleared.phrases[0]?.pipReusedAt).toBeNull();
+  });
+
   it('refuses a stale revision with a typed error, and the server copy stands', async () => {
     const { token } = await newGuest();
     const fresh = await read(token);
