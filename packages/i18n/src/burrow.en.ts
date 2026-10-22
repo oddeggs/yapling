@@ -61,4 +61,59 @@ export const burrowEn = {
 
   /** Coming back on day 8: the scene's last button goes home to the next episode. */
   'burrow.back.done': 'Back to the burrow',
+
+  /**
+   * Settling in: the burrow before the story, one short chapter with Linh at a time. The top pill
+   * says the day and its light; the card names the next chapter.
+   */
+  'burrow.settling.when': 'Day {day} · {time}',
+  'burrow.settling.time.morning': 'morning',
+  'burrow.settling.time.afternoon': 'afternoon',
+  'burrow.settling.time.evening': 'evening',
+  /** The letter's evening, when it slides under the café door. */
+  'burrow.settling.time.dusk': 'dusk',
+  'burrow.settling.kicker': 'SETTLING IN · {chapter}/{total}',
+  /** After two chapters in a day: a rest is suggested, never required. */
+  'burrow.settling.kickerRest': 'SETTLING IN · {chapter}/{total} · TOMORROW?',
+  'burrow.settling.kickerDone': 'SETTLING IN · {done}/{total} DONE',
+  /** What each chapter's card says (`{name}` is the roommate's name). */
+  'burrow.settling.sub.1': 'Linh from next door comes to say hi.',
+  'burrow.settling.sub.2': 'Linh brings the boxes over to help you unpack.',
+  'burrow.settling.sub.3': 'Linh has two lifesavers to show you.',
+  'burrow.settling.sub.4': 'Linh is waiting for you at the bus stop.',
+  'burrow.settling.sub.5': 'Mei’s café is open. Come for tea.',
+  'burrow.settling.sub.6': '{name} is writing a page about you.',
+  'burrow.settling.restSub': 'Two chapters done today. Time for a rest?',
+  'burrow.settling.restedSub': 'See you tomorrow. The next chapter will wait.',
+  /** The card's button: who the chapter is with, and about how long it takes. */
+  'burrow.settling.go.linh': 'Meet Linh · {minutes} min',
+  'burrow.settling.go.mei': 'Go to Mei’s · {minutes} min',
+  'burrow.settling.tomorrow': 'Tomorrow',
+  'burrow.settling.keepGoing': 'Keep going',
+  /** After Chapter 6 (or skipping ahead): the letter goes under Mei's door at dusk. */
+  'burrow.settling.settled': 'Settled in!',
+  'burrow.settling.settledSub': 'The burrow is full. Tomorrow, the story begins.',
+  'burrow.settling.goodnight': 'Good night',
+  /** The Settling-in list: replay any chapter, or go straight to the story. */
+  'burrow.settling.list.title': 'Settling in',
+  'burrow.settling.list.count': '{done}/{total} done',
+  'burrow.settling.list.replay': 'Play again',
+  'burrow.settling.list.next': 'Next',
+  'burrow.settling.list.minutes': '2–3 min',
+  'burrow.settling.list.skip': 'Start the story',
+  /** Under each chapter's English title, what it's about. */
+  'burrow.settling.chapter.1': 'Saying hello',
+  'burrow.settling.chapter.2': 'Unpacking',
+  'burrow.settling.chapter.3': 'Say it again',
+  'burrow.settling.chapter.4': 'Bus 45 · with Bea',
+  'burrow.settling.chapter.5': 'Mei’s café',
+  'burrow.settling.chapter.6': 'About me',
+  'burrow.settling.a11y.list': 'Settling-in list',
+  'burrow.settling.a11y.close': 'Close the list',
+  'burrow.settling.a11y.progress': '{done} of {total} chapters done',
+  'burrow.settling.a11y.box': 'A box still to unpack: {title}',
+  'burrow.settling.a11y.chapter': 'Chapter {chapter}: {title}, {about}',
+  'burrow.settling.a11y.done': 'done',
+  'burrow.settling.a11y.next': 'up next',
+  'burrow.settling.a11y.later': 'later, {minutes}',
 } as const satisfies EnCatalogue;

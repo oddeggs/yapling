@@ -1,3 +1,4 @@
+import { Canvas, Path } from '@shopify/react-native-skia';
 import { RECORDED_LINE_ASSETS } from '@yapling/story/assets';
 import {
   colours,
@@ -154,8 +155,29 @@ const DOOR = {
   pip: { size: 140, left: 8, top: 474 },
   linh: { size: 142, left: 146, top: 446 },
   bubble: { top: 306, left: 96, right: 16 },
-  dusk: { top: 110, left: 30, width: 330, height: 250 },
 } as const;
+
+/** Where the dusk window sits, and the café, the letter and the window's bars in it. */
+export interface DuskSpot {
+  readonly top: number;
+  readonly left: number;
+  readonly width: number;
+  readonly height: number;
+  readonly cafe: { readonly x: number; readonly y: number };
+  readonly letter: { readonly left: number; readonly top: number };
+  readonly bars: { readonly top: number; readonly left: number };
+}
+
+/** Linh's knock: the window over the room as she says goodnight. */
+const DOOR_DUSK: DuskSpot = {
+  top: 110,
+  left: 30,
+  width: 330,
+  height: 250,
+  cafe: { x: 15, y: 20 },
+  letter: { left: 150, top: 176 },
+  bars: { top: 118, left: 160 },
+};
 
 export type DoorPhase = 'knock' | 'welcome' | 'reply' | 'dusk';
 
@@ -222,21 +244,40 @@ export function DoorScreen({ model, phase, lineSeconds, onPlayLine, controls }: 
   );
 }
 
+/** The dusk window's frame width. */
+const DUSK_FRAME = 6;
+
+/** The window's outline: an arch over straight sides and two small bottom corners, `inset` in. */
+function archPath(w: number, h: number, stroke: number): string {
+  const s = stroke / 2;
+  const r = w / 2 - s;
+  const b = 10 - s;
+  return [
+    `M ${s} ${s + r}`,
+    `A ${r} ${r} 0 0 1 ${w - s} ${s + r}`,
+    `L ${w - s} ${h - s - b}`,
+    `A ${b} ${b} 0 0 1 ${w - s - b} ${h - s}`,
+    `L ${s + b} ${h - s}`,
+    `A ${b} ${b} 0 0 1 ${s} ${h - s - b}`,
+    'Z',
+  ].join(' ');
+}
+
 /** The burrow window at dusk, looking at the café: a letter slides under its door, again and again. */
-function DuskWindow() {
+export function DuskWindow({ spot = DOOR_DUSK }: { spot?: DuskSpot }) {
   const { u, y } = useStage();
   const pop = useKeyframes(motion.screens.roundPop);
   const letter = useKeyframes(motion.call.duskLetter, { hiddenOutside: true });
-  const w = u(DOOR.dusk.width);
-  const h = u(DOOR.dusk.height);
+  const w = u(spot.width);
+  const h = u(spot.height);
   const corners = { borderTopLeftRadius: w / 2, borderTopRightRadius: w / 2 };
   return (
     <Animated.View
       style={[
         {
           position: 'absolute',
-          top: y(DOOR.dusk.top),
-          left: u(DOOR.dusk.left),
+          top: y(spot.top),
+          left: u(spot.left),
           width: w,
           height: h,
         },
@@ -246,12 +287,26 @@ function DuskWindow() {
       {/* The frame's flat ink shadow, 8 points down, as a sticker's. */}
       <View style={[styles.duskShadow, corners]} />
       <View style={[styles.dusk, corners]}>
-        <View style={StyleSheet.absoluteFill}>
-          <DuskCafe width={w} height={h} />
+        {/* Inside the frame: the café, the letter and the window's bars. */}
+        <View style={styles.duskInside}>
+          <View style={StyleSheet.absoluteFill}>
+            <DuskCafe width={w} height={h} offset={spot.cafe} />
+          </View>
+          <Animated.View
+            style={[styles.letter, { left: u(spot.letter.left), top: u(spot.letter.top) }, letter]}
+          />
+          <View style={[styles.bar, { left: 0, right: 0, top: u(spot.bars.top), height: 6 }]} />
+          <View style={[styles.bar, { top: 0, bottom: 0, left: u(spot.bars.left), width: 6 }]} />
         </View>
-        <Animated.View style={[styles.letter, { left: u(150), top: u(176) }, letter]} />
-        <View style={[styles.bar, { left: 0, right: 0, top: u(118), height: 6 }]} />
-        <View style={[styles.bar, { top: 0, bottom: 0, left: u(160), width: 6 }]} />
+        {/* The frame over the picture, drawn as a stroke: iOS leaves an arch's border out. */}
+        <Canvas pointerEvents="none" style={[StyleSheet.absoluteFill, { width: w, height: h }]}>
+          <Path
+            path={archPath(w, h, DUSK_FRAME)}
+            style="stroke"
+            strokeWidth={DUSK_FRAME}
+            color={colours.outline}
+          />
+        </Canvas>
       </View>
     </Animated.View>
   );
@@ -369,11 +424,17 @@ const styles = StyleSheet.create({
   dusk: {
     flex: 1,
     overflow: 'hidden',
-    borderWidth: 6,
-    borderColor: colours.outline,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     backgroundColor: palette.dusk,
+  },
+  duskInside: {
+    position: 'absolute',
+    top: DUSK_FRAME,
+    left: DUSK_FRAME,
+    right: DUSK_FRAME,
+    bottom: DUSK_FRAME,
+    overflow: 'hidden',
   },
   duskShadow: {
     position: 'absolute',
