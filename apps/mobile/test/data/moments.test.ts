@@ -68,3 +68,16 @@ describe('a phrase opened in a call or a story', () => {
     expect(api.requests('PUT', '/api/me/progress')).toHaveLength(1);
   });
 });
+
+describe('the ring on the app clock', () => {
+  it('opens on the server the calls whose day has come, once', async () => {
+    const api = new FakeApi();
+    const data = launch(api, newPhone());
+    await data.start();
+    await data.progress.openRing(5);
+    const slots = data.progress.resource.data?.weeks[0]?.slots.map((s) => s.status);
+    expect(slots).toEqual(['open', 'open', 'open']);
+    await data.progress.openRing(5);
+    expect(api.requests('PUT', '/api/me/progress')).toHaveLength(1);
+  });
+});

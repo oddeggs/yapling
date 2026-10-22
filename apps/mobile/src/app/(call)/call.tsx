@@ -2,7 +2,7 @@ import { findScene } from '@yapling/story';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 
-import { getSessionToken, useProfile, useProgress } from '../../data';
+import { getSessionToken, useProfile, useProgress, useWeek } from '../../data';
 import { apiBase, clientVersion } from '../../data/config';
 import { CallScreen } from '../../features/call/call-screen';
 import { BURROW_ROUTE, postCallHref, SAFETY_ROUTE } from '../../features/call/routes';
@@ -30,7 +30,12 @@ export default function CallRoute() {
   }>();
   const router = useRouter();
   const { profile, status } = useProfile();
-  const { meetPhrase } = useProgress();
+  const { meetPhrase, openRing } = useProgress();
+  // The slot this call fills is open on the server too, before the call's record lands.
+  const dayIndex = useWeek()?.dayIndex ?? null;
+  useEffect(() => {
+    if (dayIndex !== null) void openRing(dayIndex).catch(() => undefined);
+  }, [dayIndex, openRing]);
   const scene = params.scene ? findScene(params.scene) : undefined;
   // No such scene (a stale link): back to the burrow rather than a call that can't run.
   useEffect(() => {

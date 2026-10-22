@@ -1,5 +1,5 @@
 import { Progress, type EpochMs } from '@yapling/contracts';
-import { fromPhraseProgress, meetPhrase, toPhraseProgress } from '@yapling/domain';
+import { fromPhraseProgress, meetPhrase, ringWeeks, toPhraseProgress } from '@yapling/domain';
 
 import type { ApiClient } from './client';
 import { isDataError } from './errors';
@@ -65,6 +65,19 @@ export class ProgressRepo {
       const met = meetPhrase(p.phrases.map(fromPhraseProgress), { ...phrase, at });
       return met.met ? { ...p, phrases: met.phrases.map(toPhraseProgress) } : p;
     });
+  }
+
+  /**
+   * The ring's calls whose day has come, as the phone shows them, opened on the server too, so a
+   * call taken today fills its slot even when the phone's day is ahead of the server's (the test
+   * menu's clock, or a midnight the phone has passed first). Nothing is written when they match.
+   */
+  async openRing(dayIndex: number) {
+    const current = this.resource.data ?? (await this.refresh());
+    if (current === null) return null;
+    const opened = (p: Progress) => [...ringWeeks(p.weeks, Math.max(dayIndex, p.dayIndex))];
+    if (JSON.stringify(opened(current)) === JSON.stringify(current.weeks)) return null;
+    return this.update((p) => ({ ...p, weeks: opened(p) }));
   }
 
   /**

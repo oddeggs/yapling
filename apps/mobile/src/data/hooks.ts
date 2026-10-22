@@ -92,6 +92,8 @@ export function useProgress(): Loaded<Progress> & {
   readonly updateProgress: (change: (current: Progress) => Progress) => Promise<ProgressSave>;
   /** A phrase the learner opened, met as a seed packet (needs the server; skipped if known). */
   readonly meetPhrase: (phrase: { readonly id: string; readonly text: string }) => Promise<void>;
+  /** Opens on the server the ring's calls whose day has come on the app's clock. */
+  readonly openRing: (dayIndex: number) => Promise<void>;
 } {
   const data = useData();
   const loaded = useResource(data.progress.resource);
@@ -102,6 +104,9 @@ export function useProgress(): Loaded<Progress> & {
       updateProgress: (change: (current: Progress) => Progress) => data.progress.update(change),
       meetPhrase: async (phrase: { readonly id: string; readonly text: string }) => {
         await data.progress.meetPhrase(phrase, data.clock.now());
+      },
+      openRing: async (dayIndex: number) => {
+        await data.progress.openRing(dayIndex);
       },
     }),
     [loaded, data],
