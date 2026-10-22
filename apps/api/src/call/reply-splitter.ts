@@ -71,6 +71,11 @@ export class ReplySplitter {
     return this.tag;
   }
 
+  /** True once the first word was read, so `caseTag` is final (null when the line had none). */
+  get caseTagKnown(): boolean {
+    return this.tagChecked;
+  }
+
   /** What the narration guard did to the line: null when it passed untouched. */
   get guardAction(): GuardAction | null {
     return this.guard?.action ?? null;

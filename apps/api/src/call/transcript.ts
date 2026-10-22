@@ -52,3 +52,12 @@ export interface TranscriptFile {
 
 export const transcriptKey = (prefix: string, callId: string): string =>
   `${prefix}calls/${callId}/transcript.json`;
+
+/** The last character line, recorded or generated, or null before anyone spoke. */
+export function lastCharacterLine(transcript: readonly TranscriptLine[]): CharacterLine | null {
+  for (let i = transcript.length - 1; i >= 0; i--) {
+    const line = transcript[i];
+    if (line !== undefined && !isLearnerLine(line)) return line;
+  }
+  return null;
+}

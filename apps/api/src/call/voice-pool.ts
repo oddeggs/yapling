@@ -39,6 +39,13 @@ export const stageVoice = (
   return { character, speed, breakSeconds };
 };
 
+/** A voice one step slower than `voice`, with longer phrase breaks: a line asked for slowly. */
+export const slowerVoice = (voice: TtsVoice): TtsVoice => ({
+  ...voice,
+  speed: clampSpeed(voice.speed - PACE_STEP.speed),
+  breakSeconds: (voice.breakSeconds ?? 0) + PACE_STEP.breakSeconds,
+});
+
 /**
  * Flash sockets opened ahead of time, one spare per voice in use, so a line never waits for the
  * TLS and WebSocket handshake. A spare that closed meanwhile (Flash drops idle sockets after

@@ -1,10 +1,18 @@
 import { upstream } from '../../src/call/upstream';
+import { scriptedAnswers, wire, type JevScript } from './jev';
 
 /*
  * In-process fakes of the call's providers, speaking their wire protocols: Scribe v2 Realtime and
- * Flash stream-input as WebSockets, the Anthropic Messages API as JSON and SSE. Installed on the
- * call's upstream `fetch`, so the protocol tests spend no credits.
+ * Flash stream-input as WebSockets, the Anthropic Messages API as JSON and SSE, and Jev (the turn
+ * judge) as JSON. Installed on the call's upstream `fetch`, so the protocol tests spend no credits.
  */
+
+/** A turn-judge request as the call sends it. */
+export interface JevRequest {
+  readonly model: string;
+  readonly state: { last_line: string; hoped_for: string; learner_said: string };
+  readonly questions: Record<string, unknown>;
+}
 
 interface ClaudeRequest {
   readonly model: string;
@@ -38,8 +46,13 @@ export class Providers {
   });
   /** Milliseconds before the first streamed token. */
   firstTokenDelayMs = 5;
+  /** Jev's answer to each turn; null leaves Jev down (every turn is the reply's own). */
+  jev: ((request: JevRequest) => JevScript) | null = null;
+  /** Milliseconds before Jev answers. */
+  jevDelayMs = 5;
+  readonly jevRequests: JevRequest[] = [];
   install(): this {
-    upstream.fetch = (input, init) => this.fetch(new Request(input, init));
+    upstream.fetch = (input, init) => this.fetch(new Request(input, init), init?.signal ?? null);
     return this;
   }
 
@@ -58,8 +71,11 @@ export class Providers {
       });
   }
 
-  private async fetch(request: Request): Promise<Response> {
+  private async fetch(request: Request, signal: AbortSignal | null): Promise<Response> {
     const url = new URL(request.url);
+    if (url.hostname === 'api.typesafe.ai' && url.pathname === '/v1/systemone') {
+      return this.judge(await request.json<JevRequest>(), signal);
+    }
     if (url.hostname === 'api.elevenlabs.io' && url.pathname === '/v1/speech-to-text/realtime') {
       return this.scribe();
     }
@@ -71,6 +87,24 @@ export class Providers {
       return this.claude(await request.json<ClaudeRequest>());
     }
     return new Response('not faked', { status: 599 });
+  }
+
+  private async judge(body: JevRequest, signal: AbortSignal | null): Promise<Response> {
+    this.jevRequests.push(body);
+    const answer = this.jev;
+    if (answer === null) return new Response('down', { status: 503 });
+    // Like `fetch`, a request whose signal fires (the time budget, a dropped turn) rejects.
+    await new Promise<void>((resolve, reject) => {
+      const timer = setTimeout(resolve, this.jevDelayMs);
+      signal?.addEventListener('abort', () => {
+        clearTimeout(timer);
+        reject(signal.reason instanceof Error ? signal.reason : new Error('aborted'));
+      });
+    });
+    const targets = Object.keys(body.questions)
+      .filter((k) => k.startsWith('target_'))
+      .map((k) => k.slice('target_'.length));
+    return Response.json(wire(scriptedAnswers(answer(body), targets)));
   }
 
   private scribe(): Response {
