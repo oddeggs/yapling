@@ -78,3 +78,15 @@ States built from existing components because the design does not show them.
 | Season map | Next episode already open | Without the day: "Help Wanted" alone, and "Tiếp tục" opens its call |
 | Season map | Season done | No next-episode card; the route is walked to the last pin |
 | End of an episode | Whole screen | Designed (hub/epend) but not built in this release: it needs a per-episode cliffhanger scene and a "Remind me" knock for the next episode. Release 2 |
+| Call | Ringing while the socket opens | The design starts on a speaking line. The scene and cast show at once, the pill reads "Đang gọi {who}" and the phone pill (the letter scene's ringing pill) bounces until the call is ready |
+| Call | Thinking | The call frame has no thinking state (only the board's "Pip is thinking"). The listener takes the `think` mood and tilts 8°, its bubble shows its name, the AI tag and the hub's three `ydot` dots; the mic rests (white, grey bars) with no caption |
+| Call | Reaction clip before a reply | A recorded "Ooh," covers the wait; the bubble shows the thinking dots, not "Ooh,", until the reply's own words arrive |
+| Call | Hands-free learner turn | The design shows hold-to-talk only. In hands-free the mic shows its listening look on the learner's turn, with the same caption |
+| Call | Correction, first beat | The call frame's badges ("I calling?" / "I'm calling?") need wording the server doesn't send. The character's question plays in the bubble and the learner's original shows in the "BẠN · nghe được" caption until the second try |
+| Call | Wrapping up (minutes) | No minutes chip in the call frame. The speaker pill's place line gains the time left ("Quán Lantern · 0:48"), as on the meaning board's pill; at the end the exit becomes the primary button with "Hết cảnh" |
+| Call | Reconnecting mid-call | No design. The mic rests and the last line stays; the call resumes the beat when the socket is back. After two minutes the no-connection sheet shows |
+| Call | No connection | Voice notes are a later release: the sheet keeps the kicker and title, drops the voice-note line and button, and "Thử gọi lại" becomes the primary button |
+| Call | Microphone off | Typing to the roommate is a later release: the sheet keeps "Mở Cài đặt" and drops "Nhắn chữ thay thế" |
+| Call | Meaning, translation open | The board's "Ẩn bản dịch" has no catalogue key; once revealed the translation stays until the whisper's ✕ closes it (as in the Week 1 prototype) |
+| Call | The letter | The prototype's "HARBOUR LANE OFFICE · NOTICE" kicker isn't in the story or a catalogue; the letter shows the story's own lines, sign-off included |
+| Call | Notebook, knock, dusk letter, postcard, voicemail and leaf beats | Not part of the live calls built here; the call shows nothing for them and carries on |
