@@ -28,7 +28,7 @@ import {
 } from '../../ui';
 import { DotGrid } from './art';
 import type { AfterCallModel, AfterCallReady } from './model';
-import { BloomCardView, FixRow, GrowingObject, OpenBox, Receipt, payoffType } from './pieces';
+import { FixRow, GrowingObject, OpenBox, Receipt, payoffType } from './pieces';
 import { RingDelta } from './ring-delta';
 
 export interface AfterCallScreenProps {
@@ -150,11 +150,6 @@ function Ready({ model }: { model: AfterCallReady }) {
           ))}
         </View>
       ) : null}
-      {model.blooms.map((card) => (
-        <View key={card.id} style={[styles.side, { marginTop: 22 }]}>
-          <BloomCardView card={card} />
-        </View>
-      ))}
       {model.receipt ? (
         <View style={{ marginTop: 22 }}>
           <Receipt rows={model.receipt} />
