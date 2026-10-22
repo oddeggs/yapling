@@ -16,8 +16,8 @@
 
 | Stage | Words/min | Sentence length | Idioms | Interruptions | Hints |
 |---|---|---|---|---|---|
-| Newcomer | ~110 | short, one idea | none | never | phrase hint after a 4 s pause |
-| Neighbour | ~130 | one or two ideas | rare, explained | never | hint after 6 s |
+| Newcomer | ~110 | short, one idea | none | never | phrase hint offered once, silently, after a long quiet (18 s), or when asked |
+| Neighbour | ~130 | one or two ideas | rare, explained | never | hint offered once, silently, after a long quiet (18 s), or when asked |
 | Regular | ~150 | normal | some | rarely, gently | only when asked |
 | Local | ~165 | normal, overlapping | natural | yes, then yield | only when asked |
 | Voice | natural (~170+) | natural | natural | yes | none unless asked |
