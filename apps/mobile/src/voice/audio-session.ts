@@ -1,6 +1,7 @@
 import { AudioManager, type PermissionStatus } from 'react-native-audio-api';
 
 import { VoiceSession, type VoiceSessionStatus } from '../../modules/voice-session';
+import { claimAudio, ownsAudio, releaseAudio, type AudioClaim } from './audio-owner';
 
 /*
  * The audio session for a live call: play and record, out of the speaker unless a headset or
@@ -41,6 +42,7 @@ const IO_BUFFER_SECONDS = 0.01;
 export class CallAudioSession {
   private subs: { remove(): void }[] = [];
   private active = false;
+  private claim: AudioClaim | null = null;
 
   constructor(private readonly onEvent: (event: SessionEvent) => void) {}
 
@@ -49,10 +51,12 @@ export class CallAudioSession {
   }
 
   /**
-   * Configures and activates the session and turns voice processing on. Call before the audio
-   * context or the recorder exist, so their engine starts with echo cancellation.
+   * Configures and activates the session for the call (play and record, speaker, Bluetooth) and
+   * takes it over from whichever player had it. Voice processing comes later, once the call's
+   * graph runs (`enableVoiceProcessing`).
    */
-  async start(voiceProcessing = true): Promise<VoiceSessionStatus | null> {
+  async start(): Promise<void> {
+    this.claim = claimAudio('call');
     AudioManager.setAudioSessionOptions({
       iosCategory: 'playAndRecord',
       iosMode: 'voiceChat',
@@ -65,7 +69,16 @@ export class CallAudioSession {
     await AudioManager.setAudioSessionActivity(true);
     VoiceSession?.setPreferredIOBufferDuration(IO_BUFFER_SECONDS);
     this.active = true;
-    return VoiceSession?.setVoiceProcessing(voiceProcessing) ?? null;
+  }
+
+  /**
+   * Turns Apple's voice processing (echo cancellation) on or off for the call's graph. Call it
+   * once the playback graph runs: the audio engine is then rebuilt with voice processing for this
+   * session. Turning it on before that would put it on an engine left over from an earlier player,
+   * built for another session category, which then refuses every node connected to it.
+   */
+  enableVoiceProcessing(on: boolean): VoiceSessionStatus | null {
+    return VoiceSession?.setVoiceProcessing(on) ?? null;
   }
 
   /** Re-activates after an interruption ends. */
@@ -85,13 +98,24 @@ export class CallAudioSession {
     return s ? s.outputLatency + s.ioBufferDuration : 0.02;
   }
 
-  /** Ends the call's session and gives other apps their audio back. */
+  /** Whether the call still holds the session (no player set it up since). */
+  get owned(): boolean {
+    return ownsAudio(this.claim);
+  }
+
+  /**
+   * Ends the call's session and gives other apps their audio back, unless another player has set
+   * the session up since (the next call, a story): then it is theirs and stays as it is.
+   */
   async stop(): Promise<void> {
     for (const sub of this.subs) sub.remove();
     this.subs = [];
+    this.active = false;
+    const claim = this.claim;
+    this.claim = null;
+    if (!releaseAudio(claim)) return;
     AudioManager.observeAudioInterruptions(false);
     VoiceSession?.setVoiceProcessing(false);
-    this.active = false;
     try {
       await AudioManager.setAudioSessionActivity(false);
     } catch {

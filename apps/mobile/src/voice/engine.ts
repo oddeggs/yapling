@@ -60,6 +60,9 @@ export interface VoiceEngineOptions {
 /** Streams the phone plays on its own are numbered above any the call uses. */
 const LOCAL_STREAM_BASE = 0xffff_0000;
 
+/** How long the engine takes to settle on a new route before the graph is checked. */
+const ROUTE_SETTLE_MS = 300;
+
 /** The sample rate of the playback graph: the TTS rate, so live audio needs no resampling. */
 const PLAYBACK_RATE_HZ = 24_000;
 
@@ -146,16 +149,39 @@ export class VoiceEngine {
   }
 
   /**
-   * Starts the call's audio: session with echo cancellation, the playback graph, and the mic when
+   * Starts the call's audio: the session, the playback graph, echo cancellation, and the mic when
    * permission is granted. Returns the session status (route, voice processing) for diagnostics.
+   * If the audio can't start, the session is set up once more from scratch; if that fails too, the
+   * call ends with `no_connection` (the try-again sheet) rather than going on in silence.
    */
   async prepare(): Promise<VoiceSessionStatus | null> {
-    const status = await this.session.start(this.options.voiceProcessing ?? true);
-    this.refreshLatency();
+    try {
+      return await this.startAudio();
+    } catch (e) {
+      this.log(`audio failed: ${String(e)}; setting the session up again`);
+    }
+    await this.stopAudio();
+    if (this.disposed) return null;
+    try {
+      return await this.startAudio();
+    } catch (e) {
+      this.log(`audio failed again: ${String(e)}`);
+      this.patch({ error: 'no_connection' });
+      void this.teardown();
+      return null;
+    }
+  }
+
+  private async startAudio(): Promise<VoiceSessionStatus | null> {
+    await this.session.start();
     const context = new AudioContext({ sampleRate: PLAYBACK_RATE_HZ });
-    await context.resume();
     this.context = context;
-    this.player = new CallPlayer({
+    await context.resume();
+    // Echo cancellation goes on once the graph runs: the engine is rebuilt for this session with
+    // it, never put on an engine an earlier player (a story, the last call) left behind.
+    const status = this.session.enableVoiceProcessing(this.options.voiceProcessing ?? true);
+    this.refreshLatency();
+    this.player ??= new CallPlayer({
       context,
       lipsync: this.lipsync,
       recorded: this.options.recorded ?? storyRecordedLines,
@@ -179,9 +205,36 @@ export class VoiceEngine {
     for (const a of this.earlyAudio.splice(0)) this.onAudio(a);
     if ((await micPermissionStatus()) === 'granted') await this.startMic();
     else this.log('mic permission not granted: listening only');
-    // A failed mic start can leave the graph stopped; character audio must be ready to play.
-    if (context.state !== 'running') await context.resume();
+    // A failed mic start stops the engine; character audio must still play.
+    await this.restartGraphIfStopped();
+    this.log(`audio up: ${this.debugAudio()}`);
     return status;
+  }
+
+  /** Lets go of the call's audio: the graph, the mic and (when the call still holds it) the session. */
+  private async stopAudio(): Promise<void> {
+    this.player?.dispose();
+    this.player = null;
+    const ctx = this.context;
+    this.context = null;
+    if (ctx) await ctx.close().catch(() => undefined);
+    await this.mic?.stop().catch(() => undefined);
+    this.mic = null;
+    await this.session.stop();
+  }
+
+  /**
+   * The audio engine can stop while the graph still counts as running (a failed mic start, an
+   * interruption, a route change): suspending and resuming the graph starts the engine again.
+   */
+  private async restartGraphIfStopped(force = false): Promise<void> {
+    const ctx = this.context;
+    if (!ctx) return;
+    const status = this.session.status();
+    if (!force && (status === null || status.engineRunning)) return;
+    this.log('audio engine stopped: restarting the graph');
+    await ctx.suspend().catch(() => undefined);
+    await ctx.resume().catch(() => undefined);
   }
 
   /** Starts mic capture (after the learner grants the permission mid-call). */
@@ -514,11 +567,13 @@ export class VoiceEngine {
   private async onSessionEvent(e: SessionEvent): Promise<void> {
     if (e.type === 'route') {
       this.log(`route change: ${e.reason}`);
-      // The audio engine rebuilds itself on a new route; give it a moment, then check the mic.
+      // The audio engine rebuilds itself on a new route (AirPods in or out); give it a moment,
+      // then make sure the graph and the mic run on the new one.
       setTimeout(() => {
+        if (this.disposed || !this.context) return;
         this.refreshLatency();
-        void this.mic?.ensureRunning();
-      }, 300);
+        void this.restartGraphIfStopped().then(() => this.mic?.ensureRunning());
+      }, ROUTE_SETTLE_MS);
       return;
     }
     this.log(`interruption ${e.phase}`);
@@ -528,9 +583,12 @@ export class VoiceEngine {
       this.patch({ interrupted: true, talkHeld: false, learnerSpeaking: false });
       return;
     }
+    if (this.disposed || !this.context) return;
     try {
       await this.session.resume();
-      await this.context?.resume();
+      // The engine stopped for the interruption while the graph still counts as running: start
+      // it again by suspending and resuming the graph.
+      await this.restartGraphIfStopped(true);
       if (this.mic) await this.mic.ensureRunning();
       this.refreshLatency();
     } catch (err) {
@@ -548,14 +606,7 @@ export class VoiceEngine {
     if (this.hangupTimer) clearTimeout(this.hangupTimer);
     this.hangupTimer = null;
     this.socket.close();
-    this.player?.dispose();
-    this.player = null;
-    await this.mic?.stop();
-    this.mic = null;
-    const ctx = this.context;
-    this.context = null;
-    if (ctx) await ctx.close().catch(() => undefined);
-    if (this.session.isActive) await this.session.stop();
+    await this.stopAudio();
   }
 
   private patch(p: Partial<CallState>): void {
