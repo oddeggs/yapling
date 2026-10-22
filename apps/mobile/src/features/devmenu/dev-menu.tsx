@@ -27,6 +27,7 @@ import {
   useDebugClock,
   backToRealTime,
 } from './debug-clock';
+import { CostPage } from './cost-page';
 import { useResetLocalData } from './dev-menu-host';
 import { devStorage } from './dev-storage';
 import { KnockPreview } from './knock-preview';
@@ -79,6 +80,7 @@ export function DevMenu() {
   const [permitted, setPermitted] = useState<boolean | null>(null);
   const [scheduled, setScheduled] = useState<readonly NotificationRequest[]>([]);
   const [note, setNote] = useState<string | null>(null);
+  const [page, setPage] = useState<'menu' | 'cost'>('menu');
   const opened = useRef(false);
   useEffect(() => {
     if (opened.current) return;
@@ -136,7 +138,7 @@ export function DevMenu() {
     router.replace('/');
   };
 
-  return (
+  const sheet = (children: ReactNode) => (
     <GlassSheet kind="info" top={insets.top + 8} style={{ paddingHorizontal: 0, paddingBottom: 0 }}>
       <ScrollView
         contentContainerStyle={{
@@ -145,148 +147,165 @@ export function DevMenu() {
           gap: 18,
         }}
       >
-        <View
-          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
-        >
-          <Txt variant="sheetTitle">Test menu</Txt>
-          <StickerButton label="Close" tone="glass" size="small" onPress={() => router.back()} />
-        </View>
-        <Txt variant="note" colour={colours.textMuted}>
-          {`Day ${day} · ${localDateOf(appNow, learner.timezone)} ${localTimeOf(appNow, learner.timezone)}` +
-            (clock.offsetMs === 0 ? ' · real clock' : ' · debug clock') +
-            ` · installed ${learner.installedOn}`}
-        </Txt>
-
-        <Section title="JUMP TO DAY">
-          <Row>
-            {DAYS.map((d) => (
-              <ChoiceChip key={d} label={`${d}`} selected={d === day} onPress={() => jump(d)} />
-            ))}
-            <ChoiceChip
-              label="Real clock"
-              selected={clock.offsetMs === 0}
-              onPress={() => {
-                used('real_clock');
-                backToRealTime();
-              }}
-            />
-          </Row>
-        </Section>
-
-        <ToggleRow
-          title="Came back after 3 days"
-          subtitle="The welcome back, and day 8's knock"
-          on={clock.cameBackAfterAway}
-          onChange={(on) => {
-            used('came_back_after_away');
-            setCameBackAfterAway(on);
-          }}
-        />
-
-        <Section title="LANGUAGE">
-          <Row>
-            <ChoiceChip
-              label="Tiếng Việt"
-              selected={language === 'vi'}
-              onPress={() => setLanguage('vi')}
-            />
-            <ChoiceChip
-              label="English"
-              selected={language === 'en'}
-              onPress={() => setLanguage('en')}
-            />
-          </Row>
-        </Section>
-
-        <Section title="KNOCKS">
-          <Row>
-            {DAYS.filter((d) => d > 1).map((d) => (
-              <ChoiceChip
-                key={d}
-                label={`Day ${d}`}
-                selected={d === previewDay}
-                onPress={() => setPreviewDay(d)}
-              />
-            ))}
-          </Row>
-          {preview === null ? null : (
-            <KnockPreview
-              day={previewDay}
-              date={preview.date}
-              time={preview.time}
-              title={preview.title}
-              body={preview.body}
-              language={language}
-              t={t}
-              onPress={() => {
-                // As on the lock screens between days: tapping the knock opens the app on its day.
-                used('jump_day', previewDay);
-                jumpToDay(previewDay, learner.installedOn, learner.timezone);
-                router.dismissAll();
-                router.navigate(knockHref(previewDay));
-              }}
-            />
-          )}
-          <StickerButton
-            label={`Day ${previewDay}, a minute before its knock`}
-            tone="primary"
-            onPress={ringSoon}
-          />
-          <StickerButton
-            label={today === null ? 'No knock on day 1' : `Fire day ${day}'s knock in 5 s`}
-            tone="secondary"
-            disabled={today === null}
-            onPress={fire}
-          />
-          {permitted === false ? (
-            <StickerButton
-              label="Ask for notifications"
-              tone="glass"
-              onPress={() => {
-                requestKnockPermission().then(
-                  (granted) => {
-                    setPermitted(granted);
-                    setTimeout(refresh, 600);
-                  },
-                  () => setPermitted(false),
-                );
-              }}
-            />
-          ) : null}
-          {note === null ? null : (
-            <Txt variant="note" colour={colours.textMuted}>
-              {note}
-            </Txt>
-          )}
-          <Txt variant="note" colour={colours.textMuted}>
-            {permitted === null
-              ? 'Checking the permission…'
-              : `${permitted ? 'Notifications allowed' : 'Notifications not allowed'} · ${scheduled.length} knock${scheduled.length === 1 ? '' : 's'} scheduled`}
-          </Txt>
-          {scheduled.map((request) => {
-            const at = ringsAt(request);
-            return (
-              <Txt key={request.identifier} variant="note" colour={colours.textBody}>
-                {`${request.identifier} · ${
-                  at === null
-                    ? '?'
-                    : `${localDateOf(at + clock.offsetMs, learner.timezone)} ${localTimeOf(at + clock.offsetMs, learner.timezone)}`
-                } · ${request.content.title ?? ''}: ${request.content.body ?? ''}`}
-              </Txt>
-            );
-          })}
-        </Section>
-
-        <Section title="RESET">
-          <Txt variant="note" colour={colours.textMuted}>
-            {resetLocalData === null
-              ? 'Clears the test menu, the debug clock and the knocks.'
-              : 'Clears everything on this phone: the learner, the debug clock and the knocks.'}
-          </Txt>
-          <StickerButton label="Reset" tone="dark" onPress={() => void reset()} />
-        </Section>
-        <View style={{ height: layout.marginScreen }} />
+        {children}
       </ScrollView>
     </GlassSheet>
+  );
+
+  if (page === 'cost') return sheet(<CostPage onBack={() => setPage('menu')} />);
+
+  return sheet(
+    <>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Txt variant="sheetTitle">Test menu</Txt>
+        <StickerButton label="Close" tone="glass" size="small" onPress={() => router.back()} />
+      </View>
+      <Txt variant="note" colour={colours.textMuted}>
+        {`Day ${day} · ${localDateOf(appNow, learner.timezone)} ${localTimeOf(appNow, learner.timezone)}` +
+          (clock.offsetMs === 0 ? ' · real clock' : ' · debug clock') +
+          ` · installed ${learner.installedOn}`}
+      </Txt>
+
+      <Section title="JUMP TO DAY">
+        <Row>
+          {DAYS.map((d) => (
+            <ChoiceChip key={d} label={`${d}`} selected={d === day} onPress={() => jump(d)} />
+          ))}
+          <ChoiceChip
+            label="Real clock"
+            selected={clock.offsetMs === 0}
+            onPress={() => {
+              used('real_clock');
+              backToRealTime();
+            }}
+          />
+        </Row>
+      </Section>
+
+      <ToggleRow
+        title="Came back after 3 days"
+        subtitle="The welcome back, and day 8's knock"
+        on={clock.cameBackAfterAway}
+        onChange={(on) => {
+          used('came_back_after_away');
+          setCameBackAfterAway(on);
+        }}
+      />
+
+      <Section title="LANGUAGE">
+        <Row>
+          <ChoiceChip
+            label="Tiếng Việt"
+            selected={language === 'vi'}
+            onPress={() => setLanguage('vi')}
+          />
+          <ChoiceChip
+            label="English"
+            selected={language === 'en'}
+            onPress={() => setLanguage('en')}
+          />
+        </Row>
+      </Section>
+
+      <Section title="KNOCKS">
+        <Row>
+          {DAYS.filter((d) => d > 1).map((d) => (
+            <ChoiceChip
+              key={d}
+              label={`Day ${d}`}
+              selected={d === previewDay}
+              onPress={() => setPreviewDay(d)}
+            />
+          ))}
+        </Row>
+        {preview === null ? null : (
+          <KnockPreview
+            day={previewDay}
+            date={preview.date}
+            time={preview.time}
+            title={preview.title}
+            body={preview.body}
+            language={language}
+            t={t}
+            onPress={() => {
+              // As on the lock screens between days: tapping the knock opens the app on its day.
+              used('jump_day', previewDay);
+              jumpToDay(previewDay, learner.installedOn, learner.timezone);
+              router.dismissAll();
+              router.navigate(knockHref(previewDay));
+            }}
+          />
+        )}
+        <StickerButton
+          label={`Day ${previewDay}, a minute before its knock`}
+          tone="primary"
+          onPress={ringSoon}
+        />
+        <StickerButton
+          label={today === null ? 'No knock on day 1' : `Fire day ${day}'s knock in 5 s`}
+          tone="secondary"
+          disabled={today === null}
+          onPress={fire}
+        />
+        {permitted === false ? (
+          <StickerButton
+            label="Ask for notifications"
+            tone="glass"
+            onPress={() => {
+              requestKnockPermission().then(
+                (granted) => {
+                  setPermitted(granted);
+                  setTimeout(refresh, 600);
+                },
+                () => setPermitted(false),
+              );
+            }}
+          />
+        ) : null}
+        {note === null ? null : (
+          <Txt variant="note" colour={colours.textMuted}>
+            {note}
+          </Txt>
+        )}
+        <Txt variant="note" colour={colours.textMuted}>
+          {permitted === null
+            ? 'Checking the permission…'
+            : `${permitted ? 'Notifications allowed' : 'Notifications not allowed'} · ${scheduled.length} knock${scheduled.length === 1 ? '' : 's'} scheduled`}
+        </Txt>
+        {scheduled.map((request) => {
+          const at = ringsAt(request);
+          return (
+            <Txt key={request.identifier} variant="note" colour={colours.textBody}>
+              {`${request.identifier} · ${
+                at === null
+                  ? '?'
+                  : `${localDateOf(at + clock.offsetMs, learner.timezone)} ${localTimeOf(at + clock.offsetMs, learner.timezone)}`
+              } · ${request.content.title ?? ''}: ${request.content.body ?? ''}`}
+            </Txt>
+          );
+        })}
+      </Section>
+
+      <Section title="COSTS">
+        <StickerButton
+          label={t('devmenu.cost.open')}
+          tone="secondary"
+          onPress={() => {
+            used('cost_page');
+            setPage('cost');
+          }}
+        />
+      </Section>
+
+      <Section title="RESET">
+        <Txt variant="note" colour={colours.textMuted}>
+          {resetLocalData === null
+            ? 'Clears the test menu, the debug clock and the knocks.'
+            : 'Clears everything on this phone: the learner, the debug clock and the knocks.'}
+        </Txt>
+        <StickerButton label="Reset" tone="dark" onPress={() => void reset()} />
+      </Section>
+      <View style={{ height: layout.marginScreen }} />
+    </>,
   );
 }
