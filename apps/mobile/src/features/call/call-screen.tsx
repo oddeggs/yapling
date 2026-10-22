@@ -9,7 +9,14 @@ import {
   type Stage,
   type TurnMode,
 } from '@yapling/contracts';
-import { callKindOf, CAST as STORY_CAST, type LetterLine, type Scene } from '@yapling/story';
+import {
+  callKindOf,
+  findLine,
+  glossFor,
+  CAST as STORY_CAST,
+  type LetterLine,
+  type Scene,
+} from '@yapling/story';
 import { colours, controls, layout as space } from '@yapling/theme';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, Linking, View, useWindowDimensions } from 'react-native';
@@ -37,15 +44,23 @@ import {
   YouCaption,
 } from './call-cards';
 import { CallErrorSheet } from './call-errors';
+import {
+  HistoryButton,
+  HistorySheet,
+  lineGlossProps,
+  TurnPager,
+  useLineGlosses,
+} from './call-history';
 import { CallLetter } from './call-letter';
 import { CallStage } from './call-stage';
 import { CallTip } from './call-tip';
 import { useDevMic } from './dev-mic';
 import { bandOf } from './letter-place';
+import { saidLines, transcriptOf } from './line-history';
 import { CallTimer, MirrorCard, RoundsStrip } from './pass-it-on';
 import { FRAME_WIDTH, layoutFor } from './scene-layout';
 import { useCall } from './use-call';
-import { callView } from './view-model';
+import { callView, lineGlossOffered } from './view-model';
 
 /*
  * A live call, full screen: the scene and its cast, the speaker pill, the line in a big bubble
@@ -141,6 +156,9 @@ export function CallScreen({
     onLog: log,
   });
   const { engine, state, tracker, dispatch } = call;
+  // A spoken line with no written gloss is translated on a tap; missed lines can be read again.
+  const { glosses } = useLineGlosses(url, getToken, tracker.callToken);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   // Re-render while "You fixed it" is up, so it leaves on time.
   const [now, setNow] = useState(() => Date.now());
@@ -330,7 +348,8 @@ export function CallScreen({
         <View
           style={{
             position: 'absolute',
-            top: spot.top * k,
+            // A line from before the phone rang, gone back to, sits under the phone pill.
+            top: Math.max(spot.top * k, phoneShown ? phoneBottom + 6 : 0),
             left: spot.left,
             right: spot.right,
             gap: 8,
@@ -354,11 +373,10 @@ export function CallScreen({
                   text={bubble.text}
                   {...(caption ? { caption } : {})}
                   talking={bubble.playing}
-                  {...(bubble.gloss
-                    ? { gloss: bubble.gloss, glossHint: t('call.tapForMeaning') }
-                    : {})}
+                  {...lineGlossProps(bubble, glosses, glosses.entry(bubble.text), t)}
                   onGlossChange={(shown) => {
-                    if (shown) {
+                    // A written line's phrase drops in the burrow; a generated one doesn't.
+                    if (shown && bubble.gloss) {
                       dropSeed(
                         { text: bubble.text, gloss: bubble.gloss, source: 'line' },
                         t('call.seedDropped'),
@@ -369,6 +387,13 @@ export function CallScreen({
               )}
             </BubbleCaption>
           )}
+          {bubble.page && !bubble.thinking ? (
+            <TurnPager
+              page={bubble.page}
+              onGo={(streamId) => dispatch({ type: 'browse', streamId })}
+              style={{ position: 'absolute', top: 7, right: 10 }}
+            />
+          ) : null}
           {view.meaningChip ? (
             <MeaningChip
               label={t('call.whatDoesThatMean')}
@@ -411,6 +436,13 @@ export function CallScreen({
         />
       </View>
 
+      {view.mode === 'live' && saidLines(tracker.lines).length > 0 ? (
+        <HistoryButton
+          onPress={() => setHistoryOpen((open) => !open)}
+          style={{ position: 'absolute', top, left: 14 }}
+        />
+      ) : null}
+
       {view.rounds ? (
         <RoundsStrip
           rounds={view.rounds}
@@ -445,6 +477,48 @@ export function CallScreen({
             }
           />
         </View>
+      ) : null}
+
+      {historyOpen && view.mode === 'live' ? (
+        <HistorySheet
+          entries={transcriptOf(tracker.lines, tracker.heard)}
+          replayable={
+            state.phase === 'your_turn' &&
+            !state.playing &&
+            !state.learnerSpeaking &&
+            !state.talkHeld
+          }
+          lineView={({ line }) => {
+            const story = line.lineId ? findLine(line.lineId) : undefined;
+            const written = story ? glossFor(story.glosses, firstLanguage) : null;
+            const lineId = story?.audio ? story.id : null;
+            return {
+              speaker: line.speaker,
+              name: nameOf(line.speaker),
+              tone: bubbleTone(line.speaker),
+              glossProps: lineGlossProps(
+                {
+                  text: line.text,
+                  gloss: written,
+                  translatable: scene.kind !== 'practice' && lineGlossOffered(stage, firstLanguage),
+                },
+                glosses,
+                glosses.entry(line.text),
+                t,
+              ),
+              onReplay:
+                lineId && engine ? () => engine.playRecordedLocally(lineId, line.speaker) : null,
+            };
+          }}
+          onClose={() => setHistoryOpen(false)}
+          style={{
+            position: 'absolute',
+            top: pillBottom + 10,
+            left: space.sheetInset,
+            right: space.sheetInset,
+            bottom: height - stackTop + 10,
+          }}
+        />
       ) : null}
 
       <View

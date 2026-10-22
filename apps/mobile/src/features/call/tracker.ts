@@ -8,6 +8,9 @@ import {
   type Scene,
 } from '@yapling/story';
 
+import type { CaptionLine } from '../../voice/call-state';
+import { noteShown, type SpokenLine } from './line-history';
+
 /*
  * What the call screen remembers from the call's frames beyond the voice engine's state: the beat
  * and what it shows (the letter, the phone, a timer, the fluency mirror), the hint, the two beats
@@ -73,6 +76,12 @@ export interface TrackerState {
   /** The fluency mirror after Pass it on round N. */
   readonly mirrorRound: number | null;
   readonly timer: TimerState | null;
+  /** Every character line shown so far, for reading a missed one again. */
+  readonly lines: readonly SpokenLine[];
+  /** An earlier line the learner went back to in the bubble; null for the line now. */
+  readonly browsing: number | null;
+  /** The call's resume token from `ready`: names the call for a tapped line's translation. */
+  readonly callToken: string | null;
 }
 
 export const initialTracker: TrackerState = {
@@ -91,6 +100,9 @@ export const initialTracker: TrackerState = {
   phone: false,
   mirrorRound: null,
   timer: null,
+  lines: [],
+  browsing: null,
+  callToken: null,
 };
 
 export type TrackerEvent =
@@ -102,7 +114,11 @@ export type TrackerEvent =
   | { readonly type: 'meaning_closed' }
   /** The learner started talking on this beat. */
   | { readonly type: 'speech_started' }
-  | { readonly type: 'timer_done' };
+  | { readonly type: 'timer_done' }
+  /** A character line came on screen, or its caption grew. */
+  | { readonly type: 'line_shown'; readonly caption: CaptionLine }
+  /** The learner went back to an earlier line of the turn (null: back to the line now). */
+  | { readonly type: 'browse'; readonly streamId: number | null };
 
 export interface TrackerContext {
   readonly scene: Scene;
@@ -159,11 +175,25 @@ export function reduceTracker(
       // hold with no words in it never takes it away.
       return {
         ...state,
+        browsing: null,
         heardAtSpeech: state.heard.length,
         timer: state.timer && !state.timer.done ? { ...state.timer, started: true } : state.timer,
       };
     case 'timer_done':
       return state.timer ? { ...state, timer: { ...state.timer, done: true } } : state;
+    case 'line_shown': {
+      const lines = noteShown(state.lines, event.caption, {
+        recorded: state.recorded,
+        reactions: state.reactions,
+        heardCount: state.heard.length,
+      });
+      if (lines === state.lines) return state;
+      // A new line takes the bubble back from an earlier one.
+      const fresh = lines.length > state.lines.length;
+      return { ...state, lines, browsing: fresh ? null : state.browsing };
+    }
+    case 'browse':
+      return state.browsing === event.streamId ? state : { ...state, browsing: event.streamId };
   }
 }
 
@@ -231,6 +261,9 @@ function onFrame(
         ? { ...state, meaning: { ...state.meaning, spokenStream: frame.streamId } }
         : state;
     case 'ready':
+      return state.callToken === frame.resumeToken
+        ? state
+        : { ...state, callToken: frame.resumeToken };
     case 'partial':
     case 'not_heard':
     case 'alignment':

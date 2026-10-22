@@ -53,6 +53,15 @@ export interface SpeechBubbleProps {
   readonly glossHint?: string;
   /** Called when the gloss opens or closes (a first opening drops the phrase in the burrow). */
   readonly onGlossChange?: (shown: boolean) => void;
+  /**
+   * A line with no gloss yet that can be translated on a tap: the bubble is tappable, and opening
+   * it asks for the gloss (again, after a failed ask).
+   */
+  readonly onGlossNeeded?: () => void;
+  /** Shown in the gloss's place while it has none: "Translating…", or why there is none. */
+  readonly glossNote?: string;
+  /** The last ask failed: a tap on the open note asks again instead of closing it. */
+  readonly glossRetry?: boolean;
   readonly style?: ViewStyleProp;
 }
 
@@ -70,22 +79,33 @@ export function SpeechBubble({
   gloss,
   glossHint,
   onGlossChange,
+  onGlossNeeded,
+  glossNote,
+  glossRetry = false,
   style,
 }: SpeechBubbleProps) {
   const [glossShown, setGlossShown] = useState(false);
   const said = useSaidLength(text, caption);
-  const canGloss = gloss !== undefined && gloss !== '';
+  const hasGloss = gloss !== undefined && gloss !== '';
+  const canGloss = hasGloss || onGlossNeeded !== undefined;
   const toggle = () => {
     if (!canGloss) return;
+    if (glossShown && !hasGloss && glossRetry) {
+      onGlossNeeded?.();
+      return;
+    }
     const next = !glossShown;
     setGlossShown(next);
+    if (next && !hasGloss) onGlossNeeded?.();
     onGlossChange?.(next);
   };
+  const shownGloss = glossShown && hasGloss ? gloss : null;
+  const note = glossShown && !hasGloss ? (glossNote ?? null) : null;
   return (
     <Press
       onPress={canGloss ? toggle : undefined}
       haptic={canGloss ? 'selection' : null}
-      accessibilityLabel={`${name}, ${aiTag}: ${text}`}
+      accessibilityLabel={`${name}, ${aiTag}: ${text}${shownGloss ? `. ${shownGloss}` : note ? `. ${note}` : ''}`}
       {...(canGloss && glossHint ? { accessibilityHint: glossHint } : {})}
       style={style}
     >
@@ -109,7 +129,8 @@ export function SpeechBubble({
           <Text>{text.slice(0, said)}</Text>
           <Text style={{ opacity: 0.3 }}>{text.slice(said)}</Text>
         </Text>
-        {canGloss && glossShown ? <Gloss text={gloss} /> : null}
+        {shownGloss ? <Gloss text={shownGloss} /> : null}
+        {note ? <Gloss text={note} faint /> : null}
         {canGloss && !glossShown && !talking && glossHint ? (
           <Txt
             maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}
@@ -142,12 +163,17 @@ function useSaidLength(text: string, caption: CaptionClock | undefined): number 
 }
 
 /** The Vietnamese under the line: a dashed rule, then the hand font, easing in. */
-function Gloss({ text }: { text: string }) {
+function Gloss({ text, faint = false }: { text: string; faint?: boolean }) {
   const easeIn = useKeyframes(motion.call.gloss);
   return (
     <Animated.View style={[{ paddingTop: 4 }, easeIn]}>
       <DashedRule />
-      <Txt maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE} variant="gloss" colour={colours.textGloss}>
+      <Txt
+        maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}
+        variant="gloss"
+        colour={colours.textGloss}
+        style={faint ? { opacity: 0.6 } : undefined}
+      >
         {text}
       </Txt>
     </Animated.View>

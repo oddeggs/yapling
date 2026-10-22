@@ -1,10 +1,12 @@
 import type { Mood } from '@yapling/art';
 import type { CharacterId, FirstLanguage, Stage } from '@yapling/contracts';
+import { glossPolicy } from '@yapling/domain';
 import { findLine, glossFor, type Letter, type Scene } from '@yapling/story';
 
 import type { MicState } from '../../ui/mic-button';
 import type { CallNotice, CallState } from '../../voice/call-state';
 import { currentRound, mirrorFor, roundsOf, type Mirror } from './fluency-mirror';
+import { LOCAL_STREAMS_FROM, turnPage, type TurnPage } from './line-history';
 import type { CallLayout } from './scene-layout';
 import {
   answerOf,
@@ -44,6 +46,15 @@ export interface BubbleView {
   readonly gloss: string | null;
   /** The turn got no answer: the bubble says the character didn't catch that (copy on screen). */
   readonly didntCatch?: true;
+  /**
+   * With no written gloss, a tap asks for the line in the learner's first language (line glosses
+   * at their stage, and not in Pass it on).
+   */
+  readonly translatable: boolean;
+  /** Its place among this turn's lines, when the turn had more than one ("1 of 3"). */
+  readonly page: TurnPage | null;
+  /** An earlier line the learner went back to, not the line now. */
+  readonly earlier: boolean;
 }
 
 export interface TimerView {
@@ -138,7 +149,13 @@ export function callView(input: CallViewInput): CallView {
   const mic = micOf(call, live, waiting);
   const talking = mic === 'speaking' ? (call.caption?.character ?? null) : null;
   const thinking = live && call.phase === 'thinking' && call.serverThinking;
-  const bubble = bubbleOf(call, tracker, thinking, listener ?? layout.pill, firstLanguage);
+  const translatable = live && scene.kind !== 'practice' && lineGlossOffered(stage, firstLanguage);
+  const bubble = bubbleOf(call, tracker, {
+    thinking,
+    thinker: listener ?? layout.pill,
+    firstLanguage,
+    translatable,
+  });
   const fixed = tracker.fixedAt !== null && now - tracker.fixedAt < FIXED_SHOWN_MS;
 
   // The engine keeps the last heard line until the next partial: only this turn's words show.
@@ -190,6 +207,8 @@ export function callView(input: CallViewInput): CallView {
     tracker.meaning === null &&
     bubble !== null &&
     !bubble.thinking &&
+    !bubble.earlier &&
+    bubble.streamId < LOCAL_STREAMS_FROM &&
     bubble.text !== '' &&
     bubble.gloss === null &&
     (call.phase === 'your_turn' || call.phase === 'character_speaking') &&
@@ -228,6 +247,12 @@ export function callView(input: CallViewInput): CallView {
   };
 }
 
+/** Whether a spoken line opens in the learner's first language on a tap at their stage. */
+export function lineGlossOffered(stage: Stage, firstLanguage: FirstLanguage): boolean {
+  const policy = glossPolicy(stage, 'captions', { firstLanguage });
+  return policy.unit === 'line' && policy.layers.includes('l1');
+}
+
 function modeOf(input: CallViewInput): CallScreenMode {
   const { call } = input;
   if (input.micDenied) return 'error_mic';
@@ -263,10 +288,15 @@ function micOf(call: CallState, live: boolean, waiting: boolean): MicState {
 function bubbleOf(
   call: CallState,
   tracker: TrackerState,
-  thinking: boolean,
-  thinker: CharacterId,
-  firstLanguage: FirstLanguage,
+  opts: {
+    readonly thinking: boolean;
+    readonly thinker: CharacterId;
+    readonly firstLanguage: FirstLanguage;
+    readonly translatable: boolean;
+  },
 ): BubbleView | null {
+  const { thinking, thinker, firstLanguage, translatable } = opts;
+  const plain = { translatable: false, page: null, earlier: false } as const;
   // While "What does that mean?" is answered, the line asked about stays put; the next line after
   // the explanation takes the bubble again (the whisper stays until closed).
   const meaning = tracker.meaning;
@@ -282,6 +312,25 @@ function bubbleOf(
       playing: false,
       thinking: false,
       gloss: lineGloss ? glossFor(lineGloss.glosses, firstLanguage) : null,
+      ...plain,
+      translatable,
+    };
+  }
+  // The learner went back to an earlier line of the turn: it shows, still, where its speaker is.
+  const earlier = tracker.browsing;
+  const back = earlier === null ? undefined : tracker.lines.find((l) => l.streamId === earlier);
+  if (back && back.streamId !== call.caption?.streamId && !thinking) {
+    const line = back.lineId ? findLine(back.lineId) : undefined;
+    return {
+      speaker: back.speaker,
+      streamId: back.streamId,
+      text: back.text,
+      playing: false,
+      thinking: false,
+      gloss: line ? glossFor(line.glosses, firstLanguage) : null,
+      translatable,
+      page: turnPage(tracker.lines, back.streamId),
+      earlier: true,
     };
   }
   if (call.notice === 'didnt_catch' && !thinking && !call.playing) {
@@ -293,6 +342,8 @@ function bubbleOf(
       thinking: false,
       gloss: null,
       didntCatch: true,
+      ...plain,
+      translatable,
     };
   }
   if (thinking) {
@@ -303,6 +354,7 @@ function bubbleOf(
       playing: false,
       thinking: true,
       gloss: null,
+      ...plain,
     };
   }
   const caption = call.caption;
@@ -317,6 +369,7 @@ function bubbleOf(
       playing: call.playing,
       thinking: true,
       gloss: null,
+      ...plain,
     };
   }
   if (caption.text.trim() === '') return null;
@@ -329,7 +382,17 @@ function bubbleOf(
     playing: call.playing,
     thinking: false,
     gloss: line ? glossFor(line.glosses, firstLanguage) : null,
+    translatable,
+    // Going back waits for the line to end: the voice and the words stay together.
+    page: call.playing ? null : pageOf(tracker, caption.streamId),
+    earlier: false,
   };
+}
+
+/** The turn's pages, only when it had more than one line. */
+function pageOf(tracker: TrackerState, streamId: number): TurnPage | null {
+  const page = turnPage(tracker.lines, streamId);
+  return page && page.count > 1 ? page : null;
 }
 
 function moodsOf(

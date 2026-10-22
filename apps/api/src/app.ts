@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 
 import { accountRoutes } from './account';
-import { callSocketRoutes } from './call';
+import { callSocketRoutes, callTranslateRoutes } from './call';
 import { callRecordRoutes } from './calls';
 import type { AppEnv } from './env';
 import { purchaseRoutes } from './purchases';
@@ -16,8 +16,9 @@ export function createApp(): Hono<AppEnv> {
 
   // Sessions, the session guard for every `/me` and `/calls` route, and the learner's own data.
   app.route('/', accountRoutes());
-  // The call socket (its token comes in `hello`), then the call records.
+  // The call socket (its token comes in `hello`), a live call's tap-to-translate, the records.
   app.route('/', callSocketRoutes());
+  app.route('/', callTranslateRoutes());
   app.route('/', callRecordRoutes());
   // RevenueCat's webhook: its own secret, no session.
   app.route('/', purchaseRoutes());

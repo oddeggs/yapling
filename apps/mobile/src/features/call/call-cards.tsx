@@ -188,7 +188,7 @@ export function MeaningWhisper({
 }
 
 /** The round ✕ in a card's top-right corner. */
-function CloseButton({ label, onPress }: { label: string; onPress: () => void }) {
+export function CloseButton({ label, onPress }: { label: string; onPress: () => void }) {
   return (
     <Press
       onPress={onPress}
