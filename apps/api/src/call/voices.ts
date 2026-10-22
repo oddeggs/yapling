@@ -14,7 +14,11 @@ interface CastVoices {
 
 const voices = (castVoices as CastVoices).characters;
 
-/** Stand-ins for characters with no designed voice yet. */
+/**
+ * Stand-ins for characters with no designed voice yet. A character's own voice in
+ * `audio/cast-voices.json` always wins, so Dex speaks as himself the moment his voice is added
+ * there (and his line here can go).
+ */
 export const VOICE_STAND_INS: Readonly<Partial<Record<CharacterId, CharacterId>>> = {
   office: 'mags',
   dex: 'sol',

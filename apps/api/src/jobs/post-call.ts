@@ -15,6 +15,7 @@ import type { Bindings } from '../env';
 import { addMemory } from '../memory';
 import { progressChange, readProgress, updateProgressOnce } from '../progress';
 import type { PostCallJob } from './messages';
+import { isDailyTranscript, recordDailyCall } from './daily-call';
 import { applyCall } from './progress-apply';
 import { summarise, type Draft } from './summary';
 
@@ -23,6 +24,8 @@ import { summarise, type Draft } from './summary';
  * error targets, can-dos and keepsakes, the ring); new memory items are added; Flow, Pace and
  * Pauses come from the learner's word timings. The summary goes on the call record and the record
  * stops being pending. A record already summarised is left alone, so a redelivered job is a no-op.
+ * Pip's minute is never read by a model: a job for one only writes its phrase uses
+ * (`daily-call.ts`), when the call couldn't.
  *
  * A job that fails after progress was updated is retried without applying anything twice: the
  * progress update records the call (with the summary draft and what the change produced) in the
@@ -74,12 +77,17 @@ export async function runPostCall(env: Bindings, job: PostCallJob, now: number):
   const row = await getCallRow(env.DB, job.userId, job.callId);
   if (row === null || row.summary_pending === 0) return;
   const object = await env.BLOBS.get(row.transcript_key);
+  const file = object === null ? null : await object.json<TranscriptFile>();
+  // Pip's minute: its phrase uses, with no model (the call writes them; this is its retry).
+  if (file !== null && isDailyTranscript(file)) {
+    await recordDailyCall(env.DB, job.userId, file, now);
+    return;
+  }
   const scene = findScene(row.scene_id);
-  if (object === null || !scene) {
+  if (file === null || !scene) {
     await storeSummary(env.DB, job.userId, job.callId, null, null);
     return;
   }
-  const file = await object.json<TranscriptFile>();
   const learnerLines = file.lines.filter(isLearnerLine);
   const metrics = fluencyMetrics(learnerLines.map((l) => l.words));
   let applied = await progressChange<AppliedCall>(env.DB, job.userId, job.callId);

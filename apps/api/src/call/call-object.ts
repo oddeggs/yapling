@@ -5,6 +5,7 @@ import {
   PING,
   PONG,
   PROTOCOL_VERSION,
+  type CallKind,
   type HelloFrame,
 } from '@yapling/contracts';
 import { isMeteredCall, WRAP_UP_SECONDS } from '@yapling/domain';
@@ -20,6 +21,7 @@ import { FrameSender } from './frames';
 import { loadLearner } from './learner';
 import { CONTINUOUS_GAP_MS } from './safety';
 import { anthropicClient } from './llm';
+import { pipsMinuteMeta, pipsMinuteScenes, type PipsMinuteMeta } from './daily';
 import { CallSession } from './session';
 import { lineGloss, TRANSLATIONS_PER_CALL } from './translate';
 import type { TranslateOutcome } from './translate-route';
@@ -216,9 +218,9 @@ export class CallDO extends DurableObject<Bindings> {
       return;
     }
 
-    const scene = findScene(SCENE_ALIASES[frame.sceneId] ?? frame.sceneId);
-    const callKind = scene ? callKindOf(scene.kind) : null;
-    if (!scene || callKind === null) return reject('unknown_scene');
+    const call = sceneForHello(frame);
+    if (call === null) return reject('unknown_scene');
+    const { scene, callKind, pipsMinute } = call;
     const now = Date.now();
     // The scene's own kind decides: a Settling-in call starts even with the minutes used up.
     const user = userObject(this.env, userId);
@@ -227,7 +229,10 @@ export class CallDO extends DurableObject<Bindings> {
     const metered = isMeteredCall(callKind);
     const [learner, saved, time] = await Promise.all([
       // The learner's due phrases as of the app's day (a dev test session may be days ahead).
-      loadLearner(this.env, userId, frame, scene, now + clockOffset),
+      // Pip's minute runs no model, so it reads no memory items.
+      loadLearner(this.env, userId, frame, scene, now + clockOffset, {
+        memories: pipsMinute === null,
+      }),
       savedSceneState(this.env.DB, userId, scene.id),
       callTime(this.env.DB, userId, now, CONTINUOUS_GAP_MS),
     ]);
@@ -244,6 +249,7 @@ export class CallDO extends DurableObject<Bindings> {
         country,
         turnMode: frame.turnMode,
         ...(clockOffset !== 0 ? { clockOffsetMs: clockOffset } : {}),
+        ...(pipsMinute !== null ? { pipsMinute } : {}),
       },
       learner,
       resumeFrom ?? startScene(scene, frame.stage).state,
@@ -291,7 +297,9 @@ export class CallDO extends DurableObject<Bindings> {
   }
 
   private revive(data: CallData): CallSession | null {
-    const scene = findScene(data.meta.sceneId);
+    const scene = data.meta.pipsMinute
+      ? pipsMinuteScenes.current.find(data.meta.sceneId)?.scene
+      : findScene(data.meta.sceneId);
     return scene ? this.makeSession(data, scene) : null;
   }
 
@@ -319,6 +327,31 @@ export class CallDO extends DurableObject<Bindings> {
     this.session = session;
     return session;
   }
+}
+
+interface HelloScene {
+  readonly scene: Scene;
+  readonly callKind: CallKind;
+  readonly pipsMinute: PipsMinuteMeta | null;
+}
+
+/**
+ * The scene a new call's `hello` names, and the kind it runs as (the scene's, not the phone's word
+ * for it). A `daily` hello names a Pip's-minute scene and nothing else, and a Pip's-minute scene
+ * runs only as `daily`: it costs no minutes, so it never stands in for a call that does.
+ */
+function sceneForHello(frame: HelloFrame): HelloScene | null {
+  if (frame.kind === 'daily') {
+    const minute = pipsMinuteScenes.current.find(frame.sceneId);
+    const meta = minute === null ? null : pipsMinuteMeta(minute);
+    return minute === null || meta === null
+      ? null
+      : { scene: minute.scene, callKind: 'daily', pipsMinute: meta };
+  }
+  const scene = findScene(SCENE_ALIASES[frame.sceneId] ?? frame.sceneId);
+  const callKind = scene ? callKindOf(scene.kind) : null;
+  if (!scene || callKind === null || callKind === 'daily') return null;
+  return { scene, callKind, pipsMinute: null };
 }
 
 /** A saved place in this scene, at this stage, from a call the learner's minutes cut short. */

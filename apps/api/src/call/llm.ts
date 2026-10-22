@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { CharacterId } from '@yapling/contracts';
-import { CAST, personaPrompt, sceneBrief, type Scene } from '@yapling/story';
+import { CAST, isCardTurn, personaPrompt, sceneBrief, type Scene } from '@yapling/story';
 
 import type { LearnerContext, PromptMemory } from './learner';
 import { isLearnerLine, type TranscriptLine } from './transcript';
@@ -144,8 +144,16 @@ export async function prewarm(
 }
 
 /**
- * Warms every speaker of a scene (its generated lines and its listeners) before the first turn.
- * Returns the speakers, first first, so the caller can warm a voice too.
+ * Whether a scene ever asks the model for a character's line: it has a generated line, or a turn
+ * not decided by its card's words. Pip's minute never does.
+ */
+export const asksModel = (scene: Scene): boolean =>
+  scene.beats.some((b) => b.kind === 'gen' || (b.kind === 'learner' && !isCardTurn(b.answer)));
+
+/**
+ * Warms every speaker of a scene (its generated lines and its listeners) before the first turn,
+ * unless the scene never asks the model. Returns the speakers, first first, so the caller can warm
+ * a voice too.
  */
 export function prewarmScene(
   client: Anthropic,
@@ -159,7 +167,7 @@ export function prewarmScene(
     if ((beat.kind === 'gen' || beat.kind === 'learner') && beat.answer)
       speakers.add(beat.answer.listener);
   }
-  for (const speaker of speakers) {
+  for (const speaker of asksModel(scene) ? speakers : []) {
     void prewarm(client, systemFor(speaker, scene, learner), usage).catch((error: unknown) => {
       console.warn('prewarm failed', { error: String(error).slice(0, 200) });
     });
