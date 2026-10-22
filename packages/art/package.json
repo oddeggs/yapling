@@ -14,7 +14,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "golden:report": "tsx src/golden/report.ts"
+    "golden:report": "tsx src/golden/report.ts",
+    "rig:sheets": "tsx src/node/contact-sheets.ts"
   },
   "dependencies": {
     "@shopify/react-native-skia": "catalog:",

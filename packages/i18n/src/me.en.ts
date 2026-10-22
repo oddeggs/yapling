@@ -82,4 +82,13 @@ export const meEn = {
   'me.faster.back': 'Want the old pace back? Open Me › Too hard?',
   'me.faster.confirm': 'Try it',
   'me.faster.later': 'Later',
+  /** The hands-free row: take turns by just talking, without holding the mic. */
+  'me.handsFree': 'Hands-free calls',
+  'me.handsFreeSub': 'Just talk; {name} answers when you pause',
+  /** Beside a can-do group's header: how many of the season's are ticked. */
+  'me.canDoCount': '{done}/{total}',
+  'me.a11y.canDoCount': '{done} of {total} this season',
+  /** Beside the next can-do: the episode whose call gives the chance to show it. */
+  'me.canDoEpisode': 'Ep. {number}',
+  'me.a11y.canDoEpisode': 'Comes in episode {number}',
 } as const satisfies EnCatalogue;

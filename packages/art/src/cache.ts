@@ -1,10 +1,19 @@
 /**
  * A least-recently-used cache with a memory cap: entries carry their size in bytes, the oldest go
- * once the total passes the cap, and `flush` drops everything (on a memory warning).
+ * once the total passes the cap, and `flush` drops everything not in use (on a memory warning).
+ *
+ * Entries can be pinned while something on screen draws them (`pin` / `unpin`): a pinned entry is
+ * never evicted, so a remount finds it again, and eviction goes to the oldest unused one instead.
+ * An entry that has been pinned is disposed when it goes (its pictures and images freed at once,
+ * not when the garbage collector gets to them): nothing holds it then. Entries that were never
+ * pinned are only let go of, as anything may still hold them.
  */
 interface Entry<T> {
   value: T;
   bytes: number;
+  pins: number;
+  /** Pinned at least once: whoever used it says when it is no longer drawn. */
+  managed: boolean;
 }
 
 export const DEFAULT_CACHE_BYTES = 48 * 1024 * 1024;
@@ -30,6 +39,13 @@ export class LruCache<T> {
     return this.capBytes;
   }
 
+  /** Bytes held by pinned entries (on screen). */
+  get pinnedBytes(): number {
+    let n = 0;
+    for (const e of this.entries.values()) if (e.pins > 0) n += e.bytes;
+    return n;
+  }
+
   setCap(bytes: number): void {
     this.capBytes = bytes;
     this.evict();
@@ -50,12 +66,16 @@ export class LruCache<T> {
 
   set(key: string, value: T, bytes: number): void {
     const old = this.entries.get(key);
+    let pins = 0;
+    let managed = false;
     if (old) {
       this.entries.delete(key);
       this.total -= old.bytes;
-      if (old.value !== value) this.dispose(old.value);
+      pins = old.pins;
+      managed = old.managed;
+      if (old.value !== value && old.managed && old.pins === 0) this.dispose(old.value);
     }
-    this.entries.set(key, { value, bytes });
+    this.entries.set(key, { value, bytes, pins, managed });
     this.total += bytes;
     this.evict();
   }
@@ -69,23 +89,49 @@ export class LruCache<T> {
     return value;
   }
 
+  /** Marks `key` as drawn on screen (once per user); false when it is not cached. */
+  pin(key: string): boolean {
+    const e = this.entries.get(key);
+    if (!e) return false;
+    e.pins++;
+    e.managed = true;
+    return true;
+  }
+
+  /** One user of `key` no longer draws it; unused entries can go again. */
+  unpin(key: string): void {
+    const e = this.entries.get(key);
+    if (!e || e.pins === 0) return;
+    e.pins--;
+    if (e.pins === 0) this.evict();
+  }
+
+  isPinned(key: string): boolean {
+    return (this.entries.get(key)?.pins ?? 0) > 0;
+  }
+
+  private drop(key: string, e: Entry<T>): void {
+    this.entries.delete(key);
+    this.total -= e.bytes;
+    if (e.managed) this.dispose(e.value);
+  }
+
   private evict(): void {
-    // The newest entry stays even if it alone passes the cap: it is about to be drawn.
-    while (this.total > this.capBytes && this.entries.size > 1) {
-      const first = this.entries.entries().next().value;
-      if (!first) break;
-      const [key, e] = first;
-      this.entries.delete(key);
-      this.total -= e.bytes;
-      this.dispose(e.value);
+    if (this.total <= this.capBytes) return;
+    // Oldest first, skipping what is on screen. The newest entry stays even if it alone passes the
+    // cap: it is about to be drawn.
+    let newest: string | undefined;
+    for (const key of this.entries.keys()) newest = key;
+    for (const [key, e] of this.entries) {
+      if (this.total <= this.capBytes) break;
+      if (e.pins > 0 || key === newest) continue;
+      this.drop(key, e);
     }
   }
 
+  /** Drops everything not on screen (pinned entries stay: they are drawn, so they are held anyway). */
   flush(): void {
-    const all = [...this.entries.values()];
-    this.entries.clear();
-    this.total = 0;
-    for (const e of all) this.dispose(e.value);
+    for (const [key, e] of [...this.entries]) if (e.pins === 0) this.drop(key, e);
   }
 }
 

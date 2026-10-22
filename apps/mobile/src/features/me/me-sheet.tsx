@@ -3,7 +3,7 @@ import { colours, outline, palette, stickerShadows, type, type TypeStyle } from 
 import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 
-import { Press, Sticker, Txt } from '../../ui';
+import { Press, Sticker, ToggleRow, Txt } from '../../ui';
 import { Face } from '../burrow/art';
 import { Dial } from '../payoff/too-hard-sheet';
 import { RowsCard } from './me-frame';
@@ -51,6 +51,8 @@ export interface MeSheetProps {
   readonly onTooHard?: () => void;
   /** The faster row stays pressed while its confirm sheet is up. */
   readonly fasterOpen?: boolean;
+  /** The hands-free switch, flipped. */
+  readonly onHandsFree?: (on: boolean) => void;
 }
 
 /** The learner's page: their stage, what they can now do, and the rows below. */
@@ -69,6 +71,7 @@ export function MeSheet({
   onFaster,
   onTooHard,
   fasterOpen = false,
+  onHandsFree,
 }: MeSheetProps) {
   return (
     <>
@@ -182,10 +185,14 @@ export function MeSheet({
           value={view.notifications.value}
           onPress={onNotifications}
         />
-        {/*
-          Hands-free: the turn-mode setting ("Rảnh tay") goes here, between quiet hours and help,
-          once the hands-free preference is on main.
-        */}
+        <View style={{ borderTopWidth: 1, borderTopColor: colours.divider, padding: 6 }}>
+          <ToggleRow
+            title={view.handsFree.title}
+            subtitle={view.handsFree.sub}
+            on={view.handsFree.on}
+            onChange={(on) => onHandsFree?.(on)}
+          />
+        </View>
         <Row dot={colours.surface} title={view.help} onPress={onHelp} />
       </RowsCard>
 
@@ -202,15 +209,24 @@ function Group({ group }: { group: CanDoGroup }) {
     <RowsCard>
       {group.name !== null ? (
         <View
+          accessible
+          accessibilityRole="header"
+          accessibilityLabel={group.count ? `${group.name}, ${group.count.a11y}` : group.name}
           style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             paddingVertical: 6,
             paddingHorizontal: 12,
             backgroundColor: GROUP_FILL[group.track],
           }}
         >
-          <Txt variant={meType.group} accessibilityRole="header">
-            {group.name}
-          </Txt>
+          <Txt variant={meType.group}>{group.name}</Txt>
+          {group.count ? (
+            <Txt variant={meType.group} colour={colours.textMuted}>
+              {group.count.label}
+            </Txt>
+          ) : null}
         </View>
       ) : null}
       {group.items.map((item, i) => (
@@ -219,7 +235,9 @@ function Group({ group }: { group: CanDoGroup }) {
           accessible
           accessibilityRole="checkbox"
           accessibilityState={{ checked: item.ticked }}
-          accessibilityLabel={item.gloss ? `${item.title}. ${item.gloss}` : item.title}
+          accessibilityLabel={[item.title, item.gloss, item.episode?.a11y]
+            .filter(Boolean)
+            .join('. ')}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -260,6 +278,11 @@ function Group({ group }: { group: CanDoGroup }) {
               </Txt>
             ) : null}
           </View>
+          {item.episode ? (
+            <Txt variant={meType.settlingCount} colour={colours.textMuted}>
+              {item.episode.label}
+            </Txt>
+          ) : null}
         </View>
       ))}
     </RowsCard>

@@ -5,29 +5,18 @@ import { CAST } from '@yapling/story';
 import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useAppNow, useCall, useCalls, useProfile, useProgress } from '../../data';
+import { useAppNow, useCalls, useProfile, useProgress } from '../../data';
 import { track } from '../../observability';
 import { useLocale, useToast } from '../../ui';
-import { AfterCallScreen } from './after-call-screen';
 import { Face } from '../burrow/art';
 import { stageRequests, usePendingStage } from '../me/stage-request';
-import { GraduationScreen } from './graduation-screen';
 import { earnedKeepsakes, keepsakeScreenCopy, type EarnedKeepsakes } from './keepsake-model';
 import { KeepsakeScreen } from './keepsake-screen';
-import { buildAfterCall, type PayoffLearner } from './model';
-import {
-  PREVIEW_CHAPTER_ONE,
-  PREVIEW_HEARD,
-  PREVIEW_LEARNER,
-  PREVIEW_RING_FULL,
-  PREVIEW_WEEK_TURNS,
-} from './preview';
-import { whatWasSaid } from './said-store';
+import type { PayoffLearner } from './model';
+import { PREVIEW_LEARNER, PREVIEW_RING_FULL, PREVIEW_WEEK_TURNS } from './preview';
 import { STAGE_UP_REQUESTS, stageUpOffer, stageUpView, type StageUpPhase } from './stage-up-model';
 import { StageUpScreen } from './stage-up-screen';
 import { useAnsweredStageUps } from './stage-up-store';
-import { VisitorAfterCallScreen, type Feel } from './visitor-after-call-screen';
-import { buildVisitorAfterCall, isVisitorCall } from './visitor-model';
 
 /*
  * The payoff screens on the app's data: the call's record (polled until its feedback lands),
@@ -40,6 +29,8 @@ export const PAYOFF_ROUTES = {
   home: href('/(home)'),
   keepsake: (callId: string, step = 0) =>
     href(`/(home)/keepsake?callId=${encodeURIComponent(callId)}&step=${step}`),
+  /** The week's wrap, on the last day of week `week` (the burrow routes here on day 7). */
+  wrap: (week: number) => href(`/(home)/wrap?week=${week}`),
 } as const;
 
 /** How often to ask for a summary still being written: soon at first, then less often. */
@@ -55,7 +46,7 @@ interface LearnerContext {
   readonly timezone: string | null;
 }
 
-function useLearner(): LearnerContext {
+export function useLearner(): LearnerContext {
   const { profile } = useProfile();
   const pending = usePendingStage();
   return useMemo(
@@ -74,7 +65,7 @@ function useLearner(): LearnerContext {
 }
 
 /** Development builds only: `?preview=visitor` or `?preview=stage-up` shows a sample learner. */
-function usePreview(kind: 'visitor' | 'stage-up'): boolean {
+export function usePreview(kind: 'visitor' | 'stage-up'): boolean {
   const { preview } = useLocalSearchParams<{ preview?: string }>();
   return __DEV__ && preview === kind;
 }
@@ -107,7 +98,7 @@ function weekTurnsFor(
  * Asks the server again while the call's summary is still being written, backing off gently. The
  * screen shows only what the server has: nothing stands in for the feedback meanwhile.
  */
-function useSummaryPoll(call: CallRecord | null, refresh: () => Promise<unknown>) {
+export function useSummaryPoll(call: CallRecord | null, refresh: () => Promise<unknown>) {
   const latest = useRef(refresh);
   latest.current = refresh;
   const waiting = call === null || call.summaryPending;
@@ -123,93 +114,6 @@ function useSummaryPoll(call: CallRecord | null, refresh: () => Promise<unknown>
     timer = setTimeout(ask, delay);
     return () => clearTimeout(timer);
   }, [waiting]);
-}
-
-/** After the call, then a graduation if one happened, then the keepsake if one was earned. */
-export function AfterCallRoute({ callId }: { callId: string }) {
-  const router = useRouter();
-  const { t } = useLocale();
-  const preview = usePreview('visitor');
-  const { call: liveCall, refresh } = useCall(preview ? '' : callId);
-  const { progress, refresh: refreshProgress } = useProgress();
-  const { updateProfile } = useProfile();
-  const { calls } = useCalls();
-  const { learner, species, stage, firstLanguage } = useLearner();
-  const [phase, setPhase] = useState<'summary' | 'graduation'>('summary');
-  const [feel, setFeel] = useState<Feel | null>(null);
-  const call = preview ? PREVIEW_CHAPTER_ONE : liveCall;
-  useSummaryPoll(preview ? PREVIEW_CHAPTER_ONE : call, refresh);
-
-  // Progress changes with the summary (phrases, ring, keepsakes): read it again once it lands.
-  const landed = call !== null && !call.summaryPending;
-  useEffect(() => {
-    void refreshProgress().catch(() => undefined);
-    // Only when the summary lands, not on every progress change.
-  }, [landed]);
-
-  const model = useMemo(
-    () =>
-      call === null
-        ? ({
-            state: 'writing',
-            title: t('payoff.afterCall.writing', { name: learner.roommateName }),
-            sub: t('payoff.afterCall.writingSub'),
-          } as const)
-        : buildAfterCall({ call, progress, learner, earlierCalls: calls }, t),
-    [call, progress, learner, calls, t],
-  );
-
-  const heard = preview ? PREVIEW_HEARD : whatWasSaid(callId);
-  const visitor = useMemo(
-    () =>
-      call !== null &&
-      isVisitorCall(call, preview ? 'visitor' : stage) &&
-      !(call.summaryPending && (heard === null || heard.length === 0))
-        ? buildVisitorAfterCall(
-            { call, progress: preview ? null : progress, learner, firstLanguage, heard },
-            t,
-          )
-        : null,
-    [call, preview, stage, heard, progress, learner, firstLanguage, t],
-  );
-
-  const home = () => router.replace(PAYOFF_ROUTES.home);
-  if (visitor) {
-    const onFeel = (next: Feel) => {
-      setFeel(next);
-      if (preview) return;
-      if (next === 'slower') void updateProfile({ pace: 'slower' }).catch(() => undefined);
-      // A Newcomer replaying a chapter becomes a Visitor; a Visitor is with Linh already.
-      if (next === 'practise' && stage !== null && stage !== 'visitor')
-        void stageRequests().request({ to: 'visitor', reason: 'too_hard' });
-    };
-    return (
-      <VisitorAfterCallScreen
-        model={visitor}
-        stage={stage ?? 'visitor'}
-        feel={feel}
-        onFeel={onFeel}
-        onContinue={() =>
-          visitor.keepsakes && !preview ? router.replace(PAYOFF_ROUTES.keepsake(callId)) : home()
-        }
-      />
-    );
-  }
-  const afterGraduation = () => {
-    if (model.state === 'ready' && model.keepsakes) router.replace(PAYOFF_ROUTES.keepsake(callId));
-    else home();
-  };
-  const onContinue = () => {
-    if (model.state !== 'ready') return home();
-    if (model.graduation) return setPhase('graduation');
-    return afterGraduation();
-  };
-
-  if (phase === 'graduation' && model.state === 'ready' && model.graduation)
-    return (
-      <GraduationScreen graduation={model.graduation} species={species} onDone={afterGraduation} />
-    );
-  return <AfterCallScreen model={model} species={species} onContinue={onContinue} onBack={home} />;
 }
 
 /** Linh's Newcomer card, when the call filled a ring and the week earned it. */
@@ -254,6 +158,7 @@ function useStageUp(callId: string, earned: EarnedKeepsakes | null, preview: boo
       : stageUpView(
           {
             phase,
+            week: offer?.week ?? 1,
             learnerName: preview ? PREVIEW_LEARNER : learner.name,
             firstLanguage,
             today: localDateOf(now, zone),

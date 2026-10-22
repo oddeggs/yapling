@@ -38,7 +38,7 @@ const PLACE = {
 const noteType = { ...type.speaker, size: 14.5, lineHeight: 1.15 };
 
 /** The roommate's note beside the keepsake: a bubble with its tail corner at the bottom right. */
-function NoteBubble({ text }: { text: string }) {
+export function NoteBubble({ text }: { text: string }) {
   const [tl, tr, br, bl] = corners.note;
   const shape = {
     borderTopLeftRadius: tl,

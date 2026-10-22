@@ -9,6 +9,7 @@ import {
   type Progress,
 } from '@yapling/contracts';
 import type { StringKey, Translate } from '@yapling/i18n';
+import { EPISODES } from '@yapling/story';
 
 import { receiptNumber } from './format';
 import {
@@ -17,6 +18,7 @@ import {
   type EarnedKeepsakes,
   type KeepsakeLearner,
 } from './keepsake-model';
+import { PETITION_SCENE, thenAndNow, type ThenAndNow } from './then-now-model';
 
 /*
  * After the call, as data. The post-call record (two wins, one fix, phrase and can-do events,
@@ -90,7 +92,7 @@ export interface BloomCard {
 }
 
 /** What follows the after-call screen, in order, before the burrow. */
-export type Celebration = 'graduation' | 'keepsake';
+export type Celebration = 'bloom' | 'graduation' | 'thenNow' | 'keepsake';
 
 export interface AfterCallReady {
   readonly state: 'ready';
@@ -114,6 +116,8 @@ export interface AfterCallReady {
   readonly burrow: { readonly kind: 'box' | 'things'; readonly text: string } | null;
   readonly receipt: readonly ReceiptRow[] | null;
   readonly graduation: Graduation | null;
+  /** Week 1's Pass it on next to this call, after Episode 5's petition when Flow grew. */
+  readonly thenNow: ThenAndNow | null;
   readonly keepsakes: EarnedKeepsakes | null;
   readonly next: readonly Celebration[];
   readonly cta: string;
@@ -328,6 +332,45 @@ const STAGE_LABEL: Record<PhraseState, StringKey> = {
   bloom: 'burrow.stage.bloom',
 };
 
+/** A phrase's move as a tile: its stage's name and the object before and after. */
+export function phraseTile(p: PhraseTransition, t: Translate): PhraseTile {
+  return {
+    ...p,
+    stage: t(STAGE_LABEL[p.to] as 'burrow.stage.seed'),
+    artFrom: p.grew && p.from !== null ? phraseArt(p.from) : null,
+    artTo: phraseArt(p.to),
+  };
+}
+
+/** The episode a scene is the call of ("Tập 3 · Cheaper Beans"); null for any other scene. */
+export function episodeKicker(sceneId: string, t: Translate): string | null {
+  const episode = EPISODES.find((e) => e.id === sceneId);
+  return episode
+    ? t('payoff.afterCall.episode', { number: episode.number, title: episode.title })
+    : null;
+}
+
+/**
+ * The phrases that bloomed in a call: used on their own in a new place, weeks after they were met.
+ * Pip's minute is prompted, so it never makes one (the learning model's rule); a call's bloom
+ * shows as its own moment after the summary.
+ */
+export function bloomsIn(
+  call: Pick<CallRecord, 'kind'>,
+  tiles: readonly PhraseTransition[],
+  t: Translate,
+): BloomCard[] {
+  if (call.kind === 'daily') return [];
+  return tiles
+    .filter((p) => p.grew && p.to === 'bloom')
+    .map((p) => ({
+      id: p.id,
+      label: t('payoff.bloom.label'),
+      phrase: p.text,
+      sub: t('payoff.bloom.sub'),
+    }));
+}
+
 /** Everything the after-call screen shows, or the short "writing it down" state. */
 export function buildAfterCall(input: AfterCallInput, t: Translate): AfterCallModel {
   const { call, progress, learner, earlierCalls } = input;
@@ -342,12 +385,7 @@ export function buildAfterCall(input: AfterCallInput, t: Translate): AfterCallMo
   const summary = call.summary;
   const wins = summary?.wins ?? [];
   const transitions = phraseTransitions(summary?.phraseEvents ?? [], progress?.phrases ?? null);
-  const tiles: PhraseTile[] = transitions.map((p) => ({
-    ...p,
-    stage: t(STAGE_LABEL[p.to] as 'burrow.stage.seed'),
-    artFrom: p.grew && p.from !== null ? phraseArt(p.from) : null,
-    artTo: phraseArt(p.to),
-  }));
+  const tiles: PhraseTile[] = transitions.map((p) => phraseTile(p, t));
   const ring = ringChange(progress?.weeks, call.id);
   const sprouted = transitions.filter((p) => p.grew && p.to === 'sprout').length;
   const burrow =
@@ -358,15 +396,21 @@ export function buildAfterCall(input: AfterCallInput, t: Translate): AfterCallMo
         : null;
   const graduation = progress ? graduationIn(call, progress.errorTargets, name, t) : null;
   const keepsakes = progress ? earnedKeepsakes(call, progress, learner) : null;
+  const blooms = bloomsIn(call, tiles, t);
+  const thenNow =
+    call.sceneId === PETITION_SCENE ? thenAndNow(earlierCalls, 'petition', t, call) : null;
   const next: Celebration[] = [
+    ...(blooms.length > 0 ? (['bloom'] as const) : []),
     ...(graduation ? (['graduation'] as const) : []),
+    ...(thenNow ? (['thenNow'] as const) : []),
     ...(keepsakes ? (['keepsake'] as const) : []),
   ];
   return {
     state: 'ready',
     kicker: isFirstRingCall(progress?.weeks, call.id)
       ? t('payoff.afterCall.firstCall')
-      : t(`payoff.afterCall.kind.${call.kind}`),
+      : ((call.kind === 'episode' ? episodeKicker(call.sceneId, t) : null) ??
+        t(`payoff.afterCall.kind.${call.kind}`)),
     title: t('payoff.afterCall.done'),
     wins:
       wins.length > 0
@@ -390,19 +434,13 @@ export function buildAfterCall(input: AfterCallInput, t: Translate): AfterCallMo
         }
       : null,
     phrases: tiles.length > 0 ? { title: t(phrasesTitle(tiles)), tiles } : null,
-    blooms: tiles
-      .filter((p) => p.grew && p.to === 'bloom')
-      .map((p) => ({
-        id: p.id,
-        label: t('payoff.bloom.label'),
-        phrase: p.text,
-        sub: t('payoff.bloom.sub'),
-      })),
+    blooms,
     ring,
     ringTag: ring ? t('payoff.afterCall.ring', { done: ring.after, total: ring.total }) : null,
     burrow,
     receipt: fluencyReceipt(call, earlierCalls, t),
     graduation,
+    thenNow,
     keepsakes,
     next,
     cta: next.length > 0 ? t('common.continue') : t('payoff.afterCall.cta'),
