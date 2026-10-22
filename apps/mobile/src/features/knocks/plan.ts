@@ -18,7 +18,17 @@ import { t, type Language, type StringKey } from '@yapling/i18n';
 import { CAST } from '@yapling/story';
 import type { Href } from 'expo-router';
 
-import type { KnockInputs } from './inputs';
+import { settlingStateOf, type KnockInputs } from './inputs';
+import {
+  SETTLING_KNOCKS,
+  isKnockedChapter,
+  isSettlingIn,
+  nextSettlingChapter,
+  planSettlingKnock,
+  settlingCallPath,
+  storyDayOneOf,
+  type KnockedChapter,
+} from './settling';
 
 /*
  * From the day clock's week-one plan to the notifications the phone schedules: the copy in the
@@ -63,6 +73,8 @@ export interface KnockData {
   readonly kind: 'knock';
   readonly day: number;
   readonly url: string;
+  /** The Settling-in chapter it announces (its call is `url`); left out for the first week's. */
+  readonly chapter?: number;
   /** Fired from the test menu: shown even with the app open. */
   readonly test?: boolean;
   /** When a scheduled knock rings, on the phone's clock. */
@@ -78,7 +90,31 @@ export const knockDataOf = (data: unknown): KnockData | null => {
   }
   // Only paths inside the app: a payload never sends the learner somewhere else.
   if (!d['url'].startsWith('/')) return null;
-  return { kind: 'knock', day: d['day'], url: d['url'], test: d['test'] === true };
+  const chapter = d['chapter'];
+  return {
+    kind: 'knock',
+    day: d['day'],
+    url: d['url'],
+    ...(typeof chapter === 'number' && isKnockedChapter(chapter) ? { chapter } : {}),
+    test: d['test'] === true,
+  };
+};
+
+/**
+ * Where a tapped knock goes. A Settling-in knock opens its chapter's call, unless the learner has
+ * finished that chapter since or left Settling in (then the burrow, which shows what's next). Any
+ * other knock opens the burrow on its day. `inputs` null: not known yet, so the knock's own place.
+ */
+export const knockTarget = (knock: KnockData, inputs: KnockInputs | null): Href => {
+  if (knock.chapter === undefined) return knockHref(knock.day);
+  // A test knock from the test menu always opens what it shows.
+  if (inputs !== null && knock.test !== true) {
+    const state = settlingStateOf(inputs);
+    if (!isSettlingIn(state) || nextSettlingChapter(state.chapters) !== knock.chapter) {
+      return '/';
+    }
+  }
+  return knock.url;
 };
 
 /** Who a knock is from, as its title: the roommate by its name, a neighbour by theirs, or the app. */
@@ -138,22 +174,64 @@ export interface KnockClock {
 const lastOpenedOn = (clock: KnockClock, timezone: TimeZone): LocalDate =>
   localDateOf(clock.cameBackAfterAway ? clock.now - AWAY_DAYS * DAY_MS : clock.now, timezone);
 
+/** A Settling-in knock's content: from Yapling, in the app's language, opening its chapter. */
+export const settlingKnockContent = (
+  chapter: KnockedChapter,
+  day: number,
+  language: Language,
+  roommateName: string,
+): KnockContent => ({
+  title: knockTitle('yapling', language, roommateName),
+  body: knockBody(SETTLING_KNOCKS[chapter].key, language, roommateName),
+  data: { kind: 'knock', day, url: settlingCallPath(chapter), chapter },
+});
+
+/** Settling-in knocks carry this identifier, by chapter. */
+export const settlingKnockId = (chapter: KnockedChapter): string =>
+  `${KNOCK_ID_PREFIX}settling-${chapter}`;
+
 /**
- * The knocks to schedule now: the week-one plan from the app's time on, moved out of quiet hours,
- * at most one a day, none when the learner said no. Planned on each open, with today as the last
- * day opened, so day 8 says "you're back" only to a learner who then stays away three days.
+ * The knocks to schedule now. While a Visitor settles in: the next Settling-in knock, if any.
+ * Otherwise the week-one plan from the app's time on, its days counted from the story's start,
+ * moved out of quiet hours, at most one a day. None when the learner said no. Planned on each
+ * open, with today as the last day opened, so day 8 says "you're back" only to a learner who then
+ * stays away three days.
  */
 export const planKnockRequests = (
   inputs: KnockInputs,
   language: Language,
   clock: KnockClock,
-): readonly KnockRequest[] =>
-  planWeekOneKnocks({
+): readonly KnockRequest[] => {
+  const state = settlingStateOf(inputs);
+  const quiet = inputs.quietHours === undefined ? {} : { quietHours: inputs.quietHours };
+  if (isSettlingIn(state)) {
+    const knock = planSettlingKnock({
+      state,
+      installedOn: inputs.installedOn,
+      timezone: inputs.timezone,
+      now: clock.now,
+      notificationsAllowed: inputs.notificationsAllowed,
+      ...quiet,
+    });
+    if (knock === null) return [];
+    return [
+      {
+        ...settlingKnockContent(knock.chapter, knock.day, language, inputs.roommateName),
+        identifier: settlingKnockId(knock.chapter),
+        day: knock.day,
+        date: knock.date,
+        time: knock.time,
+        fireAt: knock.at - clock.offsetMs,
+      },
+    ];
+  }
+  return planWeekOneKnocks({
     installedOn: inputs.installedOn,
+    storyStartedOn: storyDayOneOf(state, inputs.installedOn),
     timezone: inputs.timezone,
     now: clock.now,
     notificationsAllowed: inputs.notificationsAllowed,
-    ...(inputs.quietHours === undefined ? {} : { quietHours: inputs.quietHours }),
+    ...quiet,
     lastOpenedOn: lastOpenedOn(clock, inputs.timezone),
   }).map((knock) => ({
     ...knockContent(knock.day, knock, language, inputs.roommateName),
@@ -163,6 +241,7 @@ export const planKnockRequests = (
     time: knock.time,
     fireAt: knock.at - clock.offsetMs,
   }));
+};
 
 /** The knock a day of the first week rings with (day 8's "you're back" after days away). */
 export const knockPlanOfDay = (day: number, cameBackAfterAway: boolean): KnockPlan | null => {
@@ -173,23 +252,50 @@ export const knockPlanOfDay = (day: number, cameBackAfterAway: boolean): KnockPl
     : entry.knock;
 };
 
-/** A day's knock where it lands in the learner's day, for previews: null on day 1. */
+/**
+ * A day's knock where it lands in the learner's day, for previews: null on day 1. `storyDayOne`
+ * is the day week 1's days count from (the install day when left out).
+ */
 export const knockOfDay = (
   day: number,
-  inputs: Pick<KnockInputs, 'installedOn' | 'timezone' | 'quietHours' | 'roommateName'>,
+  inputs: Pick<KnockInputs, 'installedOn' | 'timezone' | 'quietHours' | 'roommateName'> & {
+    readonly storyDayOne?: LocalDate;
+  },
   language: Language,
   cameBackAfterAway: boolean,
 ): (KnockContent & { readonly date: LocalDate; readonly time: string }) | null => {
   const plan = knockPlanOfDay(day, cameBackAfterAway);
   if (plan === null) return null;
   const slot = placeKnock(
-    dateOfDay(inputs.installedOn, day),
+    dateOfDay(inputs.storyDayOne ?? inputs.installedOn, day),
     plan.time,
     inputs.timezone,
     inputs.quietHours === undefined ? DEFAULT_QUIET_HOURS : inputs.quietHours,
   );
   return {
     ...knockContent(day, plan, language, inputs.roommateName),
+    date: slot.date,
+    time: slot.time,
+  };
+};
+
+/**
+ * A Settling-in knock where it lands when its chapter is next on settling day N (as the test
+ * menu's chapter jump leaves it: chapter N on day N), for previews.
+ */
+export const settlingKnockOf = (
+  chapter: KnockedChapter,
+  inputs: Pick<KnockInputs, 'installedOn' | 'timezone' | 'quietHours' | 'roommateName'>,
+  language: Language,
+): KnockContent & { readonly date: LocalDate; readonly time: string } => {
+  const slot = placeKnock(
+    dateOfDay(inputs.installedOn, chapter),
+    SETTLING_KNOCKS[chapter].time,
+    inputs.timezone,
+    inputs.quietHours === undefined ? DEFAULT_QUIET_HOURS : inputs.quietHours,
+  );
+  return {
+    ...settlingKnockContent(chapter, chapter, language, inputs.roommateName),
     date: slot.date,
     time: slot.time,
   };

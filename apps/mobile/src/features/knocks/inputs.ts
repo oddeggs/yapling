@@ -4,9 +4,12 @@ import type {
   Profile,
   Progress,
   QuietHours,
+  SettlingChapterDone,
   TimeZone,
 } from '@yapling/contracts';
 import { SEASON_1_EPISODES, type Season1EpisodeId } from '@yapling/domain';
+
+import { isVisitorPath, type SettlingState } from './settling';
 
 /**
  * What the knocks need to know about the learner, from their profile and progress. The app's data
@@ -25,6 +28,15 @@ export interface KnockInputs {
   readonly completedEpisodes: readonly Season1EpisodeId[];
   /** The roommate's name, which titles its knocks and fills `{name}`. */
   readonly roommateName: string;
+  /**
+   * Started with Linh (onboarding's "just starting", a Visitor by placement or "too hard"): the
+   * knocks are Settling in's until the letter comes. Left out: not a Visitor.
+   */
+  readonly visitorPath?: boolean;
+  /** The story's start (the letter's day); null or left out when it isn't recorded. */
+  readonly storyStartedOn?: LocalDate | null;
+  /** The Settling-in chapters done; left out for none. */
+  readonly settlingChaptersDone?: readonly SettlingChapterDone[];
 }
 
 /** Week N's episode is Episode N: the episodes whose ring slot is done, in order. */
@@ -35,6 +47,15 @@ export const completedEpisodesOf = (progress: Pick<Progress, 'weeks'>): Season1E
   });
 
 /** The knocks' inputs from the learner's profile, progress and last open; null without a profile. */
+/** Where the learner is with Settling in, from the knocks' inputs. */
+export const settlingStateOf = (
+  inputs: Pick<KnockInputs, 'visitorPath' | 'storyStartedOn' | 'settlingChaptersDone'>,
+): SettlingState => ({
+  visitorPath: inputs.visitorPath === true,
+  chapters: inputs.settlingChaptersDone ?? [],
+  storyStartedOn: inputs.storyStartedOn ?? null,
+});
+
 export function knockInputsOf(
   profile: Profile | null,
   progress: Progress | null,
@@ -49,5 +70,8 @@ export function knockInputsOf(
     lastOpenedAt,
     completedEpisodes: completedEpisodesOf(progress),
     roommateName: profile.roommate.name,
+    visitorPath: isVisitorPath(profile),
+    storyStartedOn: profile.storyStartedOn,
+    settlingChaptersDone: progress.settlingChaptersDone,
   };
 }

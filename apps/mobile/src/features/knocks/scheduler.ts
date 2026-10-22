@@ -89,7 +89,10 @@ export const fireTestKnock = (
   seconds: number = TEST_KNOCK_DELAY_S,
 ): Promise<string> =>
   api.scheduleNotificationAsync({
-    identifier: `test-${KNOCK_ID_PREFIX}day-${knock.data.day}`,
+    identifier:
+      knock.data.chapter === undefined
+        ? `test-${KNOCK_ID_PREFIX}day-${knock.data.day}`
+        : `test-${KNOCK_ID_PREFIX}settling-${knock.data.chapter}`,
     content: contentOf({ ...knock, data: { ...knock.data, test: true } }),
     trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds },
   });
