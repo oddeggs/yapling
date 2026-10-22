@@ -94,6 +94,8 @@ export class VoiceEngine {
   /** Caption text per stream, kept until the line ends. */
   private readonly captions = new Map<number, string>();
   private localStream = LOCAL_STREAM_BASE;
+  /** Mic audio sent on the current socket, in ms (the clock `speech` frames are timed on). */
+  private micSentMs = 0;
 
   constructor(private readonly options: VoiceEngineOptions) {
     this.state = new Store(initialCallState(options.hello.turnMode));
@@ -102,7 +104,10 @@ export class VoiceEngine {
     this.turns = new TurnTaker(
       options.hello.turnMode,
       {
-        sendMic: (pcm) => this.socket.sendMic(pcm),
+        sendMic: (pcm) => {
+          // The call's mic clock: milliseconds of 16 kHz mic audio sent on this socket.
+          if (this.socket.sendMic(pcm)) this.micSentMs += pcm.byteLength / 2 / 16;
+        },
         endTurn: () => {
           this.socket.send({ type: 'end_turn' });
           this.patch({ awaitingReply: true });
@@ -321,14 +326,30 @@ export class VoiceEngine {
       this.meter.speechEnded(r.event.atMs);
       this.patch({ learnerSpeaking: false });
     }
-    if (this.socket.ready) this.turns.frame(frame, r.speaking, r.event);
+    if (!this.socket.ready) return;
+    const sentBefore = this.micSentMs;
+    this.turns.frame(frame, r.speaking, r.event);
+    // Hands-free: tell the call when the learner starts and stops, on its mic clock, so it times
+    // the turn by the phone's echo-cancelled VAD. Hold-to-talk turns end on release instead, so a
+    // pause while the button is held never ends the turn.
+    if (r.event && this.turns.mode === 'hands_free' && this.micSentMs > sentBefore) {
+      const atMs = Math.max(0, Math.round(this.micSentMs - (endMs - r.event.atMs)));
+      this.socket.send({
+        type: 'speech',
+        state: r.event.type === 'speech_start' ? 'start' : 'end',
+        atMs,
+      });
+    }
   }
 
   private onSocketStatus(status: SocketStatus): void {
     this.log(`socket ${status}`);
     switch (status) {
       case 'connecting':
+        break;
       case 'open':
+        // A new socket starts a new mic clock.
+        this.micSentMs = 0;
         break;
       case 'ready':
         this.patch({ connected: true, reconnecting: false });
