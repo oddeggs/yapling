@@ -163,6 +163,19 @@ Gate B3 (founder): run the 6 sessions.
 | The slow replay | Server-side TTS, so the phone's native audio module doesn't change |
 | A new build | Only if a lane adds a native dependency or touches `app.config.ts` or `modules/`; none is planned. The runtime is fingerprinted, so any native change stops the update reaching installed builds. Testers need build 6 or later (the first that takes updates) |
 
+## Autonomous run (from 23 Oct 2026)
+
+The founder's brief: "a hand-free mode that user dont need to hold everytime would be a good addition. get the plan, implement and build once we had a working version that would be able to learn and educate with the users, every days, every weeks." Order of work:
+
+1. **Hands-free, for everyone.** The engine already has a `hands_free` turn mode (reached only through a route parameter). Make it a real choice: a setting and an in-call switch, turn-taking that respects unlimited thinking time, gating so idle listening doesn't stream to Scribe, echo-safe while a character speaks, the "real words" rule, and Jev's again/slowly. Lane H1 below.
+2. **Release 1.1 to its gate:** the Visitor call server after the Jev judge merges, then the app lanes B2a–B2e, then Gate B2 on the simulator and an over-the-air update.
+3. **Every day, every week:** the learner keeps learning after week 1. Plan and build the Release 2 core loop (Episodes 2–6 compiled and recorded, the weekly ring after week 1, the daily practice set), the parts that don't need the App Store launch work.
+4. **A new TestFlight build** once the whole loop works on the simulator (needed anyway if hands-free or anything else touches native code), then over-the-air updates on top.
+
+| Lane | Owns | Does | Done when |
+|---|---|---|---|
+| H1 Hands-free | `apps/mobile/src/voice/**`, `features/call/**` (turn-mode parts), the turn-mode preference in `src/data/**`, `apps/api/src/call/learner-turn.ts` and `endpointing.ts`, `packages/i18n/src/call.*` | The setting (onboarding default stays hold-to-talk; a clear switch in the call and a row the Me sheet can show), turn-taking for hands-free with unlimited thinking time, client-side voice gating with pre-roll, echo-safe listening, visuals that say "listening, I'll answer when you pause" | A live E1 call on the simulator in hands-free with long pauses, a "Sorry, again?" and a Vietnamese answer; idle cost measured; full gate green |
+
 ---
 
 # Release 2 · Season One (App Store, Vietnam)
