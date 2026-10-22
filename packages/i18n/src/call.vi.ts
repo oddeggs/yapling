@@ -25,6 +25,8 @@ export const callVi = {
   'call.mic.talking': '{who} đang nói',
   'call.mic.sceneComplete': 'Hết cảnh',
   'call.a11y.mic': 'Giữ để nói',
+  'call.a11y.thinking': '{name} đang nghĩ',
+  'call.a11y.seconds': '{count} giây',
   'call.didntCatch': "Sorry, I didn't catch that. Say it another way?",
   'call.reconnecting': 'Đang nối lại…',
   'call.interrupted': 'Tạm dừng trong lúc bạn nghe máy',

@@ -38,6 +38,10 @@ export const callEn = {
   'call.mic.sceneComplete': 'Scene complete',
   /** Read for the mic button. */
   'call.a11y.mic': 'Hold to talk',
+  /** Read for a character's bubble while the reply is on its way. */
+  'call.a11y.thinking': '{name} is thinking',
+  /** Read for a timer and a Pass it on round (shown as "60s"). */
+  'call.a11y.seconds': '{count} seconds',
 
   /** The last button of each scene. */
   'call.done.wrapUp': 'Wrap up',
