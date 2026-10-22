@@ -14,11 +14,12 @@ import {
 import { localDateOf } from './time';
 
 /*
- * The weekly ring, not a streak. Each week (seven days from the install day, so week 1 is days
+ * The weekly ring, not a streak. Each week (seven days from the story's start, so week 1 is days
  * 1–7) has three calls: the episode, the real-week call and the practice call. A slot is
  * `upcoming` until its day comes, then `open`, then `done`. There is no "missed": a week that ends
- * with open slots keeps them open, and the next call of that kind fills the oldest open one first,
- * so a missed week simply waits. Filling the third slot of a week fills the ring: a week keepsake.
+ * with open slots keeps them open, so a missed week simply waits. A slot that knows its scene is
+ * filled by a call of that scene; a slot with no scene takes the next call of its kind, oldest
+ * first. Filling the third slot of a week fills the ring: a week keepsake.
  */
 
 export const DAYS_PER_WEEK = 7;
@@ -27,7 +28,7 @@ export const DAYS_PER_WEEK = 7;
 export const weekOfDay = (dayIndex: number): number =>
   Math.max(1, Math.ceil(dayIndex / DAYS_PER_WEEK));
 
-/** The first day of a week: week 1 starts on day 1 (the install day). */
+/** The first day of a week: week 1 starts on day 1 (the story's first day). */
 export const firstDayOfWeek = (week: number): number => (week - 1) * DAYS_PER_WEEK + 1;
 
 /**
@@ -58,6 +59,9 @@ export const slotOpensOnDay = (week: number, kind: RingSlotKind): number =>
 /** The scene a slot will play, when the story knows it (null otherwise). */
 export type SceneFor = (week: number, kind: RingSlotKind) => Id | null;
 
+/** The day index a week's call opens on (`slotOpensOnDay`, or the story's week plan). */
+export type SlotOpensOn = (week: number, kind: RingSlotKind) => number;
+
 const emptySlot = (kind: RingSlotKind): RingSlot => ({
   kind,
   status: 'upcoming',
@@ -68,12 +72,14 @@ const emptySlot = (kind: RingSlotKind): RingSlot => ({
 
 /**
  * The rings up to the week of `dayIndex`: new weeks are added, slots whose day has come open, and
- * nothing that is open or done ever goes back.
+ * nothing that is open or done ever goes back. An open slot that doesn't know its scene yet (one
+ * opened before the story named it) learns it here; a done slot keeps what it has.
  */
 export const ringWeeks = (
   weeks: readonly WeekRing[],
   dayIndex: number,
   sceneFor: SceneFor = () => null,
+  opensOn: SlotOpensOn = slotOpensOnDay,
 ): readonly WeekRing[] => {
   const count = Math.max(weeks.length, weekOfDay(dayIndex));
   return Array.from({ length: count }, (_, i) => {
@@ -83,7 +89,11 @@ export const ringWeeks = (
       week,
       slots: RING_SLOT_KINDS.map((kind, s) => {
         const slot = previous?.slots[s] ?? emptySlot(kind);
-        if (slot.status !== 'upcoming' || dayIndex < slotOpensOnDay(week, kind)) return slot;
+        if (slot.status === 'done') return slot;
+        if (slot.status === 'open') {
+          return slot.sceneId === null ? { ...slot, sceneId: sceneFor(week, kind) } : slot;
+        }
+        if (dayIndex < opensOn(week, kind)) return slot;
         return { ...slot, status: 'open' as const, sceneId: slot.sceneId ?? sceneFor(week, kind) };
       }),
     };
@@ -104,6 +114,11 @@ export interface RingCall {
   readonly kind: RingSlotKind;
   readonly callRecordId: OpaqueId;
   readonly doneAt: EpochMs;
+  /**
+   * The scene the call played (its `hello` scene id). Left out or null: a call from before scenes
+   * were kept, which fills the oldest open slot of its kind whatever its scene.
+   */
+  readonly sceneId?: Id | null;
 }
 
 export interface RingFillResult {
@@ -116,18 +131,38 @@ export interface RingFillResult {
 
 export const isRingFull = (ring: WeekRing): boolean => ring.slots.every((s) => s.status === 'done');
 
+/** The index of the oldest week with an open slot of the call's kind that `fits` it, or -1. */
+const oldestOpen = (
+  weeks: readonly WeekRing[],
+  kind: RingSlotKind,
+  fits: (slot: RingSlot) => boolean,
+): number =>
+  weeks.findIndex((w) => w.slots.some((s) => s.kind === kind && s.status === 'open' && fits(s)));
+
 /**
- * A finished call fills the oldest open slot of its kind. An upcoming slot can't be filled early;
- * a call with nothing to fill still counts as practice, it just doesn't move the ring.
+ * The week whose slot a call fills: the open slot whose scene it played (the oldest, if a scene
+ * repeats), else the oldest open slot of its kind with no scene of its own. A call from before
+ * scenes were kept fills the oldest open slot of its kind. -1 when nothing fits.
+ */
+const slotWeekFor = (weeks: readonly WeekRing[], call: RingCall): number => {
+  const scene = call.sceneId ?? null;
+  if (scene === null) return oldestOpen(weeks, call.kind, () => true);
+  const own = oldestOpen(weeks, call.kind, (s) => s.sceneId === scene);
+  return own !== -1 ? own : oldestOpen(weeks, call.kind, (s) => s.sceneId === null);
+};
+
+/**
+ * A finished call fills the open slot its scene belongs to, or the oldest open slot of its kind
+ * that has no scene (`slotWeekFor`). An upcoming slot can't be filled early, and a call never
+ * takes another scene's slot (a replay of Episode 1 doesn't finish Episode 3); a call with
+ * nothing to fill still counts as practice, it just doesn't move the ring.
  */
 export const fillRingSlot = (
   weeks: readonly WeekRing[],
   call: RingCall,
   timezone: TimeZone,
 ): RingFillResult => {
-  const index = weeks.findIndex((w) =>
-    w.slots.some((s) => s.kind === call.kind && s.status === 'open'),
-  );
+  const index = slotWeekFor(weeks, call);
   const target = weeks[index];
   if (target === undefined) return { weeks, filled: null, ringFull: null };
   const ring: WeekRing = {
