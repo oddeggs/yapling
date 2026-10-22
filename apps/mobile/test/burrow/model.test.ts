@@ -224,3 +224,10 @@ describe('coming back', () => {
     expect(back.peek?.episode).toBe(1);
   });
 });
+
+describe('the room after Settling in', () => {
+  it('stays unpacked for a learner who settled in with Linh first', () => {
+    expect(burrowHomeModel(input(2)).scene).toBe('burrow-day1');
+    expect(burrowHomeModel({ ...input(2), settledIn: true }).scene).toBe('burrow');
+  });
+});

@@ -17,6 +17,8 @@ export interface MeFrameProps {
   readonly closeLabel: string;
   /** Kept still at the bottom, under the scrolling content (a confirm's buttons). */
   readonly footer?: ReactNode;
+  /** A sheet over the whole screen ("Thử nhanh hơn?", "Khó quá"). */
+  readonly overlay?: ReactNode;
   readonly children: ReactNode;
 }
 
@@ -24,7 +26,7 @@ export interface MeFrameProps {
  * The Me sheet's frame: a tall glass sheet rising from the bottom edge over the dimmed burrow,
  * with its handle. Tapping above it, the handle, or VoiceOver's escape closes it.
  */
-export function MeFrame({ onClose, closeLabel, footer, children }: MeFrameProps) {
+export function MeFrame({ onClose, closeLabel, footer, overlay, children }: MeFrameProps) {
   const insets = useSafeAreaInsets();
   const rise = useKeyframes(motion.screens.infoSheet);
   return (
@@ -83,6 +85,7 @@ export function MeFrame({ onClose, closeLabel, footer, children }: MeFrameProps)
           </View>
         ) : null}
       </GlassView>
+      {overlay}
     </View>
   );
 }

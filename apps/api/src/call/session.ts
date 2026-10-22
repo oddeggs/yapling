@@ -3,35 +3,36 @@ import type {
   CallEndReason,
   CharacterId,
   MeaningSubject,
+  Pace,
 } from '@yapling/contracts';
-import { LONG_QUIET_MS, speechSettings, WRAP_UP_SECONDS } from '@yapling/domain';
+import { LONG_QUIET_MS } from '@yapling/domain';
 import {
-  findLine,
-  glossFor,
-  lastQuestion,
-  plainCaption,
+  callKindOf,
   SAFE_WRAP_UP,
   safeLineFor,
-  STAGE_SPEECH,
+  type LineLanguage,
   type Scene,
   type SceneEffect,
 } from '@yapling/story';
 
 import type { Bindings } from '../env';
 import { userObject, type ChargeResult } from '../user';
-import { Director, lineDirection, wrapUpDirection, type GenEffect } from './director';
+import { CallLines, type PlayRec } from './call-lines';
+import { CardTurns } from './card-turn';
+import { Director, lineDirection, promptStage, wrapUpDirection, type GenEffect } from './director';
 import { finalizeCall, type CallData } from './finalize';
 import { FrameSender } from './frames';
 import { LearnerTurn } from './learner-turn';
-import { SpokenLine, type LineHost, type LineSource } from './line';
-import { anthropicClient, HEDGE, messagesFor, prewarm, systemFor, turnParams } from './llm';
+import type { LineHost, LineSource, SpokenLine } from './line';
+import { anthropicClient, HEDGE, messagesFor, prewarmScene, systemFor, turnParams } from './llm';
 import { meaningFor } from './meaning';
 import { Meter } from './meter';
+import { notePass, placementDone } from './placement';
 import { Replies, type Active } from './reply';
-import { AI_DISCLOSURE_EVERY_MS, BREAK_REMINDER_AFTER_MS, crisisResourcesKey } from './safety';
+import { crisisResourcesKey, discloseAi, keepHouse } from './safety';
+import { hintFrame } from './scene-lines';
+import { lastAskedBy, type CharacterLine } from './transcript';
 import type { TtsVoice } from './tts';
-import { logGuardedLine } from './turn-log';
-import type { CharacterLine } from './transcript';
 import { stageVoice, VoicePool } from './voice-pool';
 
 /*
@@ -42,7 +43,6 @@ import { stageVoice, VoicePool } from './voice-pool';
 
 /** A line waits for the phone's `played` at most this long after its audio is all sent. */
 const PLAYED_GRACE_MS = 3_000;
-const THINKING_AFTER_MS = 600;
 const HOUSEKEEPING_MS = 15_000;
 
 /**
@@ -52,7 +52,11 @@ const HOUSEKEEPING_MS = 15_000;
 export const quietTiming = { offerMs: LONG_QUIET_MS };
 
 type QueueItem =
-  SceneEffect | { readonly type: 'say'; readonly speaker: CharacterId; readonly text: string };
+  | SceneEffect
+  /** A meaning's simple English, said by the character who explained it. */
+  | { readonly type: 'speak'; readonly speaker: CharacterId; readonly text: string }
+  /** A recorded line whose name splice ("Lan!") was just said: the recording now. */
+  | { readonly type: 'rec_now'; readonly effect: PlayRec };
 
 export class CallSession {
   private frames = new FrameSender(null);
@@ -63,6 +67,8 @@ export class CallSession {
   private queue: QueueItem[] = [];
   private active: Active | null = null;
   private readonly replies: Replies;
+  private readonly cards: CardTurns;
+  private readonly lines: CallLines;
   private readonly voices: VoicePool;
   private thinkingOn = false;
   private linesPlayed = 0;
@@ -77,8 +83,10 @@ export class CallSession {
     private readonly onEnded: () => void,
   ) {
     this.director = new Director(scene, data.runner, data.learner.stage);
+    // The scene's kind, not the phone's word for it, decides whether its minutes count.
+    const callKind = callKindOf(scene.kind) ?? data.meta.kind;
     this.meter = new Meter((seconds, kind) =>
-      userObject(env, data.meta.userId).charge(seconds, kind),
+      userObject(env, data.meta.userId).charge(seconds, kind, callKind),
     );
     this.meter.restore(data.meter);
     this.llm = anthropicClient(env.ANTHROPIC_API_KEY ?? '');
@@ -87,6 +95,7 @@ export class CallSession {
       data,
       director: this.director,
       scene,
+      judgeKey: env.TYPESAFE_API_KEY,
       frames: () => this.frames,
       learner: () => this.learner,
       active: () => this.active,
@@ -106,6 +115,39 @@ export class CallSession {
         this.pushCharacterLine(speaker, text, null, beatId),
       nextStreamId: () => this.nextStreamId(),
     });
+    this.cards = new CardTurns({
+      data,
+      director: this.director,
+      judgeKey: env.TYPESAFE_API_KEY,
+      frames: () => this.frames,
+      learner: () => this.learner,
+      accepting: () => this.accepting(),
+      lineHost: () => this.lineHost(),
+      voice: (character) => this.voice(character),
+      run: (effects) => this.run(effects),
+      askedAgain: (ask) => this.lines.askedAgain(ask),
+      pump: () => this.pump(),
+    });
+    this.lines = new CallLines({
+      data,
+      director: this.director,
+      frames: () => this.frames,
+      learner: () => this.learner,
+      voice: (character, language) => this.voice(character, language),
+      scene,
+      lineHost: () => this.lineHost(),
+      thinking: (on) => this.thinking(on),
+      addUsage: (line) => this.addUsage(line),
+      active: () => this.active,
+      newActive: (streamId, after) => this.newActive(streamId, after),
+      ready: (active, silent) => this.ready(active, silent),
+      pushCharacterLine: (speaker, text, lineId, beatId) =>
+        this.pushCharacterLine(speaker, text, lineId, beatId),
+      nextStreamId: () => this.nextStreamId(),
+      queueFirst: (item) => this.queue.unshift(item),
+      run: (effects) => this.run(effects),
+      pump: () => this.pump(),
+    });
   }
 
   // ---- lifecycle ----
@@ -122,7 +164,11 @@ export class CallSession {
     const learner = new LearnerTurn(this.env.ELEVENLABS_API_KEY ?? '', this.data.meta.turnMode, {
       accepting: () => this.accepting(),
       partial: (text) => this.frames.send({ type: 'partial', text: text.slice(0, 2_000) }),
-      answer: (text, speechEndAt, gated) => this.replies.answer(text, speechEndAt, gated),
+      // A card turn is decided by its words; any other turn is answered by the listener's line.
+      answer: (text, speechEndAt, gated) =>
+        this.cards.handles()
+          ? this.cards.answer(text, speechEndAt, gated)
+          : this.replies.answer(text, speechEndAt, gated),
       silence: () => this.run(this.director.dispatch({ type: 'silent' })),
       notHeard: () => this.frames.send({ type: 'not_heard' }),
       released: (line) => this.replies.released(line),
@@ -150,7 +196,7 @@ export class CallSession {
       resumeToken,
       resumed: !how.newCall,
     });
-    if (how.newCall) this.discloseAi();
+    if (how.newCall) discloseAi(this.data, this.frames);
     this.housekeeping ??= setInterval(() => this.keepHouse(), HOUSEKEEPING_MS);
     this.queue = [];
     this.run(this.director.begin(how.freshScene));
@@ -178,6 +224,7 @@ export class CallSession {
 
   private detachPhone(): void {
     this.replies.drop();
+    this.cards.drop();
     if (this.active?.timer) clearTimeout(this.active.timer);
     this.active = null;
     this.learner?.close();
@@ -194,6 +241,7 @@ export class CallSession {
     this.syncData();
     this.detachPhoneKeepFrames();
     this.voices.close();
+    await placementDone(this.env, this.data, this.scene, reason);
     let summaryPending = false;
     try {
       summaryPending = await finalizeCall(this.env, this.data, this.scene, this.director.state);
@@ -241,9 +289,13 @@ export class CallSession {
       case 'hangup':
         void this.end('hangup');
         return;
-      // Again, slowly and a pace change are not handled yet: ignored, as an older call would.
       case 'replay':
+        // "Nói lại" / "Chậm thôi": the same replay as saying it, while the scene waits.
+        if (this.accepting()) this.lines.tapped(frame.slower ? 'slower' : 'repeat');
+        return;
       case 'pace':
+        this.setPace(frame.pace);
+        return;
       case 'hello':
       case 'unknown':
         return;
@@ -253,13 +305,11 @@ export class CallSession {
   // ---- effects ----
 
   private run(effects: readonly SceneEffect[], subject: MeaningSubject | null = null): void {
+    notePass(this.data, this.director.state);
     const later: QueueItem[] = [];
     for (const effect of effects) {
       if (effect.type === 'hint') {
-        const gloss = STAGE_SPEECH[this.data.learner.stage].glossHints
-          ? glossFor(effect.hint.glosses, this.data.learner.firstLanguage)
-          : null;
-        this.frames.send({ type: 'hint', phrase: effect.hint.en, gloss });
+        this.frames.send(hintFrame(effect, this.data.learner));
         this.learner?.restartQuiet();
       } else if (effect.type === 'gen' && effect.purpose === 'meaning') {
         void this.meaning(effect, subject);
@@ -272,7 +322,8 @@ export class CallSession {
   }
 
   private pump(): void {
-    if (this.ended || this.active !== null || this.replies.busy || this.data.crisis) return;
+    if (this.ended || this.active !== null || this.replies.busy || this.cards.busy) return;
+    if (this.data.crisis) return;
     // No phone, no lines: nothing is generated or spoken until a phone resumes the call.
     if (!this.frames.attached) return;
     if (this.data.wrapping && !this.data.wrapStarted && this.linesPlayed > 0) {
@@ -280,9 +331,12 @@ export class CallSession {
       this.data.wrapStarted = true;
       const speaker = this.director.listening()?.answer.listener ?? this.scene.cast[0] ?? 'pip';
       this.learner?.closeWindow();
-      this.startLine(
+      this.lines.startLine(
         speaker,
-        this.modelSource(speaker, wrapUpDirection(speaker, this.data.learner.stage)),
+        this.modelSource(
+          speaker,
+          wrapUpDirection(speaker, promptStage(this.scene, this.data.learner.stage)),
+        ),
         null,
         { endAfter: 'minutes_exhausted', safeLine: SAFE_WRAP_UP },
       );
@@ -298,20 +352,31 @@ export class CallSession {
           return;
         case 'play_rec':
           this.learner?.closeWindow();
-          this.playRec(item);
+          this.lines.playRec(item);
+          return;
+        case 'rec_now':
+          this.learner?.closeWindow();
+          this.lines.playRecorded(item.effect);
           return;
         case 'gen':
           this.learner?.closeWindow();
-          this.startLine(
+          this.lines.startLine(
             item.speaker,
-            this.modelSource(item.speaker, lineDirection(item, this.data.learner.stage)),
+            this.modelSource(
+              item.speaker,
+              lineDirection(item, promptStage(this.scene, this.data.learner.stage)),
+            ),
             'gen_done',
-            { safeLine: safeLineFor(item, this.lastAsked(item.speaker)) },
+            { safeLine: safeLineFor(item, lastAskedBy(this.data.transcript, item.speaker)) },
           );
           return;
         case 'say':
           this.learner?.closeWindow();
-          this.startLine(item.speaker, { kind: 'text', text: item.text }, null);
+          this.lines.say(item);
+          return;
+        case 'speak':
+          this.learner?.closeWindow();
+          this.lines.startLine(item.speaker, { kind: 'text', text: item.text }, null);
           return;
         case 'show_ui':
         case 'hint':
@@ -329,35 +394,17 @@ export class CallSession {
       !this.ended &&
       !this.data.crisis &&
       this.active === null &&
+      !this.cards.busy &&
       this.queue.length === 0 &&
       !(this.data.wrapping && this.linesPlayed > 0) &&
       this.director.listening() !== null
     );
   }
 
-  private playRec(effect: Extract<SceneEffect, { type: 'play_rec' }>): void {
-    const line = findLine(effect.lineId);
-    if (!effect.recorded || !line?.audio) {
-      // Not recorded yet: the character's live voice reads the written line.
-      this.startLine(
-        effect.character,
-        { kind: 'text', text: plainCaption(effect.text) },
-        'rec_played',
-        { beatId: effect.beatId },
-      );
-      return;
-    }
-    const streamId = this.nextStreamId();
-    this.frames.send({
-      type: 'play_rec',
-      streamId,
-      lineId: effect.lineId,
-      character: effect.character,
-    });
-    this.pushCharacterLine(effect.character, effect.caption, effect.lineId, effect.beatId);
-    const active = this.newActive(streamId, 'rec_played');
-    active.durationMs = line.audio.durationMs;
-    this.ready(active);
+  /** "Khó quá" → slower (or back to the stage's own): the voice and the prompt from the next line. */
+  private setPace(pace: Pace | null): void {
+    this.data.learner = { ...this.data.learner, pace };
+    this.persistState();
   }
 
   private modelSource(speaker: CharacterId, direction: string): LineSource {
@@ -369,8 +416,9 @@ export class CallSession {
     };
   }
 
-  private voice(character: CharacterId): TtsVoice {
-    return stageVoice(character, this.data.learner.stage, this.data.learner.pace ?? null);
+  private voice(character: CharacterId, language: LineLanguage = 'en'): TtsVoice {
+    const voice = stageVoice(character, this.data.learner.stage, this.data.learner.pace ?? null);
+    return language === 'en' ? voice : { ...voice, language };
   }
 
   private lineHost(): LineHost {
@@ -380,64 +428,6 @@ export class CallSession {
       nextStreamId: () => this.nextStreamId(),
       takeTts: (voice) => this.voices.take(voice),
     };
-  }
-
-  /** The speaker's last question in the call, for a safe nudge to ask again. */
-  private lastAsked(speaker: CharacterId): string | null {
-    for (let i = this.data.transcript.length - 1; i >= 0; i--) {
-      const line = this.data.transcript[i];
-      if (line?.speaker === speaker) return lastQuestion(line.text);
-    }
-    return null;
-  }
-
-  /** A line from the model or written text, not waiting on the learner. */
-  private startLine(
-    speaker: CharacterId,
-    source: LineSource,
-    after: Active['after'],
-    extra: {
-      readonly endAfter?: CallEndReason;
-      readonly beatId?: string;
-      readonly safeLine?: string;
-    } = {},
-  ): void {
-    const endAfter = extra.endAfter ?? null;
-    const beatId = extra.beatId ?? null;
-    const line = new SpokenLine(this.lineHost(), {
-      speaker,
-      voice: this.voice(speaker),
-      source,
-      gated: false,
-      maxWords: speechSettings(this.data.learner.stage).maxWordsPerTurn,
-      afterReaction: false,
-      onFirstAudio: () => this.thinking(false),
-      ...(extra.safeLine ? { safeLine: extra.safeLine } : {}),
-    });
-    const active = this.newActive(line.streamId, after);
-    active.endAfter = endAfter;
-    const thinkingTimer = setTimeout(() => {
-      if (!line.committed && this.active === active) this.thinking(true);
-    }, THINKING_AFTER_MS);
-    line.start();
-    void line.done.then((result) => {
-      clearTimeout(thinkingTimer);
-      this.thinking(false);
-      this.addUsage(line);
-      logGuardedLine(this.data.meta.callId, beatId ?? this.director.state.beatId, result);
-      if (this.active !== active) return;
-      if (result.failed !== null && result.text === '') {
-        this.frames.send({
-          type: 'error',
-          code: result.failed === 'llm' ? 'llm_failed' : 'tts_failed',
-          fatal: false,
-        });
-      }
-      if (result.text)
-        this.pushCharacterLine(speaker, result.text, null, beatId ?? this.director.state.beatId);
-      active.durationMs = result.audioMs;
-      this.ready(active, result.text === '');
-    });
   }
 
   private newActive(streamId: number, after: Active['after']): Active {
@@ -466,7 +456,10 @@ export class CallSession {
 
   private played(streamId: number, lagMs: number | null): void {
     const active = this.active;
-    if (lagMs !== null) this.replies.lag(streamId, lagMs);
+    if (lagMs !== null) {
+      this.replies.lag(streamId, lagMs);
+      this.cards.lag(lagMs);
+    }
     if (active?.streamId !== streamId) return;
     active.played = true;
     if (active.ready) this.complete(active);
@@ -511,7 +504,9 @@ export class CallSession {
       simple: answer.simple.slice(0, 2_000),
       gloss: answer.gloss?.slice(0, 2_000) ?? null,
     });
-    this.queue.unshift({ type: 'say', speaker: effect.speaker, text: answer.simple });
+    // A Visitor reads the meaning in their own language first: no English explanation is said.
+    if (promptStage(this.scene, this.data.learner.stage) === 'visitor' && answer.gloss) return;
+    this.queue.unshift({ type: 'speak', speaker: effect.speaker, text: answer.simple });
     this.pump();
   }
 
@@ -528,28 +523,17 @@ export class CallSession {
     console.warn('call safety flag', { callId: this.data.meta.callId, kind: 'crisis' });
   }
 
-  private discloseAi(): void {
-    this.frames.send({ type: 'safety', kind: 'ai_disclosure', resourcesKey: null });
-    this.data.disclosedAtMs =
-      this.data.priorCallSeconds * 1_000 + (Date.now() - this.data.meta.startedAt);
-  }
-
   private keepHouse(): void {
     if (this.ended || !this.frames.attached) return;
-    const now = Date.now();
-    const cumulative = this.data.priorCallSeconds * 1_000 + (now - this.data.meta.startedAt);
-    if (cumulative - this.data.disclosedAtMs >= AI_DISCLOSURE_EVERY_MS) this.discloseAi();
-    if (!this.data.breakSent && now - this.data.continuousSince >= BREAK_REMINDER_AFTER_MS) {
-      this.data.breakSent = true;
-      this.frames.send({ type: 'safety', kind: 'break_reminder', resourcesKey: null });
-    }
+    keepHouse(this.data, this.frames);
     this.persistState();
   }
 
   private charged(result: ChargeResult | null): void {
     if (result === null || this.ended) return;
     this.data.secondsLeft = result.secondsLeft;
-    const wrappingUp = result.secondsLeft <= WRAP_UP_SECONDS;
+    // The ledger says when to wrap up: never in a call it doesn't meter (Settling in).
+    const wrappingUp = result.wrappingUp;
     this.frames.send({ type: 'minutes', secondsLeft: result.secondsLeft, wrappingUp });
     if (result.exhausted && !this.data.wrapStarted) {
       this.frames.send({ type: 'error', code: 'minutes_exhausted', fatal: true });
@@ -596,22 +580,8 @@ export class CallSession {
   }
 
   private warmUp(): void {
-    const speakers = new Set<CharacterId>();
-    for (const beat of this.scene.beats) {
-      if (beat.kind === 'gen') speakers.add(beat.speaker);
-      if ((beat.kind === 'gen' || beat.kind === 'learner') && beat.answer)
-        speakers.add(beat.answer.listener);
-    }
-    for (const speaker of speakers) {
-      void prewarm(
-        this.llm,
-        systemFor(speaker, this.scene, this.data.learner),
-        this.data.usage,
-      ).catch((error: unknown) => {
-        console.warn('prewarm failed', { error: String(error).slice(0, 200) });
-      });
-    }
-    const first = [...speakers][0];
+    const speakers = prewarmScene(this.llm, this.scene, this.data.learner, this.data.usage);
+    const first = speakers[0];
     if (first) this.voices.warm(this.voice(first));
   }
 

@@ -4,7 +4,8 @@ import type { Usage } from './llm';
  * What a call cost, from public list prices (October 2026, as in the voice spike report): Scribe
  * v2 Realtime $0.39 an audio hour; Flash TTS $0.04 per 1,000 characters; Claude Haiku 5.5 $0.10 per
  * million input tokens, $0.01 cache reads, $0.125 cache writes, $0.50 output. Hedged turns pay
- * for the losing request's input too, which the counts include.
+ * for the losing request's input too, which the counts include. Jev, the turn judge, $0.042 per
+ * million input tokens, output free (the turn judge spike report).
  */
 
 export const PRICES = {
@@ -12,12 +13,15 @@ export const PRICES = {
   ttsPerThousandChars: 0.04,
   haiku: { input: 0.1, cacheRead: 0.01, cacheWrite: 0.125, output: 0.5 },
   sonnet: { input: 2, cacheRead: 0.2, cacheWrite: 2.5, output: 10 },
+  jevInputPerMillion: 0.042,
 } as const;
 
 export interface CallCost {
   readonly sttSeconds: number;
   readonly ttsChars: number;
   readonly llm: Usage;
+  /** Jev's input tokens (the turn judge); its output is free. */
+  readonly jevInputTokens: number;
   readonly usd: number;
 }
 
@@ -32,15 +36,22 @@ export function tokenUsd(usage: Usage, prices: typeof PRICES.haiku | typeof PRIC
   );
 }
 
-export function callCost(sttSeconds: number, ttsChars: number, llm: Usage): CallCost {
+export function callCost(
+  sttSeconds: number,
+  ttsChars: number,
+  llm: Usage,
+  jevInputTokens = 0,
+): CallCost {
   const usd =
     (sttSeconds / 3_600) * PRICES.sttPerHour +
     (ttsChars / 1_000) * PRICES.ttsPerThousandChars +
-    tokenUsd(llm, PRICES.haiku);
+    tokenUsd(llm, PRICES.haiku) +
+    perMillion(jevInputTokens, PRICES.jevInputPerMillion);
   return {
     sttSeconds: Math.round(sttSeconds * 10) / 10,
     ttsChars,
     llm,
+    jevInputTokens,
     usd: Math.round(usd * 100_000) / 100_000,
   };
 }
@@ -64,6 +75,10 @@ export const STAGES = [
   'phoneReaction',
   // End of learner speech → the generated reply's first audio heard, measured on the phone.
   'phoneReply',
+  // Turn judge request → Jev's answer (answered requests only).
+  'judge',
+  // A card turn: end of learner speech → the turn decided by its words (no model), call clock.
+  'cardOut',
 ] as const;
 export type Stage = (typeof STAGES)[number];
 

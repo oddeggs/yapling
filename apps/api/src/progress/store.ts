@@ -1,10 +1,16 @@
-import { Progress } from '@yapling/contracts';
+import { Progress, type SettlingProgress } from '@yapling/contracts';
 
 import { dayIndex, LAUNCH_TIMEZONE, localDate } from './days';
 
 /** Reads and writes on `progress`. */
 
-type Lists = Pick<Progress, 'phrases' | 'errorTargets' | 'canDos' | 'keepsakes' | 'weeks'>;
+/**
+ * The lists a write sets. `settlingChaptersDone` left out keeps the saved chapters (an older app's
+ * body never has them).
+ */
+type Lists = Pick<Progress, 'phrases' | 'errorTargets' | 'canDos' | 'keepsakes' | 'weeks'> & {
+  readonly settlingChaptersDone?: SettlingProgress;
+};
 
 interface ProgressRow {
   revision: number;
@@ -14,9 +20,17 @@ interface ProgressRow {
   can_dos: string;
   keepsakes: string;
   weeks: string;
+  settling_chapters_done: string;
 }
 
-const EMPTY: Lists = { phrases: [], errorTargets: [], canDos: [], keepsakes: [], weeks: [] };
+const EMPTY: Lists = {
+  phrases: [],
+  errorTargets: [],
+  canDos: [],
+  keepsakes: [],
+  weeks: [],
+  settlingChaptersDone: [],
+};
 
 /**
  * The learner's timezone: the profile's; before onboarding, the phone's from the guest session;
@@ -49,6 +63,7 @@ function fromRow(row: ProgressRow, today: string): Progress {
     canDos: json(row.can_dos),
     keepsakes: json(row.keepsakes),
     weeks: json(row.weeks),
+    settlingChaptersDone: json(row.settling_chapters_done),
   });
 }
 
@@ -59,6 +74,8 @@ function listValues(lists: Lists) {
     JSON.stringify(lists.canDos),
     JSON.stringify(lists.keepsakes),
     JSON.stringify(lists.weeks),
+    // Null keeps the saved chapters.
+    lists.settlingChaptersDone === undefined ? null : JSON.stringify(lists.settlingChaptersDone),
   ] as const;
 }
 
@@ -68,8 +85,8 @@ export async function readProgress(db: D1Database, userId: string, now: number):
   await db
     .prepare(
       `INSERT INTO progress (user_id, revision, installed_on, phrases, error_targets, can_dos,
-         keepsakes, weeks, updated_at)
-       VALUES (?1, 1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
+         keepsakes, weeks, settling_chapters_done, updated_at)
+       VALUES (?1, 1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
        ON CONFLICT (user_id) DO NOTHING`,
     )
     .bind(userId, today, ...listValues(EMPTY), now)
@@ -102,7 +119,8 @@ export async function writeProgress(
   const row = await db
     .prepare(
       `UPDATE progress SET revision = revision + 1, phrases = ?3, error_targets = ?4,
-         can_dos = ?5, keepsakes = ?6, weeks = ?7, updated_at = ?8
+         can_dos = ?5, keepsakes = ?6, weeks = ?7,
+         settling_chapters_done = COALESCE(?8, settling_chapters_done), updated_at = ?9
        WHERE user_id = ?1 AND revision = ?2
        RETURNING *`,
     )
@@ -188,10 +206,11 @@ export async function updateProgressOnce<T>(
       db
         .prepare(
           `UPDATE progress SET revision = revision + 1, phrases = ?3, error_targets = ?4,
-             can_dos = ?5, keepsakes = ?6, weeks = ?7, updated_at = ?8
+             can_dos = ?5, keepsakes = ?6, weeks = ?7,
+             settling_chapters_done = COALESCE(?8, settling_chapters_done), updated_at = ?9
            WHERE user_id = ?1 AND revision = ?2
              AND EXISTS (SELECT 1 FROM progress_changes
-                         WHERE id = ?9 AND user_id = ?1 AND revision = ?2 + 1)`,
+                         WHERE id = ?10 AND user_id = ?1 AND revision = ?2 + 1)`,
         )
         .bind(userId, base, ...listValues(next), now, changeId),
     ]);

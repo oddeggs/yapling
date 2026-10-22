@@ -1,4 +1,5 @@
 import type { CallEndReason, CallKind, Id, TurnMode } from '@yapling/contracts';
+import type { TurnPass } from '@yapling/domain';
 import type { RunnerState, Scene } from '@yapling/story';
 
 import { userBlobPrefix } from '../account';
@@ -39,16 +40,26 @@ export interface CallMeta {
   readonly clockOffsetMs?: number;
 }
 
+export interface TurnPassRecord {
+  readonly beatId: Id;
+  readonly pass: TurnPass;
+}
+
 export interface CallData {
   readonly version: 1;
   readonly meta: CallMeta;
-  readonly learner: LearnerContext;
+  /** The pace in it changes mid-call (`pace`). */
+  learner: LearnerContext;
   runner: RunnerState;
   transcript: TranscriptLine[];
   turns: number;
   streamSeq: number;
   meter: MeterState;
   usage: Usage;
+  /** Jev's input tokens; missing in a call saved before the turn judge. */
+  jevInputTokens?: number;
+  /** How each turn left its beat, in order; missing in a call saved before pass kinds. */
+  passes?: TurnPassRecord[];
   sttSeconds: number;
   ttsChars: number;
   samples: Samples;
@@ -86,6 +97,8 @@ export function newCallData(
     streamSeq: 0,
     meter: { learnerMs: 0, characterMs: 0, billedLearner: 0, billedCharacter: 0 },
     usage: noUsage(),
+    jevInputTokens: 0,
+    passes: [],
     sttSeconds: 0,
     ttsChars: 0,
     samples: noSamples(),
@@ -142,7 +155,7 @@ export async function finalizeCall(
   const reason = data.endReason ?? 'hangup';
   // The scene keeps its place only when minutes ran out before it finished.
   const sceneState = reason === 'minutes_exhausted' && runner.phase !== 'ended' ? runner : null;
-  const cost = callCost(data.sttSeconds, data.ttsChars, data.usage);
+  const cost = callCost(data.sttSeconds, data.ttsChars, data.usage, data.jevInputTokens ?? 0);
   await insertCall(env.DB, {
     id: meta.callId,
     userId: meta.userId,

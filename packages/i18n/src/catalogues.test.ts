@@ -53,7 +53,8 @@ describe('the merged catalogues', () => {
     for (const key of days) expect(Object.keys(catalogues.vi)).toContain(key);
     const canDos = Object.keys(en).filter((k) => k.startsWith('cando.'));
     const titles = canDos.filter((k) => !k.endsWith('.certificate'));
-    expect(titles).toHaveLength(12);
+    // Season 1's twelve and the Visitor's six.
+    expect(titles).toHaveLength(18);
     // Each can-do has its keepsake wording too.
     expect(canDos.filter((k) => k.endsWith('.certificate')).sort()).toEqual(
       titles.map((k) => `${k}.certificate`).sort(),

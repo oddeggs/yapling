@@ -120,6 +120,14 @@ export class LearnerTurn {
     this.quietSince = { audioMs: this.endpointer.audioMs - ago, wall: Date.now() - ago };
   }
 
+  /**
+   * The answer's line was replaced (by a line written for the judged case, or by a replay of the
+   * last line): the new line is held and released, or dropped, in its place.
+   */
+  swapReply(from: SpokenLine, to: SpokenLine): void {
+    if (this.reply === from) this.reply = to;
+  }
+
   /** The reply line finished or was dropped. */
   replyDone(line: SpokenLine): void {
     if (this.reply === line) this.reply = null;

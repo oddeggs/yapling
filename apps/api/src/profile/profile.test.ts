@@ -85,6 +85,76 @@ describe('the profile', () => {
     );
   });
 
+  it('keeps the story start and start path, which an older app never sends', async () => {
+    const { session, profile } = await onboarded();
+    expect(profile).toMatchObject({ storyStartedOn: null, startPath: null });
+    const token = session.token;
+
+    // A PATCH with only these is an edit.
+    const patch = await call('/api/me/profile', {
+      method: 'PATCH',
+      body: { storyStartedOn: '2026-10-27' },
+      token,
+    });
+    expect(Profile.parse(await expectJson(patch))).toMatchObject({
+      storyStartedOn: '2026-10-27',
+      startPath: null,
+      revision: 2,
+    });
+    const path = await call('/api/me/profile', {
+      method: 'PATCH',
+      body: { startPath: 'visitor' },
+      token,
+    });
+    expect(Profile.parse(await expectJson(path))).toMatchObject({
+      storyStartedOn: '2026-10-27',
+      startPath: 'visitor',
+    });
+
+    // An older app's whole-profile write keeps both.
+    const kept = await call('/api/me/profile', { method: 'PUT', body: onboarding, token });
+    expect(Profile.parse(await expectJson(kept))).toMatchObject({
+      storyStartedOn: '2026-10-27',
+      startPath: 'visitor',
+    });
+    const read = Profile.parse(await expectJson(await call('/api/me/profile', { token })));
+    expect(read).toMatchObject({ storyStartedOn: '2026-10-27', startPath: 'visitor' });
+
+    // A newer app's sets them, null included.
+    const set = await call('/api/me/profile', {
+      method: 'PUT',
+      body: { ...onboarding, storyStartedOn: null, startPath: 'placement' },
+      token,
+    });
+    expect(Profile.parse(await expectJson(set))).toMatchObject({
+      storyStartedOn: null,
+      startPath: 'placement',
+    });
+
+    for (const body of [{ startPath: 'beginner' }, { storyStartedOn: '27/10/2026' }]) {
+      await expectError(
+        await call('/api/me/profile', { method: 'PATCH', body, token }),
+        400,
+        'bad_request',
+      );
+    }
+  });
+
+  it('takes the story start and start path at onboarding', async () => {
+    const { token } = await newGuest();
+    const response = await call('/api/me/profile', {
+      method: 'PUT',
+      body: { ...onboarding, startPath: 'visitor', storyStartedOn: null },
+      token,
+    });
+    expect(Profile.parse(await expectJson(response))).toMatchObject({
+      revision: 1,
+      stage: 'newcomer',
+      startPath: 'visitor',
+      storyStartedOn: null,
+    });
+  });
+
   it('never takes the stage from the client', async () => {
     const { session } = await onboarded();
     const put = await call('/api/me/profile', {

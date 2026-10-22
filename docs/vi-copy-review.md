@@ -224,10 +224,6 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | "Too hard" sheet · option 1 | Slower, please | Nói chậm hơn | | |
 | "Too hard" sheet · option 2 | Practise with Linh first | Tập với Linh trước | | |
 | "Too hard" sheet · body | Linh will practise with you in a few short visits. Mei's café will wait for you. | Linh sẽ tập cùng bạn vài buổi ngắn. Quán của Mei vẫn chờ bạn. | | From the design; never says "level", "down", "fail" or "beginner" |
-| Burrow · path name | Settling in | Làm quen | Term | Also the start of "Làm quen với Linh"; fine together? |
-| Burrow · after two chapters | Tomorrow | Để mai | | |
-| Burrow · keep going | Keep going | Làm tiếp | | |
-| Burrow · skip to the story | Start the story | Vào truyện luôn | | |
 | Call · replay pill | Again | Nói lại | | |
 | Call · slower pill | Slower | Chậm thôi | | |
 | Call · skip pill | Skip | Bỏ qua | | |
@@ -359,7 +355,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## The burrow (home), day by day
 
-`packages/i18n/src/burrow.vi.ts` · 45 strings
+`packages/i18n/src/burrow.vi.ts` · 88 strings
 
 | Key | English | Tiếng Việt | Flag | Notes |
 |---|---|---|---|---|
@@ -408,6 +404,49 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `burrow.a11y.keepsake` | Keepsake on the wall: {canDo} | Kỷ niệm trên tường: {canDo} | Meaning | Same as the keepsake card: "kỷ vật" |
 | `burrow.a11y.object` | {phrase}: {stage} | {phrase}: {stage} |  |  |
 | `burrow.back.done` | Back to the burrow | Về hang |  |  |
+| `burrow.settling.when` | Day {day} · {time} | Ngày {day} · {time} | New |  |
+| `burrow.settling.time.morning` | morning | sáng | New |  |
+| `burrow.settling.time.afternoon` | afternoon | chiều | New |  |
+| `burrow.settling.time.evening` | evening | tối | New |  |
+| `burrow.settling.time.dusk` | dusk | hoàng hôn | New | The letter's evening, as the design writes it |
+| `burrow.settling.kicker` | SETTLING IN · {chapter}/{total} | LÀM QUEN · {chapter}/{total} | New |  |
+| `burrow.settling.kickerRest` | SETTLING IN · {chapter}/{total} · TOMORROW? | LÀM QUEN · {chapter}/{total} · NGÀY MAI? | New |  |
+| `burrow.settling.kickerDone` | SETTLING IN · {done}/{total} DONE | LÀM QUEN · XONG {done}/{total} | New |  |
+| `burrow.settling.sub.1` | Linh from next door comes to say hi. | Linh ở nhà bên sang chào bạn. | New |  |
+| `burrow.settling.sub.2` | Linh brings the boxes over to help you unpack. | Linh mang thùng sang giúp bạn dọn. | New |  |
+| `burrow.settling.sub.3` | Linh has two lifesavers to show you. | Linh có hai câu cứu nguy muốn chỉ bạn. | New |  |
+| `burrow.settling.sub.4` | Linh is waiting for you at the bus stop. | Linh đang đợi bạn ở bến xe buýt. | New | "bến xe buýt", as the Chapter 4 knock; the line gloss says "trạm xe buýt" |
+| `burrow.settling.sub.5` | Mei’s café is open. Come for tea. | Quán của Mei mở cửa rồi. Ghé uống trà nhé. | New | Same wording as the Chapter 5 knock draft |
+| `burrow.settling.sub.6` | {name} is writing a page about you. | {name} đang viết một trang về bạn. | New |  |
+| `burrow.settling.restSub` | Two chapters done today. Time for a rest? | Hôm nay bạn xong hai chương rồi. Nghỉ chút nhé? | New |  |
+| `burrow.settling.restedSub` | See you tomorrow. The next chapter will wait. | Hẹn bạn ngày mai nhé. Chương sau vẫn chờ bạn. | New | Shown after "Để mai"; no design for this state |
+| `burrow.settling.go.linh` | Meet Linh · {minutes} min | Gặp Linh · {minutes} phút | New |  |
+| `burrow.settling.go.mei` | Go to Mei’s · {minutes} min | Đến quán Mei · {minutes} phút | New | "Đến quán Mei": Chapter 5 is with Mei, not Linh |
+| `burrow.settling.tomorrow` | Tomorrow | Để mai | New |  |
+| `burrow.settling.keepGoing` | Keep going | Làm tiếp | New |  |
+| `burrow.settling.settled` | Settled in! | Settled in! | English on purpose? | The design keeps "Settled in!" in English, like the chapter titles; confirm or translate |
+| `burrow.settling.settledSub` | The burrow is full. Tomorrow, the story begins. | Hang đã đầy đồ. Ngày mai, truyện bắt đầu. | New |  |
+| `burrow.settling.goodnight` | Good night | Chúc ngủ ngon | New |  |
+| `burrow.settling.list.title` | Settling in | Làm quen | Term | Also the start of "Làm quen với Linh"; fine together? |
+| `burrow.settling.list.count` | {done}/{total} done | Settling in · {done}/{total} | English on purpose? | The design shows "Settling in · 3/6" under "Làm quen" |
+| `burrow.settling.list.replay` | Play again | Chơi lại | New |  |
+| `burrow.settling.list.next` | Next | Tiếp | New |  |
+| `burrow.settling.list.minutes` | 2–3 min | 2–3 phút | New |  |
+| `burrow.settling.list.skip` | Start the story | Vào truyện luôn | New |  |
+| `burrow.settling.chapter.1` | Saying hello | Chào hỏi | New |  |
+| `burrow.settling.chapter.2` | Unpacking | Dỡ thùng | New |  |
+| `burrow.settling.chapter.3` | Say it again | Nói lại nhé | New |  |
+| `burrow.settling.chapter.4` | Bus 45 · with Bea | Xe buýt 45 · với Bea | New |  |
+| `burrow.settling.chapter.5` | Mei’s café | Quán của Mei | New |  |
+| `burrow.settling.chapter.6` | About me | Về mình | New |  |
+| `burrow.settling.a11y.list` | Settling-in list | Danh sách Làm quen | New |  |
+| `burrow.settling.a11y.close` | Close the list | Đóng danh sách | New |  |
+| `burrow.settling.a11y.progress` | {done} of {total} chapters done | Đã xong {done}/{total} chương | New |  |
+| `burrow.settling.a11y.box` | A box still to unpack: {title} | Thùng chưa dỡ: {title} | New |  |
+| `burrow.settling.a11y.chapter` | Chapter {chapter}: {title}, {about} | Chương {chapter}: {title}, {about} | New |  |
+| `burrow.settling.a11y.done` | done | đã xong | New |  |
+| `burrow.settling.a11y.next` | up next | chương tiếp theo | New |  |
+| `burrow.settling.a11y.later` | later, {minutes} | để sau, {minutes} | New |  |
 
 ## The week view
 
@@ -601,6 +640,38 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `payoff.keepsake.canNow` | {learner} can now… | {learner} can now… | English on purpose? | The keepsake itself is written in English (a learning artefact); confirm |
 | `payoff.keepsake.witnessed` | witnessed by {witness} · {date} | witnessed by {witness} · {date} | English on purpose? | As above |
 | `payoff.keepsake.weekCanDo` | fill a whole week with calls | fill a whole week with calls | English on purpose? | As above |
+| `payoff.visitor.kicker` | Settling in · {chapter} of {total} · {title} | Làm quen · {chapter}/{total} · {title} | New |  |
+| `payoff.visitor.said` | You said: | Bạn đã nói được: | New |  |
+| `payoff.visitor.a11ySaid` | You said: {lines} | Bạn đã nói được: {lines} | New |  |
+| `payoff.visitor.seedTag` | SEED PACKET · CHAPTER {chapter} | GÓI HẠT · CHƯƠNG {chapter} | New |  |
+| `payoff.visitor.seedTagCall` | NEW SEED PACKET | GÓI HẠT MỚI | New |  |
+| `payoff.visitor.seedSub` | Say it again another day and it sprouts. | Nói lại vào hôm khác để nó nảy mầm. | New |  |
+| `payoff.visitor.feelTitle` | How was this call? | Cuộc gọi này thế nào? | New |  |
+| `payoff.visitor.justRight` | Just right | Vừa sức | New | The design says "Vừa sức"; §5 drafts "Vừa" |
+| `payoff.visitor.tooHard` | Too hard | Khó quá | New |  |
+| `payoff.visitor.replyJustRight` | Great! {name} will keep this pace. | Tuyệt! {name} sẽ giữ nhịp này nhé. | New |  |
+| `payoff.visitor.replySlower` | Next time {name} goes slower, one step at a time. | Lần sau {name} nói chậm hơn, từng bước một. | New |  |
+| `payoff.visitor.replyPractise` | {name} will practise with you first. Mei’s café will wait. | {name} sẽ tập cùng bạn trước. Quán của Mei vẫn chờ bạn. | New |  |
+| `payoff.visitor.box` | The “{title}” box is unpacked in the burrow | Thùng "{title}" đã được dỡ trong hang | New | Straight quotes, as the design prints them |
+| `payoff.tooHard.title` | Too hard | Khó quá | New |  |
+| `payoff.tooHard.sub` | That’s fine. Pick what suits you. | Không sao cả. Chọn cách bạn thích. | New |  |
+| `payoff.tooHard.slower` | Slower, please | Nói chậm hơn | New |  |
+| `payoff.tooHard.slowerSub` | From the next call, everyone speaks more slowly. | Từ cuộc gọi sau, mọi người sẽ nói chậm hơn. | New |  |
+| `payoff.tooHard.linh` | Practise with Linh first | Tập với Linh trước | New |  |
+| `payoff.tooHard.linhSubNewcomer` | A few short visits with Linh before the story goes on. | Vài buổi ngắn với Linh, rồi truyện đi tiếp. | New |  |
+| `payoff.tooHard.linhSubVisitor` | Play a Settling-in chapter with Linh again. | Chơi lại một chương Làm quen cùng Linh. | New |  |
+| `payoff.tooHard.note` | Linh will practise with you in a few short visits. Mei’s café will wait for you. | Linh sẽ tập cùng bạn vài buổi ngắn. Quán của Mei vẫn chờ bạn. | New |  |
+| `payoff.tooHard.back` | Back | Quay lại | New |  |
+| `payoff.stageUp.lineOffer` | Knock knock! You’re not a visitor any more. | Cốc cốc! Bạn không còn là khách nữa rồi. | New | Linh’s line: English in the bubble, this under it |
+| `payoff.stageUp.lineTaken` | Welcome to Natterwick, neighbour. | Chào mừng đến Natterwick, hàng xóm. | New | Linh’s line |
+| `payoff.stageUp.lineStay` | Of course! Same time tomorrow? | Được chứ! Mai gặp lại nhé? | New | Linh’s line |
+| `payoff.stageUp.noteOffer` | A week of settling in, done. The new card opens the story’s calls. | Một tuần làm quen đã xong. Thẻ mới mở các cuộc gọi trong truyện. | New |  |
+| `payoff.stageUp.noteTaken` | Your Newcomer card is in the burrow. Linh is still next door if you need her. | Thẻ Người mới đã vào hang. Linh vẫn ở nhà bên nếu bạn cần. | New |  |
+| `payoff.stageUp.noteStay` | You’re still a Visitor. Take the card any time, from Me. | Bạn vẫn là Khách mới đến. Nhận thẻ lúc nào cũng được, trong mục Tôi. | New |  |
+| `payoff.stageUp.stay` | Stay a little longer | Ở lại thêm | New |  |
+| `payoff.stageUp.take` | Take the card | Nhận thẻ | New |  |
+| `payoff.stageUp.goodnight` | Good night | Chúc ngủ ngon | New |  |
+| `payoff.stageUp.a11yCard` | Natterwick residency card for {name}: {stage} | Thẻ cư trú Natterwick của {name}: {stage} | New |  |
 
 ## Can-dos (residency card aims, keepsakes, the Me sheet)
 
@@ -632,6 +703,18 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `cando.pitch-45s.certificate` | Gave a 45-second pitch | Đã trình bày ý tưởng trong 45 giây† |  |  |
 | `cando.speak-to-a-group.certificate` | Spoke in front of a group | Đã nói trước một nhóm người |  |  |
 | `cando.make-a-case-take-a-question.certificate` | Made a short case and answered a question | Đã trình bày ngắn gọn quan điểm và trả lời một câu hỏi |  |  |
+| `cando.say-hello-and-your-name` | Say hello and your name | Chào hỏi và nói tên mình | New |  |
+| `cando.answer-yes-or-no-politely` | Answer yes or no politely | Trả lời có hoặc không một cách lịch sự | New |  |
+| `cando.ask-again-or-slower` | Ask someone to say it again or slower | Nhờ người khác nói lại hoặc nói chậm hơn | New |  |
+| `cando.understand-number-time-price` | Understand a number, a time and a price | Nghe hiểu số, giờ và giá tiền | New |  |
+| `cando.order-one-thing` | Order one thing | Gọi một món | New |  |
+| `cando.say-where-youre-from-and-what-you-do` | Say where you’re from and what you do | Nói mình từ đâu đến và làm nghề gì | New |  |
+| `cando.say-hello-and-your-name.certificate` | Said hello and my name | Đã chào hỏi và nói tên mình | New |  |
+| `cando.answer-yes-or-no-politely.certificate` | Answered yes or no politely | Đã trả lời có hoặc không một cách lịch sự | New |  |
+| `cando.ask-again-or-slower.certificate` | Asked someone to say it again | Đã nhờ người khác nói lại | New |  |
+| `cando.understand-number-time-price.certificate` | Understood a number, a time and a price | Đã nghe hiểu số, giờ và giá tiền | New |  |
+| `cando.order-one-thing.certificate` | Ordered one thing | Đã gọi một món | New |  |
+| `cando.say-where-youre-from-and-what-you-do.certificate` | Said where I’m from and what I do | Đã nói mình từ đâu đến và làm nghề gì | New |  |
 
 ## The season map
 
@@ -733,7 +816,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `me.stage.regular` | Regular | Khách quen |  |  |
 | `me.stage.local` | Local | Người địa phương |  |  |
 | `me.stage.voiceOfNatterwick` | Voice of Natterwick | Tiếng nói Natterwick |  |  |
-| `me.canDoTitle` | Things you can now do | Những điều bạn đã làm được |  |  |
+| `me.canDoTitle` | Things you can now do | Bạn đã làm được | New | Shortened to the R5 and R6 boards' wording |
 | `me.group.life` | LIFE | CUỘC SỐNG | Term | See the keepsake track ("ĐỜI SỐNG") |
 | `me.group.work` | WORK | CÔNG VIỆC |  |  |
 | `me.fixesTitle` | Fixes you now own | Lỗi bạn đã làm chủ | Machine-like | "Lỗi bạn đã làm chủ" is literal; consider "Lỗi bạn đã tự sửa được" |
@@ -769,6 +852,26 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `me.memory.delete` | Delete | Xoá |  |  |
 | `me.memory.a11y.delete` | Delete “{text}” | Xoá “{text}” |  |  |
 | `me.memory.failed` | That didn’t save. Try again. | Chưa lưu được. Bạn thử lại nhé. |  |  |
+| `me.stage.visitor` | Visitor | Khách mới đến | New |  |
+| `me.stageBoth` | {en} · {local} | {en} · {local} | New |  |
+| `me.settlingCount` | Settling in {done}/{total} | Làm quen {done}/{total} | New |  |
+| `me.a11y.settlingCount` | Settling in: {done} of {total} chapters done | Làm quen: xong {done}/{total} chương | New |  |
+| `me.settling.title` | SETTLING IN | LÀM QUEN | New |  |
+| `me.settling.replay` | Settle in with Linh again | Làm quen lại với Linh | New |  |
+| `me.settling.replaySub` | Play any of the 6 chapters again | Chơi lại bất kỳ chương nào trong 6 chương | New |  |
+| `me.settling.faster` | Try it faster | Thử nhanh hơn | New |  |
+| `me.settling.fasterSub` | Into the story at the usual pace | Vào truyện với nhịp bình thường | New |  |
+| `me.settling.tooHard` | Too hard? | Khó quá? | New |  |
+| `me.settling.tooHardSub` | Slower voices, or practise with Linh first | Nói chậm hơn, hoặc tập với Linh trước | New |  |
+| `me.settling.chapter` | Chapter {chapter} | Chương {chapter} | New |  |
+| `me.settling.notYet` | Not played yet | Chưa chơi | New |  |
+| `me.settling.played` | Played | Đã chơi | New |  |
+| `me.faster.title` | Try it faster? | Thử nhanh hơn? | New |  |
+| `me.faster.body` | Everyone speaks at the usual pace and the read-aloud cards hide. Tap {slower} any time you need it. | Mọi người sẽ nói với tốc độ bình thường, và thẻ đọc to sẽ ẩn đi. Cần thì bấm {slower} bất cứ lúc nào. | New |  |
+| `me.faster.slowerPill` | Slower | Chậm thôi | New |  |
+| `me.faster.back` | Want the old pace back? Open Me › Too hard? | Muốn quay lại nhịp cũ? Mở mục Tôi › Khó quá? | New |  |
+| `me.faster.confirm` | Try it | Thử luôn | New |  |
+| `me.faster.later` | Later | Để sau | New |  |
 
 ## Safety sheet (crisis)
 

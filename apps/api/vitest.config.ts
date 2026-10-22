@@ -20,6 +20,7 @@ export default defineConfig(async () => {
             BETTER_AUTH_SECRET: `${randomUUID()}${randomUUID()}`,
             ANTHROPIC_API_KEY: 'test-anthropic-key',
             ELEVENLABS_API_KEY: 'test-elevenlabs-key',
+            TYPESAFE_API_KEY: 'test-typesafe-key',
             // Empty is unset: the Apple key stays off whatever a local `.dev.vars` holds.
             APPLE_TEAM_ID: '',
             APPLE_KEY_ID: '',

@@ -12,7 +12,15 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-const TABLES = ['sessions', 'accounts', 'profiles', 'progress', 'memory_items', 'push_tokens'];
+const TABLES = [
+  'sessions',
+  'accounts',
+  'profiles',
+  'progress',
+  'memory_items',
+  'push_tokens',
+  'stage_changes',
+];
 
 /** Whether the learner has rows everywhere a guest has them (a guest has no Apple account). */
 async function hasEverything(userId: string): Promise<boolean> {
@@ -62,6 +70,7 @@ async function fullLearner() {
     }),
   );
   await ok(await call('/api/me/progress', { token }));
+  await ok(await call('/api/me/stage', { token, body: { to: 'visitor', reason: 'self_select' } }));
   await ok(
     await call('/api/me/memory', { token, body: { text: 'Has a cat', category: 'about_you' } }),
     201,

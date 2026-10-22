@@ -7,7 +7,7 @@ import {
   PROTOCOL_VERSION,
   type HelloFrame,
 } from '@yapling/contracts';
-import { WRAP_UP_SECONDS } from '@yapling/domain';
+import { isMeteredCall, WRAP_UP_SECONDS } from '@yapling/domain';
 import { callKindOf, findScene, startScene, type RunnerState, type Scene } from '@yapling/story';
 import { DurableObject } from 'cloudflare:workers';
 
@@ -217,10 +217,14 @@ export class CallDO extends DurableObject<Bindings> {
     }
 
     const scene = findScene(SCENE_ALIASES[frame.sceneId] ?? frame.sceneId);
-    if (!scene || callKindOf(scene.kind) === null) return reject('unknown_scene');
+    const callKind = scene ? callKindOf(scene.kind) : null;
+    if (!scene || callKind === null) return reject('unknown_scene');
     const now = Date.now();
-    const balance = await userObject(this.env, userId).balance();
-    if (balance.leftSeconds <= 0) return reject('minutes_exhausted');
+    // The scene's own kind decides: a Settling-in call starts even with the minutes used up.
+    const user = userObject(this.env, userId);
+    const [balance, canStart] = await Promise.all([user.balance(), user.canStart(callKind)]);
+    if (!canStart) return reject('minutes_exhausted');
+    const metered = isMeteredCall(callKind);
     const [learner, saved, time] = await Promise.all([
       // The learner's due phrases as of the app's day (a dev test session may be days ahead).
       loadLearner(this.env, userId, frame, scene, now + clockOffset),
@@ -245,7 +249,7 @@ export class CallDO extends DurableObject<Bindings> {
       resumeFrom ?? startScene(scene, frame.stage).state,
       {
         secondsLeft: balance.leftSeconds,
-        wrapping: balance.leftSeconds <= WRAP_UP_SECONDS,
+        wrapping: metered && balance.leftSeconds <= WRAP_UP_SECONDS,
         priorCallSeconds: time.totalSeconds,
         continuousSince: time.continuousSince,
       },

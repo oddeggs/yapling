@@ -6,6 +6,7 @@ import {
   earnedKeepsakes,
   hungKeepsakes,
   keepsakeScreenCopy,
+  trackOf,
 } from '../../src/features/payoff/keepsake-model';
 import { CALL_ID, RING_FULL, RING_ONE, T0, learner, progress } from './fixtures';
 
@@ -148,5 +149,69 @@ describe('the keepsake', () => {
       learner,
     );
     expect(wall.map((k) => k.id)).toEqual(['cando-introduce-yourself-30s', 'week-1']);
+  });
+});
+
+describe('the keepsake’s track count', () => {
+  const ticked = (id: string, stage: CanDoProgress['stage'], callRecordId = CALL_ID) =>
+    ({
+      id,
+      stage,
+      status: 'ticked',
+      evidence: [{ callRecordId, quote: 'Hi! I’m Lan.', at: T0 }],
+      witness: 'linh',
+      tickedOn: '2026-09-22',
+    }) as const satisfies CanDoProgress;
+
+  it('counts a Visitor’s can-do among the Visitor’s own, in the Visitor’s words', () => {
+    const hello = ticked('say-hello-and-your-name', 'visitor');
+    const earned = earnedKeepsakes(
+      { id: CALL_ID },
+      progress({
+        canDos: [hello],
+        keepsakes: [
+          {
+            id: 'cando-say-hello-and-your-name',
+            kind: 'can_do',
+            canDoId: 'say-hello-and-your-name',
+            signedBy: 'linh',
+            earnedOn: '2026-09-22',
+          },
+        ],
+        weeks: [RING_ONE],
+      }),
+      learner,
+    );
+    expect(earned?.certificates[0]).toMatchObject({
+      canDo: 'Said hello and my name',
+      track: { track: 'life', done: 1, total: 4 },
+    });
+    expect(keepsakeScreenCopy(earned!, 0, vi)?.ticked?.count).toBe('1/4');
+  });
+
+  it('never counts past its total once Settling in and Season 1 are both under way', () => {
+    const canDos = [
+      ticked('say-hello-and-your-name', 'visitor', 'call_a'),
+      ticked('answer-yes-or-no-politely', 'visitor', 'call_b'),
+      ticked('ask-again-or-slower', 'visitor', 'call_c'),
+      ticked('order-one-thing', 'visitor', 'call_d'),
+      ticked('ask-whats-wrong', 'newcomer'),
+    ];
+    expect(trackOf('ask-whats-wrong', canDos)).toEqual({ track: 'life', done: 1, total: 6 });
+    expect(trackOf('order-one-thing', canDos)).toEqual({ track: 'life', done: 4, total: 4 });
+    expect(trackOf('understand-number-time-price', canDos)).toEqual({
+      track: 'work',
+      done: 0,
+      total: 2,
+    });
+  });
+
+  it('keeps Season 1’s count unchanged for a learner who never settled in', () => {
+    expect(trackOf('introduce-yourself-30s', [introduced])).toEqual({
+      track: 'work',
+      done: 1,
+      total: 6,
+    });
+    expect(trackOf('no-such-can-do')).toBeNull();
   });
 });

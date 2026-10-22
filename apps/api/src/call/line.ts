@@ -28,7 +28,12 @@ export type LineSource =
       readonly params: Anthropic.MessageStreamParams;
       readonly hedge: number;
     }
-  | { readonly kind: 'text'; readonly text: string };
+  | { readonly kind: 'text'; readonly text: string }
+  /**
+   * Says nothing: a turn decided without a reply (a card turn's word match) is held like one, so a
+   * learner still speaking in hands-free is never cut off. It ends at once, or on `release()`.
+   */
+  | { readonly kind: 'hold' };
 
 export interface LineTimings {
   start: number;
@@ -88,6 +93,11 @@ export interface LineOptions {
   readonly onFirstAudio?: () => void;
   /** The model's control line, as soon as its stream ends. */
   readonly onControl?: (control: Control) => void;
+  /**
+   * The case the model wrote first (`[unclear]` → `unclear`), once its first word is in: before
+   * any of the line is spoken. Null when the line started without one. Model lines only.
+   */
+  readonly onCaseTag?: (tag: Outcome | null) => void;
   /** Spoken instead when the guard leaves nothing of a model line (it was all narration). */
   readonly safeLine?: string;
 }
@@ -113,6 +123,7 @@ export class SpokenLine {
   readonly done: Promise<LineResult>;
   private lastProgress = 0;
   private stallCheck: ReturnType<typeof setInterval> | null = null;
+  private tagSent = false;
 
   constructor(
     private readonly host: LineHost,
@@ -202,6 +213,11 @@ export class SpokenLine {
   }
 
   private async run(): Promise<void> {
+    if (this.options.source.kind === 'hold') {
+      this.ttsDone = true;
+      if (!this.gated) this.finish();
+      return;
+    }
     const ttsSocket = this.host.takeTts(this.options.voice).catch(() => null);
     const openTts = async (): Promise<boolean> => {
       if (this.tts) return true;
@@ -253,6 +269,8 @@ export class SpokenLine {
           } else if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
             this.timings.llmFirstToken ??= Date.now();
             const words = this.splitter.push(event.delta.text);
+            if (this.splitter.caseTagKnown) this.sendTag();
+            if (this.aborted) return;
             if (words && !(await openTts())) return;
             say(words);
           }
@@ -260,6 +278,8 @@ export class SpokenLine {
       }
       if (this.aborted) return;
       const end = this.splitter.end();
+      if (source.kind === 'model') this.sendTag();
+      if (this.aborted) return;
       let tail = end.tail;
       const { safeLine } = this.options;
       if (this.splitter.text === '' && this.splitter.guardAction !== null && safeLine) {
@@ -284,6 +304,13 @@ export class SpokenLine {
       console.error('call line failed', { error: String(error).slice(0, 300) });
       this.fail('llm');
     }
+  }
+
+  /** Tells the host the line's case once, as soon as it is known. */
+  private sendTag(): void {
+    if (this.tagSent) return;
+    this.tagSent = true;
+    this.options.onCaseTag?.(outcomeOf(this.splitter.caseTag));
   }
 
   private onAudio(pcm: Uint8Array, alignment: MappedAlignment | null): void {
@@ -372,8 +399,11 @@ export class SpokenLine {
   }
 }
 
+const outcomeOf = (tag: string | null): Outcome | null =>
+  OUTCOMES.find((o): o is Outcome => o === tag) ?? null;
+
 /** The line was written for the case it was tagged with: that is the turn's outcome. */
 function withCaseTag(control: Control, tag: string | null): Control {
-  const outcome = OUTCOMES.find((o): o is Outcome => o === tag);
-  return outcome === undefined ? control : { ...control, outcome };
+  const outcome = outcomeOf(tag);
+  return outcome === null ? control : { ...control, outcome };
 }

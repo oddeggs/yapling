@@ -3,6 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { useAccount, useCalls, useMemory, useMinutes, useProfile, useProgress } from '../../data';
 import type { MeActions } from './me-container';
 import type { MeInputs } from './me-model';
+import { stageRequests, usePendingStage } from './stage-request';
 
 /**
  * The Me sheet from the app's data: the profile and progress (cached first), the ledger and the
@@ -10,7 +11,8 @@ import type { MeInputs } from './me-model';
  * there is a profile.
  */
 export function useMeData(): { inputs: MeInputs | null; actions: MeActions } {
-  const { profile } = useProfile();
+  const { profile, updateProfile } = useProfile();
+  const pending = usePendingStage();
   const { progress } = useProgress();
   const { minutes, refresh: refreshMinutes } = useMinutes();
   const { items, refresh: refreshMemory, editMemory, removeMemory } = useMemory();
@@ -30,15 +32,18 @@ export function useMeData(): { inputs: MeInputs | null; actions: MeActions } {
     return {
       displayName: profile.displayName,
       roommateName: profile.roommate.name,
-      stage: profile.stage,
+      // A choice still on its way to the server shows at once.
+      stage: pending?.request.to ?? profile.stage,
       track: profile.track,
       canDos: progress?.canDos ?? [],
       minutes,
       fluency: latest?.summary?.metrics ?? null,
       memory: items,
       quietHours: profile.quietHours,
+      firstLanguage: profile.firstLanguage,
+      settlingDone: progress?.settlingChaptersDone.map((c) => c.chapter) ?? [],
     };
-  }, [profile, progress, minutes, items, calls]);
+  }, [profile, pending, progress, minutes, items, calls]);
 
   const actions = useMemo<MeActions>(
     () => ({
@@ -47,8 +52,14 @@ export function useMeData(): { inputs: MeInputs | null; actions: MeActions } {
       deleteAccount: async () => {
         await deleteAccount();
       },
+      requestStage: (request) => {
+        void stageRequests().request(request);
+      },
+      slowDown: () => {
+        void updateProfile({ pace: 'slower' }).catch(() => undefined);
+      },
     }),
-    [editMemory, removeMemory, deleteAccount],
+    [editMemory, removeMemory, deleteAccount, updateProfile],
   );
 
   return { inputs, actions };

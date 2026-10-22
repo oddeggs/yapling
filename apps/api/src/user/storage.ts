@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS ledger (
   plan TEXT NOT NULL,
   plan_period_start INTEGER NOT NULL,
   timezone TEXT,
-  installed_on TEXT
+  installed_on TEXT,
+  story_started_on TEXT
 );
 CREATE TABLE IF NOT EXISTS usage (
   period_start INTEGER NOT NULL,
@@ -44,6 +45,8 @@ export interface StoredLedger {
   readonly planPeriodStart: number;
   /** The learner's timezone and install day, pinned from their profile; null until then. */
   readonly zone: { readonly timezone: string; readonly installedOn: string } | null;
+  /** The day the story started, pinned once it has; null until then. */
+  readonly storyStartedOn: string | null;
 }
 
 export interface ScheduledPush {
@@ -70,6 +73,10 @@ export class UserStorage {
       this.sql.exec('ALTER TABLE ledger ADD COLUMN timezone TEXT');
       this.sql.exec('ALTER TABLE ledger ADD COLUMN installed_on TEXT');
     }
+    // And those made before it pinned the story's start.
+    if (!columns.includes('story_started_on')) {
+      this.sql.exec('ALTER TABLE ledger ADD COLUMN story_started_on TEXT');
+    }
   }
 
   ledger(): StoredLedger | null {
@@ -80,9 +87,10 @@ export class UserStorage {
         plan_period_start: number;
         timezone: string | null;
         installed_on: string | null;
+        story_started_on: string | null;
       }>(
-        `SELECT started_at, plan, plan_period_start, timezone, installed_on FROM ledger
-         WHERE id = 1`,
+        `SELECT started_at, plan, plan_period_start, timezone, installed_on, story_started_on
+         FROM ledger WHERE id = 1`,
       )
       .toArray()[0];
     if (row === undefined) return null;
@@ -94,7 +102,16 @@ export class UserStorage {
         row.timezone !== null && row.installed_on !== null
           ? { timezone: row.timezone, installedOn: row.installed_on }
           : null,
+      storyStartedOn: row.story_started_on,
     };
+  }
+
+  /** Pins the day the story started; once pinned it doesn't move. */
+  pinStoryStart(storyStartedOn: string): void {
+    this.sql.exec(
+      'UPDATE ledger SET story_started_on = ? WHERE id = 1 AND story_started_on IS NULL',
+      storyStartedOn,
+    );
   }
 
   /** Pins the ledger's timezone and install day; once pinned they don't move. */

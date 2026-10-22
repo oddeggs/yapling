@@ -152,12 +152,7 @@ export class Director {
    * asked), the runner's next generated line is kept to be spoken on its own.
    */
   apply(plan: ReplyPlan, outcome: Outcome, options: { readonly merge?: boolean } = {}): Applied {
-    const event: SceneEvent['type'] =
-      outcome === 'fine' || (outcome === 'target_error' && plan.error === null)
-        ? 'fine'
-        : outcome === 'target_error'
-          ? 'target_error'
-          : 'unclear';
+    const event = eventFor(plan, outcome);
     const branch =
       event === 'fine' ? plan.fine : event === 'target_error' ? plan.error : plan.offTopic;
     const effects = [...this.dispatch({ type: event })];
@@ -183,6 +178,19 @@ export class Director {
     }
     return { effects, fulfilled, correction, event };
   }
+}
+
+/** The runner event an outcome is applied as on this beat: a target error counts as fine where the beat accepts it. */
+export function eventFor(plan: ReplyPlan, outcome: Outcome): SceneEvent['type'] {
+  if (outcome === 'fine' || (outcome === 'target_error' && plan.error === null)) return 'fine';
+  return outcome === 'target_error' ? 'target_error' : 'unclear';
+}
+
+/** The one case a line is written for when the turn was already judged: its runner event's case. */
+export function caseFor(plan: ReplyPlan, outcome: Outcome): Outcome {
+  const event = eventFor(plan, outcome);
+  if (event === 'fine' || event === 'target_error') return event;
+  return outcome === 'question' || outcome === 'off_topic' ? outcome : 'unclear';
 }
 
 const nameOf = (c: CharacterId) => CAST[c].name;
@@ -280,6 +288,17 @@ const notYetText = (branch: Branch, kind: NotYet, asked: boolean): string => {
 const spokenOnly = (speaker: CharacterId) =>
   `Write only the exact words ${nameOf(speaker)} says out loud, in the first person: no narration, no stage directions, no quotation marks, no notes about the learner or the scene, no reasoning.`;
 
+/**
+ * The stage a line's rules are written for: a Settling-in chapter is the Visitor's, whoever plays
+ * it (a Newcomer going back to "Làm quen lại với Linh" hears it the same way).
+ */
+export const promptStage = (scene: Scene, stage: Stage): Stage =>
+  scene.kind === 'settling' ? 'visitor' : stage;
+
+/** The Visitor's few live lines: short, model then ask, plain words. */
+const VISITOR_RULES = (max: number) =>
+  `Say one short sentence, ${max} words at most (or two very short ones, ${max} words in all). When you ask something, say your own answer first, then ask (like "I'm Linh. And you?"). Only plain, everyday words: no idioms, no slang, no phrasal verbs. Spell numbers as words.`;
+
 function rules(
   speaker: CharacterId,
   stage: Stage,
@@ -288,7 +307,9 @@ function rules(
 ): string {
   const max = speechSettings(stage).maxWordsPerTurn;
   return [
-    `Say one or two short sentences, under ${max} words in all. Spell numbers as words.`,
+    stage === 'visitor'
+      ? VISITOR_RULES(max)
+      : `Say one or two short sentences, under ${max} words in all. Spell numbers as words.`,
     spokenOnly(speaker),
     CONTROL_RULE,
     phrases.length > 0 ? `Phrase ids you may list: ${phrases.join(', ')}.` : '',
@@ -298,7 +319,17 @@ function rules(
     .join(' ');
 }
 
-/** The direction for the listener's answer to a learner turn. */
+/** The turn was already judged: the line is written for this one case (from `caseFor`). */
+export interface OneCase {
+  readonly outcome: Outcome;
+  /** The target a target error showed. */
+  readonly target: ErrorTargetBrief | null;
+}
+
+/**
+ * The direction for the listener's answer to a learner turn: every case, the model picking one,
+ * or (`only`) the one case the turn was judged to be.
+ */
 export function replyDirection(
   plan: ReplyPlan,
   stage: Stage,
@@ -308,6 +339,7 @@ export function replyDirection(
   lastLine: string | null = null,
   /** What the learner said (as heard so far). */
   said: string | null = null,
+  only: OneCase | null = null,
 ): string {
   const lines = [`Your reply as ${nameOf(plan.speaker)} to what the learner just said.`];
   lines.push(
@@ -330,19 +362,30 @@ export function replyDirection(
       'In the control line, outcome is "fine" if they fixed it, "target_error" if not.',
     );
   } else {
-    lines.push('The cases, and what your line does in each (two short sentences at most):');
-    lines.push(
-      `[fine] → Build on what they actually said, never on an answer of your own. ${branchText(plan.fine)}`,
-    );
-    if (plan.error !== null && targets.length > 0) {
-      lines.push(`[target_error] → ${branchText(plan.error)}`);
+    const cases: [Outcome, string][] = [
+      [
+        'fine',
+        `Build on what they actually said, never on an answer of your own. ${branchText(plan.fine)}`,
+      ],
+    ];
+    if (plan.error !== null && (targets.length > 0 || only?.outcome === 'target_error')) {
+      cases.push(['target_error', branchText(plan.error)]);
     }
     for (const kind of ['unclear', 'question', 'off_topic'] as const) {
-      lines.push(`[${kind}] → ${notYetText(plan.offTopic, kind, lastLine !== null)}`);
+      cases.push([kind, notYetText(plan.offTopic, kind, lastLine !== null)]);
     }
+    const chosen = only ? cases.filter(([c]) => c === only.outcome) : [];
+    if (only && chosen.length > 0) {
+      lines.push('Their turn has been judged. What your line does (two short sentences at most):');
+    } else {
+      lines.push('The cases, and what your line does in each (two short sentences at most):');
+    }
+    for (const [c, text] of chosen.length > 0 ? chosen : cases) lines.push(`[${c}] → ${text}`);
   }
   lines.push(rules(plan.speaker, stage, plan.answer.phrases, plan.answer.canDo));
-  if (!plan.correcting) {
+  if (!plan.correcting && only) {
+    lines.push(oneCaseRule(only, said));
+  } else if (!plan.correcting) {
     // The decision comes last, nearest the reply, and the reply starts with it.
     const heard = said ? `They said: "${said.replace(/["\n]/g, ' ').slice(0, 300)}". ` : '';
     const errors =
@@ -354,6 +397,22 @@ export function replyDirection(
     );
   }
   return lines.join('\n');
+}
+
+/** The closing rule of a one-case direction: the case is given, not picked. */
+function oneCaseRule(only: OneCase, said: string | null): string {
+  const heard = said ? `They said: "${said.replace(/["\n]/g, ' ').slice(0, 300)}". ` : '';
+  const target =
+    only.outcome === 'target_error' && only.target
+      ? ` It shows their target error ${only.target.id}: ${only.target.description}.`
+      : '';
+  const keep =
+    only.outcome === 'fine'
+      ? ''
+      : ' Your line never contains the answer we hoped for: they still have to say it.';
+  const id =
+    only.outcome === 'target_error' && only.target ? `,"targetId":"${only.target.id}"` : '';
+  return `${heard}Their turn is [${only.outcome}].${target} Write [${only.outcome}] in square brackets first, then the line; the control line's outcome is "${only.outcome}"${id ? ` (with ${id.slice(1)})` : ''}.${keep}`;
 }
 
 /** The direction for a line the runner asks for on its own (a beat line, nudge or fallback). */

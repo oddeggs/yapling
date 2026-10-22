@@ -90,4 +90,51 @@ export const payoffEn = {
   'payoff.keepsake.witnessed': 'witnessed by {witness} · {date}',
   /** A full week's keepsake when no can-do was ticked that week. */
   'payoff.keepsake.weekCanDo': 'fill a whole week with calls',
+  /**
+   * The Visitor's after-call card: the learner's own sentences as stickers, the chapter's seed
+   * packet and a one-tap "how was it". `{title}` is the chapter's title ("Hello"); `{name}` is the
+   * neighbour who guides Settling in (Linh).
+   */
+  'payoff.visitor.kicker': 'Settling in · {chapter} of {total} · {title}',
+  'payoff.visitor.said': 'You said:',
+  'payoff.visitor.a11ySaid': 'You said: {lines}',
+  'payoff.visitor.seedTag': 'SEED PACKET · CHAPTER {chapter}',
+  'payoff.visitor.seedTagCall': 'NEW SEED PACKET',
+  'payoff.visitor.seedSub': 'Say it again another day and it sprouts.',
+  'payoff.visitor.feelTitle': 'How was this call?',
+  'payoff.visitor.justRight': 'Just right',
+  'payoff.visitor.tooHard': 'Too hard',
+  'payoff.visitor.replyJustRight': 'Great! {name} will keep this pace.',
+  'payoff.visitor.replySlower': 'Next time {name} goes slower, one step at a time.',
+  'payoff.visitor.replyPractise': '{name} will practise with you first. Mei’s café will wait.',
+  'payoff.visitor.box': 'The “{title}” box is unpacked in the burrow',
+  /**
+   * The "Too hard" sheet after a call and on the Me sheet: slower voices, or practise with Linh
+   * first. Never says "level", "down", "fail" or "beginner".
+   */
+  'payoff.tooHard.title': 'Too hard',
+  'payoff.tooHard.sub': 'That’s fine. Pick what suits you.',
+  'payoff.tooHard.slower': 'Slower, please',
+  'payoff.tooHard.slowerSub': 'From the next call, everyone speaks more slowly.',
+  'payoff.tooHard.linh': 'Practise with Linh first',
+  'payoff.tooHard.linhSubNewcomer': 'A few short visits with Linh before the story goes on.',
+  'payoff.tooHard.linhSubVisitor': 'Play a Settling-in chapter with Linh again.',
+  'payoff.tooHard.note':
+    'Linh will practise with you in a few short visits. Mei’s café will wait for you.',
+  'payoff.tooHard.back': 'Back',
+  /**
+   * Linh hands a Visitor the Newcomer residency card at the end of a week's ring. The three `line`
+   * entries are Linh's words: English in the speech bubble, the learner's language under it.
+   */
+  'payoff.stageUp.lineOffer': 'Knock knock! You’re not a visitor any more.',
+  'payoff.stageUp.lineTaken': 'Welcome to Natterwick, neighbour.',
+  'payoff.stageUp.lineStay': 'Of course! Same time tomorrow?',
+  'payoff.stageUp.noteOffer': 'A week of settling in, done. The new card opens the story’s calls.',
+  'payoff.stageUp.noteTaken':
+    'Your Newcomer card is in the burrow. Linh is still next door if you need her.',
+  'payoff.stageUp.noteStay': 'You’re still a Visitor. Take the card any time, from Me.',
+  'payoff.stageUp.stay': 'Stay a little longer',
+  'payoff.stageUp.take': 'Take the card',
+  'payoff.stageUp.goodnight': 'Good night',
+  'payoff.stageUp.a11yCard': 'Natterwick residency card for {name}: {stage}',
 } as const satisfies EnCatalogue;

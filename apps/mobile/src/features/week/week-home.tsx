@@ -1,16 +1,18 @@
+import { ringWeeks } from '@yapling/domain';
 import { colours } from '@yapling/theme';
 import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useMemo } from 'react';
 import { View } from 'react-native';
 
-import { useProfile, useProgress, useWeek } from '../../data';
 import { previewModel, previewOptionsFrom } from '../burrow/preview';
 import { BURROW_ROUTES } from '../burrow/routes';
+import { useSettlingLive } from '../burrow/settling-live';
 import { weekModel, type WeekInput } from './model';
 import { WeekScreen } from './week-screen';
 
 /*
- * The week route, on the learner's profile and progress, on the day the app's clock says.
+ * The week route, on the learner's profile and progress, on the story's day the app's clock says
+ * (week 1 starts the day the story does: for a Visitor, the letter's day after Settling in).
  * Development: `?day=N&after=1` shows the preview learner on any day of the first week instead.
  */
 
@@ -24,7 +26,7 @@ function usePreviewInput(params: Params): WeekInput | null {
     const preview = previewModel(dev.day, dev.options);
     return {
       day: dev.day,
-      installedOn: preview.installedOn,
+      startedOn: preview.installedOn,
       roommate: preview.input.roommate,
       firstLanguage: preview.input.firstLanguage,
       progress: preview.progress,
@@ -33,23 +35,20 @@ function usePreviewInput(params: Params): WeekInput | null {
   }, [key]);
 }
 
+/** The week on the story's clock: its days count from the letter's day, not the install day. */
 function useLiveInput(): WeekInput | null {
-  const { profile } = useProfile();
-  const { progress } = useProgress();
-  const week = useWeek();
-  return useMemo(
-    () =>
-      profile === null || progress === null || week === null
-        ? null
-        : {
-            day: week.dayIndex,
-            installedOn: progress.installedOn,
-            roommate: profile.roommate,
-            firstLanguage: profile.firstLanguage,
-            progress: { ...progress, weeks: week.weeks },
-          },
-    [profile, progress, week],
-  );
+  const live = useSettlingLive();
+  return useMemo(() => {
+    if (live === null) return null;
+    const { profile, progress, clock } = live;
+    return {
+      day: clock.storyDay,
+      startedOn: clock.startedOn,
+      roommate: profile.roommate,
+      firstLanguage: profile.firstLanguage,
+      progress: { ...progress, weeks: ringWeeks(progress.weeks, clock.storyDay) },
+    };
+  }, [live]);
 }
 
 export function WeekHome() {
