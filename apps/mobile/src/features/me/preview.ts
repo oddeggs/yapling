@@ -1,4 +1,5 @@
-import type { MemoryItem } from '@yapling/contracts';
+import type { MemoryItem, Stage } from '@yapling/contracts';
+import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
 
 import type { MeActions } from './me-container';
@@ -6,7 +7,8 @@ import type { MeInputs } from './me-model';
 
 /*
  * Development builds only: a learner on day 7, for looking at the sheet before the app's data
- * layer feeds it (`yapling-dev://me?preview=1`). Edits change this copy only, nothing is sent.
+ * layer feeds it (`yapling-dev://me?preview=1`), or a Visitor four chapters into Settling in
+ * (`yapling-dev://me?preview=visitor`). Edits change this copy only, nothing is sent.
  */
 
 const DAY = 24 * 60 * 60_000;
@@ -34,6 +36,33 @@ const SAMPLE_MEMORY: readonly MemoryItem[] = [
     sourceCallId: null,
   },
 ];
+
+const sampleVisitor = (memory: readonly MemoryItem[], stage: Stage): MeInputs => ({
+  ...sampleInputs(memory),
+  stage,
+  canDos: [
+    {
+      id: 'say-hello-and-your-name',
+      stage: 'visitor',
+      status: 'ticked',
+      evidence: [{ callRecordId: 'sample-call', quote: 'Hi! I’m Lan.', at: Date.now() - DAY }],
+      witness: 'linh',
+      tickedOn: '2026-10-21',
+    },
+  ],
+  minutes: {
+    plan: 'free',
+    periodStart: Date.now() - 2 * DAY,
+    periodEnd: Date.now() + 5 * DAY,
+    allowanceSeconds: 600,
+    usedSeconds: 120,
+    leftSeconds: 480,
+    firstWeek: false,
+  },
+  fluency: null,
+  firstLanguage: 'vi',
+  settlingDone: [1, 2, 3, 4],
+});
 
 const sampleInputs = (memory: readonly MemoryItem[]): MeInputs => ({
   displayName: 'Lan',
@@ -66,7 +95,10 @@ const sampleInputs = (memory: readonly MemoryItem[]): MeInputs => ({
 
 /** The sample learner and actions that edit it in place; null when not previewing. */
 export function useMePreview(on: boolean): { inputs: MeInputs; actions: MeActions } | null {
+  const { preview } = useLocalSearchParams<{ preview?: string }>();
   const [memory, setMemory] = useState<readonly MemoryItem[]>(SAMPLE_MEMORY);
+  const [stage, setStage] = useState<Stage>('visitor');
+  const visitor = preview === 'visitor';
   return useMemo(() => {
     if (!on) return null;
     const actions: MeActions = {
@@ -79,7 +111,8 @@ export function useMePreview(on: boolean): { inputs: MeInputs; actions: MeAction
         return Promise.resolve();
       },
       deleteAccount: () => Promise.reject(new Error('the preview has no account to delete')),
+      requestStage: (request) => setStage(request.to),
     };
-    return { inputs: sampleInputs(memory), actions };
-  }, [on, memory]);
+    return { inputs: visitor ? sampleVisitor(memory, stage) : sampleInputs(memory), actions };
+  }, [on, memory, visitor, stage]);
 }

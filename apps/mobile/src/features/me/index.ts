@@ -12,3 +12,4 @@ export {
 } from './me-model';
 export { useMeData } from './use-me-data';
 export { useRoommate } from './use-roommate';
+export { stageRequests, usePendingStage } from './stage-request';

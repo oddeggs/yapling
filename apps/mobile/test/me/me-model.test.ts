@@ -112,6 +112,7 @@ describe('the can-dos', () => {
           {
             id: 'ask-whats-wrong',
             title: 'Ask someone what’s wrong and offer help',
+            gloss: null,
             ticked: false,
           },
         ],
@@ -120,8 +121,18 @@ describe('the can-dos', () => {
         track: 'work',
         name: 'WORK',
         items: [
-          { id: 'introduce-yourself-30s', title: 'Introduce yourself in 30 seconds', ticked: true },
-          { id: 'tell-me-about-yourself', title: 'Answer “Tell me about yourself”', ticked: false },
+          {
+            id: 'introduce-yourself-30s',
+            title: 'Introduce yourself in 30 seconds',
+            gloss: null,
+            ticked: true,
+          },
+          {
+            id: 'tell-me-about-yourself',
+            title: 'Answer “Tell me about yourself”',
+            gloss: null,
+            ticked: false,
+          },
         ],
       },
     ]);
@@ -190,7 +201,13 @@ describe('the rest of the sheet', () => {
       quietHours: { start: '22:00', end: '08:00' },
     };
     const view = meView(inputs, en);
-    expect(view.stage).toEqual({ label: 'Newcomer', step: 1, of: 5, a11y: 'Stage 1 of 5' });
+    expect(view.stage).toEqual({
+      label: 'Newcomer',
+      visitor: false,
+      steps: { step: 1, of: 5 },
+      settling: null,
+      a11y: 'Newcomer. Stage 1 of 5',
+    });
     expect(view.memory).toEqual({ title: 'What Pip remembers', count: '2 notes' });
     expect(view.notifications.value).toBe('22:00 – 08:00');
     expect(
@@ -200,5 +217,80 @@ describe('the rest of the sheet', () => {
       memory: { count: '1 note' },
     });
     expect(meView(inputs, vi).stage.label).toBe('Người mới');
+  });
+});
+
+describe('a Visitor’s Me sheet', () => {
+  const visitor: MeInputs = {
+    displayName: 'Lan',
+    roommateName: 'Pip',
+    stage: 'visitor',
+    track: 'work',
+    canDos: [{ ...ticked('say-hello-and-your-name'), stage: 'visitor' }],
+    minutes: minutes(),
+    fluency: null,
+    memory: [],
+    quietHours: null,
+    firstLanguage: 'vi',
+    settlingDone: [1, 2, 3, 4],
+  };
+
+  it('names the stage with no "N of 5", and counts the Settling-in chapters instead', () => {
+    expect(meView(visitor, vi).stage).toEqual({
+      label: 'Visitor · Khách mới đến',
+      visitor: true,
+      steps: null,
+      settling: 'Làm quen 4/6',
+      a11y: 'Visitor · Khách mới đến. Làm quen: xong 4/6 chương',
+    });
+    expect(meView(visitor, en).stage.label).toBe('Visitor');
+  });
+
+  it('lists the Visitor’s can-dos in English with their meaning, whatever the track', () => {
+    expect(meView(visitor, vi).groups).toEqual([
+      {
+        track: 'life',
+        name: null,
+        items: [
+          {
+            id: 'say-hello-and-your-name',
+            title: 'Say hello and your name',
+            gloss: 'Chào hỏi và nói tên mình',
+            ticked: true,
+          },
+          {
+            id: 'answer-yes-or-no-politely',
+            title: 'Answer yes or no politely',
+            gloss: 'Trả lời có hoặc không một cách lịch sự',
+            ticked: false,
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('offers Settling in again, a faster pace and "too hard", and keeps the numbers for the story', () => {
+    const view = meView(visitor, vi);
+    expect(view.settling).toEqual({
+      title: 'LÀM QUEN',
+      replay: {
+        title: 'Làm quen lại với Linh',
+        sub: 'Chơi lại bất kỳ chương nào trong 6 chương',
+      },
+      faster: { title: 'Thử nhanh hơn', sub: 'Vào truyện với nhịp bình thường' },
+      tooHard: { title: 'Khó quá?', sub: 'Nói chậm hơn, hoặc tập với Linh trước' },
+    });
+    expect(view.progress).toBeNull();
+  });
+
+  it('gives a Newcomer "too hard" and the chapters they played, and nothing past Newcomer', () => {
+    const newcomer = { ...visitor, stage: 'newcomer' } as const;
+    expect(meView(newcomer, en).settling).toMatchObject({
+      replay: { title: 'Settle in with Linh again' },
+      faster: null,
+      tooHard: { title: 'Too hard?' },
+    });
+    expect(meView({ ...newcomer, settlingDone: [] }, en).settling?.replay).toBeNull();
+    expect(meView({ ...newcomer, stage: 'neighbour' }, en).settling).toBeNull();
   });
 });
