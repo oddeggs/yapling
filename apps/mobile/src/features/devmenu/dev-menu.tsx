@@ -297,6 +297,16 @@ export function DevMenu() {
         />
       </Section>
 
+      {__DEV__ ? (
+        <Section title="LABS">
+          <StickerButton
+            label="Motion lab (critter rig)"
+            tone="secondary"
+            onPress={() => router.push('/motion-lab')}
+          />
+        </Section>
+      ) : null}
+
       <Section title="RESET">
         <Txt variant="note" colour={colours.textMuted}>
           {resetLocalData === null
