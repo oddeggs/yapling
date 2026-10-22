@@ -1,16 +1,20 @@
 import type { Id, Stage } from '@yapling/contracts';
 import { recapKey, SEASON_1_EPISODES, type Season1EpisodeId } from '@yapling/domain';
 
+import { parsePipsMinuteSceneId, pipsMinuteScene } from './pips-minute';
 import { S1_PHRASES, S1_VISITOR_VERSIONS, SEASON_1 } from './season-1';
-import type { Episode, Scene, Season, TargetPhrase } from './types';
+import { seasonWeeks, type Episode, type Scene, type Season, type TargetPhrase } from './types';
 
 export const SEASONS: readonly Season[] = [SEASON_1];
 
-/** Every scene of every season: prologues first, Settling in, then each episode's scenes. */
+/**
+ * Every stored scene of every season: prologues first, Settling in, then each week's scenes (the
+ * episodes', then the festival's). Pip's minute is built from its id, not stored (`findScene`).
+ */
 export const SCENES: readonly Scene[] = SEASONS.flatMap((season) => [
   ...season.prologue,
   ...season.settling,
-  ...season.episodes.flatMap((episode) => episode.scenes),
+  ...seasonWeeks(season).flatMap((week) => week.scenes),
 ]);
 
 export const EPISODES: readonly Episode[] = SEASONS.flatMap((season) => season.episodes);
@@ -20,10 +24,16 @@ export const PHRASES: readonly TargetPhrase[] = S1_PHRASES;
 const scenes = new Map(SCENES.map((s) => [s.id, s]));
 const phrases = new Map(PHRASES.map((p) => [p.id, p]));
 
-export const findScene = (id: Id): Scene | undefined => scenes.get(id);
+/** A stored scene, or the Pip's minute its id names. */
+export const findScene = (id: Id): Scene | undefined => {
+  const stored = scenes.get(id);
+  if (stored) return stored;
+  const spec = parsePipsMinuteSceneId(id);
+  return (spec && pipsMinuteScene(spec)) ?? undefined;
+};
 
 export const getScene = (id: Id): Scene => {
-  const scene = scenes.get(id);
+  const scene = findScene(id);
   if (!scene) throw new Error(`No scene ${id}`);
   return scene;
 };

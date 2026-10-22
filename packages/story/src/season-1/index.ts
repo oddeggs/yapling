@@ -1,7 +1,11 @@
 import type { Episode, Season } from '../types';
 import { S1_E1_CALL } from './episode-1';
-import { S1_E2, S1_E3 } from './episodes-2-3';
-import { S1_E4, S1_E5, S1_E6 } from './episodes-4-6';
+import { S1_E2 } from './episode-2';
+import { S1_E3 } from './episode-3';
+import { S1_E4 } from './episode-4';
+import { S1_E5 } from './episode-5';
+import { S1_E6 } from './episode-6';
+import { S1_FESTIVAL } from './festival';
 import { PROLOGUE_KNOCK, PROLOGUE_UNPACK } from './prologue';
 import { S1_SET1, S1_SET2, S1_SET3 } from './settling-1-3';
 import { S1_SET4, S1_SET5, S1_SET6 } from './settling-4-6';
@@ -88,8 +92,12 @@ export const SEASON_1: Season = {
   prologue: [PROLOGUE_UNPACK, PROLOGUE_KNOCK],
   settling: [S1_SET1, S1_SET2, S1_SET3, S1_SET4, S1_SET5, S1_SET6],
   episodes: [S1_E1, S1_E2, S1_E3, S1_E4, S1_E5, S1_E6],
+  festival: S1_FESTIVAL,
 };
 
 export { S1_E1_LETTER } from './episode-1';
+export { S1_FESTIVAL } from './festival';
 export { S1_PHRASES } from './phrases';
+export { S1_PIPS_MINUTE } from './pips-minute';
+export type { PipsMinutePhrase, PipsMinuteTurn } from './pips-minute';
 export type { S1PhraseId } from './phrases';
