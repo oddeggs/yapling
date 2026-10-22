@@ -20,6 +20,7 @@ import { appClock, DevMenuHost, devToolsEnabled, now } from '../features/devmenu
 import { KnocksProvider, knockInputsOf } from '../features/knocks';
 import { onboardingStore } from '../features/onboarding';
 import { identifyPurchaser } from '../features/plus';
+import { analytics, useAppAnalytics } from '../observability';
 import { AppArtProvider } from '../ui/art-provider';
 import { UiProvider } from '../ui/ui-provider';
 import { useReduceMotion } from '../ui/motion/reduce-motion';
@@ -113,13 +114,15 @@ function Knocks({ children }: { readonly children: ReactNode }) {
 function AppShell() {
   const { profile } = useProfile();
   const { resetLocal } = useAccount();
-  // The test menu's reset: a fresh install, onboarding from the ferry.
+  // The test menu's reset: a fresh install, onboarding from the ferry, the funnel from the top.
   const reset = async () => {
     await resetLocal();
     onboardingStore().dispatch({ type: 'reset' });
+    analytics().reset({ testSession: true });
   };
   useOpens();
   usePurchaserIdentity();
+  useAppAnalytics();
   return (
     <UiProvider language={profile ? chromeLocale(profile.firstLanguage) : undefined}>
       <AppArtProvider>

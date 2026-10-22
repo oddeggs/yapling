@@ -2,10 +2,11 @@ import type { NotificationRequest } from 'expo-notifications';
 import { colours, layout } from '@yapling/theme';
 import { MINUTE_MS, WEEK_ONE_PLAN, instantOf, localDateOf, localTimeOf } from '@yapling/domain';
 import { router } from 'expo-router';
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { analytics, track, type TimeTravelAction } from '../../observability';
 import { ChoiceChip } from '../../ui/chip';
 import { GlassSheet } from '../../ui/glass-sheet';
 import { useLanguageOverride, useLocale } from '../../ui/locale';
@@ -32,6 +33,12 @@ import { KnockPreview } from './knock-preview';
 import { dayOf, testLearnerOf } from './test-learner';
 
 const DAYS = WEEK_ONE_PLAN.map((d) => d.day);
+
+/** A test-menu action: this install is a test session from now on, and the action is counted. */
+const used = (action: TimeTravelAction, day: number | null = null) => {
+  analytics().markTestSession();
+  track('time_travel_used', { action, day });
+};
 
 /*
  * The test menu: the facilitator's panel for learner sessions, in the test builds only. Its labels
@@ -72,6 +79,12 @@ export function DevMenu() {
   const [permitted, setPermitted] = useState<boolean | null>(null);
   const [scheduled, setScheduled] = useState<readonly NotificationRequest[]>([]);
   const [note, setNote] = useState<string | null>(null);
+  const opened = useRef(false);
+  useEffect(() => {
+    if (opened.current) return;
+    opened.current = true;
+    used('opened');
+  }, []);
 
   const refresh = useCallback(() => {
     hasKnockPermission().then(setPermitted, () => setPermitted(false));
@@ -88,12 +101,14 @@ export function DevMenu() {
   const today = knockOfDay(day, learner, language, clock.cameBackAfterAway);
 
   const jump = (to: number) => {
+    used('jump_day', to);
     jumpToDay(to, learner.installedOn, learner.timezone);
     setPreviewDay(Math.max(to, 2));
   };
 
   const fire = () => {
     if (today === null) return;
+    used('knock', day);
     fireTestKnock(today).then(
       () => setNote(`Day ${day}'s knock rings in 5 s. Lock the phone or leave the app.`),
       (e: unknown) => setNote(`Not scheduled: ${String(e)}`),
@@ -102,6 +117,7 @@ export function DevMenu() {
 
   const ringSoon = () => {
     if (preview === null) return;
+    used('knock', previewDay);
     // The scheduled knock itself rings, a minute from now, as it would on its morning.
     jumpToInstant(instantOf(preview.date, preview.time, learner.timezone) - MINUTE_MS);
     setNote(
@@ -110,6 +126,7 @@ export function DevMenu() {
   };
 
   const reset = async () => {
+    used('reset');
     await cancelKnocks();
     resetDebugClock();
     devStorage.clear();
@@ -148,7 +165,10 @@ export function DevMenu() {
             <ChoiceChip
               label="Real clock"
               selected={clock.offsetMs === 0}
-              onPress={backToRealTime}
+              onPress={() => {
+                used('real_clock');
+                backToRealTime();
+              }}
             />
           </Row>
         </Section>
@@ -157,7 +177,10 @@ export function DevMenu() {
           title="Came back after 3 days"
           subtitle="The welcome back, and day 8's knock"
           on={clock.cameBackAfterAway}
-          onChange={setCameBackAfterAway}
+          onChange={(on) => {
+            used('came_back_after_away');
+            setCameBackAfterAway(on);
+          }}
         />
 
         <Section title="LANGUAGE">
@@ -197,6 +220,7 @@ export function DevMenu() {
               t={t}
               onPress={() => {
                 // As on the lock screens between days: tapping the knock opens the app on its day.
+                used('jump_day', previewDay);
                 jumpToDay(previewDay, learner.installedOn, learner.timezone);
                 router.dismissAll();
                 router.navigate(knockHref(previewDay));
