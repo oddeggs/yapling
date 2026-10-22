@@ -1,0 +1,186 @@
+{
+ "linh-vi-1": {
+  "line": "s1-set1-02",
+  "variant": "vi",
+  "rate": 207,
+  "unit": "syllables/min",
+  "words": 29,
+  "seconds": 8.39
+ },
+ "linh-vi-2": {
+  "line": "s1-set3-01",
+  "variant": "vi",
+  "rate": 176,
+  "unit": "syllables/min",
+  "words": 35,
+  "seconds": 11.92
+ },
+ "linh-vi-3": {
+  "line": "s1-set-linh-english",
+  "variant": "vi",
+  "rate": 269,
+  "unit": "syllables/min",
+  "words": 14,
+  "seconds": 3.12
+ },
+ "linh-vi-3-nolang": {
+  "line": "s1-set-linh-english",
+  "variant": "no language code",
+  "rate": 276,
+  "unit": "syllables/min",
+  "words": 14,
+  "seconds": 3.04
+ },
+ "linh-en-1-a": {
+  "line": "s1-set1-04",
+  "variant": "a",
+  "rate": 111,
+  "unit": "wpm",
+  "words": 4,
+  "seconds": 2.16
+ },
+ "linh-en-2-a": {
+  "line": "s1-set4-03",
+  "variant": "a",
+  "rate": 89,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 3.36
+ },
+ "linh-en-3-a": {
+  "line": "s1-set6-03",
+  "variant": "a",
+  "rate": 138,
+  "unit": "wpm",
+  "words": 7,
+  "seconds": 3.04
+ },
+ "pip-en-1-a": {
+  "line": "s1-set1-03",
+  "variant": "a",
+  "rate": 80,
+  "unit": "wpm",
+  "words": 3,
+  "seconds": 2.24
+ },
+ "pip-en-2-a": {
+  "line": "s1-set2-01",
+  "variant": "a",
+  "rate": 83,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 3.6
+ },
+ "pip-en-3-a": {
+  "line": "s1-set6-04",
+  "variant": "a",
+  "rate": 107,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 2.8
+ },
+ "bea-en-1-a": {
+  "line": "s1-set4-02",
+  "variant": "a",
+  "rate": 107,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 2.8
+ },
+ "mei-en-1-a": {
+  "line": "s1-set5-02",
+  "variant": "a",
+  "rate": 104,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 2.88
+ },
+ "linh-en-1-b": {
+  "line": "s1-set1-04",
+  "variant": "b",
+  "rate": 107,
+  "unit": "wpm",
+  "words": 4,
+  "seconds": 2.24
+ },
+ "linh-en-3-b": {
+  "line": "s1-set6-03",
+  "variant": "b",
+  "rate": 142,
+  "unit": "wpm",
+  "words": 7,
+  "seconds": 2.96
+ },
+ "pip-en-3-b": {
+  "line": "s1-set6-04",
+  "variant": "b",
+  "rate": 121,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 2.48
+ },
+ "bea-en-1-b": {
+  "line": "s1-set4-02",
+  "variant": "b",
+  "rate": 101,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 2.97
+ },
+ "mei-en-1-b": {
+  "line": "s1-set5-02",
+  "variant": "b",
+  "rate": 101,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 2.96
+ },
+ "linh-en-3-c": {
+  "line": "s1-set6-03",
+  "variant": "c",
+  "rate": 119,
+  "unit": "wpm",
+  "words": 7,
+  "seconds": 3.52
+ },
+ "pip-en-3-c": {
+  "line": "s1-set6-04",
+  "variant": "c",
+  "rate": 94,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 3.2
+ },
+ "bea-en-1-c": {
+  "line": "s1-set4-02",
+  "variant": "c",
+  "rate": 80,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 3.76
+ },
+ "linh-en-1-c": {
+  "line": "s1-set1-04",
+  "variant": "c",
+  "rate": 86,
+  "unit": "wpm",
+  "words": 4,
+  "seconds": 2.8
+ },
+ "mei-en-1-c": {
+  "line": "s1-set5-02",
+  "variant": "c",
+  "rate": 89,
+  "unit": "wpm",
+  "words": 5,
+  "seconds": 3.36
+ },
+ "linh-en-3-d": {
+  "line": "s1-set6-03",
+  "variant": "d",
+  "rate": 95,
+  "unit": "wpm",
+  "words": 7,
+  "seconds": 4.4
+ }
+}

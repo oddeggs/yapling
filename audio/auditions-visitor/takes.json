@@ -1,0 +1,185 @@
+{
+  "_note": "Visitor voice audition (Release 1.1). Render with `python3 tools/voice/yap_voice.py audition audio/auditions-visitor/takes.json`; existing takes are skipped. English takes must measure 100 wpm or slower.",
+  "takes": [
+    {
+      "id": "linh-vi-1",
+      "char": "linh",
+      "lang": "vi",
+      "line": "s1-set1-02",
+      "text": "[warmly] Chào bạn! Mình là Linh, ở nhà bên cạnh. Hồi mới xuống phà, mình cũng chưa nói được câu nào đâu. Giờ mình nói trước, bạn nói theo nhé."
+    },
+    {
+      "id": "linh-vi-2",
+      "char": "linh",
+      "lang": "vi",
+      "line": "s1-set3-01",
+      "text": "[warmly] Mình chỉ bạn hai câu cứu nguy nhé. Không nghe kịp thì nói: Sorry? Again, please. Người ta nói nhanh quá thì nói: Slowly, please. Ở Natterwick, ai cũng sẵn lòng nói lại cho bạn."
+    },
+    {
+      "id": "linh-vi-3",
+      "char": "linh",
+      "lang": "vi",
+      "line": "s1-set-linh-english",
+      "text": "[warmly] Bạn thử nói bằng tiếng Anh nhé, cứ đọc thẻ gợi ý là được."
+    },
+    {
+      "id": "linh-vi-3-nolang",
+      "char": "linh",
+      "line": "s1-set-linh-english",
+      "variant": "no language code",
+      "text": "[warmly] Bạn thử nói bằng tiếng Anh nhé, cứ đọc thẻ gợi ý là được."
+    },
+    {
+      "id": "linh-en-1-a",
+      "char": "linh",
+      "speed": 0.7,
+      "line": "s1-set1-04",
+      "variant": "a",
+      "text": "[slowly, clearly] I'm Linh. And you?"
+    },
+    {
+      "id": "linh-en-2-a",
+      "char": "linh",
+      "speed": 0.7,
+      "line": "s1-set4-03",
+      "variant": "a",
+      "text": "[slowly, clearly] Which bus? Forty-five or fifty?"
+    },
+    {
+      "id": "linh-en-3-a",
+      "char": "linh",
+      "speed": 0.7,
+      "line": "s1-set6-03",
+      "variant": "a",
+      "text": "[slowly, clearly] I work at the library. And you?"
+    },
+    {
+      "id": "pip-en-1-a",
+      "char": "pip",
+      "speed": 0.7,
+      "line": "s1-set1-03",
+      "variant": "a",
+      "text": "[slowly, clearly] Hi! Hi, Linh!"
+    },
+    {
+      "id": "pip-en-2-a",
+      "char": "pip",
+      "speed": 0.7,
+      "line": "s1-set2-01",
+      "variant": "a",
+      "text": "[slowly, clearly] So many boxes! Help, please!"
+    },
+    {
+      "id": "pip-en-3-a",
+      "char": "pip",
+      "speed": 0.7,
+      "line": "s1-set6-04",
+      "variant": "a",
+      "text": "[slowly, clearly] I like snacks! And you?"
+    },
+    {
+      "id": "bea-en-1-a",
+      "char": "bea",
+      "speed": 0.7,
+      "line": "s1-set4-02",
+      "variant": "a",
+      "text": "[slowly, clearly] Morning! This is Bus forty-five."
+    },
+    {
+      "id": "mei-en-1-a",
+      "char": "mei",
+      "speed": 0.7,
+      "line": "s1-set5-02",
+      "variant": "a",
+      "text": "[slowly, clearly] I'm Mei. Tea or coffee?"
+    },
+    {
+      "id": "linh-en-1-b",
+      "char": "linh",
+      "speed": 0.7,
+      "line": "s1-set1-04",
+      "variant": "b",
+      "text": "[very slowly, warmly, with pauses] I'm Linh. And you?"
+    },
+    {
+      "id": "linh-en-3-b",
+      "char": "linh",
+      "speed": 0.7,
+      "line": "s1-set6-03",
+      "variant": "b",
+      "text": "[very slowly, warmly, with pauses] I work at the library. And you?"
+    },
+    {
+      "id": "pip-en-3-b",
+      "char": "pip",
+      "speed": 0.7,
+      "line": "s1-set6-04",
+      "variant": "b",
+      "text": "[very slowly, warmly, with pauses] I like snacks! And you?"
+    },
+    {
+      "id": "bea-en-1-b",
+      "char": "bea",
+      "speed": 0.7,
+      "line": "s1-set4-02",
+      "variant": "b",
+      "text": "[very slowly, warmly, with pauses] Morning! This is Bus forty-five."
+    },
+    {
+      "id": "mei-en-1-b",
+      "char": "mei",
+      "speed": 0.7,
+      "line": "s1-set5-02",
+      "variant": "b",
+      "text": "[very slowly, warmly, with pauses] I'm Mei. Tea or coffee?"
+    },
+    {
+      "id": "linh-en-3-c",
+      "char": "linh",
+      "speed": 0.7,
+      "line": "s1-set6-03",
+      "variant": "c",
+      "text": "[slowly, clearly] I work at the library. [pause] And you?"
+    },
+    {
+      "id": "pip-en-3-c",
+      "char": "pip",
+      "speed": 0.7,
+      "line": "s1-set6-04",
+      "variant": "c",
+      "text": "[slowly, clearly] I like snacks! [pause] And you?"
+    },
+    {
+      "id": "bea-en-1-c",
+      "char": "bea",
+      "speed": 0.7,
+      "line": "s1-set4-02",
+      "variant": "c",
+      "text": "[slowly, clearly] Morning! [pause] This is Bus forty-five."
+    },
+    {
+      "id": "linh-en-1-c",
+      "char": "linh",
+      "speed": 0.7,
+      "line": "s1-set1-04",
+      "variant": "c",
+      "text": "[slowly, clearly] I'm Linh. [pause] And you?"
+    },
+    {
+      "id": "mei-en-1-c",
+      "char": "mei",
+      "speed": 0.7,
+      "line": "s1-set5-02",
+      "variant": "c",
+      "text": "[slowly, clearly] I'm Mei. [pause] Tea or coffee?"
+    },
+    {
+      "id": "linh-en-3-d",
+      "char": "linh",
+      "speed": 0.7,
+      "line": "s1-set6-03",
+      "variant": "d",
+      "text": "[slowly, clearly] I work [pause] at the library. [pause] And you?"
+    }
+  ]
+}
