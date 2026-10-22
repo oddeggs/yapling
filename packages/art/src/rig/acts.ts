@@ -16,6 +16,12 @@ export interface Act {
   readonly duration: number;
   readonly keys: Readonly<Partial<Record<Channel, FlowKeys>>>;
   readonly face?: Readonly<Partial<Record<FaceChannel, Keys>>>;
+  /**
+   * A window of the act (ms) it loops for as long as it is still asked for: listening while the
+   * learner talks, thinking while a reply is on its way. Every row is still and equal at both
+   * ends, so the loop has no seam; the idle layers keep moving over it.
+   */
+  readonly hold?: readonly [from: number, to: number];
   /** A hop: take-off and landing (ms) and height (rig units). */
   readonly hop?: readonly [takeoff: number, land: number, height: number];
   /** Accents: a wave of `amp` every `period` ms on a channel, inside a window of the act. */
@@ -51,7 +57,7 @@ export type Channel =
 
 export type FaceChannel = 'lid' | 'lookX' | 'lookY' | 'cheek';
 
-export const ACT_NAMES = ['breathe', 'listen', 'think', 'hop', 'wave'] as const;
+export const ACT_NAMES = ['idle', 'listen', 'think', 'hop', 'wave'] as const;
 export type ActName = (typeof ACT_NAMES)[number];
 
 /** The arms at rest: a little out from the body, the elbow a little bent. */
@@ -67,122 +73,153 @@ type Key4 = readonly [Keys[number], Keys[number], Keys[number], Keys[number]];
 
 export const ACTS: Readonly<Record<ActName, Act>> = {
   /** Only the idle layers: breathing, weight, tail and ears, blinks and glances. */
-  breathe: { name: 'breathe', duration: 6000, keys: {} },
+  idle: { name: 'idle', duration: 6000, keys: {} },
 
-  /** Leans in toward the speaker, ears up, brows up, two small nods; blinks on the turn. */
+  /**
+   * Leans in toward the speaker, ears up, brows up, a nod and a softer one; blinks on the turn.
+   * Held, it loops from the first nod to after the second.
+   */
   listen: {
     name: 'listen',
-    duration: 6650,
+    duration: 9700,
+    hold: [2200, 8600],
     keys: {
       lean: [
         [0, 0],
         [700, 4],
-        [2600, 4.5],
-        [3000, 3.5],
-        [3400, 4.5],
-        [5600, 4],
-        [6400, 0],
+        [2200, 4],
+        [2500, 4.6],
+        [2900, 3.6],
+        [3300, 4.2],
+        [3800, 4],
+        [5800, 4],
+        [6050, 4.4],
+        [6400, 3.8],
+        [6800, 4],
+        [8600, 4],
+        [9400, 0],
       ],
+      // The pupils read the turn 120 ms ahead: still past the hold's end, so the loop is seamless.
       yaw: [
         [0, 0],
         [600, 0.35],
-        [5700, 0.35],
-        [6400, 0],
+        [8600, 0.35],
+        [8750, 0.35],
+        [9400, 0],
       ],
       tilt: [
         [0, 0],
         [800, 5],
-        [2300, 5],
-        [2600, 8],
-        [2950, 4.5],
-        [4200, 5],
-        [4500, 8],
-        [4850, 5],
-        [5700, 4],
-        [6400, 0],
+        [2200, 5],
+        [2500, 8],
+        [2850, 4.5],
+        [3500, 5],
+        [5800, 5],
+        [6100, 7],
+        [6450, 4.6],
+        [7000, 5],
+        [8600, 5],
+        [9400, 0],
       ],
       squash: [
         [0, 0],
         [700, 0.02],
-        [5600, 0.02],
-        [6400, 0],
+        [8600, 0.02],
+        [9400, 0],
       ],
       ears: [
         [0, 0],
         [500, -9],
-        [5800, -9],
-        [6400, 0],
+        [8600, -9],
+        [9400, 0],
       ],
       browL: [
         [0, 0],
         [500, 2.5],
-        [5800, 2.5],
-        [6400, 0],
+        [8600, 2.5],
+        [9400, 0],
       ],
       browR: [
         [0, 0],
         [500, 2.5],
-        [5800, 2.5],
-        [6400, 0],
+        [8600, 2.5],
+        [9400, 0],
       ],
     },
     face: {
       lookX: [
         [0, 0],
         [450, 3, 'out'],
-        [5800, 3],
-        [6300, 0],
+        [8600, 3],
+        [9300, 0],
       ],
       lookY: [
         [0, 0],
         [450, -1, 'out'],
-        [5800, -1],
-        [6300, 0],
+        [8600, -1],
+        [9300, 0],
       ],
-      lid: [[0, 0], ...blink(250), [6400, 0]],
+      lid: [[0, 0], ...blink(250), [9400, 0]],
     },
   },
 
-  /** Glances up and aside and holds, a slow blink, then a softer look; the head tilts away. */
+  /**
+   * Glances up and aside and holds, a slow blink, then a softer look; the head tilts away. Held,
+   * it glances up again now and then and comes back to the softer look.
+   */
   think: {
     name: 'think',
-    duration: 6650,
+    duration: 9900,
+    hold: [4000, 8800],
     keys: {
       yaw: [
         [0, 0],
         [700, -0.3],
         [3200, -0.3],
-        [3800, -0.15],
-        [5600, -0.15],
-        [6400, 0],
+        [3700, -0.15],
+        [5200, -0.15],
+        [5800, -0.28],
+        [7200, -0.28],
+        [7800, -0.15],
+        [8800, -0.15],
+        [8950, -0.15],
+        [9600, 0],
       ],
       tilt: [
         [0, 0],
         [800, -5],
         [3000, -6],
         [3600, -3],
-        [5600, -3],
-        [6400, 0],
+        [5200, -3],
+        [5800, -5.5],
+        [7200, -5.5],
+        [7800, -3],
+        [8800, -3],
+        [9600, 0],
       ],
       lean: [
         [0, 0],
         [800, -1.5],
-        [5600, -1.5],
-        [6400, 0],
+        [8800, -1.5],
+        [9600, 0],
       ],
       browL: [
         [0, 0],
         [700, 3.5],
         [3000, 3.5],
         [3600, 1],
-        [5600, 1],
-        [6400, 0],
+        [5200, 1],
+        [5800, 3],
+        [7200, 3],
+        [7800, 1],
+        [8800, 1],
+        [9600, 0],
       ],
       browR: [
         [0, 0],
         [700, -1],
-        [5600, -1],
-        [6400, 0],
+        [8800, -1],
+        [9600, 0],
       ],
     },
     face: {
@@ -192,8 +229,12 @@ export const ACTS: Readonly<Record<ActName, Act>> = {
         [800, -4.5],
         [3000, -4.5],
         [3600, -2],
-        [5600, -2],
-        [6300, 0],
+        [5200, -2],
+        [5700, -4],
+        [7200, -4],
+        [7700, -2],
+        [8800, -2],
+        [9500, 0],
       ],
       lookY: [
         [0, 0],
@@ -201,10 +242,14 @@ export const ACTS: Readonly<Record<ActName, Act>> = {
         [800, -5.5],
         [3000, -5.5],
         [3600, -1],
-        [5600, -1],
-        [6300, 0],
+        [5200, -1],
+        [5700, -5],
+        [7200, -5],
+        [7700, -1],
+        [8800, -1],
+        [9500, 0],
       ],
-      // A blink on the glance, the lids resting a little lower while it thinks, a slow blink.
+      // A blink on each glance, the lids resting a little lower while it thinks, a slow blink.
       lid: [
         [0, 0],
         [200, 0],
@@ -216,9 +261,13 @@ export const ACTS: Readonly<Record<ActName, Act>> = {
         [3330, 1],
         [3450, 1],
         [3830, 0.12, 'out'],
-        [5600, 0.12],
-        [6300, 0],
-        [6400, 0],
+        [5450, 0.12],
+        [5560, 1],
+        [5600, 1],
+        [5790, 0.12, 'out'],
+        [8800, 0.12],
+        [9500, 0],
+        [9600, 0],
       ],
     },
   },

@@ -111,8 +111,8 @@ describe('the loops close', () => {
   });
 
   it('the idle pose is the same at both ends of the loop', () => {
-    const a = poseAt(0, 0, ACTS.breathe, 1, 0.4);
-    const b = poseAt(IDLE_PERIOD, 0, ACTS.breathe, 1, 0.4);
+    const a = poseAt(0, 0, ACTS.idle, 1, 0.4);
+    const b = poseAt(IDLE_PERIOD, 0, ACTS.idle, 1, 0.4);
     for (const k of Object.keys(a) as (keyof typeof a)[]) expect(b[k]).toBeCloseTo(a[k], 6);
   });
 

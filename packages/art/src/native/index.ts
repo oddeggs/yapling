@@ -6,12 +6,12 @@ export {
   type ArtProviderProps,
   type MemoryWarnings,
 } from './context';
-export { Critter, CritterArt, type CritterArtProps, type CritterProps } from './critter';
-export { BurrowObject, Scene, type BurrowObjectProps, type SceneProps } from './scene';
-export { useLoopClock, useOneShotClock } from './clock';
 export {
-  RigCritter,
-  RigCritterArt,
-  type RigCritterArtProps,
-  type RigCritterProps,
-} from './rig-critter';
+  Critter,
+  CritterArt,
+  type CritterAct,
+  type CritterArtProps,
+  type CritterProps,
+} from './critter';
+export { BurrowObject, Scene, type BurrowObjectProps, type SceneProps } from './scene';
+export { afterFirstFrame } from './schedule';

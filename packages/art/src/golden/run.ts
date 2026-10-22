@@ -48,8 +48,8 @@ export function goldenArt(): Promise<Golden> {
 }
 
 /**
- * Draws a manifest state the way the app does: a critter from its cached part pictures (outline,
- * body, eyes, mouth), a scene or object from its cached picture, each recorded in points and drawn
+ * Draws a manifest state the way the app does: a critter from its cached part pictures (body, eyes,
+ * mouth; the outline as pixels at the render's density), a scene or object from its cached picture, each recorded in points and drawn
  * at the render's scale. A face is drawn as the browser composites it (its canvas at a fractional
  * pixel, smoothed); the app draws faces sharp.
  */
@@ -63,7 +63,8 @@ export function renderState({ renderer, raster }: Golden, s: ArtState): SkImage 
       draw(c);
     });
   if (s.kind === 'critter' && s.species && s.mood) {
-    const pics = renderer.critter({ species: s.species, mood: s.mood, size: s.w });
+    // The outline as the app caches it: pixels at the screen's density (the render's scale).
+    const pics = renderer.critter({ species: s.species, mood: s.mood, size: s.w }, a);
     return place((c) => renderer.drawCritter(c, pics, s.mouth ?? 'rest'));
   }
   if (s.kind === 'face') {

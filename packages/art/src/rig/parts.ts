@@ -119,6 +119,28 @@ export interface CritterRig {
   };
   /** Points per rig unit: the generator draws in a 200-wide box. */
   readonly unit: number;
+  /** The species' size in that box (a tarsier is drawn at 0.64): its motion scales with it. */
+  readonly scale: number;
+}
+
+/**
+ * Where a sticker critter's outline reaches, in points: its box, out by the outline's radius and
+ * the hard shadow's offset (yap-sticker's `outline`: r = max(1.4, 3.2k), sh = max(2, 5k),
+ * k = w / 200; the silhouettes are copies of the box moved by up to r + 0.35 sh across and r + sh
+ * down), plus a point for anti-aliasing.
+ */
+export function outlineBox(width: number, height: number): Box {
+  const k = width / 200;
+  const r = Math.max(1.4, 3.2 * k);
+  const sh = Math.max(2, 5 * k);
+  const x = Math.floor(-r - 1);
+  const y = Math.floor(-r - 1);
+  return {
+    x,
+    y,
+    width: Math.ceil(width + r + 0.35 * sh + 1) - x,
+    height: Math.ceil(height + r + sh + 1) - y,
+  };
 }
 
 const keyOf = (op: Op | undefined) => op?.key;
@@ -254,19 +276,23 @@ function fail(spec: CritterSpec, what: string): never {
 }
 
 /**
- * Cuts the critter into rig parts (see `CritterRig`). The rig is recorded upright (`tilt` 0): the
- * motion leans it. Moods that hold a paw to the face (`cheeks`, `chin` poses) are not rigged: their
- * paws are drawn over the face, and the rig has no arm to move them by.
+ * Cuts the critter into rig parts (see `CritterRig`), at the mood's own tilt: the motion leans it
+ * from there. Moods that hold a paw to the face (`cheeks`, `chin` poses) are not rigged: their paws
+ * are drawn over the face, and the rig has no arm to move them by (it throws).
  */
 export function critterRig(proto: Prototype, skia: SkiaApi, spec: CritterSpec): CritterRig {
   // The generator's own options, as `recordCritter` passes them, plus the ones the rig compares by.
-  const rec = (o: Record<string, unknown> = {}) =>
+  const raw = (o: Record<string, unknown>) =>
     recordArt(proto, skia, {
       fn: 's_critter',
       w: spec.size,
       h: spec.size * 1.2,
-      o: { sp: spec.species, mood: spec.mood, mouth: 'rest', t: 0, tilt: 0, ...o },
+      o: { sp: spec.species, mood: spec.mood, mouth: 'rest', t: 0, ...o },
     });
+  // A mood's own tilt (a listening head on one side) stays in every drawing the rig compares, so
+  // at rest it draws exactly what the generator does; the rig's motion turns it from there.
+  const tilt = moodTilt(raw({ tilt: 0 }), raw({}));
+  const rec = (o: Record<string, unknown> = {}) => raw({ tilt, ...o });
   const base = rec();
   const unit = spec.size / 200;
 
@@ -362,6 +388,10 @@ export function critterRig(proto: Prototype, skia: SkiaApi, spec: CritterSpec): 
   // Eyes: the run a blink replaces; null when the mood's eyes do not blink.
   const blink = rec({ blink: true });
   const eyeRun = changedRun(base, blink);
+  // A pose that holds the paws to the face (`cheeks`, `chin`) draws them after it: the run the
+  // other pose moves then reaches over the eyes and the mouth.
+  if (pawRun.to > (eyeRun.to > eyeRun.from ? eyeRun.from : mFrom))
+    fail(spec, 'the paws are drawn over the face (a front pose)');
   const eyes = eyeRun.to > eyeRun.from ? cutEyes(skia, spec, rec, base, blink, eyeRun) : null;
   const eyeFrom = eyeRun.from;
   const eyeTo = eyeRun.to;
@@ -400,7 +430,7 @@ export function critterRig(proto: Prototype, skia: SkiaApi, spec: CritterSpec): 
   if (ears) {
     // Perked ears turn about their roots; another mood with the same drawing order shows where.
     for (const mood of ['listen', 'sleepy'] as const) {
-      const perked = rec({ mood, tilt: 0 });
+      const perked = rec({ mood });
       const half = ears.length / 2;
       const l0 = base[feetAt + 2];
       const l1 = perked[feetAt + 2];
@@ -432,15 +462,19 @@ export function critterRig(proto: Prototype, skia: SkiaApi, spec: CritterSpec): 
   const k = spec.size / 200;
   const r = Math.max(1.4, 3.2 * k) + 3 * k + 1;
   const sh = Math.max(2, 5 * k);
+  // Every silhouette copy is clipped to the critter's box, so no outline reaches past `whole`.
+  const whole = outlineBox(spec.size, spec.size * 1.2);
   const boxOf = (ops: readonly Op[]): Box => {
+    // Text (a confused `?`, a sleepy `z`) has no path to measure: the whole outline's box.
+    if (ops.some((op) => !isPath(op))) return whole;
     const b = unionBounds(skia, ops);
-    const x = Math.floor(b.x0 - r);
-    const y = Math.floor(b.y0 - r);
+    const x = Math.max(whole.x, Math.floor(b.x0 - r));
+    const y = Math.max(whole.y, Math.floor(b.y0 - r));
     return {
       x,
       y,
-      width: Math.ceil(b.x1 + r + sh * 0.35) - x,
-      height: Math.ceil(b.y1 + r + sh) - y,
+      width: Math.min(whole.x + whole.width, Math.ceil(b.x1 + r + sh * 0.35)) - x,
+      height: Math.min(whole.y + whole.height, Math.ceil(b.y1 + r + sh)) - y,
     };
   };
   const cutOutline = (ops: readonly Op[]): RigOutline => {
@@ -502,7 +536,28 @@ export function critterRig(proto: Prototype, skia: SkiaApi, spec: CritterSpec): 
       paws: [centreOf(paws[0]), centreOf(paws[1])],
     },
     unit,
+    // The feet are drawn at the species' size: their transform's scale over the box's.
+    scale: feet[0][0] ? Math.hypot(feet[0][0].m[0], feet[0][0].m[1]) / unit : 1,
   };
+}
+
+/**
+ * The tilt a mood draws the critter at, in the generator's units (`o.tilt`): the turn between the
+ * upright drawing and the mood's own, read from the first operation it moves (0 when none does).
+ */
+function moodTilt(upright: readonly Op[], own: readonly Op[]): number {
+  if (upright.length !== own.length) return 0;
+  for (let i = 0; i < upright.length; i++) {
+    const a = upright[i];
+    const b = own[i];
+    if (!a || !b || a.key === b.key || a.kind !== 'path') continue;
+    const inv = invert(a.m);
+    if (!inv) continue;
+    const [ra, rb] = multiply(b.m, inv);
+    // The generator turns by tilt × π / 300 radians.
+    return (Math.atan2(rb, ra) * 300) / Math.PI;
+  }
+  return 0;
 }
 
 /** The 24 silhouette copies, each cut to the art operations at `idx` (one shared list for all). */
