@@ -1,6 +1,7 @@
 import type {
   AppleLinkRequest,
   CallRecord,
+  EpochMs,
   MemoryCreate,
   MemoryItem,
   MemoryUpdate,
@@ -11,9 +12,10 @@ import type {
   Progress,
   Session,
 } from '@yapling/contracts';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { ConnectivityState } from './connectivity';
+import type { OpenState, SeenMoment, SeenState } from './moments';
 import type { ProgressSave } from './progress';
 import { useData } from './provider';
 import type { Resource, ResourceState } from './resource';
@@ -88,6 +90,8 @@ export function useProgress(): Loaded<Progress> & {
   readonly progress: Progress | null;
   /** Saves over the revision the phone has; the server's copy wins a conflict. */
   readonly updateProgress: (change: (current: Progress) => Progress) => Promise<ProgressSave>;
+  /** A phrase the learner opened, met as a seed packet (needs the server; skipped if known). */
+  readonly meetPhrase: (phrase: { readonly id: string; readonly text: string }) => Promise<void>;
 } {
   const data = useData();
   const loaded = useResource(data.progress.resource);
@@ -96,9 +100,28 @@ export function useProgress(): Loaded<Progress> & {
       ...loaded,
       progress: loaded.data,
       updateProgress: (change: (current: Progress) => Progress) => data.progress.update(change),
+      meetPhrase: async (phrase: { readonly id: string; readonly text: string }) => {
+        await data.progress.meetPhrase(phrase, data.clock.now());
+      },
     }),
     [loaded, data],
   );
+}
+
+/**
+ * The app's time, read again whenever the app's clock moves (the test menu's day jumps) and at
+ * every local midnight in `timezone`.
+ */
+export function useAppNow(timezone: string = deviceTimeZone()): EpochMs {
+  const data = useData();
+  const moves = useStore(data.clockMoves);
+  const [midnights, setMidnights] = useState(0);
+  const now = useMemo(() => data.clock.now(), [data, moves, midnights]);
+  useEffect(() => {
+    const timer = setTimeout(() => setMidnights((n) => n + 1), msUntilNextDay(now, timezone));
+    return () => clearTimeout(timer);
+  }, [now, timezone]);
+  return now;
 }
 
 /** This week's ring from progress and the day clock; moves on at local midnight. */
@@ -107,15 +130,26 @@ export function useWeek(): CurrentWeek | null {
   const progress = useStore(data.progress.resource.store, (s) => s.data);
   const timezone =
     useStore(data.profile.resource.store, (s) => s.data?.timezone) ?? deviceTimeZone();
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const timer = setTimeout(() => setNow(Date.now()), msUntilNextDay(now, timezone));
-    return () => clearTimeout(timer);
-  }, [now, timezone]);
+  const now = useAppNow(timezone);
   return useMemo(
     () => (progress === null ? null : currentWeek(progress, now, timezone)),
     [progress, now, timezone],
   );
+}
+
+/** The between-call moments seen on this phone, and the mark for one just finished. */
+export function useSeen(): SeenState & {
+  readonly markSeen: (...moments: SeenMoment[]) => Promise<void>;
+} {
+  const data = useData();
+  const state = useStore(data.seen.store);
+  const markSeen = useCallback((...moments: SeenMoment[]) => data.seen.mark(moments), [data]);
+  return useMemo(() => ({ ...state, markSeen }), [state, markSeen]);
+}
+
+/** When the app was opened before this open (for the welcome back and day 8's knock). */
+export function useLastOpen(): OpenState {
+  return useStore(useData().opens.store);
 }
 
 export function useMinutes(): Loaded<MinutesSummary> & { readonly minutes: MinutesSummary | null } {
@@ -161,10 +195,10 @@ export function useCall(id: string): Loaded<CallRecord> & { readonly call: CallR
   return useMemo(() => ({ ...loaded, call: loaded.data }), [loaded]);
 }
 
-/** Push-token registration and account deletion (both need the server). */
+/** Push-token registration, account deletion (both need the server) and the test menu's reset. */
 export function useAccount(): Pick<
   ReturnType<typeof useData>,
-  'registerPushToken' | 'unregisterPushToken' | 'deleteAccount'
+  'registerPushToken' | 'unregisterPushToken' | 'deleteAccount' | 'resetLocal'
 > {
   const data = useData();
   return useMemo(
@@ -172,6 +206,7 @@ export function useAccount(): Pick<
       registerPushToken: (body) => data.registerPushToken(body),
       unregisterPushToken: (body) => data.unregisterPushToken(body),
       deleteAccount: () => data.deleteAccount(),
+      resetLocal: () => data.resetLocal(),
     }),
     [data],
   );

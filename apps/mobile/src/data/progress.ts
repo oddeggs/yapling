@@ -1,4 +1,5 @@
-import { Progress } from '@yapling/contracts';
+import { Progress, type EpochMs } from '@yapling/contracts';
+import { fromPhraseProgress, meetPhrase, toPhraseProgress } from '@yapling/domain';
 
 import type { ApiClient } from './client';
 import { isDataError } from './errors';
@@ -51,6 +52,19 @@ export class ProgressRepo {
       await this.resource.setFromServer(server);
       return { saved: false, progress: server };
     }
+  }
+
+  /**
+   * A phrase the learner opened (a gloss, "what does that mean?"): met, as a seed packet in the
+   * burrow. Nothing is written when the phrase is already there; offline it is not written at all.
+   */
+  async meetPhrase(phrase: { readonly id: string; readonly text: string }, at: EpochMs) {
+    const current = this.resource.data ?? (await this.refresh());
+    if (current === null || current.phrases.some((p) => p.id === phrase.id)) return null;
+    return this.update((p) => {
+      const met = meetPhrase(p.phrases.map(fromPhraseProgress), { ...phrase, at });
+      return met.met ? { ...p, phrases: met.phrases.map(toPhraseProgress) } : p;
+    });
   }
 
   /**

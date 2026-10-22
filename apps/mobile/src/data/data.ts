@@ -7,9 +7,11 @@ import type {
 } from '@yapling/contracts';
 
 import { createApiClient, createSessionApi, type ApiClient } from './client';
+import { phoneClock, type AppClock } from './clock';
 import { Connectivity, watchedHttp, type Schedule } from './connectivity';
 import { createHttp } from './http';
 import { MemoryRepo } from './memory';
+import { OpenLog, SeenMoments } from './moments';
 import { Outbox, type OpResource, type OutboxOp } from './outbox';
 import { ProfileRepo } from './profile';
 import { ProgressRepo } from './progress';
@@ -17,6 +19,7 @@ import { CallsRepo, minutesResource } from './records';
 import type { Resource } from './resource';
 import { SessionManager } from './session';
 import { CACHE_KEYS, type CacheStorage, type SecretStorage } from './storage';
+import { createStore, type Store } from './store';
 import { phoneTimeZone } from './week';
 
 /*
@@ -36,6 +39,8 @@ export interface DataOptions {
   /** The phone's timezone for the guest request; the runtime's by default. */
   readonly timeZone?: () => TimeZone | null;
   readonly now?: () => number;
+  /** The app's clock for the day count; the phone's unless the test menu moves it. */
+  readonly clock?: AppClock;
   readonly schedule?: Schedule;
   readonly timeoutMs?: number;
 }
@@ -50,6 +55,14 @@ export class Data {
   readonly memory: MemoryRepo;
   readonly minutes: Resource<MinutesSummary>;
   readonly calls: CallsRepo;
+  /** The between-call moments seen on this phone. */
+  readonly seen: SeenMoments;
+  /** The app's opens, for the welcome back. */
+  readonly opens: OpenLog;
+  /** Moves each time the app's clock moves or is replaced. */
+  readonly clockMoves: Store<number> = createStore(0);
+  private clockNow: AppClock;
+  private stopClock: () => void;
   private readonly cache: CacheStorage;
   private ownerCheck: { readonly userId: string; readonly done: Promise<void> } | null = null;
   private stopSession: (() => void) | null = null;
@@ -84,7 +97,25 @@ export class Data {
     this.memory = new MemoryRepo(this.api, opts.cache, this.outbox, opts.now);
     this.minutes = minutesResource(this.api, opts.cache);
     this.calls = new CallsRepo(this.api, opts.cache);
+    this.clockNow = opts.clock ?? phoneClock;
+    this.stopClock = this.clockNow.subscribe(() => this.clockMoves.set((n) => n + 1));
+    this.seen = new SeenMoments(opts.cache, () => this.clockNow.now());
+    this.opens = new OpenLog(opts.cache);
     this.connectivity.setProbe(() => this.resume());
+  }
+
+  /** The app's clock (the phone's, or the test menu's in test builds). */
+  get clock(): AppClock {
+    return this.clockNow;
+  }
+
+  /** The test builds put the test menu's clock in place of the phone's. */
+  setClock(clock: AppClock): void {
+    if (clock === this.clockNow) return;
+    this.stopClock();
+    this.clockNow = clock;
+    this.stopClock = clock.subscribe(() => this.clockMoves.set((n) => n + 1));
+    this.clockMoves.set((n) => n + 1);
   }
 
   /**
@@ -105,6 +136,7 @@ export class Data {
       this.memory.resource.loadCache(),
       this.minutes.loadCache(),
       this.outbox.load(),
+      this.seen.load(),
     ]);
     await this.session.start();
     await this.resume();
@@ -178,6 +210,17 @@ export class Data {
     return answer;
   }
 
+  /**
+   * The test menu's reset: everything on this phone (the cache, the queue, the moments seen, the
+   * session and the install id), as a fresh install. The account stays on the server; the next
+   * learner confirms their age again and gets a new guest.
+   */
+  async resetLocal(): Promise<void> {
+    await this.forgetLocal();
+    await this.session.signOut();
+    this.ownerCheck = null;
+  }
+
   private async forgetLocal(): Promise<void> {
     await this.outbox.clear();
     await this.cache.clear().catch(() => undefined);
@@ -186,6 +229,8 @@ export class Data {
     this.memory.resource.reset();
     this.minutes.reset();
     this.calls.reset();
+    this.seen.reset();
+    this.opens.reset();
   }
 
   /** The cache belongs to one learner: another one's session starts it afresh. */

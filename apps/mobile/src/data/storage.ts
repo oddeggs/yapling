@@ -36,6 +36,10 @@ export const CACHE_KEYS = {
   calls: 'calls',
   call: (id: string) => `call:${id}`,
   outbox: 'outbox',
+  /** The between-call moments seen on this phone. */
+  seen: 'seen',
+  /** When the app was last opened. */
+  lastOpen: 'last-open',
 } as const;
 
 /** A cached JSON value, checked against its schema; a value that no longer parses is dropped. */
