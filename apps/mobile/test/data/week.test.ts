@@ -41,6 +41,17 @@ describe('the current week', () => {
     expect(week).toMatchObject({ week: 2, dayIndex: 9 });
   });
 
+  it('counts a Visitor’s weeks from the day the story started, not the install day', () => {
+    // Installed on 20 Oct, settled in, and the letter came on 22 Oct: that is week 1's day 1, so
+    // nothing in the ring is open yet, whatever the server's install-day count says.
+    const week = currentWeek({ ...emptyProgress(), dayIndex: 3 }, OCT_22_10AM, TZ, '2026-10-22');
+    expect(week).toMatchObject({ week: 1, dayIndex: 1, dayOfWeek: 1 });
+    expect(week.ring.slots.map((s) => s.status)).toEqual(['upcoming', 'upcoming', 'upcoming']);
+    // The next day the episode opens.
+    const next = currentWeek(emptyProgress(), OCT_22_10AM + DAY, TZ, '2026-10-22');
+    expect(next.ring.slots.map((s) => s.status)).toEqual(['open', 'upcoming', 'upcoming']);
+  });
+
   it('knows when the next local day starts', () => {
     expect(msUntilNextDay(OCT_22_10AM, TZ)).toBe(14 * 3_600_000);
   });

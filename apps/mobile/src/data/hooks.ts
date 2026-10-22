@@ -137,10 +137,12 @@ export function useWeek(): CurrentWeek | null {
   const progress = useStore(data.progress.resource.store, (s) => s.data);
   const timezone =
     useStore(data.profile.resource.store, (s) => s.data?.timezone) ?? deviceTimeZone();
+  const storyStartedOn =
+    useStore(data.profile.resource.store, (s) => s.data?.storyStartedOn) ?? null;
   const now = useAppNow(timezone);
   return useMemo(
-    () => (progress === null ? null : currentWeek(progress, now, timezone)),
-    [progress, now, timezone],
+    () => (progress === null ? null : currentWeek(progress, now, timezone, storyStartedOn)),
+    [progress, now, timezone, storyStartedOn],
   );
 }
 
