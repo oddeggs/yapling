@@ -1,4 +1,4 @@
-import type { LocalDate, TimeZone } from '@yapling/contracts';
+import type { LocalDate, SettlingChapterDone, TimeZone } from '@yapling/contracts';
 import { dayIndexOf, localDateOf, type Season1EpisodeId } from '@yapling/domain';
 import { CAST } from '@yapling/story';
 
@@ -66,3 +66,34 @@ export const dayOf = (learner: TestLearner, appNow: number): number =>
 
 /** Still settling in with Linh. */
 export const settlingOf = (learner: TestLearner): boolean => isSettlingIn(learner.settling);
+
+/** What the burrow reads for Settling in: its chapters (merged from every source) and its letter. */
+export interface BurrowSettling {
+  readonly visitorPath: boolean;
+  readonly chapters: readonly SettlingChapterDone[];
+  readonly letterOn: LocalDate | null;
+}
+
+/**
+ * The learner as the burrow sees them: the chapters and the letter's day the burrow works out
+ * (the server's progress, this phone's copy and the call records), so the test menu says what the
+ * burrow shows. Before the burrow's data is read, the learner as it was.
+ */
+export const withBurrowSettling = (
+  learner: TestLearner,
+  burrow: BurrowSettling | null,
+): TestLearner => {
+  if (burrow === null || !learner.known) return learner;
+  const settling: SettlingState = {
+    visitorPath: burrow.visitorPath,
+    chapters: [...burrow.chapters],
+    storyStartedOn: burrow.letterOn,
+  };
+  return { ...learner, settling, storyDayOne: storyDayOneOf(settling, learner.installedOn) };
+};
+
+/** The letter is out in the burrow, but its day (week 1's day 1) is still ahead of the clock. */
+export const letterAhead = (learner: TestLearner, today: LocalDate): boolean =>
+  learner.settling.visitorPath &&
+  learner.settling.storyStartedOn !== null &&
+  learner.settling.storyStartedOn > today;

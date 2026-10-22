@@ -14,6 +14,7 @@ import { useLanguageOverride, useLocale } from '../../ui/locale';
 import { StickerButton } from '../../ui/sticker-button';
 import { Txt } from '../../ui/text';
 import { ToggleRow } from '../../ui/toggle';
+import { useSettlingLive } from '../burrow/settling-live';
 import { useKnockInputs } from '../knocks/knocks-provider';
 import { hasKnockPermission, requestKnockPermission } from '../knocks/permission';
 import { knockHref, knockOfDay } from '../knocks/plan';
@@ -36,7 +37,13 @@ import { KnockPreview } from './knock-preview';
 import { menuShown } from './menu-once';
 import { SettlingSection } from './settling-section';
 import { createVisitor, seedOf } from './settling-tools';
-import { dayOf, deviceTimeZone, settlingOf, testLearnerOf } from './test-learner';
+import {
+  dayOf,
+  deviceTimeZone,
+  settlingOf,
+  testLearnerOf,
+  withBurrowSettling,
+} from './test-learner';
 import { WeeksSection } from './weeks-section';
 
 const DAYS = WEEK_ONE_PLAN.map((d) => d.day);
@@ -83,7 +90,12 @@ export function DevMenu() {
   const clock = useDebugClock();
   const resetLocalData = useResetLocalData();
   const { turnMode, setTurnMode } = useTurnMode();
-  const learner = testLearnerOf(useKnockInputs(), Date.now());
+  // Settling in as the burrow sees it, so the menu and the burrow agree on the letter's day.
+  const burrow = useSettlingLive();
+  const learner = withBurrowSettling(
+    testLearnerOf(useKnockInputs(), Date.now()),
+    burrow && { visitorPath: burrow.visitorPath, ...burrow.day },
+  );
   const appNow = now();
   const day = dayOf(learner, appNow);
   const [previewDay, setPreviewDay] = useState(() => Math.min(Math.max(day, 2), 8));

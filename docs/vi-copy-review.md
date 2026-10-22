@@ -1521,6 +1521,7 @@ Seen only in development builds by the team: no review needed; listed for comple
 | `devmenu.settling.status.notVisitor` | Not a Visitor: the story runs from the install day. | Không phải Khách mới đến: truyện tính từ ngày cài. | New |  |
 | `devmenu.settling.status.settling` | Settling in · {done} of 6 chapters done · chapter {next} next | Đang làm quen · xong {done}/6 chương · tiếp theo chương {next} | New |  |
 | `devmenu.settling.status.letter` | Settled in · the letter came on {date} (week 1, day 1) | Đã làm quen xong · lá thư đến ngày {date} (tuần 1, ngày 1) | New |  |
+| `devmenu.settling.status.letterAhead` | Settled in · the burrow shows the letter, but week 1 counts from {date}, after the clock. To go back, start a new Visitor. | Đã làm quen xong · hang đang có lá thư, nhưng tuần 1 tính từ ngày {date}, sau đồng hồ. Muốn quay lại thì bắt đầu Khách mới đến mới. | New | Facilitator only; when the clock was moved back before the letter's day |
 | `devmenu.settling.startVisitor` | Start as a Visitor | Bắt đầu là Khách mới đến | New |  |
 | `devmenu.settling.startVisitorHint` | Clears this phone’s learner, then makes a new one at Visitor and opens the burrow with Chapter 1 next | Xoá người học trên máy này, tạo người học mới ở chặng Khách mới đến và mở hang với chương 1 | New |  |
 | `devmenu.settling.jumpHeading` | JUMP TO CHAPTER | CHUYỂN TỚI CHƯƠNG | New |  |
