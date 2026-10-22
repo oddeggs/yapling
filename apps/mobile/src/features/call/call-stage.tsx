@@ -5,14 +5,17 @@ import { motion, translucent } from '@yapling/theme';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 import Animated, {
+  makeMutable,
   useAnimatedStyle,
   useSharedValue,
   type SharedValue,
 } from 'react-native-reanimated';
 
 import { transitionTo } from '../../ui/motion/play';
+import { useLipsyncClock, type Lipsync } from '../../voice/lipsync';
 import { useReduceMotion } from '../../ui/motion/reduce-motion';
 import { artCharacter, BlurredScene } from './call-art';
+import type { BubbleTone } from '../../ui/speech-bubble';
 import type { CallLayout, CastSpot } from './scene-layout';
 
 /*
@@ -75,7 +78,7 @@ export function CallStage({
         <Scene
           name={backdrop.name}
           width={width}
-          style={{ position: 'absolute', top: 0, left: 0 }}
+          style={{ position: 'absolute', top: (backdrop.top ?? 0) * k, left: 0 }}
         />
       )}
       {layout.cast.map(spot)}
@@ -142,3 +145,16 @@ function StageCritter({
     </Animated.View>
   );
 }
+
+/** A fixed closed mouth for before the engine exists. */
+export const restMouth = makeMutable<Mouth>('rest');
+
+/** Runs the engine's lipsync clock on the UI thread while the call is on screen. */
+export function LipsyncClock({ lipsync }: { lipsync: Lipsync }) {
+  useLipsyncClock(lipsync);
+  return null;
+}
+
+/** A speaker's bubble colour. */
+export const bubbleTone = (c: CharacterId): BubbleTone =>
+  c === 'pip' ? 'pip' : c === 'office' ? 'office' : 'neighbour';

@@ -1,8 +1,9 @@
-import type { Mouth, PipSpecies } from '@yapling/art';
+import type { PipSpecies } from '@yapling/art';
 import { BurrowObject } from '@yapling/art/native';
 import {
   LIMITS,
   type CallEndReason,
+  type HangupReason,
   type CharacterId,
   type FirstLanguage,
   type Pace,
@@ -20,7 +21,6 @@ import {
 import { colours, controls, layout as space } from '@yapling/theme';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, Linking, View, useWindowDimensions } from 'react-native';
-import { makeMutable } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CallBar } from '../../ui/call-bar';
@@ -28,10 +28,9 @@ import { MeaningChip } from '../../ui/chip';
 import { haptics } from '../../ui/haptics';
 import { useLocale } from '../../ui/locale';
 import { SpeakerPill } from '../../ui/speaker-pill';
-import { SpeechBubble, type BubbleTone } from '../../ui/speech-bubble';
+import { SpeechBubble } from '../../ui/speech-bubble';
 import { useToast } from '../../ui/toast';
 import { useCallAnalytics } from '../../observability';
-import { useLipsyncClock, type Lipsync } from '../../voice/lipsync';
 import { BubbleCaption } from './bubble-caption';
 import { CritterFace } from './call-art';
 import {
@@ -43,6 +42,7 @@ import {
   YouCaption,
 } from './call-cards';
 import { CallErrorSheet } from './call-errors';
+import { useCallHelp } from './call-help';
 import {
   HistoryButton,
   HistorySheet,
@@ -51,13 +51,13 @@ import {
   useLineGlosses,
 } from './call-history';
 import { CallLetter } from './call-letter';
-import { CallStage } from './call-stage';
+import { bubbleTone, CallStage, LipsyncClock, restMouth } from './call-stage';
 import { CallTip } from './call-tip';
 import { useDevMic } from './dev-mic';
 import { bandOf } from './letter-place';
 import { saidLines, transcriptOf } from './line-history';
 import { CallTimer, MirrorCard, RoundsStrip } from './pass-it-on';
-import { FRAME_WIDTH, layoutFor } from './scene-layout';
+import { FRAME_WIDTH, layoutFor, placeText } from './scene-layout';
 import { TurnModeSwitch, useMicBar } from './turn-mode-switch';
 import { useCall } from './use-call';
 import { callView, lineGlossOffered } from './view-model';
@@ -80,6 +80,8 @@ export interface SeedDrop {
 export interface CallFinish {
   readonly callId: string | null;
   readonly reason: CallEndReason | null;
+  /** What the call heard the learner say, turn by turn. */
+  readonly heard: readonly string[];
 }
 
 export interface CallScreenProps {
@@ -102,17 +104,13 @@ export interface CallScreenProps {
   readonly onSafety: () => void;
   /** A phrase dropped in the burrow as a seed packet. */
   readonly onSeed?: (seed: SeedDrop) => void;
+  /** The learner slowed the voices mid-call ("Khó quá"): kept for the calls after. */
+  readonly onPace?: (pace: Pace) => void;
   /** Development only: recorded answers for a simulator with no microphone. */
   readonly devFixtures?: readonly string[] | null;
 }
 
-const bubbleTone = (c: CharacterId): BubbleTone =>
-  c === 'pip' ? 'pip' : c === 'office' ? 'office' : 'neighbour';
-
 const clock = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
-
-/** A fixed closed mouth for before the engine exists. */
-const restMouth = makeMutable<Mouth>('rest');
 
 export function CallScreen({
   scene,
@@ -127,6 +125,7 @@ export function CallScreen({
   onFinish,
   onSafety,
   onSeed,
+  onPace,
   devFixtures = null,
 }: CallScreenProps) {
   const { t } = useLocale();
@@ -199,18 +198,22 @@ export function CallScreen({
   const finish = useCallback(() => {
     if (finished.current) return;
     finished.current = true;
-    onFinish({ callId: state.callRecordId, reason: state.endReason });
-  }, [onFinish, state.callRecordId, state.endReason]);
+    onFinish({
+      callId: state.callRecordId,
+      reason: state.endReason,
+      heard: tracker.heard.map((h) => h.text),
+    });
+  }, [onFinish, state.callRecordId, state.endReason, tracker.heard]);
   useEffect(() => {
     if (leaving.current && state.endReason !== null) finish();
   }, [state.endReason, finish]);
-  const exit = () => {
+  const exit = (reason?: HangupReason) => {
     if (view.sceneDone || !engine || view.mode !== 'live') {
       finish();
       return;
     }
     leaving.current = true;
-    engine.hangup();
+    engine.hangup(reason);
   };
 
   // A crisis steps out of the story at once.
@@ -275,6 +278,14 @@ export function CallScreen({
   const holdToTalk = state.turnMode === 'hold_to_talk';
   useDevMic(engine, devFixtures, learnerTurn && !state.onHold, holdToTalk, log);
   const micBar = useMicBar(engine, state, view);
+  const help = useCallHelp({
+    ...{ engine, state, tracker, dispatch, scene, kind, stage, firstLanguage, pace, onPace },
+    live: view.mode === 'live' && !view.sceneDone,
+    hintShown: view.hint !== null,
+    place: placeText(layout.place, t),
+    toastTop: 110 * k + Math.max(space.topBar, insets.top + 4) - space.topBar,
+    leave: exit,
+  });
 
   if (view.mode === 'error_net' || view.mode === 'error_mic') {
     return (
@@ -293,10 +304,7 @@ export function CallScreen({
 
   const top = Math.max(space.topBar, insets.top + 4);
   const dy = top - space.topBar;
-  const place =
-    layout.place.key === 'onboarding.unpack.place'
-      ? t(layout.place.key, { day: layout.place.day })
-      : t(layout.place.key);
+  const place = placeText(layout.place, t);
   const pillPlace =
     view.mode === 'ringing'
       ? t('call.calling', { who: nameOf(layout.pill) })
@@ -545,6 +553,7 @@ export function CallScreen({
             onClose={() => dispatch({ type: 'meaning_closed' })}
           />
         ) : null}
+        {help.task}
         {view.hint ? (
           <HintCard
             phrase={view.hint.phrase}
@@ -553,6 +562,7 @@ export function CallScreen({
           />
         ) : null}
         {view.you ? <YouCaption text={view.you.text} heard={view.you.heard} /> : null}
+        {help.cards}
         {tipText !== null ? (
           <CallTip
             key={view.tip}
@@ -574,22 +584,18 @@ export function CallScreen({
             />
           </View>
         ) : null}
+        {help.pills}
         <CallBar
           mic={view.mic}
           {...(view.talking ? { speaker: nameOf(view.talking) } : {})}
           sceneDone={view.sceneDone}
           exitLabel={t(layout.exit)}
           onHoldToggle={() => engine?.holdOn(state.onHold ? 0 : LIMITS.holdSecondsMax)}
-          onExit={exit}
+          onExit={help.onExit}
           {...micBar}
         />
       </View>
+      {help.overlay}
     </View>
   );
-}
-
-/** Runs the engine's lipsync clock on the UI thread while the call is on screen. */
-function LipsyncClock({ lipsync }: { lipsync: Lipsync }) {
-  useLipsyncClock(lipsync);
-  return null;
 }

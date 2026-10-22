@@ -51,6 +51,8 @@ export interface BubbleView {
    * at their stage, and not in Pass it on).
    */
   readonly translatable: boolean;
+  /** Linh speaking Vietnamese (Settling in): nothing to translate or explain. */
+  readonly vietnamese?: true;
   /** Its place among this turn's lines, when the turn had more than one ("1 of 3"). */
   readonly page: TurnPage | null;
   /** An earlier line the learner went back to, not the line now. */
@@ -215,6 +217,7 @@ export function callView(input: CallViewInput): CallView {
     bubble.streamId < LOCAL_STREAMS_FROM &&
     bubble.text !== '' &&
     bubble.gloss === null &&
+    !bubble.vietnamese &&
     (call.phase === 'your_turn' || call.phase === 'character_speaking') &&
     scene.kind !== 'practice';
 
@@ -326,14 +329,16 @@ function bubbleOf(
   const back = earlier === null ? undefined : tracker.lines.find((l) => l.streamId === earlier);
   if (back && back.streamId !== call.caption?.streamId && !thinking) {
     const line = back.lineId ? findLine(back.lineId) : undefined;
+    const vietnamese = line !== undefined && line.language !== 'en';
     return {
       speaker: back.speaker,
       streamId: back.streamId,
       text: back.text,
       playing: false,
       thinking: false,
-      gloss: line ? glossFor(line.glosses, firstLanguage) : null,
-      translatable,
+      gloss: line && !vietnamese ? glossFor(line.glosses, firstLanguage) : null,
+      translatable: translatable && !vietnamese,
+      ...(vietnamese ? { vietnamese: true as const } : {}),
       page: turnPage(tracker.lines, back.streamId),
       earlier: true,
     };
@@ -380,14 +385,16 @@ function bubbleOf(
   if (caption.text.trim() === '') return null;
   const lineId = tracker.recorded[caption.streamId];
   const line = lineId ? findLine(lineId) : undefined;
+  const vietnamese = line !== undefined && line.language !== 'en';
   return {
     speaker: caption.character,
     streamId: caption.streamId,
     text: caption.text,
     playing: call.playing,
     thinking: false,
-    gloss: line ? glossFor(line.glosses, firstLanguage) : null,
-    translatable,
+    gloss: line && !vietnamese ? glossFor(line.glosses, firstLanguage) : null,
+    translatable: translatable && !vietnamese,
+    ...(vietnamese ? { vietnamese: true as const } : {}),
     // Going back waits for the line to end: the voice and the words stay together.
     page: call.playing ? null : pageOf(tracker, caption.streamId),
     earlier: false,
