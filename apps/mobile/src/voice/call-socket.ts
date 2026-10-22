@@ -321,3 +321,13 @@ function detach(s: SocketLike): void {
   s.onclose = null;
   s.onerror = null;
 }
+
+/**
+ * The socket URL with the app's clock on it when the test menu has moved it (time travel in a
+ * test session): the dev Worker then stamps the call on the app's day. Off by under a minute, or
+ * in a store build where the app's clock is the real one, the URL stays as it is.
+ */
+export function withAppClock(url: string, appNowMs: number, realNowMs = Date.now()): string {
+  if (Math.abs(appNowMs - realNowMs) < 60_000) return url;
+  return `${url}${url.includes('?') ? '&' : '?'}clock=${Math.round(appNowMs)}`;
+}

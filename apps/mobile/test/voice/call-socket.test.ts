@@ -7,7 +7,12 @@ import {
   type CallServerFrame,
 } from '@yapling/contracts';
 
-import { CallSocket, type SocketLike, type SocketStatus } from '../../src/voice/call-socket';
+import {
+  CallSocket,
+  withAppClock,
+  type SocketLike,
+  type SocketStatus,
+} from '../../src/voice/call-socket';
 
 class FakeSocket implements SocketLike {
   binaryType = 'blob';
@@ -305,5 +310,19 @@ describe('coming back from the background', () => {
     jest.advanceTimersByTime(60_000);
     expect(socket.checkAlive()).toBe(false);
     expect(sockets).toHaveLength(1);
+  });
+});
+
+describe("a test build's clock on the socket URL", () => {
+  it('goes along only when the test menu moved it', () => {
+    const real = 1_790_000_000_000;
+    const url = 'wss://api.test/api/calls/socket';
+    expect(withAppClock(url, real + 20_000, real)).toBe(url);
+    expect(withAppClock(url, real + 3 * 86_400_000, real)).toBe(
+      `${url}?clock=${real + 3 * 86_400_000}`,
+    );
+    expect(withAppClock(`${url}?a=1`, real - 86_400_000, real)).toBe(
+      `${url}?a=1&clock=${real - 86_400_000}`,
+    );
   });
 });

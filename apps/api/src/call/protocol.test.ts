@@ -7,6 +7,7 @@ import { readProgress } from '../progress';
 import { userObject } from '../user';
 import { pcm, Phone } from '../../test/call/phone';
 import { lineTiming } from './line';
+import { appClockOffset } from './socket-route';
 import { control, Providers } from '../../test/call/providers';
 
 /*
@@ -544,5 +545,43 @@ describe('latency', () => {
       phoneReaction: 900,
       phoneReply: 900,
     });
+  }, 20_000);
+});
+
+describe("a test build's clock", () => {
+  const DAY = 24 * 3_600_000;
+
+  it('is honoured only by the dev Worker, and only when it makes sense', () => {
+    const now = 1_790_000_000_000;
+    expect(appClockOffset('dev', String(now + 4 * DAY), now)).toBe(4 * DAY);
+    expect(appClockOffset('prd', String(now + 4 * DAY), now)).toBe(0);
+    expect(appClockOffset('dev', undefined, now)).toBe(0);
+    expect(appClockOffset('dev', 'tomorrow', now)).toBe(0);
+    expect(appClockOffset('dev', String(now + 400 * DAY), now)).toBe(0);
+  });
+
+  it('stamps the call record and the transcript on the app’s day', async () => {
+    script();
+    const { token } = await newGuest();
+    const shift = 4 * DAY;
+    const phone = await Phone.call(token, {}, `?clock=${Date.now() + shift}`);
+    await beat(phone, 'ask-whats-wrong');
+    await sleep(200);
+    await turn(phone, "What's wrong?");
+    phone.send({ type: 'hangup' });
+    const ended = await phone.next('ended');
+    const row = await env.DB.prepare(
+      'SELECT started_at, ended_at, transcript_key FROM calls WHERE id = ?',
+    )
+      .bind(ended.callRecordId)
+      .first<{ started_at: number; ended_at: number; transcript_key: string }>();
+    expect(row?.started_at ?? 0).toBeGreaterThan(Date.now() + shift - 60_000);
+    expect(row?.ended_at ?? 0).toBeGreaterThanOrEqual(row?.started_at ?? 0);
+    const file = await env.BLOBS.get(row?.transcript_key ?? '');
+    // The post-call job stamps phrase use with the transcript's end.
+    const transcript = (await file?.json()) as { endedAt: number; lines: { at: number }[] };
+    expect(transcript.endedAt).toBeGreaterThan(Date.now() + shift - 60_000);
+    for (const line of transcript.lines)
+      expect(line.at).toBeGreaterThan(Date.now() + shift - 60_000);
   }, 20_000);
 });

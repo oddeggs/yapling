@@ -32,6 +32,11 @@ export interface CallMeta {
   /** Two-letter country of the phone's connection, for crisis resources. */
   readonly country: string;
   readonly turnMode: TurnMode;
+  /**
+   * Dev Worker only: how far the test build's clock was ahead when the call started. The call's
+   * record and transcript are stamped on that clock, so phrase use lands on the test session's day.
+   */
+  readonly clockOffsetMs?: number;
 }
 
 export interface CallData {
@@ -112,7 +117,10 @@ export async function finalizeCall(
   runner: RunnerState,
 ): Promise<boolean> {
   const { meta } = data;
-  const endedAt = Date.now();
+  // Stamped on the app's clock in a dev test session (no shift anywhere else).
+  const shift = meta.clockOffsetMs ?? 0;
+  const startedAt = meta.startedAt + shift;
+  const endedAt = Date.now() + shift;
   const key = transcriptKey(userBlobPrefix(meta.userId), meta.callId);
   const file: TranscriptFile = {
     version: 1,
@@ -122,9 +130,10 @@ export async function finalizeCall(
     stage: data.learner.stage,
     firstLanguage: data.learner.firstLanguage,
     timezone: data.learner.timezone,
-    startedAt: meta.startedAt,
+    startedAt,
     endedAt,
-    lines: data.transcript,
+    // Each line's time too: the post-call job stamps a phrase's use with its line's.
+    lines: shift === 0 ? data.transcript : data.transcript.map((l) => ({ ...l, at: l.at + shift })),
   };
   await env.BLOBS.put(key, JSON.stringify(file), {
     httpMetadata: { contentType: 'application/json' },
@@ -141,8 +150,8 @@ export async function finalizeCall(
     sceneId: meta.sceneId,
     character: leadOf(scene),
     stage: data.learner.stage,
-    startedAt: meta.startedAt,
-    endedAt: Math.max(endedAt, meta.startedAt),
+    startedAt,
+    endedAt: Math.max(endedAt, startedAt),
     learnerSeconds: Math.round(data.meter.learnerMs / 1_000),
     characterSeconds: Math.round(data.meter.characterMs / 1_000),
     endReason: reason,
@@ -157,7 +166,7 @@ export async function finalizeCall(
   console.log('call ended', {
     callId: meta.callId,
     reason,
-    seconds: Math.round((endedAt - meta.startedAt) / 1_000),
+    seconds: Math.round((endedAt - startedAt) / 1_000),
     usd: cost.usd,
     timings: medians(data.samples),
   });

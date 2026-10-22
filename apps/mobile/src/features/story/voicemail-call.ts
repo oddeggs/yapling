@@ -6,6 +6,8 @@ import { decodeAudioData } from 'react-native-audio-api';
 import { getSessionToken } from '../../data';
 import { apiBase, clientVersion } from '../../data/config';
 import { Store, useStore, VoiceEngine, type CallState } from '../../voice';
+import { withAppClock } from '../../voice/call-socket';
+import { now } from '../devmenu';
 import { initialCallState } from '../../voice/call-state';
 import {
   initialVoicemail,
@@ -76,7 +78,8 @@ export function useVoicemailCall({
       }
       if (!live) return;
       const e = new VoiceEngine({
-        url: callSocketUrl(apiBase()),
+        // A test session's time travel goes with the call, so the fix grows on the app's day.
+        url: withAppClock(callSocketUrl(apiBase()), now()),
         hello: {
           token,
           kind: 'voicemail_reply',

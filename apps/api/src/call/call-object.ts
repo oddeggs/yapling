@@ -59,7 +59,8 @@ export class CallDO extends DurableObject<Bindings> {
     server.accept();
     // Newer compatibility dates deliver binary frames as Blob unless asked otherwise.
     server.binaryType = 'arraybuffer';
-    this.listen(server, request.headers.get('x-call-country') ?? 'VN');
+    const clockOffset = Number(request.headers.get('x-call-clock-offset') ?? 0) || 0;
+    this.listen(server, request.headers.get('x-call-country') ?? 'VN', clockOffset);
     return new Response(null, { status: 101, webSocket: phone });
   }
 
@@ -80,7 +81,7 @@ export class CallDO extends DurableObject<Bindings> {
     await session?.end('idle');
   }
 
-  private listen(socket: WebSocket, country: string): void {
+  private listen(socket: WebSocket, country: string, clockOffset: number): void {
     let hello: Promise<void> | null = null;
     const early: (string | ArrayBuffer)[] = [];
     socket.addEventListener('message', (event) => {
@@ -90,7 +91,7 @@ export class CallDO extends DurableObject<Bindings> {
         return;
       }
       if (hello === null) {
-        hello = this.hello(socket, data, country).then(() => {
+        hello = this.hello(socket, data, country, clockOffset).then(() => {
           for (const message of early.splice(0)) this.message(socket, message);
         });
         return;
@@ -124,6 +125,7 @@ export class CallDO extends DurableObject<Bindings> {
     socket: WebSocket,
     raw: string | ArrayBuffer,
     country: string,
+    clockOffset: number,
   ): Promise<void> {
     const reject = (
       code: 'unauthorized' | 'update_required' | 'unknown_scene' | 'minutes_exhausted',
@@ -163,7 +165,8 @@ export class CallDO extends DurableObject<Bindings> {
     const balance = await userObject(this.env, userId).balance();
     if (balance.leftSeconds <= 0) return reject('minutes_exhausted');
     const [learner, saved, time] = await Promise.all([
-      loadLearner(this.env, userId, frame, scene, now),
+      // The learner's due phrases as of the app's day (a dev test session may be days ahead).
+      loadLearner(this.env, userId, frame, scene, now + clockOffset),
       savedSceneState(this.env.DB, userId, scene.id),
       callTime(this.env.DB, userId, now, CONTINUOUS_GAP_MS),
     ]);
@@ -179,6 +182,7 @@ export class CallDO extends DurableObject<Bindings> {
         resumeSecret: secret,
         country,
         turnMode: frame.turnMode,
+        ...(clockOffset !== 0 ? { clockOffsetMs: clockOffset } : {}),
       },
       learner,
       resumeFrom ?? startScene(scene, frame.stage).state,
