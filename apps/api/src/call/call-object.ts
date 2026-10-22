@@ -19,7 +19,10 @@ import { newCallData, type CallData } from './finalize';
 import { FrameSender } from './frames';
 import { loadLearner } from './learner';
 import { CONTINUOUS_GAP_MS } from './safety';
+import { anthropicClient } from './llm';
 import { CallSession } from './session';
+import { lineGloss, TRANSLATIONS_PER_CALL } from './translate';
+import type { TranslateOutcome } from './translate-route';
 
 /*
  * One per live call, created in US West (`locationHint: 'wnam'`: Cloudflare's Hong Kong colo,
@@ -48,6 +51,9 @@ export function objectIdOfToken(token: string): string | null {
 export class CallDO extends DurableObject<Bindings> {
   private session: CallSession | null = null;
   private socket: WebSocket | null = null;
+  /** Lines translated on a tap in this call, and how many taps were answered. */
+  private readonly glosses = new Map<string, string | null>();
+  private translations = 0;
 
   override fetch(request: Request): Response {
     const { pathname } = new URL(request.url);
@@ -71,6 +77,33 @@ export class CallDO extends DurableObject<Bindings> {
   async canResume(token: string): Promise<boolean> {
     const data = await this.load();
     return data !== null && this.resumable(data, token);
+  }
+
+  /**
+   * A tapped line in the learner's first language (`POST /api/calls/translate`): only for the
+   * live call's own learner, holding its resume token.
+   */
+  async translate(token: string, userId: string, text: string): Promise<TranslateOutcome> {
+    const session = this.session;
+    const data = session?.data ?? null;
+    if (data === null || data.meta.userId !== userId || !this.resumable(data, token)) {
+      return { ok: false, code: 'no_call' };
+    }
+    if (this.translations >= TRANSLATIONS_PER_CALL) return { ok: false, code: 'too_many' };
+    this.translations += 1;
+    try {
+      const gloss = await lineGloss(text, {
+        stage: data.learner.stage,
+        firstLanguage: data.learner.firstLanguage,
+        llm: anthropicClient(this.env.ANTHROPIC_API_KEY ?? ''),
+        usage: data.usage,
+        cache: this.glosses,
+      });
+      return { ok: true, gloss };
+    } catch (error) {
+      console.error('line gloss failed', { error: String(error).slice(0, 200) });
+      return { ok: false, code: 'failed' };
+    }
   }
 
   override async alarm(): Promise<void> {
