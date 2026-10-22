@@ -1,0 +1,4 @@
+# Audition audio stays local, like audio/auditions and audio/auditions-visitor; the takes, wpm, heard and page are committed.
+*.mp3
+*.timing.json
+*.stt.json

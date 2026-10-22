@@ -1,6 +1,6 @@
 # Vietnamese copy review
 
-Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here, except the beginner path's Vietnamese (Release 1.1), which comes first because Linh's spoken lines gate the recording.
+Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with its English source, for a native Vietnamese reviewer before the learner test and the store launch. Learning content (character lines, glosses in `@yapling/story`) is out of scope here, except two sets reviewed first: the Vietnamese of weeks 2–7 (Release 1.2: Visitor task cards, card and hint glosses, line glosses, knocks), and the beginner path's (Release 1.1), whose spoken lines gated the recording.
 
 526 strings in 15 catalogues; 97 flagged.
 
@@ -30,7 +30,395 @@ Every Vietnamese string in `packages/i18n/src/*.vi.ts`, grouped by screen, with 
 | Round (Pass it on) vs turn      | both "Lượt"                                    | decide; "Vòng" is taken by the weekly ring                                              |
 | Not now                         | "Để sau", "Không phải bây giờ"                 | "Để sau"                                                                                |
 
-## Settling in and the Visitor stage (Release 1.1) · review first
+## Every day, every week (Release 1.2) · review first
+
+Weeks 2–7 of Season One (`docs/every-week-loop.md`; script in `docs/season-1-script.md`, "Weeks 2–7", "Pip's minute", "Bunting Week") add Vietnamese that isn't in the i18n catalogues yet. Same register as the rest of the app: the cast say "mình", the learner is "bạn", soft endings with "nhé"; Hank and Dex say "tôi" (flagged), a public speech says "tôi". **Section 1, the Visitor task cards, comes first**: they are the only instructions a Visitor gets. No new Vietnamese is spoken in this release, so nothing here gates the recording.
+
+19 task cards, 48 card glosses (several cards to a row), 51 Newcomer hint glosses, 190 line glosses, 33 chrome drafts: 341 rows.
+
+### 1. Visitor task cards
+
+A short Vietnamese instruction on a card when a new kind of turn starts.
+
+| Where | Tiếng Việt | English meaning | Flag | Notes |
+|---|---|---|---|---|
+| Week 2 episode, the rehearsal | Pip sắp đi phỏng vấn. Bạn đóng vai Sol: đọc câu hỏi trên thẻ. | Pip has an interview soon. You play Sol: read the question on the card. |  |  |
+| Week 2 episode, about you | Sol hỏi về bạn. Nói tên và công việc của bạn. | Sol asks about you. Say your name and your job. |  |  |
+| Week 2 episode, good at | Bạn giỏi việc gì? Chọn một thẻ, hoặc nói bằng từ của bạn. | What are you good at? Pick a card, or say it your own way. |  | Same frame as Chapter 6's task card |
+| Week 2 episode, the details | Nhắc lại giờ làm và nhận lời giúp Pip. | Say the hours back and say yes for Pip. |  |  |
+| Week 2 real-week call | Pip muốn biết thêm về bạn. Chọn thẻ, hoặc nói bằng từ của bạn. | Pip wants to know more about you. Pick a card, or say it your own way. |  |  |
+| Week 2 and 4 practice calls, explain a word | Giải thích từ cho Pip: chọn một thẻ. | Explain the word to Pip: pick a card. |  |  |
+| Week 3 episode, Hank | Hank muốn mua cà phê rẻ hơn. Bạn giúp Mei từ chối thật lịch sự. | Hank wants cheaper coffee. Help Mei say no, politely. |  |  |
+| Week 3 episode, something else | Mời Hank một món khác thay cho giảm giá. | Offer Hank something else instead of a discount. |  |  |
+| Week 3 real-week call | Dex đóng vai sếp của bạn. Từ chối thật lịch sự. | Dex plays your boss. Say no, politely. |  |  |
+| Week 4 episode, open the meeting | Bạn chủ trì cuộc họp. Chào mọi người trước nhé. | You're running the meeting. Say hello to everyone first. |  |  |
+| Week 4 episode, each person | Hỏi ý kiến từng người. | Ask each person what they think. |  |  |
+| Week 4 real-week call, your idea | Bạn góp một ý. Chọn một thẻ. | Add an idea. Pick a card. |  |  |
+| Week 4 practice call, Nell's time | Nghe lại bưu thiếp của Nell, rồi chọn giờ. | Listen to Nell's postcard again, then pick the time. |  |  |
+| Week 5 episode, the stops | Mỗi trạm, đọc thẻ cho một hành khách. Ai cũng sẽ ký. | At each stop, read the card to a passenger. Everyone will sign. |  | "Ai cũng sẽ ký" promises the outcome on purpose: nothing fails |
+| Week 6 episode, the speech | Bài phát biểu ba câu. Nói từng câu một. | A three-line speech. Say one line at a time. |  |  |
+| Week 6 episode, Hank's question | Hank hỏi một câu. Chọn thẻ để trả lời. | Hank asks a question. Pick a card to answer. |  |  |
+| Week 6 real-week call | Pip hỏi về tuần của bạn. Chọn một thẻ. | Pip asks about your week. Pick a card. |  |  |
+| Week 6 practice call, the postcards | Hàng xóm gửi bưu thiếp. Nghe, rồi chọn thẻ để trả lời. Nghe không kịp thì nói: Sorry? Again, please. | The neighbours sent postcards. Listen, then pick a card to answer. If you don't catch it, say: Sorry? Again, please. | Length | The longest task card; the lifesaver stays in English |
+| Pip's minute, the first one | Một phút với Pip: đọc thẻ giúp Pip nhé. | Pip's minute: read the card for Pip. | Term | "Một phút với Pip" is also the chip's name |
+
+Reused unchanged from week 1 (already in the Settling-in list, section 4): "Giới thiệu bản thân: từng câu một." and "Giờ nói cả ba câu liền nhau nhé." (week 5's real-week call, week 6's speech), "Pip nói sai. Đọc câu đúng cho Pip nhé." (Pip's minute fix turns).
+
+### 2. Visitor card glosses
+
+The Vietnamese under each say-this card. Cards already reviewed in the Settling-in list are left out.
+
+| English card | Tiếng Việt | Where | Flag | Notes |
+|---|---|---|---|---|
+| What's your job? | Bạn làm nghề gì? | Wk 2 episode |  |  |
+| I'm {name}. I'm a … | Mình là {name}. Mình là … | Wk 2 episode |  |  |
+| I'm {name}. I work at … | Mình là {name}. Mình làm ở … | Wk 2 episode |  |  |
+| I'm good at cooking. | Mình nấu ăn giỏi. | Wk 2 episode, real-week |  |  |
+| I'm good at numbers. | Mình giỏi tính toán. | Wk 2 episode |  |  |
+| I'm good at my job. | Mình làm tốt công việc của mình. | Wk 2 real-week |  |  |
+| I'm good at … | Mình giỏi … | Wk 5 real-week |  |  |
+| Mornings. Okay! | Buổi sáng. Được! | Wk 2 episode |  |  |
+| Yes, mornings are okay. | Vâng, buổi sáng thì được. | Wk 2 episode | Register | "Vâng" to Sol, an interviewer; "Dạ" is the southern equivalent |
+| Thank you. Bye! | Cảm ơn. Tạm biệt! | Wk 2 episode, wk 3 real-week |  | As week 1's office card |
+| I'm a … / I work at … | Mình là … / Mình làm ở … | Wk 2 and 5 real-week |  | As Chapter 6 |
+| I like … · I like music. · I like coffee. | Mình thích … · Mình thích âm nhạc. · Mình thích cà phê. | Wk 2 real-week |  | As Chapter 6 |
+| It's a group. | Là một nhóm. | Wk 2 practice (team) |  |  |
+| It's people. They work together. | Là những người làm việc cùng nhau. | Wk 2 practice (team) |  |  |
+| It's work time. | Là giờ làm. | Wk 2 practice (shift) |  |  |
+| It's your work hours. | Là giờ làm việc của bạn. | Wk 2 practice (shift) |  |  |
+| Sorry, no. | Xin lỗi, không được. | Wk 3 episode, real-week |  |  |
+| I'm sorry, we can't do that. | Xin lỗi, chúng tôi không làm vậy được. | Wk 3 episode | Register | "chúng tôi": the learner speaks for the café to a customer; the phrase's gloss in the week view says the same |
+| How about a free cake? | Tặng ông một cái bánh nhé? | Wk 3 episode | Register | "ông" for Hank (a raccoon in his forties or fifties); "anh" if that reads too old |
+| How about free tea? | Tặng ông trà miễn phí nhé? | Wk 3 episode | Register | As above |
+| Deal! | Chốt! | Wk 3 episode, wk 6 practice |  | Colloquial on purpose, as Hank is |
+| Sorry, I can't. | Xin lỗi, mình không đi làm được. | Wk 3 real-week | Meaning | Glossed for its scene ("work on Sunday?"), not word for word |
+| Yes, Monday is okay. | Vâng, thứ Hai thì được. | Wk 3 real-week |  |  |
+| How about Tuesday? | Hay là thứ Ba nhé? | Wk 3 real-week |  |  |
+| Hello, everyone! / Hello, everyone. | Chào mọi người! | Wk 4 episode and real-week, wk 6 speech |  |  |
+| Bea, what do you think? · Linh, what do you think? | Bea nghĩ sao? · Linh nghĩ sao? | Wk 4 episode |  | The name stands for "you", as people say it |
+| Good idea! | Ý hay đó! | Wk 4, wk 6 practice |  |  |
+| I like it! | Mình thích ý này! | Wk 4 |  |  |
+| Okay! / Yes! Thank you, everyone. | Được! / Vâng! Cảm ơn mọi người. | Wk 4 episode |  |  |
+| Coffee at three? / Let's start at nine. | Ba giờ uống cà phê nhé? / Mình bắt đầu lúc chín giờ nhé. | Wk 4 real-week |  |  |
+| At four. / At nine. | Lúc bốn giờ. / Lúc chín giờ. | Wk 4 practice |  | The listening checkpoint: the number is the point |
+| It's names on paper. / People sign it. | Là tên mọi người trên một tờ giấy. / Mọi người ký vào đó. | Wk 4 practice (petition) |  |  |
+| It's your name. / You write your name. | Là tên của bạn. / Bạn tự viết tên mình. | Wk 4 practice (signature) |  |  |
+| Please sign. It's for Mei's café. | Ký giúp nhé. Là để giúp quán của Mei. | Wk 5 episode |  |  |
+| Hello! Please sign. | Xin chào! Ký giúp nhé. | Wk 5 episode |  |  |
+| Mei's café. It's very good. / The Lantern Café. Please sign. | Quán của Mei. Ngon lắm. / Quán Lantern. Ký giúp nhé. | Wk 5 episode | Meaning | "very good" glossed as "ngon lắm" (the food), which is what a café is praised for |
+| Thank you! / Thank you, Bea! | Cảm ơn! / Cảm ơn Bea! | Wk 5, wk 6 |  |  |
+| Thanks for listening! | Cảm ơn bạn đã lắng nghe! | Wk 5 episode |  |  |
+| Hi, I'm {name}. | Xin chào, mình là {name}. | Wk 5 real-week |  | As week 1 |
+| I love Mei's café. | Mình rất yêu quán của Mei. | Wk 6 speech, practice |  |  |
+| Please say yes. Thank you! | Mọi người đồng ý nhé. Cảm ơn! | Wk 6 speech |  | "say yes" = vote yes |
+| It's our café. / Mei is our friend. | Đó là quán của chúng ta. / Mei là bạn của chúng ta. | Wk 6 episode |  | "chúng ta": the speaker includes the listeners |
+| Thank you all! | Cảm ơn tất cả mọi người! | Wk 6 episode |  |  |
+| A good week. / A busy week. | Một tuần vui. / Một tuần bận rộn. | Wk 6 real-week |  |  |
+| I like the café. / I like my job. | Mình thích quán cà phê. / Mình thích công việc của mình. | Wk 6 real-week |  |  |
+| I work tomorrow. / I rest tomorrow. | Mai mình đi làm. / Mai mình nghỉ. | Wk 6 real-week |  |  |
+| A party! Yes! | Tiệc! Đồng ý! | Wk 6 practice |  |  |
+| Yes, please! | Có, cảm ơn nhé! | Wk 6 practice |  | As Chapter 2's "Yes, please." |
+
+English-only cards (Pass it on and timed pitches, no Vietnamese by rule): "I like the café." · "Mei is my friend." · "The toast is good." (week 3) · "We got a hundred names." · "Bea signed last." · "Mei is happy." (week 5). Pip's minute cards show each phrase's existing gloss (`S1_PHRASES`, reviewed with the week view).
+
+### 3. Newcomer hint glosses
+
+The Vietnamese under a Newcomer hint (shown after a long quiet, or when asked). "…" is where the learner's own words go.
+
+| Where | English hint | Tiếng Việt | Flag | Notes |
+|---|---|---|---|---|
+| Wk 2 episode | Tell me about yourself. / What are you good at? | Hãy giới thiệu về bản thân bạn. / Bạn giỏi việc gì? |  |  |
+| Wk 2 episode | You mean: … | Ý Pip là: … |  | To fix Pip's mistake |
+| Wk 2 episode | I'm … I work at … / I study … Every day, I … | Mình là … Mình làm ở … / Mình học … Mỗi ngày, mình … |  |  |
+| Wk 2 | I'm good at … | Mình giỏi … |  |  |
+| Wk 2 | For example, last week I … | Ví dụ, tuần trước mình … |  |  |
+| Wk 2 episode | Just to confirm: the fourteenth, mornings? | Cho mình xác nhận lại: ngày mười bốn, làm buổi sáng, đúng không? |  |  |
+| Wk 2 episode | I'd love to! | Có chứ, mình rất muốn! |  |  |
+| Wk 2 real-week | I'm … I work at … Every day, I … | Mình là … Mình làm ở … Mỗi ngày, mình … |  |  |
+| Wk 2 real-week | I'm good at … For example, … | Mình giỏi … Ví dụ, … |  |  |
+| Wk 2 real-week | One day, I'd love to … | Một ngày nào đó, mình rất muốn … |  |  |
+| Wk 2 practice | It's the last day to … | Là ngày cuối cùng để … |  | deadline |
+| Wk 2 practice | A team is a group of people who … | Team là một nhóm người cùng … | English on purpose? | The word being taught stays English |
+| Wk 2 practice | A shift is the time when you … | Ca làm là khoảng thời gian bạn … |  |  |
+| Wk 3 episode | I'm sorry, we can't do that. | Xin lỗi, chúng tôi không làm vậy được. |  |  |
+| Wk 3 episode | Sorry, we really can't. | Xin lỗi, thật sự là không được. |  |  |
+| Wk 3 episode | How about free kaya toast? / How about …? | Hay là tặng kèm bánh mì nướng kaya nhé? / Hay là … nhé? |  |  |
+| Wk 3 episode | That's a fair point, but … | Ông nói cũng có lý, nhưng … | Register | To Hank; the week-4 real-week version says "Bạn" |
+| Wk 3 episode | Deal! Thank you. | Chốt! Cảm ơn ông. |  |  |
+| Wk 3 real-week | This week, someone asked me to … | Tuần này, có người nhờ mình … |  |  |
+| Wk 3 real-week | I'm sorry, I can't do that. | Xin lỗi, mình không làm vậy được. |  |  |
+| Wk 3 real-week | How about …? | Hay là … nhé? |  |  |
+| Wk 4 episode | Hello, everyone. Let's hear from Bea. What do you think? | Chào mọi người. Mời Bea nói trước nhé. Bea nghĩ sao? |  |  |
+| Wk 4 episode | Good idea, and … Nell, what do you think? | Ý hay đó, và … Nell thấy sao? |  |  |
+| Wk 4 episode | I see, but … How about …? | Mình hiểu, nhưng … Hay là … nhé? |  |  |
+| Wk 4 episode | Thanks, Bea. Let's hear from Linh. | Cảm ơn Bea. Giờ mời Linh nói nhé. |  |  |
+| Wk 4 episode | So, to sum up: a petition. A hundred names. | Vậy, tóm lại: một bản kiến nghị. Một trăm chữ ký. | Term | "bản kiến nghị" everywhere for petition; "đơn kiến nghị" is the other choice |
+| Wk 4 real-week | On … I have a meeting about … I want to say … | Vào … mình có cuộc họp về … Mình muốn nói … |  |  |
+| Wk 4 real-week | Can I add something? I think we should … | Cho mình góp một ý nhé? Mình nghĩ chúng ta nên … |  |  |
+| Wk 4 real-week | That's a fair point, but … | Bạn nói cũng có lý, nhưng … |  |  |
+| Wk 4 practice | It's a paper. People sign it to ask for … | Là một tờ giấy. Mọi người ký vào đó để đề nghị … |  |  |
+| Wk 4 practice | It's your name, written by you. | Là tên của bạn, do chính bạn viết. |  |  |
+| Wk 4 practice | Yes! That's your signature. | Đúng rồi! Đó là chữ ký của Pip. | Meaning | "your" is Pip's, so the gloss names Pip |
+| Wk 5 episode | Yes! The kaya toast is the best in town. | Có chứ! Bánh mì nướng kaya ở đó ngon nhất thị trấn. |  |  |
+| Wk 5 episode | Go along the harbour. It's next to the bus stop. | Đi dọc bến cảng. Quán ở ngay cạnh trạm xe buýt. | Term | "trạm xe buýt" vs "bến xe buýt" (open in the Settling-in list) |
+| Wk 5 episode | Thanks for listening, Bea! | Cảm ơn Bea đã lắng nghe! |  |  |
+| Wk 5 real-week | It's for … (my boss / a client / an interview). | Để nói với … (sếp / khách hàng / người phỏng vấn). |  |  |
+| Wk 5 real-week | Here's the thing: I'm … I'm good at … For example, … It matters because … | Chuyện là thế này: mình là … Mình giỏi … Ví dụ, … Điều đó quan trọng vì … |  |  |
+| Wk 5 real-week | Same pitch, plus one number. | Như lúc nãy, thêm một con số. |  |  |
+| Wk 6 episode | Yes, please. / No, let's go! | Có, tập nhé. / Thôi, đi luôn! |  |  |
+| Wk 6 episode | I'd like to say a few words. First, … Second, … Thank you. | Tôi xin phép nói vài lời. Thứ nhất, … Thứ hai, … Xin cảm ơn. | Register | "Tôi" in a public speech, the phrase's own gloss |
+| Wk 6 episode | That's a great question. It matters because … | Câu hỏi hay quá. Điều đó quan trọng vì … |  |  |
+| Wk 6 episode | Thank you all. … | Cảm ơn tất cả mọi người. … |  |  |
+| Wk 6 real-week | It went well. I said … / It was hard, because … | Ổn lắm. Mình đã nói … / Hơi khó, vì … |  |  |
+| Wk 6 real-week | They said … Then I … | Họ nói … Sau đó mình … |  |  |
+| Wk 6 real-week | Next week, I have to … | Tuần sau, mình phải … |  |  |
+| Wk 6 practice (Linh) | That's a great question! … | Câu hỏi hay quá! … |  |  |
+| Wk 6 practice (Mei) | I think you should … | Mình nghĩ bạn nên … |  |  |
+| Wk 6 practice (Sol) | I'd love to! Just to confirm: Friday? | Mình rất muốn! Cho mình xác nhận lại: thứ Sáu nhé? |  |  |
+| Wk 6 practice (Hank) | Deal! | Chốt! |  |  |
+| Wk 6 practice (Nell) | Good idea, and … | Ý hay đó, và … |  |  |
+| Wk 6 practice (Bea) | Here's the thing: … It matters because … | Chuyện là thế này: … Điều đó quan trọng vì … |  |  |
+
+### 4. Glosses of the new recorded lines
+
+Shown under each line when the learner taps it, and under every line at Visitor. The English is final for recording (`audio/season-1/lines.json`, `pending`, where `_vi` repeats this column); suggest Vietnamese only. "Visitor-slow" lines are the short ones a Visitor hears.
+
+| Id | Who | English | Tiếng Việt | Flag | Notes |
+|---|---|---|---|---|---|
+| `s1-e2-09` | Pip | Wait, was that the fourteenth? Can you check? | Khoan đã, ngày mười bốn hả? Bạn hỏi lại giúp mình nhé? |  |  |
+| `s1-e2-10` | Sol | Before you go, would you like to see the office? | Trước khi về, hai bạn có muốn xem văn phòng một chút không? |  |  |
+| `s1-e2-11` | Sol | And you came with Pip! Can I ask you the same question? | Bạn đi cùng Pip à! Mình hỏi bạn câu đó luôn nhé? |  |  |
+| `s1-e2-12` | Sol | Last thing. The job starts on the fourteenth, mornings only. | Còn một việc nữa. Công việc bắt đầu từ ngày mười bốn, chỉ làm buổi sáng. |  |  |
+| `s1-e2-13` | Pip | I GOT THE JOB! Oh, and Mei says a big man wants cheaper coffee beans. She looked worried. | MÌNH ĐƯỢC NHẬN RỒI! À, Mei kể có một ông to con muốn mua hạt cà phê rẻ hơn. Trông Mei lo lắm. |  |  |
+| `s1-e2-visitor-practise` | Pip | Be Sol, please! Ask me: what's your job? | Bạn làm Sol nhé! Hỏi mình: bạn làm nghề gì? |  | Visitor-slow |
+| `s1-e2-visitor-pip-me` | Pip | I'm Pip. I help at Mei's café. | Mình là Pip. Mình phụ việc ở quán của Mei. |  | Visitor-slow |
+| `s1-e2-visitor-sol-hi` | Sol | Hi! I'm Sol. Welcome to Hollowbrook! | Chào! Mình là Sol. Chào mừng đến Hollowbrook! |  | Visitor-slow |
+| `s1-e2-visitor-sol-you` | Sol | Thank you, Pip. And you? | Cảm ơn Pip. Còn bạn? |  | Visitor-slow |
+| `s1-e2-visitor-sol-good` | Sol | I'm good at meetings. And you? | Mình giỏi chủ trì các cuộc họp. Còn bạn? |  | Visitor-slow |
+| `s1-e2-visitor-sol-mornings` | Sol | Pip's job is in the mornings. Okay? | Pip sẽ làm buổi sáng. Được không? |  | Visitor-slow |
+| `s1-e2-visitor-sol-bye` | Sol | Thank you both. Goodbye! | Cảm ơn hai bạn. Tạm biệt! |  | Visitor-slow |
+| `s1-e2-visitor-pip-done` | Pip | We did it! Thank you! | Chúng mình làm được rồi! Cảm ơn bạn! |  | Visitor-slow |
+| `s1-e2-rw-open` | Pip | No Sol today, just me. Tell me about yourself, for real? | Hôm nay không có Sol, chỉ có mình thôi. Kể thật về bạn cho mình nghe nhé? |  |  |
+| `s1-e2-rw-close` | Pip | I wrote it all down. Now I know you better! | Mình ghi lại hết rồi. Giờ mình hiểu bạn hơn rồi! |  |  |
+| `s1-e2-pr-open` | Pip | I copied the poster at Hollowbrook. Three words I don't know! | Mình chép lại tấm áp phích ở Hollowbrook. Có ba từ mình không biết! |  |  |
+| `s1-e2-pr-close` | Pip | Deadline, team, shift. Now I can read the whole poster! | Hạn chót, nhóm, ca làm. Giờ mình đọc được cả tấm áp phích rồi! |  |  |
+| `s1-e2-story-01` | Pip | Story time! Before my interview, I tried on three things. | Đến giờ kể chuyện rồi! Trước buổi phỏng vấn, mình đã thử ba món đồ. |  |  |
+| `s1-e2-story-02` | Pip | First, a big red hat. Mei said, 'Too much hat.' | Đầu tiên là một cái mũ đỏ thật to. Mei nói: "Mũ lố quá." | Register | "lố" (over the top) is colloquial and young; the joke needs it |
+| `s1-e2-story-03` | Pip | Then, my blue coat. Linh said, 'Too much coat.' | Rồi đến cái áo khoác xanh. Linh nói: "Áo lố quá." |  |  |
+| `s1-e2-story-04` | Pip | Then, a long, long tie. It went down to the floor. Too much tie! | Rồi một chiếc cà vạt dài ơi là dài, dài chấm tận sàn. Cà vạt lố quá! |  |  |
+| `s1-e2-story-05` | Pip | So I wore my green scarf. Not too much. Just right. | Thế là mình quàng chiếc khăn xanh. Không lố. Vừa đẹp. |  |  |
+| `s1-e2-story-06` | Pip | Sol said, 'Would you like some tea?' And I said, 'I'd love to!' I felt very smart. | Sol hỏi: "Bạn uống trà nhé?" Mình đáp: "Có chứ, mình rất muốn!" Mình thấy mình giỏi ghê. |  |  |
+| `s1-e3-09` | Hank | One more thing: a man from the office was here. He checked the size of your door. | Còn chuyện này nữa: có người của văn phòng vừa tới đây. Ông ta đo kích thước cửa quán của cô đấy. | Register | Hank to Mei: "cô" |
+| `s1-e3-10` | Hank | Morning! I buy fifty kilos a month. I'd like ten percent off. And free delivery? | Chào buổi sáng! Mỗi tháng tôi mua năm mươi ký. Tôi muốn được giảm mười phần trăm. Và giao hàng miễn phí nữa, được không? | Register | Hank says "tôi"; the cast says "mình" elsewhere. A gruff customer, so "tôi" here |
+| `s1-e3-11` | Hank | Look, I buy fifty kilos a month. Ten percent off and we're friends. Deal? | Nghe này, mỗi tháng tôi mua năm mươi ký. Giảm mười phần trăm là mình thành bạn. Chốt không? |  |  |
+| `s1-e3-12` | Pip | While you were away, a raccoon called Hank wanted cheaper beans. We said no, nicely, and he said 'deal'! Then he told us about a man at Mei's door. | Trong lúc bạn đi vắng, một chú gấu mèo tên Hank muốn mua hạt cà phê rẻ hơn. Chúng mình đã từ chối thật khéo, và ông ấy nói "chốt"! Rồi ông ấy kể có một người lạ đến xem cửa quán Mei. |  |  |
+| `s1-e3-visitor-hank` | Hank | I'm Hank. Ten percent off. Okay? | Tôi là Hank. Giảm mười phần trăm nhé. Được không? | Register | As above; Visitor-slow |
+| `s1-e3-visitor-mei` | Mei | Please say no. I need the money. | Bạn từ chối giúp mình nhé. Mình cần tiền lắm. |  | Visitor-slow |
+| `s1-e3-visitor-hank-hmm` | Hank | Hmm. Then what? | Hừm. Vậy thì sao? |  | Visitor-slow |
+| `s1-e3-visitor-pip` | Pip | Offer him something. Not money. | Mời ông ấy món gì đó đi. Đừng giảm tiền. |  | Visitor-slow |
+| `s1-e3-visitor-hank-deal` | Hank | Free? Okay. Deal! | Miễn phí à? Được. Chốt! |  | Visitor-slow |
+| `s1-e3-visitor-twist` | Hank | A man checked your door. | Có một người đã đến xem xét cửa quán đấy. |  | Visitor-slow |
+| `s1-e3-visitor-mei-why` | Mei | Thank you! My door? Why? | Cảm ơn bạn! Cửa quán mình á? Sao vậy? |  | Visitor-slow |
+| `s1-e3-rw-open` | Dex | Hi, I'm Dex. I hear you said no to Hank, very kindly. | Chào bạn, tôi là Dex. Nghe nói bạn đã từ chối Hank, mà rất khéo nữa. |  |  |
+| `s1-e3-rw-close` | Dex | That was strong. Say it just like that this week. | Tốt lắm. Tuần này bạn cứ nói đúng như vậy nhé. |  |  |
+| `s1-e3-pr-open` | Pip | Mei might lose this café. Why does it matter to you? | Mei có thể mất quán này. Với bạn, quán quan trọng thế nào? |  |  |
+| `s1-e3-pr-close` | Pip | Three times! And Hank listened to the very end. | Ba lần liền! Hank còn nghe tới tận cuối nữa. |  |  |
+| `s1-e3-postcard-linh` | Linh | Tip from a neighbour: I used to say yes to everything. Now I say, 'Sorry, I can't. How about Monday?' | Mẹo nhỏ từ hàng xóm: trước đây việc gì mình cũng nhận lời. Giờ mình nói: "Sorry, I can't. How about Monday?" | English on purpose? | The phrases Linh teaches stay in English |
+| `s1-e3-story-01` | Pip | My first morning at Hollowbrook! Sol said, 'Quick sync at nine.' | Buổi sáng đầu tiên của mình ở Hollowbrook! Sol nói: "Chín giờ quick sync nhé." | English on purpose? | "quick sync" stays English: it's office jargon Pip is learning |
+| `s1-e3-story-02` | Pip | Quick sync? I didn't know it. A quick sink? For washing dishes? | "Quick sync" á? Mình không biết là gì. "Quick sink", cái bồn rửa à? Để rửa bát nhanh hả? | English on purpose? | The joke is a sound (*sync*/*sink*); the English words stay |
+| `s1-e3-story-03` | Pip | So I brought soap. A big yellow bottle of soap. | Thế là mình mang theo xà phòng. Một chai xà phòng to, màu vàng. |  |  |
+| `s1-e3-story-04` | Pip | But a quick sync is a short meeting. Everyone says their plan for today. | Nhưng "quick sync" là một cuộc họp ngắn. Mỗi người nói kế hoạch hôm nay của mình. |  |  |
+| `s1-e3-story-05` | Pip | Sol asked, 'Pip, your plan?' I said, 'Washing!' Sol smiled. 'Good guess.' | Sol hỏi: "Pip, kế hoạch của bạn là gì?" Mình nói: "Rửa bát!" Sol mỉm cười: "Đoán hay đấy." |  |  |
+| `s1-e3-story-06` | Pip | Then I asked, 'Just to confirm: no dishes?' Sol said, 'No dishes, Pip.' The soap is on my desk now. For luck. | Rồi mình hỏi: "Cho mình xác nhận lại: không phải rửa bát hả?" Sol nói: "Không rửa bát đâu, Pip." Giờ chai xà phòng nằm trên bàn làm việc của mình. Để lấy may. |  |  |
+| `s1-e4-07` | Mei | It's Big Bean, the big café across the harbour. They want my building. | Là Big Bean, chuỗi quán cà phê lớn bên kia bến cảng. Họ muốn mua toà nhà của mình. | Term | Big Bean is a name; "chuỗi quán cà phê" = a chain |
+| `s1-e4-08` | Nell | Arjun from Market Lane couldn't come. His note says: a market day! | Arjun ở Market Lane không đến được. Anh ấy gửi lời nhắn: mở một phiên chợ! | English on purpose? | "Market Lane" kept as a place name |
+| `s1-e4-09` | Pip | While you were away, the town met at Nell's inn. You ran the meeting! The plan: a petition, a hundred names. And I have to get them. Help! | Trong lúc bạn đi vắng, cả thị trấn đã họp ở quán trọ của Nell. Bạn chủ trì cuộc họp đó! Kế hoạch là: một bản kiến nghị, một trăm chữ ký. Và mình phải đi xin chữ ký. Cứu với! |  |  |
+| `s1-e4-visitor-mei` | Mei | A big café wants my place. | Một quán cà phê lớn muốn lấy chỗ của mình. |  | Visitor-slow |
+| `s1-e4-visitor-nell` | Nell | I'm Nell. Please start the meeting! | Mình là Nell. Bạn mở đầu cuộc họp nhé! |  | Visitor-slow |
+| `s1-e4-visitor-bea` | Bea | A cake sale on my bus! | Bán bánh ngay trên xe buýt của mình! |  | Visitor-slow |
+| `s1-e4-visitor-linh` | Linh | A petition. A hundred names! | Một bản kiến nghị. Một trăm chữ ký! |  | Visitor-slow |
+| `s1-e4-visitor-nell-sum` | Nell | So, a petition. A hundred names. Okay? | Vậy là: một bản kiến nghị. Một trăm chữ ký. Được chứ? |  | Visitor-slow |
+| `s1-e4-visitor-mei-thanks` | Mei | Thank you. Let's save my café! | Cảm ơn mọi người. Cùng cứu quán của mình nhé! |  | Visitor-slow |
+| `s1-e4-rw-open` | Dex | You ran the town meeting! Now let's practise one of yours. | Bạn đã chủ trì cuộc họp của cả thị trấn! Giờ chúng ta tập cho một cuộc họp của bạn nhé. |  |  |
+| `s1-e4-rw-close` | Dex | Clear and kind. Try it in your real meeting. | Rõ ràng mà vẫn nhẹ nhàng. Hãy thử nói vậy trong cuộc họp thật của bạn nhé. |  |  |
+| `s1-e4-pr-open` | Pip | I forgot the time on Nell's postcard. What did she say? | Mình quên mất giờ ghi trên bưu thiếp của Nell. Nell hẹn mấy giờ nhỉ? |  |  |
+| `s1-e4-pr-close` | Pip | Petition, signature, and my signature has a star. Ready for Bus 45! | Kiến nghị, chữ ký, mà chữ ký của mình còn có ngôi sao nữa. Sẵn sàng lên xe buýt 45 rồi! |  |  |
+| `s1-e4-postcard-nell` | Nell | It's Nell from the Lantern Inn: great meeting! The petition papers are ready at my desk after four. | Nell ở quán trọ Lantern đây: cuộc họp tuyệt lắm! Giấy kiến nghị để sẵn ở quầy của mình, sau bốn giờ ghé lấy nhé. |  |  |
+| `s1-e4-story-01` | Pip | I made a poster for the petition. Big letters. Very big. | Mình làm một tấm áp phích cho bản kiến nghị. Chữ to. Rất to. |  |  |
+| `s1-e4-story-02` | Pip | It says: SAVE THE CAFÉ. SIGN HERE. | Trên đó ghi: CỨU QUÁN CÀ PHÊ. KÝ VÀO ĐÂY. |  |  |
+| `s1-e4-story-03` | Pip | I showed Nell. I asked, 'What do you think?' | Mình đưa Nell xem. Mình hỏi: "Nell thấy sao?" |  |  |
+| `s1-e4-story-04` | Pip | Nell looked at it for a long time. Then she said, 'Count the f's, love.' | Nell nhìn nó rất lâu. Rồi Nell nói: "Đếm thử xem có mấy chữ f nào." |  |  |
+| `s1-e4-story-05` | Pip | I counted. C, A, F, F, F, E. Three f's! Oops. | Mình đếm: C, A, F, F, F, E. Ba chữ f! Ối. |  |  |
+| `s1-e4-story-06` | Pip | Now it says CAFÉ, with one f. And a small star. Stars make everything better. | Giờ thì ghi đúng CAFÉ, một chữ f thôi. Thêm một ngôi sao nhỏ. Có sao là cái gì cũng đẹp hơn. |  |  |
+| `s1-e5-08` | Pip | Strangers! Can you go first, please? | Người lạ! Bạn nói trước giúp mình nhé? |  |  |
+| `s1-e5-09` | Bea | Morning! You can talk about your petition until the next stop. | Chào buổi sáng! Bạn được nói về bản kiến nghị cho tới trạm kế tiếp nhé. |  |  |
+| `s1-e5-10` | Pip | One hundred! You got shorter and better every time! | Một trăm! Mỗi lần bạn lại nói ngắn hơn và hay hơn! |  |  |
+| `s1-e5-11` | Bea | Bus 45 leaves at nine o'clock. Bring your best story, love. | Xe buýt 45 chạy lúc chín giờ. Mang theo câu chuyện hay nhất của bạn nhé. |  |  |
+| `s1-e5-12` | Pip | While you were away, we got a hundred names on Bus 45. Bea signed last! Now there's a vote. Mei wants you to speak. | Trong lúc bạn đi vắng, chúng mình đã xin được một trăm chữ ký trên xe buýt 45. Bea ký cuối cùng! Giờ sắp có cuộc bỏ phiếu. Mei muốn bạn lên phát biểu. |  |  |
+| `s1-e5-visitor-bea` | Bea | Morning, love! Listen to me first. | Chào buổi sáng! Nghe mình nói trước nhé. |  | Visitor-slow |
+| `s1-e5-visitor-bea-model` | Bea | Please sign. It's for Mei's café. | Ký giúp nhé. Là để giúp quán của Mei. |  | Visitor-slow |
+| `s1-e5-visitor-pip` | Pip | So many people! You go first? | Đông người quá! Bạn nói trước nhé? |  | Visitor-slow |
+| `s1-e5-visitor-count` | Pip | Ninety-nine names! One more! | Chín mươi chín chữ ký! Thêm một nữa thôi! |  | Visitor-slow |
+| `s1-e5-visitor-bea-signs` | Bea | Wait! I can sign! | Khoan đã! Mình ký được mà! |  | Visitor-slow |
+| `s1-e5-visitor-pip-100` | Pip | One hundred! You were great! | Một trăm chữ ký! Bạn giỏi quá! |  | Visitor-slow |
+| `s1-e5-rw-open` | Dex | A hundred names in one ride. Now, a short talk about you. | Một trăm chữ ký chỉ trong một chuyến xe. Giờ đến một bài nói ngắn về chính bạn. |  |  |
+| `s1-e5-rw-close` | Dex | Much better. Sixty seconds, and I wanted to hear more. | Tốt hơn nhiều. Sáu mươi giây, mà tôi vẫn muốn nghe thêm. |  |  |
+| `s1-e5-pr-open` | Pip | Linh and Mei weren't on the bus. Tell them our petition story! | Linh với Mei không đi chuyến xe đó. Bạn kể chuyện xin chữ ký cho hai người nghe nhé! |  |  |
+| `s1-e5-pr-close` | Pip | Three friends! Bea says it's her favourite story this week. | Ba người bạn! Bea bảo đây là câu chuyện Bea thích nhất tuần này. |  |  |
+| `s1-e5-story-01` | Pip | Can I tell you a secret? Before Bus 45, I practised what to say. | Kể bạn nghe một bí mật nhé? Trước chuyến xe 45, mình đã tập trước những gì sẽ nói. |  |  |
+| `s1-e5-story-02` | Pip | Not with a person. With a street light, outside the bread shop. | Không phải với người đâu. Với một cây đèn đường, ngoài tiệm bánh mì. |  |  |
+| `s1-e5-story-03` | Pip | I said, 'Excuse me, street light. Here's the thing. Mei's café might close.' | Mình nói: "Xin lỗi, đèn đường ơi. Chuyện là thế này. Quán của Mei có thể phải đóng cửa." |  |  |
+| `s1-e5-story-04` | Pip | The street light said nothing. Very quiet. Very tall. | Cây đèn đường chẳng nói gì. Rất im lặng. Rất cao. |  |  |
+| `s1-e5-story-05` | Pip | I said it again, slower. Then a bird sat on top and looked at me. | Mình nói lại, chậm hơn. Rồi một con chim đậu lên trên và nhìn mình. |  |  |
+| `s1-e5-story-06` | Pip | The street light didn't sign. But the bird listened to the end. That's a start! | Cây đèn không ký. Nhưng con chim nghe tới cuối. Vậy cũng là một khởi đầu rồi! |  |  |
+| `s1-e6-07` | Hank | Full price, fifty kilos, Mei. Don't tell anyone. | Giá gốc, năm mươi ký nhé, Mei. Đừng nói với ai đấy. |  |  |
+| `s1-e6-08` | Pip | Want to practise your speech first? Just once, with me. | Bạn có muốn tập bài phát biểu trước không? Một lần thôi, với mình. |  |  |
+| `s1-e6-09` | Pip | Look! Your name is on the flags! | Nhìn kìa! Tên bạn ở trên dây cờ! |  |  |
+| `s1-e6-10` | Mei | Shiok! Thank you, everyone, especially you. | Đã quá! Cảm ơn mọi người, nhất là bạn. | Meaning | "Shiok!" (Singlish, "so good") glossed "Đã quá!" |
+| `s1-e6-11` | Mags | The office wants to sell 12 Harbour Lane. Does anyone want to speak? | Văn phòng muốn bán toà nhà số 12 đường Harbour. Có ai muốn phát biểu không? |  |  |
+| `s1-e6-12` | Pip | You can do it. First, second, thank you, like we practised. | Bạn làm được mà. Thứ nhất, thứ hai, cảm ơn, như mình đã tập. |  |  |
+| `s1-e6-visitor-mags` | Mags | Does anyone want to speak? | Có ai muốn phát biểu không? |  | Visitor-slow |
+| `s1-e6-visitor-pip` | Pip | You can do it. Line by line. | Bạn làm được mà. Từng câu một thôi. |  | Visitor-slow |
+| `s1-e6-visitor-hank` | Hank | Good speech. But why this café? | Nói hay lắm. Nhưng sao lại là quán này? |  | Visitor-slow |
+| `s1-e6-visitor-hank-yes` | Hank | Okay. I say yes! | Được. Tôi đồng ý! |  | Visitor-slow |
+| `s1-e6-visitor-mags-vote` | Mags | The town says yes. The café stays! | Thị trấn đồng ý. Quán cà phê được ở lại! |  | Visitor-slow |
+| `s1-e6-visitor-mei` | Mei | Thank you lah! You were great! | Cảm ơn nhiều nha! Bạn giỏi lắm! |  | Visitor-slow |
+| `s1-e6-visitor-flags` | Pip | Look! Your name! On the flags! | Nhìn kìa! Tên bạn! Ở trên dây cờ! |  | Visitor-slow |
+| `s1-e6-visitor-boat` | Pip | Look! A boat! Who's on it? | Nhìn kìa! Một con thuyền! Ai ở trên đó vậy? |  | Visitor-slow |
+| `s1-e6-rw-open` | Pip | I have a question from my notebook. A real one. | Mình có một câu hỏi trong sổ tay. Câu hỏi thật đấy. |  |  |
+| `s1-e6-rw-close` | Pip | I'm so happy for you. Tell a friend about it, too! | Mình mừng cho bạn lắm. Kể cho một người bạn nghe nữa nhé! |  |  |
+| `s1-e6-postcard-linh` | Linh | You spoke to the whole town! How did you get so brave? | Bạn đã nói trước cả thị trấn! Sao bạn dũng cảm vậy? |  |  |
+| `s1-e6-postcard-mei` | Mei | The café is staying! Ok, so what's the plan for the party? | Quán được ở lại rồi! Ok, vậy tiệc tính sao đây? |  |  |
+| `s1-e6-postcard-sol` | Sol | Pip is doing great at work. Can you come to our team lunch on Friday? | Pip làm việc tốt lắm. Thứ Sáu bạn đến ăn trưa với nhóm mình được không? |  |  |
+| `s1-e6-postcard-hank` | Hank | Full price, fifty kilos, every month. Deal? | Giá gốc, năm mươi ký, tháng nào cũng vậy. Chốt không? |  |  |
+| `s1-e6-postcard-nell` | Nell | The inn wants a party for the café. What do you think? | Quán trọ muốn mở tiệc mừng cho quán cà phê. Bạn thấy sao? |  |  |
+| `s1-e6-postcard-bea` | Bea | Tell me again, love. Why does the café matter to you? | Kể lại cho mình nghe nào. Vì sao quán cà phê quan trọng với bạn? |  |  |
+| `s1-e6-vm-bunting` | Pip | Big news! The little flags in the square stay up for a whole week. It's called Bunting Week. It starts next week! | Tin vui đây! Mấy dây cờ nhỏ ở quảng trường sẽ treo suốt một tuần. Gọi là Tuần Cờ Dây. Tuần sau là bắt đầu rồi! | Term | "Tuần Cờ Dây" for Bunting Week; also in the knocks |
+| `s1-e6-story-01` | Pip | The night before the meeting, I couldn't sleep. | Đêm trước buổi họp, mình không ngủ được. |  |  |
+| `s1-e6-story-02` | Pip | So I went outside and practised your speech. To the moon. | Thế là mình ra ngoài tập bài phát biểu của bạn. Tập với mặt trăng. |  |  |
+| `s1-e6-story-03` | Pip | 'I'd like to say a few words,' I said. The moon said nothing. It was busy being round. | "Tôi xin phép nói vài lời," mình nói. Mặt trăng chẳng nói gì. Nó còn bận tròn. |  |  |
+| `s1-e6-story-04` | Pip | 'First, the café is our home. Second, Mei makes the best toast.' | "Thứ nhất, quán cà phê là nhà của chúng ta. Thứ hai, Mei làm bánh mì nướng ngon nhất." |  |  |
+| `s1-e6-story-05` | Pip | An owl said, 'Who? Who?' And I said, 'Mei! Mei's café!' | Một con cú kêu: "Ai? Ai?" Mình đáp: "Mei! Quán của Mei!" | Meaning | An owl's "hoo" sounds like *who*: "Ai? Ai?" keeps the joke |
+| `s1-e6-story-06` | Pip | Then I said, 'Thank you all,' to the moon and the owl. And I went to bed. | Rồi mình nói "Cảm ơn tất cả" với mặt trăng và con cú. Rồi mình đi ngủ. |  |  |
+| `s1-fest-story-01` | Pip | {name}, this is the story of our season. | {name} ơi, đây là câu chuyện mùa này của chúng mình. |  | `{name}` is filled in by the app |
+| `s1-fest-story-02` | Pip | Six weeks ago, Mei got a letter. Her rent doubled. | Sáu tuần trước, Mei nhận được một lá thư. Tiền thuê nhà tăng gấp đôi. |  |  |
+| `s1-fest-story-03` | Pip | You asked, 'What's wrong?' Then you called the office for her. | Bạn hỏi: "Có chuyện gì vậy?" Rồi bạn gọi điện cho văn phòng giúp Mei. |  |  |
+| `s1-fest-story-04` | Pip | I had my first interview. You helped me, and I got the job! | Mình đi phỏng vấn lần đầu. Bạn giúp mình, và mình được nhận! |  |  |
+| `s1-fest-story-05` | Pip | Hank wanted cheaper beans. You said no, so kindly. He said, 'Deal.' | Hank muốn mua hạt cà phê rẻ hơn. Bạn từ chối thật khéo. Ông ấy nói: "Chốt." |  |  |
+| `s1-fest-story-06` | Pip | You ran the meeting at Nell's inn. Everyone had a turn. | Bạn chủ trì cuộc họp ở quán trọ của Nell. Ai cũng được nói. |  |  |
+| `s1-fest-story-07` | Pip | We rode Bus 45 and got a hundred names. Bea signed last. | Chúng mình đi xe buýt 45 và xin được một trăm chữ ký. Bea ký cuối cùng. |  |  |
+| `s1-fest-story-08` | Pip | Then you spoke in front of the whole town. And the café stays. | Rồi bạn phát biểu trước cả thị trấn. Và quán cà phê được ở lại. |  |  |
+| `s1-fest-story-09` | Pip | I wrote it all in my notebook. The best pages are about you. | Mình ghi hết vào sổ tay. Những trang hay nhất là về bạn. |  |  |
+| `s1-fest-postcard-mei` | Mei | Thank you lah. The café stays because of you. Free kaya toast for you, all week! | Cảm ơn nhiều nha. Quán còn là nhờ bạn đó. Cả tuần này bánh mì nướng kaya miễn phí cho bạn! |  |  |
+| `s1-fest-vm-boat` | Bea | Bea here, love. That boat is still in the harbour. Nobody has come off it yet. | Bea đây. Con thuyền đó vẫn còn ở bến cảng. Chưa có ai bước xuống cả. |  |  |
+| `s1-pm-open-1` | Pip | It's Pip's minute! Ready? | Một phút với Pip đây! Sẵn sàng chưa? |  | Visitor-slow |
+| `s1-pm-open-2` | Pip | Quick question! Just one. | Hỏi nhanh nhé! Một câu thôi. |  | Visitor-slow |
+| `s1-pm-open-3` | Pip | Hi! My notebook needs you. | Chào bạn! Cuốn sổ của mình cần bạn giúp. |  | Visitor-slow |
+| `s1-pm-close-1` | Pip | Writing it down. Thank you! | Mình ghi lại đây. Cảm ơn bạn! |  | Visitor-slow |
+| `s1-pm-close-2` | Pip | In my notebook! See you later! | Vào sổ tay rồi! Lát gặp nhé! |  | Visitor-slow |
+| `s1-pm-close-3` | Pip | Got it! You're a good teacher. | Mình nhớ rồi! Bạn dạy hay ghê. |  | Visitor-slow |
+| `s1-pm-nice-to-meet-you-setup` | Pip | A new neighbour! What do I say? | Hàng xóm mới! Mình nói gì đây? |  | Visitor-slow |
+| `s1-pm-yes-please-setup` | Pip | I have snacks. Want some? | Mình có đồ ăn vặt đây. Bạn ăn không? |  | Visitor-slow |
+| `s1-pm-sorry-again-please-setup` | Pip | Bea says the bus is late again today! | Bea nói hôm nay xe buýt lại trễ nữa! |  |  |
+| `s1-pm-slowly-please-setup` | Pip | The library closes at five on Fridays! | Thư viện đóng cửa lúc năm giờ vào thứ Sáu đó! |  |  |
+| `s1-pm-how-much-setup` | Pip | I want this cake. What do I ask? | Mình muốn mua cái bánh này. Mình hỏi gì đây? |  | Visitor-slow |
+| `s1-pm-im-from-setup` | Pip | A tourist asks: where are you from? | Một du khách hỏi: bạn từ đâu đến? |  | Visitor-slow |
+| `s1-pm-whats-wrong-setup` | Pip | Mei looks sad again. What do I ask? | Mei lại trông buồn rồi. Mình hỏi gì đây? |  | Visitor-slow |
+| `s1-pm-i-need-a-plan-setup` | Pip | So many jobs today! What do I need? | Hôm nay nhiều việc quá! Mình cần gì đây? |  | Visitor-slow |
+| `s1-pm-can-i-help-setup` | Pip | Oh no, Linh's books! What do I say? | Ôi, sách của Linh rơi kìa! Mình nói gì đây? |  | Visitor-slow |
+| `s1-pm-i-think-you-should-setup` | Pip | Bea is so tired. Any advice? | Bea mệt quá. Bạn khuyên Bea một câu nhé? |  | Visitor-slow |
+| `s1-pm-im-good-at-setup` | Pip | Sol asks: what are you good at? | Sol hỏi: bạn giỏi việc gì? |  | Visitor-slow |
+| `s1-pm-for-example-setup` | Pip | You're good at your job. How? Tell me! | Bạn làm giỏi công việc của mình. Giỏi thế nào? Kể mình nghe! |  | Visitor-slow |
+| `s1-pm-id-love-to-setup` | Pip | Mei has a new cake. Want to try? | Mei có bánh mới. Bạn ăn thử không? |  | Visitor-slow |
+| `s1-pm-just-to-confirm-setup` | Pip | Sol says: meeting at nine. Check it! | Sol nói: chín giờ họp. Bạn hỏi lại cho chắc nhé! |  | Visitor-slow |
+| `s1-pm-sorry-we-cant-setup` | Pip | A man wants free coffee. Every day! | Có ông khách muốn uống cà phê miễn phí. Ngày nào cũng vậy! |  | Visitor-slow |
+| `s1-pm-how-about-setup` | Pip | Hank wants a lower price. Offer something else? | Hank muốn giá rẻ hơn. Bạn mời món khác nhé? |  | Visitor-slow |
+| `s1-pm-fair-point-but-setup` | Pip | Hank says: Big Bean is cheaper. Answer him? | Hank nói: Big Bean rẻ hơn. Bạn trả lời ông ấy nhé? |  | Visitor-slow |
+| `s1-pm-deal-setup` | Pip | Hank says: free toast, full price. Okay? | Hank nói: tặng bánh mì nướng, giữ nguyên giá. Được không? |  | Visitor-slow |
+| `s1-pm-what-do-you-think-setup` | Pip | Nell is very quiet. Ask her! | Nell im lặng quá. Bạn hỏi Nell đi! |  | Visitor-slow |
+| `s1-pm-good-idea-and-setup` | Pip | Bea says: a cake sale! Add your idea? | Bea nói: bán bánh! Bạn góp thêm ý nhé? |  | Visitor-slow |
+| `s1-pm-lets-hear-from-setup` | Pip | Bea talks and talks. Linh wants a turn. | Bea nói mãi không dừng. Linh muốn được nói. |  | Visitor-slow |
+| `s1-pm-to-sum-up-setup` | Pip | Long meeting! Say it short? | Họp lâu quá! Bạn nói gọn lại nhé? |  | Visitor-slow |
+| `s1-pm-heres-the-thing-setup` | Pip | A man asks: why the petition? | Có người hỏi: kiến nghị để làm gì? |  | Visitor-slow |
+| `s1-pm-it-matters-because-setup` | Pip | Why is the café important? Tell me! | Sao quán cà phê lại quan trọng? Kể mình nghe! |  | Visitor-slow |
+| `s1-pm-would-you-sign-setup` | Pip | A man on the bus. Get his name! | Có một ông trên xe buýt. Xin chữ ký của ông ấy đi! |  | Visitor-slow |
+| `s1-pm-thanks-for-listening-setup` | Pip | My story is done. Bea is smiling! | Mình kể xong rồi. Bea đang mỉm cười kìa! |  | Visitor-slow |
+| `s1-pm-a-few-words-setup` | Pip | A big party! You stand up and say…? | Một bữa tiệc lớn! Bạn đứng lên và nói…? |  | Visitor-slow |
+| `s1-pm-first-second-setup` | Pip | Two reasons. Say them in order? | Hai lý do. Bạn nói lần lượt nhé? |  | Visitor-slow |
+| `s1-pm-great-question-setup` | Pip | A child asks: why is the sea blue? | Một bạn nhỏ hỏi: sao biển lại màu xanh? |  | Visitor-slow |
+| `s1-pm-thank-you-all-setup` | Pip | Everyone helps us! What do I say? | Mọi người đều giúp chúng mình! Mình nói gì đây? |  | Visitor-slow |
+| `s1-pm-nice-to-meet-you-wrong` | Pip | Nice to meeting you! | Rất vui được gặp bạn! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-sorry-again-please-wrong` | Pip | Sorry? Repeat me, please? | Xin lỗi? Nói lại giúp mình nhé? | Meaning | Pip's mistakes are glossed with what Pip means; the mistake is only in the English; Visitor-slow |
+| `s1-pm-slowly-please-wrong` | Pip | Speak more slow, please! | Nói chậm hơn chút nhé! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-how-much-wrong` | Pip | How many is the cake? | Cái bánh này bao nhiêu tiền? |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-im-from-wrong` | Pip | I from Far Meadow! | Mình đến từ Far Meadow! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-whats-wrong-wrong` | Pip | What wrong, Mei? | Có chuyện gì vậy, Mei? |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-i-need-a-plan-wrong` | Pip | I need plan. | Mình cần một kế hoạch. |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-can-i-help-wrong` | Pip | Can I to help? | Mình giúp được không? |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-i-think-you-should-wrong` | Pip | I think you should to sleep. | Mình nghĩ bạn nên đi ngủ. |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-im-good-at-wrong` | Pip | I'm good at draw maps. | Mình giỏi vẽ bản đồ. |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-for-example-wrong` | Pip | For examples, I like tea! | Ví dụ, mình thích trà! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-id-love-to-wrong` | Pip | I love to, Mei! | Có chứ, mình rất muốn, Mei ơi! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-just-to-confirm-wrong` | Pip | Just for confirm: nine? | Cho mình xác nhận lại: chín giờ nhé? |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-sorry-we-cant-wrong` | Pip | Sorry, we don't can do that. | Xin lỗi, chúng tôi không làm vậy được. |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-how-about-wrong` | Pip | How about give a cake? | Hay là tặng một cái bánh? |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-fair-point-but-wrong` | Pip | It's fair point, but I like Mei! | Ông nói cũng có lý, nhưng mình thích quán Mei! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-what-do-you-think-wrong` | Pip | What you think, Nell? | Nell nghĩ sao? |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-good-idea-and-wrong` | Pip | Good ideas, and cookies! | Ý hay đó, thêm bánh quy nữa! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-lets-hear-from-wrong` | Pip | Let we hear from Linh. | Mời Linh nói nhé. |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-to-sum-up-wrong` | Pip | To summary: a petition! | Tóm lại: một bản kiến nghị! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-heres-the-thing-wrong` | Pip | Here is thing: the café! | Chuyện là thế này: quán cà phê! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-it-matters-because-wrong` | Pip | It matter because Mei is kind! | Điều đó quan trọng vì Mei tốt bụng! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-would-you-sign-wrong` | Pip | You would sign? | Ông ký giúp được không? |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-thanks-for-listening-wrong` | Pip | Thanks for listen, Bea! | Cảm ơn Bea đã lắng nghe! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-a-few-words-wrong` | Pip | I'd like to say a little words. | Tôi xin phép nói vài lời. |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-first-second-wrong` | Pip | First, toast. Two, tea! | Thứ nhất, bánh mì nướng. Thứ hai, trà! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-great-question-wrong` | Pip | That's a great questions! | Câu hỏi hay quá! |  | Pip's slightly wrong line; Visitor-slow |
+| `s1-pm-thank-you-all-wrong` | Pip | Thanks you all! | Cảm ơn tất cả mọi người! |  | Pip's slightly wrong line; Visitor-slow |
+
+### 5. App chrome drafts
+
+Knocks for weeks 2–7 (`season-1-script.md`, "Knocks"), Pip's minute, the week's wrap, then and now, Bunting Week and the weeks after. The app lanes put these into `knocks.*`, `burrow.*`, `week.*`, `payoff.*` and `season.*`; review the wording here.
+
+| Where | English | Tiếng Việt | Flag | Notes |
+|---|---|---|---|---|
+| Knock · week 2 · 1 | Interview day! Sol is waiting. Come with me? | Hôm nay {name} đi phỏng vấn. Đi cùng {name} nhé? | New | From Pip; at Visitor this Vietnamese replaces the English |
+| Knock · week 2 · 2 | {name} tried on three things for the interview. | {name} đã thử ba món đồ cho buổi phỏng vấn. Nghe kể không? | New | From Yapling |
+| Knock · week 2 · 5 | {name} left you a voicemail. | {name} để lại cho bạn một thư thoại. | New | From Yapling |
+| Knock · week 3 · 1 | A big customer is coming. Can you help at the counter? | Mei sắp có một vị khách lớn. Ra quầy giúp Mei nhé? | New | From Mei; at Visitor this Vietnamese replaces the English |
+| Knock · week 3 · 2 | {name} had its first morning at work. | {name} vừa có buổi sáng đầu tiên đi làm. Có chuyện để kể đây. | New | From Yapling |
+| Knock · week 3 · 5 | Mei left you a voicemail. | Mei để lại cho bạn một thư thoại. | New | From Yapling |
+| Knock · week 4 · 1 | Meeting at the inn tonight. Tea's on. Bring an idea? | Tối nay họp ở quán trọ của Nell. Mang theo một ý tưởng nhé? | New | From Nell; at Visitor this Vietnamese replaces the English |
+| Knock · week 4 · 2 | {name} made a poster. Count the f's. | {name} vừa làm một tấm áp phích. Đếm thử mấy chữ f xem. | New | From Yapling |
+| Knock · week 4 · 5 | Nell left you a voicemail. | Nell để lại cho bạn một thư thoại. | New | From Yapling |
+| Knock · week 5 · 1 | Petition day! Bus 45 leaves at nine. | Hôm nay đi xin chữ ký! Xe buýt 45 chạy lúc chín giờ. | New | From Bea; at Visitor this Vietnamese replaces the English |
+| Knock · week 5 · 2 | {name} has a secret to tell you. | {name} có một bí mật muốn kể bạn nghe. | New | From Yapling |
+| Knock · week 5 · 5 | Mei left you a voicemail. | Mei để lại cho bạn một thư thoại. | New | From Yapling |
+| Knock · week 6 · 1 | The vote is today. The whole town is in the square. | Hôm nay bỏ phiếu. Cả thị trấn đang ở quảng trường. | New | From Mei; at Visitor this Vietnamese replaces the English |
+| Knock · week 6 · 2 | Six postcards came for you. | Có sáu tấm bưu thiếp gửi cho bạn. | New | From Yapling |
+| Knock · week 6 · 5 | {name} left you a voicemail. | {name} để lại cho bạn một thư thoại. | New | From Yapling |
+| Knock · week 7 · 1 | Bunting Week! Your words are on the flags. | Tuần Cờ Dây bắt đầu rồi! Câu nói của bạn ở trên những lá cờ. | New | From Yapling |
+| Knock · week 7 · 2 | {name} wrote the story of your season. | {name} đã viết lại câu chuyện mùa này của hai bạn. | New | From Yapling |
+| Knock · week 7 · 5 | Bea left you a voicemail. | Bea để lại cho bạn một thư thoại. | New | From Yapling |
+| Burrow · Pip's minute chip | A minute with Pip | Một phút với Pip | New | From the design brief; no count, no badge |
+| Pip's minute · after card | {phrase}: now a {state} | {phrase}: giờ đã thành {state} | New | States as in `burrow.stage.*`: Gói hạt, Mầm, Lá |
+| Burrow · week 3 "since you were away" | A stranger measured the café door. | Có người lạ đến đo cửa quán cà phê. | New | With the silhouette at the window |
+| Week · still waiting row | Still waiting for you | Vẫn đang chờ bạn | New | An earlier week's open call; never "missed" |
+| Week's wrap · title | Week {n} done | Xong tuần {n} rồi | New |  |
+| Week's wrap · phrases | Phrases that grew this week | Những câu đã lớn thêm tuần này | New | Machine-like? |
+| Week's wrap · ring full | Your ring is full. The keepsake is on your wall. | Vòng tuần đã đầy. Kỷ vật đã treo trên tường. | New |  |
+| Week's wrap · ring not full | {done} calls this week. The rest will wait for you. | Tuần này bạn đã gọi {done} cuộc. Những cuộc còn lại sẽ chờ bạn. | New | No guilt: never "you missed" |
+| Week's wrap · next | Episode {n} opens on {day} | Tập {n} mở vào {day} | New |  |
+| Then and now | {now} s without stopping. In week 1 it was {then}. | Nói liền {now} giây không dừng. Tuần 1 là {then} giây. | New | After Episode 5 and in Bunting Week |
+| Then and now · Visitor | You said {now} sentences in a row. In week 1: {then}. | Bạn đã nói {now} câu liền. Tuần 1: {then} câu. | New | A Visitor's rounds are short; count sentences |
+| Bunting Week · title | Bunting Week | Tuần Cờ Dây | Term | Natterwick's own festival |
+| Bunting Week · flags | Your phrases are on the flags | Câu nói của bạn ở trên những lá cờ | New |  |
+| Season end · residency stamp | Season One | Mùa Một | Term | "Mùa" for season everywhere |
+| Burrow · weeks 8 on | Season One is done. Replay any episode, or call Pip. | Mùa Một đã xong. Chơi lại tập nào cũng được, hoặc gọi Pip. | New |  |
+
+---
+
+## Settling in and the Visitor stage (Release 1.1)
 
 The beginner path (`docs/beginner-path.md`; script in `docs/season-1-script.md`, "Settling in") adds Vietnamese that isn't in the i18n catalogues yet, so it is reviewed here, ahead of the catalogue rows below. **Section 1 gates the recording; review it first.** Sections 2–5 can follow while the app is built. Same register as the rest of the app: Linh and the cast say "mình", the learner is "bạn", soft endings with "nhé".
 

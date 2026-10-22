@@ -78,11 +78,28 @@ describe('the ring after a call', () => {
     expect(slot(weeks, 2, 'episode')).toMatchObject({ status: 'open', sceneId: 's1-e2' });
   });
 
-  it("never takes week 1's real-week slot with another week's real-week call", () => {
-    const weeks = play(['episode', 's1-e1', 2], ['real_week', 'later-real-week', 10]);
-    // Week 1's slot is Episode 1's own real-week call; week 2 names none, so it takes any.
-    expect(slot(weeks, 1, 'real_week')).toMatchObject({ status: 'open' });
-    expect(slot(weeks, 2, 'real_week')).toMatchObject({ status: 'done', sceneId: null });
+  it("never takes week 1's real-week slot with week 2's real-week call", () => {
+    const weeks = play(['episode', 's1-e1', 2], ['real_week', 's1-e2-real-week', 10]);
+    expect(slot(weeks, 1, 'real_week')).toMatchObject({
+      status: 'open',
+      sceneId: 's1-e1-real-week',
+    });
+    expect(slot(weeks, 2, 'real_week')).toMatchObject({
+      status: 'done',
+      sceneId: 's1-e2-real-week',
+    });
+    // A real-week call of no week of the season fills neither.
+    const other = play(['episode', 's1-e1', 2], ['real_week', 'later-real-week', 10]);
+    expect(slot(other, 1, 'real_week')?.status).toBe('open');
+    expect(slot(other, 2, 'real_week')?.status).toBe('open');
+  });
+
+  it('lets Bunting Week take any call of its kind, as a replay', () => {
+    const weeks = play(['real_week', 's1-e1-real-week', 4], ['real_week', 's1-e1-real-week', 45]);
+    expect(weeks).toHaveLength(7);
+    // The replay skips the earlier weeks' own scenes and fills the festival's open slot.
+    expect(slot(weeks, 2, 'real_week')).toMatchObject({ status: 'open' });
+    expect(slot(weeks, 7, 'real_week')).toMatchObject({ status: 'done', sceneId: null });
   });
 
   it('opens the rings on the story day, not the install day', () => {

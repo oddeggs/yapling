@@ -29,6 +29,12 @@ import { againAsk, cardWords, matchesCard, withName } from './words';
  * 3. Vietnamese (marks on a word): `not_english`, never a try.
  * 4. Another English try: Jev's card question (`card-judge.ts`); a card at p ≥ 0.75 is `fine`,
  *    else `unclear` (the runner says "Again?" and the line once more; the second miss passes).
+ *    On Pip's minute's fix turn Jev is shown Pip's mistake as the other card, and only the right
+ *    words pass: reading Pip's version back never does.
+ *
+ * A card that is itself "Sorry? Again, please." or "Slowly, please." (a lifesaver to read back, as
+ * on Pip's minute's fix turn) is answered by its words first, like a turn that teaches it; a turn
+ * that replays to pass (`replay_and_pass`) still replays.
  *
  * The decision is held like a reply (a `hold` line): in hands-free it waits for the end of the
  * learner's pause, and a learner who goes on is answered again with the joined words.
@@ -72,6 +78,10 @@ interface CardTurn {
   /** Holds the decision until the learner's pause is over; aborted when they go on. */
   readonly hold: SpokenLine;
 }
+
+/** Pip's slightly-wrong line before a Pip's-minute fix turn; null for any other turn. */
+const mistakeOf = (data: CallData, beatId: string): string | null =>
+  data.meta.pipsMinute?.turns.find((t) => t.beatId === beatId)?.mistake ?? null;
 
 export class CardTurns {
   private turn: CardTurn | null = null;
@@ -132,7 +142,7 @@ export class CardTurns {
       said: text,
       speechEndAt,
       abort,
-      decision: this.decide(text, now.answer, abort.signal),
+      decision: this.decide(text, now.beatId, now.answer, abort.signal),
       hold,
     };
     this.turn = turn;
@@ -155,11 +165,19 @@ export class CardTurns {
     return hold;
   }
 
-  private async decide(text: string, answer: Answer, signal: AbortSignal): Promise<Decision> {
+  private async decide(
+    text: string,
+    beatId: string,
+    answer: Answer,
+    signal: AbortSignal,
+  ): Promise<Decision> {
     const { data } = this.host;
     const words = () => ({ by: 'words' as const, jev: null, cardMatch: null, judgeMs: null });
     const ask = againAsk(text);
-    const teaches = answer.onReplay === 'pass';
+    // A card that is the lifesaver itself, on a turn that doesn't replay to pass, is the answer.
+    const lifesaver =
+      answer.onReplay === 'replay' && answer.choices.some((c) => againAsk(c.en) !== null);
+    const teaches = answer.onReplay === 'pass' || lifesaver;
     if (ask !== null && !teaches) return { event: null, again: ask, ...words() };
     // A name is no English: "Mình là Lan." is Vietnamese, though it holds the card's name.
     const kind = speechKind(text);
@@ -170,11 +188,15 @@ export class CardTurns {
     if (ask !== null) return { event: null, again: ask, ...words() };
     if (kind !== 'english') return { event: 'not_english', again: null, ...words() };
     const cards = answer.choices.map((c) => withName(c.en, data.learner.name));
-    const judged = await judgeCard({ cards, said: text }, { apiKey: this.host.judgeKey, signal });
+    const mistake = mistakeOf(data, beatId);
+    const judged = await judgeCard(
+      { cards: mistake === null ? cards : [...cards.slice(0, 1), mistake], said: text },
+      { apiKey: this.host.judgeKey, signal },
+    );
     if (judged === null) return { event: 'unclear', again: null, ...words(), jev: 'failed' };
     data.jevInputTokens = (data.jevInputTokens ?? 0) + judged.inputTokens;
     addSample(data.samples, 'judge', judged.ms);
-    const passed = judged.card !== null;
+    const passed = mistake === null ? judged.card !== null : judged.card === 0;
     return {
       event: passed ? 'fine' : 'unclear',
       again: null,

@@ -1,6 +1,6 @@
 import type { Id } from '@yapling/contracts';
 
-import { NO_GLOSS } from './gloss';
+import { NO_GLOSS, viDraft } from './gloss';
 import { PENDING_LINES, RECORDED_LINES } from './lines.generated';
 import {
   S1_LINE_ENGLISH,
@@ -21,11 +21,15 @@ const scriptedById = new Map(S1_SCRIPTED_LINES.map((line) => [line.id, line]));
 
 /*
  * A line's extras (glosses, segments, meaning) are keyed by its id alone, never by whether it is
- * recorded yet: a line rendered and moved from `pending` to `lines` keeps them unchanged.
+ * recorded yet: a line rendered and moved from `pending` to `lines` keeps them unchanged. Its
+ * gloss is the one written here, else the `_vi` beside it in `lines.json` (a draft for review).
  */
-const fromLinesJson = (line: WrittenLineData): StoryLine => ({
+const fromLinesJson = ({ vi, ...line }: WrittenLineData): StoryLine => ({
   ...line,
-  glosses: S1_LINE_GLOSSES[line.id] ?? scriptedById.get(line.id)?.glosses ?? NO_GLOSS,
+  glosses:
+    S1_LINE_GLOSSES[line.id] ??
+    scriptedById.get(line.id)?.glosses ??
+    (vi === null ? NO_GLOSS : viDraft(vi)),
   english: S1_LINE_ENGLISH[line.id] ?? null,
   segments: scriptedById.get(line.id)?.segments ?? [],
   meaning: S1_LINE_MEANINGS[line.id] ?? null,

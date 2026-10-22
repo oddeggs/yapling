@@ -39,7 +39,9 @@ export interface GlossedText {
 
 /**
  * What a scene is. All but `story` and `postcard` run as live calls; those two play on the phone.
- * `settling` is a Settling-in chapter with Linh, before the story starts.
+ * `settling` is a Settling-in chapter with Linh, before the story starts. `daily` is Pip's minute:
+ * two card turns in the burrow, built from a phrase (`pipsMinuteScene`), never a ring slot and
+ * never metered.
  */
 export const SCENE_KINDS = [
   'settling',
@@ -50,6 +52,7 @@ export const SCENE_KINDS = [
   'voicemail',
   'story',
   'postcard',
+  'daily',
 ] as const;
 export type SceneKind = (typeof SCENE_KINDS)[number];
 
@@ -315,6 +318,23 @@ export interface WeekSlot {
   readonly scene: Id;
 }
 
+/**
+ * A week of the season with no episode of its own (the festival): what it opens, day by day. Its
+ * ring slots name no scene, so each takes any call of its kind.
+ */
+export interface StoryWeek {
+  readonly id: Id;
+  /** The week of the season it is (the festival follows the sixth episode: week 7). */
+  readonly number: number;
+  readonly title: string;
+  readonly scenes: readonly Scene[];
+  readonly week: readonly WeekSlot[];
+}
+
+/**
+ * An episode and its week. Its `week` slots name what opens on days 1–7 (ring calls on the days
+ * their slots open); the learning model reads them (`StoryWeekShape` in `@yapling/domain`).
+ */
 export interface Episode {
   readonly id: Id;
   readonly number: number;
@@ -348,7 +368,15 @@ export interface Season {
   /** Settling in: Visitors' short chapters with Linh before the story, in order. */
   readonly settling: readonly Scene[];
   readonly episodes: readonly Episode[];
+  /** The festival week after the last episode, if the season has one. */
+  readonly festival: StoryWeek | null;
 }
+
+/** The season's weeks in order, week 1 first: each episode's week, then the festival. */
+export const seasonWeeks = (season: Season): readonly (Episode | StoryWeek)[] => [
+  ...season.episodes,
+  ...(season.festival === null ? [] : [season.festival]),
+];
 
 /** The live-call kind a scene runs as, or null for content played on the phone. */
 export const callKindOf = (kind: SceneKind): CallKind | null => {
@@ -365,6 +393,9 @@ export const callKindOf = (kind: SceneKind): CallKind | null => {
     case 'story':
     case 'postcard':
       return null;
+    // Pip's minute: in the call frame, with no live minutes and no ring slot.
+    case 'daily':
+      return 'daily';
   }
 };
 
@@ -379,6 +410,8 @@ export interface WrittenLineData {
   readonly nameSplice: 'before' | null;
   readonly language: LineLanguage;
   readonly speed: number | null;
+  /** The Vietnamese gloss written beside the line in `lines.json` (`_vi`), or null. */
+  readonly vi: string | null;
   readonly audio: LineAudio | null;
 }
 

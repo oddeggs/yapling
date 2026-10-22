@@ -1,0 +1,92 @@
+{
+  "dex-1-1": {
+    "group": "dex-1",
+    "line": "s1-e3-rw-open",
+    "rate": 184,
+    "unit": "wpm",
+    "words": 12,
+    "seconds": 3.92,
+    "heard": "Hi, I'm Dex. I hear you said no to Hank, very kindly",
+    "diff": []
+  },
+  "dex-1-2": {
+    "group": "dex-1",
+    "line": "s1-e5-rw-close",
+    "rate": 160,
+    "unit": "wpm",
+    "words": 10,
+    "seconds": 3.76,
+    "heard": "Much better. 60 seconds and I wanted to hear more",
+    "diff": []
+  },
+  "dex-1-3": {
+    "group": "dex-1",
+    "line": "visitor (live line)",
+    "rate": 94,
+    "unit": "wpm",
+    "words": 6,
+    "seconds": 3.84,
+    "heard": "I'm Dex. Work on Sunday? Okay",
+    "diff": []
+  },
+  "dex-2-1": {
+    "group": "dex-2",
+    "line": "s1-e3-rw-open",
+    "rate": 180,
+    "unit": "wpm",
+    "words": 12,
+    "seconds": 4.0,
+    "heard": "Hi, I'm Dex. I hear you said no to Hank, very kindly",
+    "diff": []
+  },
+  "dex-2-2": {
+    "group": "dex-2",
+    "line": "s1-e5-rw-close",
+    "rate": 160,
+    "unit": "wpm",
+    "words": 10,
+    "seconds": 3.76,
+    "heard": "Much better sixty seconds and I wanted to hear more",
+    "diff": []
+  },
+  "dex-2-3": {
+    "group": "dex-2",
+    "line": "visitor (live line)",
+    "rate": 94,
+    "unit": "wpm",
+    "words": 6,
+    "seconds": 3.84,
+    "heard": "I'm Dex. Work on Sunday okay?",
+    "diff": []
+  },
+  "dex-3-1": {
+    "group": "dex-3",
+    "line": "s1-e3-rw-open",
+    "rate": 187,
+    "unit": "wpm",
+    "words": 12,
+    "seconds": 3.86,
+    "heard": "Hi, I'm Dex. I hear you said no to Hank, very kindly",
+    "diff": []
+  },
+  "dex-3-2": {
+    "group": "dex-3",
+    "line": "s1-e5-rw-close",
+    "rate": 160,
+    "unit": "wpm",
+    "words": 10,
+    "seconds": 3.76,
+    "heard": "Much better. 60 seconds, and I wanted to hear more",
+    "diff": []
+  },
+  "dex-3-3": {
+    "group": "dex-3",
+    "line": "visitor (live line)",
+    "rate": 102,
+    "unit": "wpm",
+    "words": 6,
+    "seconds": 3.52,
+    "heard": "I'm Dex. Work on Sunday okay?",
+    "diff": []
+  }
+}

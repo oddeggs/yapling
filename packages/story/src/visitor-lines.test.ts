@@ -4,9 +4,10 @@ import { describe, expect, it } from 'vitest';
 
 import { LINES_JSON } from '../scripts/generate';
 import { rec, scene } from './build';
-import { SCENES } from './catalogue';
+import { EPISODES, SCENES } from './catalogue';
 import { findLine, isRecorded } from './lines';
 import { PENDING_LINES, RECORDED_LINES } from './lines.generated';
+import { PIPS_MINUTE_LINE_IDS } from './season-checks';
 import { S1_SHARED_LINES } from './season-1/shared-lines';
 import {
   LONG_VISITOR_LINES,
@@ -26,7 +27,10 @@ const pendingIds = (source.pending ?? []).map((l) => l.id);
 const answerOf = (beat: Beat): Answer | null =>
   beat.kind === 'learner' || beat.kind === 'gen' ? beat.answer : null;
 
-/** Every line id a scene can play or say: its beats, models and praise, and the shared lines. */
+/**
+ * Every line id a scene can play or say: its beats, models and praise, the shared lines, Pip's
+ * recaps (played on coming back) and every line Pip's minute can build a scene from.
+ */
 const referenced = new Set([
   ...SCENES.flatMap((scene) =>
     scene.beats.flatMap((beat) => {
@@ -43,6 +47,8 @@ const referenced = new Set([
   ...Object.values(S1_SHARED_LINES.skip),
   S1_SHARED_LINES.together,
   S1_SHARED_LINES.english,
+  ...EPISODES.map((episode) => episode.recap),
+  ...PIPS_MINUTE_LINE_IDS,
 ]);
 
 const VISITOR_IDS = /^s1-(set|e1-visitor)/;
