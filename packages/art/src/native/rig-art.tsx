@@ -73,6 +73,13 @@ export function RigArt({
     turn.current += 1;
     request.value = { act: actIndex(act), side, turn: turn.current };
   }, [act, side, play, request]);
+  // A measure ends with the critter.
+  useEffect(
+    () => () => {
+      if (cost) cost.value = 0;
+    },
+    [cost],
+  );
   // Held still, it starts again from rest (where it is drawn) when it moves again.
   useEffect(() => {
     if (!live) state.value = null;

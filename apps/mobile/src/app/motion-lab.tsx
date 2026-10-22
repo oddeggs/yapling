@@ -12,6 +12,7 @@ import {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { BurrowBackdrop, useStage } from '../features/burrow';
 import { ChoiceChip } from '../ui/chip';
 import { Txt } from '../ui/text';
 
@@ -48,8 +49,8 @@ export default function MotionLab() {
   return <Lab />;
 }
 
-type Mode = 'compare' | 'three-rig' | 'three-today' | 'cast' | 'none';
-const MODES: readonly Mode[] = ['compare', 'three-rig', 'three-today', 'cast', 'none'];
+type Mode = 'compare' | 'three-rig' | 'three-today' | 'cast' | 'burrow' | 'none';
+const MODES: readonly Mode[] = ['compare', 'three-rig', 'three-today', 'cast', 'burrow', 'none'];
 const LAB_MOODS: readonly Mood[] = ['happy', 'listen', 'excited', 'confused', 'sleepy', 'laugh'];
 
 /** How long the cycle stays on each act (the held ones loop meanwhile). */
@@ -230,6 +231,8 @@ function Lab() {
         <View style={{ height: 200 }} />
       ) : mode === 'cast' ? (
         <Cast {...shared} />
+      ) : mode === 'burrow' ? (
+        <Burrow mood={mood} />
       ) : (
         <Three rig={mode === 'three-rig'} {...shared} mouth={mouth} costs={costs} />
       )}
@@ -330,6 +333,28 @@ function Cast(shared: Shared) {
           lookAt={i % 2 ? 'left' : 'right'}
         />
       ))}
+    </View>
+  );
+}
+
+/**
+ * The burrow as its screens draw it (the room by time of day, critters placed in the prototype's
+ * units) with three roommates idling: the critters as every burrow screen gets them, untouched.
+ */
+function Burrow({ mood }: { mood: Mood }) {
+  const { u } = useStage();
+  return (
+    <View style={{ height: u(660), marginHorizontal: -layout.marginScreen }}>
+      <BurrowBackdrop
+        scene="burrow"
+        timeOfDay="afternoon"
+        species="redpanda"
+        cast={[
+          { character: 'pip', mood, size: 140, left: 8, top: 474 },
+          { character: 'linh', mood: 'happy', size: 142, left: 146, top: 446 },
+          { character: 'mei', mood: 'patient', size: 112, left: 270, top: 500 },
+        ]}
+      />
     </View>
   );
 }
