@@ -1,6 +1,7 @@
 export * from './time';
 export * from './rng';
 export * from './stages';
+export * from './level-guide';
 export * from './stage-moves';
 export * from './settling';
 export * from './can-dos';
