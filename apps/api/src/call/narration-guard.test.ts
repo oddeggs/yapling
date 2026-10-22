@@ -40,6 +40,15 @@ describe('the narration guard', () => {
     expect(speak('Mei says: Aiyah, nothing lah.', 'Mei').spoken).toBe('Aiyah, nothing lah.');
   });
 
+  it("never speaks the learner's words quoted in a note about them", () => {
+    const note = speak(
+      'The learner said "Mm, I\'m not sure either," so this is the unclear case. Is it money?',
+      'Pip',
+    );
+    expect(note.spoken).toBe('Is it money?');
+    expect(note.action).toBe('dropped');
+  });
+
   it('drops asides, stage directions, labels and quotation marks', () => {
     expect(speak('Mei: Hmm, you still there?', 'Mei').spoken).toBe('Hmm, you still there?');
     expect(speak('*smiles warmly* Hello again!', 'Pip').spoken).toBe('Hello again!');
@@ -91,5 +100,19 @@ describe('the narration guard', () => {
     expect(splitter.push('I ')).toBe('');
     expect(splitter.push('think ')).toBe('I think ');
     expect(splitter.push('you ')).toBe('you ');
+  });
+});
+
+describe('the case tag', () => {
+  it('is kept for the call and never spoken', () => {
+    const splitter = new ReplySplitter({ maxWords: 25, speaker: 'Pip' });
+    const spoken = splitter.push('[question] I’m Pip! What do you do ') + splitter.end().tail;
+    expect(spoken.trim()).toBe('I’m Pip! What do you do');
+    expect(splitter.caseTag).toBe('question');
+    expect(splitter.guardAction).toBeNull();
+    const glued = new ReplySplitter({ maxWords: 25, speaker: 'Pip' });
+    glued.push('[unclear]Sorry, ');
+    expect(glued.end().tail + glued.text).toContain('Sorry,');
+    expect(glued.caseTag).toBe('unclear');
   });
 });

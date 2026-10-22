@@ -49,6 +49,7 @@ export interface ReplyPlan {
   readonly fine: Branch;
   /** Null when a target error counts as fine on this beat. */
   readonly error: Branch | null;
+  /** Unclear, a question back, off topic or silent: the beat stays (or falls back). */
   readonly offTopic: Branch;
 }
 
@@ -210,6 +211,49 @@ const BRANCH_TEXT: Readonly<Record<Exclude<Branch['kind'], 'merge'>, string>> = 
 const branchText = (branch: Branch) =>
   branch.kind === 'merge' ? `Then: ${genDirection(branch.effect)}` : BRANCH_TEXT[branch.kind];
 
+/** The turns that don't do what we hoped: the beat stays (a hint, a nudge) or falls back. */
+type NotYet = 'unclear' | 'question' | 'off_topic';
+
+const NOT_YET_WHEN: Readonly<Record<NotYet, string>> = {
+  unclear:
+    'They don\'t know or don\'t understand, ask you to repeat, answer in another language, only say "um", or their words make no sense as an answer',
+  question: 'They ask you something, or talk near the topic, instead of doing what we hoped',
+  off_topic: 'They talk about something unrelated to the scene',
+};
+
+/** The beat stays: help them try again, never answering for them. */
+const STAY: Readonly<Record<NotYet, string>> = {
+  unclear:
+    'Ask your question again in fewer, simpler words, in one short sentence (if you asked nothing, gently invite what we hoped for). Do not explain it or answer it: the learner says it.',
+  question:
+    'Two short sentences: answer it in a few words, then ask your question again, simply (if you asked nothing, bring the moment back so they can try, without saying their words for them).',
+  off_topic:
+    'Two short sentences: acknowledge it kindly, in character, then ask your question again, simply (if you asked nothing, bring the moment back so they can try, without saying their words for them).',
+};
+
+/** Someone else speaks next: react, with no question. */
+const MOVE_ON: Readonly<Record<NotYet, string>> = {
+  unclear: BRANCH_TEXT.react,
+  question: 'Answer it in a few words, with no question: the scene goes on after you.',
+  off_topic:
+    'Acknowledge it in a few words, in character, with no question: the scene goes on after you.',
+};
+
+/** Their last try: a short lead-in, then the fallback line. */
+const LAST_TRY_LEAD: Readonly<Record<NotYet, string>> = {
+  unclear: '',
+  question: 'Answer it in a few words. ',
+  off_topic: 'Acknowledge it in a few words, kindly. ',
+};
+
+const notYetText = (branch: Branch, kind: NotYet): string => {
+  if (branch.kind === 'react') return MOVE_ON[kind];
+  if (branch.kind === 'merge' && branch.effect.purpose === 'fallback') {
+    return `${LAST_TRY_LEAD[kind]}This was their last try, so then: ${genDirection(branch.effect)}`;
+  }
+  return STAY[kind];
+};
+
 /** What every direction ends with: the reply is the character's own words and nothing else. */
 const spokenOnly = (speaker: CharacterId) =>
   `Write only the exact words ${nameOf(speaker)} says out loud, in the first person: no narration, no stage directions, no quotation marks, no notes about the learner or the scene, no reasoning.`;
@@ -238,8 +282,11 @@ export function replyDirection(
   stage: Stage,
   targets: readonly ErrorTargetBrief[],
   afterReaction: string | null,
+  /** The line the learner is answering, when it was this speaker's. */
+  lastLine: string | null = null,
 ): string {
   const lines = [`Your reply as ${nameOf(plan.speaker)} to what the learner just said.`];
+  if (lastLine) lines.push(`Your last line to them, with your question: "${lastLine}"`);
   if (afterReaction) {
     lines.push(
       `You have already said "${afterReaction}" out loud: carry on from it, without another Ooh, Oh, Mm or Hmm.`,
@@ -253,19 +300,22 @@ export function replyDirection(
       'In the control line, outcome is "fine" if they fixed it, "target_error" if not.',
     );
   } else {
-    lines.push('Decide which case fits their turn, then speak only the line for it:');
     lines.push(
-      `- fine (it answers, in any words, even with small mistakes): ${branchText(plan.fine)}`,
+      'First decide which case fits their turn and write it in square brackets, like [fine]. Then write the line for that case only, in two short sentences at most:',
+    );
+    lines.push(
+      `[fine] Their turn actually does what we hoped, in any words; small mistakes are fine. A hello, a question back or another topic is not fine; when in doubt, it is not fine. → ${branchText(plan.fine)}`,
     );
     if (plan.error !== null && targets.length > 0) {
       const list = targets.map((t) => `${t.id}: ${t.description}`).join('; ');
       lines.push(
-        `- target_error (it shows one of their target errors: ${list}): ${branchText(plan.error)}`,
+        `[target_error] It shows one of their target errors (${list}). → ${branchText(plan.error)}`,
       );
     }
-    lines.push(
-      `- off_topic (it doesn't answer, is unclear, or is only "um"): ${branchText(plan.offTopic)}`,
-    );
+    for (const kind of ['unclear', 'question', 'off_topic'] as const) {
+      lines.push(`[${kind}] ${NOT_YET_WHEN[kind]}. → ${notYetText(plan.offTopic, kind)}`);
+    }
+    lines.push('The outcome in the control line is the case you wrote in brackets.');
   }
   lines.push(rules(plan.speaker, stage, plan.answer.phrases, plan.answer.canDo));
   return lines.join('\n');

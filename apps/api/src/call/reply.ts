@@ -11,7 +11,7 @@ import type { LearnerTurn } from './learner-turn';
 import { SpokenLine, type LineHost, type LineResult } from './line';
 import { HEDGE, messagesFor, systemFor, turnParams } from './llm';
 import type { TtsVoice } from './tts';
-import { isLearnerLine, type LearnerLine } from './transcript';
+import { isLearnerLine, type LearnerLine, type TranscriptLine } from './transcript';
 import { pickReaction } from './voices';
 
 /*
@@ -100,7 +100,13 @@ export class Replies {
     const { data } = host;
     const stage = data.learner.stage;
     const reaction = pickReaction(plan.speaker, text, data.turns);
-    const direction = replyDirection(plan, stage, data.learner.targets, reaction?.text ?? null);
+    const direction = replyDirection(
+      plan,
+      stage,
+      data.learner.targets,
+      reaction?.text ?? null,
+      promptLine(data.transcript, plan.speaker),
+    );
     const pending = this.learnerLine(text, [], plan.beatId);
     const system = systemFor(plan.speaker, host.scene, data.learner);
     const messages = messagesFor(plan.speaker, [...data.transcript, pending], direction);
@@ -330,4 +336,14 @@ export class Replies {
       host.pump();
     }
   }
+}
+
+/** The character line the learner is answering, when the listener said it (their question). */
+function promptLine(transcript: readonly TranscriptLine[], speaker: CharacterId): string | null {
+  for (let i = transcript.length - 1; i >= 0; i--) {
+    const line = transcript[i];
+    if (line === undefined || isLearnerLine(line)) continue;
+    return line.speaker === speaker ? line.text.slice(0, 300) : null;
+  }
+  return null;
 }

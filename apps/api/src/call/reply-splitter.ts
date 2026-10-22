@@ -8,8 +8,11 @@ import { NarrationGuard, type GuardAction } from './narration-guard';
  *   it); the last word leaves at `end()`.
  * - Everything from the control marker (`§`), or from a `{` (spoken lines never hold braces), is
  *   control and is never returned as speech.
- * - The spoken line is trimmed: two sentences at most, and about `maxWords` words (cut at the
- *   next clause end once over, hard cut a few words later).
+ * - The spoken line is trimmed: two sentences at most (an exclamation of one or two words, like
+ *   "Hi!", doesn't count), and about `maxWords` words (cut at the next clause end once over, hard
+ *   cut a few words later).
+ * - A leading case tag (`[unclear]`), which the model writes first to commit to how the
+ *   learner's turn went, is kept for the call and never spoken.
  * - After a recorded reaction ("Ooh,") has played, a leading reaction word is dropped.
  * - Narration is kept from the voice (`NarrationGuard`): notes about the scene, the speaker
  *   described in the third person, asides and stage directions, labels and quotation marks.
@@ -46,14 +49,23 @@ export class ReplySplitter {
   private control: string | null = null;
   private words = 0;
   private sentences = 0;
+  /** Words in the sentence being spoken. */
+  private sentenceWords = 0;
   private done = false;
   private first = true;
   private capitalizeNext = false;
   private readonly spoken: string[] = [];
   private readonly guard: NarrationGuard | null;
+  private tag: string | null = null;
+  private tagChecked = false;
 
   constructor(private readonly options: SplitterOptions) {
     this.guard = options.guard === false ? null : new NarrationGuard(options.speaker ?? '');
+  }
+
+  /** The case tag the line started with (`[question]` → `question`), or null. */
+  get caseTag(): string | null {
+    return this.tag;
   }
 
   /** What the narration guard did to the line: null when it passed untouched. */
@@ -120,13 +132,25 @@ export class ReplySplitter {
     const ready = text.slice(0, Math.max(0, cut));
     this.pending = all ? '' : text.slice(cut + 1);
     const out: string[] = [];
-    for (const raw of ready.split(' ')) {
+    for (const piece of ready.split(' ')) {
+      const raw = this.tagChecked ? piece : this.takeTag(piece);
+      if (raw === '') continue;
       for (const word of this.guard ? this.guard.push(raw) : [raw]) this.emit(word, out);
     }
     if (all && this.guard) for (const word of this.guard.end()) this.emit(word, out);
     if (out.length === 0) return '';
     this.spoken.push(...out);
     return `${out.join(' ')} `;
+  }
+
+  /** The first word: a `[case]` tag is taken off it. */
+  private takeTag(raw: string): string {
+    if (raw === '') return raw;
+    this.tagChecked = true;
+    const m = /^\[([a-z_]{2,20})\](.*)$/i.exec(raw);
+    if (!m) return raw;
+    this.tag = (m[1] ?? '').toLowerCase();
+    return m[2] ?? '';
   }
 
   /** One word the guard let through: markup off, the reaction dropped, the trims applied. */
@@ -146,7 +170,12 @@ export class ReplySplitter {
       this.capitalizeNext = false;
     }
     this.words++;
-    if (SENTENCE_END.test(spoken)) this.sentences++;
+    this.sentenceWords++;
+    if (SENTENCE_END.test(spoken)) {
+      // "Hi!", "Oh, okay.": an exclamation doesn't use up one of the two sentences.
+      if (this.sentenceWords > 2) this.sentences++;
+      this.sentenceWords = 0;
+    }
     const overLimit = this.words >= this.options.maxWords;
     if (this.sentences >= (this.options.maxSentences ?? 2)) {
       this.done = true;

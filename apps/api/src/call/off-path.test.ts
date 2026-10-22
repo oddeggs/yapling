@@ -7,7 +7,7 @@ import { control, Providers } from '../../test/call/providers';
 
 /*
  * Off the happy path, end to end: what the model writes that isn't speech never reaches the
- * voice or the captions.
+ * voice or the captions, and a turn that doesn't do what the beat hoped keeps the beat.
  */
 
 let providers: Providers;
@@ -52,6 +52,30 @@ describe('narration from the model', () => {
       .join('')
       .replace(/<break[^>]*>/g, '');
     expect(spoken).not.toMatch(/learner|sighs|looks away|"/);
+    phone.close();
+  }, 30_000);
+});
+
+describe('a turn that does not do what the beat hoped', () => {
+  it('keeps the beat, with the line written for its case, and the hint follows', async () => {
+    providers.reply = (request) =>
+      directionOf(request).includes('what the learner just said')
+        ? // The control line disagrees; the line was written for the tagged case.
+          `[off_topic] One coffee, can lah! Sit down first, ok?${control({ outcome: 'fine' })}`
+        : `Okay, here we go. Ready?${control({ outcome: 'fine' })}`;
+    const { token } = await newGuest();
+    const phone = await Phone.call(token);
+    await phone.next('beat', (b) => b.beatId === 'ask-whats-wrong');
+    await sleep(150);
+    const from = phone.frames.length;
+    providers.speech.push('Hello. Can I have a coffee, please?');
+    phone.speak(1_200);
+    const said = await phone.next('say_end', () => true, { from });
+    expect(said.text).toBe('One coffee, can lah! Sit down first, ok?');
+    // Newcomers get the phrase hint; the scene stays on the beat.
+    await phone.next('hint', () => true, { from });
+    await sleep(300);
+    expect(phone.frames.slice(from).some((f) => f.type === 'beat')).toBe(false);
     phone.close();
   }, 30_000);
 });

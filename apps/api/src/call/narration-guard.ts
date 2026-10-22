@@ -7,8 +7,8 @@
  * - A sentence that starts like speech passes at once, word by word (no added latency).
  * - A sentence that starts suspiciously (the speaker's own name, "The", "I", "Let", "Since"…) is
  *   held for a word or three until it is clearly speech (then released) or narration. Narration
- *   is held to the sentence's end and dropped, except the words it quotes (or that follow a
- *   colon), which are spoken.
+ *   is held to the sentence's end and dropped; when it describes the speaker speaking, the words
+ *   it quotes (or that follow a colon) are spoken.
  * - Asides in brackets and stage directions in asterisks are dropped wherever they appear, a
  *   speaker label ("Mei:") is dropped, and quotation marks are never spoken.
  */
@@ -192,12 +192,15 @@ export class NarrationGuard {
     this.mode = 'start';
     if (!narration) return speakable(words);
     const text = words.join(' ');
+    this.droppedText.push(text);
+    // Only the speaker's own words are spoken from narration ("Pip says, like "Take your time.""):
+    // a quote in a note about the learner is the learner's ("The learner said "I'm not sure"").
+    if (bare(words[0] ?? '') !== this.own) return [];
     const quoted = [...text.matchAll(/["“]([^"“”]+)["”]?/g)]
       .map((m) => (m[1] ?? '').trim())
       .filter((q) => q !== '');
     const afterColon = quoted.length === 0 ? /:\s*(.+)$/.exec(text)?.[1]?.trim() : undefined;
     const kept = quoted.length > 0 ? quoted.join(' ') : (afterColon ?? '');
-    this.droppedText.push(text);
     if (kept === '') return [];
     this.extractedAny = true;
     return speakable(kept.split(/\s+/));

@@ -6,8 +6,12 @@ import { z } from 'zod';
  *
  *   §{"outcome":"fine","phrasesUsed":["whats-wrong"],"canDo":"ask-whats-wrong"}
  *
- * - `outcome`: how the learner's turn went: `fine`, `target_error` (one of their active error
- *   targets, named by `targetId`), `silent` (nothing usable was said) or `off_topic`.
+ * - `outcome`: how the learner's turn went: `fine` (it does what the beat hoped for),
+ *   `target_error` (one of their active error targets, named by `targetId`), `unclear` (they
+ *   don't know or understand, ask to repeat, answer in their own language, or the words make no
+ *   sense), `question` (they ask the character something instead), `off_topic`, or `silent`
+ *   (nothing usable was said). Every outcome but the first two keeps the beat: it counts as a
+ *   silence for the runner (a hint or a nudge, then the fallback after the beat's tries).
  * - `phrasesUsed`: target phrase ids the learner used correctly in that turn.
  * - `canDo`: the can-do the turn evidences, if it does.
  * - `safety`: `crisis` when the learner seems distressed or unsafe.
@@ -17,7 +21,14 @@ import { z } from 'zod';
 
 export const CONTROL_MARKER = '§';
 
-export const OUTCOMES = ['fine', 'target_error', 'silent', 'off_topic'] as const;
+export const OUTCOMES = [
+  'fine',
+  'target_error',
+  'unclear',
+  'question',
+  'off_topic',
+  'silent',
+] as const;
 export type Outcome = (typeof OUTCOMES)[number];
 
 const ControlLine = z.object({
@@ -70,4 +81,4 @@ export function parseControl(text: string | null): Control {
 }
 
 /** The output rule appended to every turn's direction. */
-export const CONTROL_RULE = `After the spoken line, write one last line: ${CONTROL_MARKER} followed by compact JSON about the learner's last turn: {"outcome":"fine"|"target_error"|"silent"|"off_topic","targetId":"<target id, only for target_error>","phrasesUsed":["<phrase ids they used correctly>"],"canDo":"<can-do id, if their turn shows it>","safety":"crisis" only if they seem distressed or unsafe}. Never speak the JSON.`;
+export const CONTROL_RULE = `After the spoken line, write one last line: ${CONTROL_MARKER} followed by compact JSON about the learner's last turn: {"outcome":"fine"|"target_error"|"unclear"|"question"|"off_topic","targetId":"<target id, only for target_error>","phrasesUsed":["<phrase ids they used correctly>"],"canDo":"<can-do id, if their turn shows it>","safety":"crisis" only if they seem distressed or unsafe}. Never speak the JSON.`;

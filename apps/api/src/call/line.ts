@@ -2,7 +2,7 @@ import type Anthropic from '@anthropic-ai/sdk';
 import type { CharacterId } from '@yapling/contracts';
 import { CAST } from '@yapling/story';
 
-import { NO_CONTROL, parseControl, type Control } from './control';
+import { NO_CONTROL, OUTCOMES, parseControl, type Control, type Outcome } from './control';
 import type { FrameSender } from './frames';
 import { hedged } from './hedge';
 import { noUsage, type Usage } from './llm';
@@ -266,7 +266,7 @@ export class SpokenLine {
         this.replacedBySafeLine = true;
         tail = this.splitter.speakInstead(safeLine);
       }
-      this.control = parseControl(end.control);
+      this.control = withCaseTag(parseControl(end.control), this.splitter.caseTag);
       this.options.onControl?.(this.control);
       if (tail && !(await openTts())) return;
       say(tail);
@@ -370,4 +370,10 @@ export class SpokenLine {
       guard: this.guard,
     });
   }
+}
+
+/** The line was written for the case it was tagged with: that is the turn's outcome. */
+function withCaseTag(control: Control, tag: string | null): Control {
+  const outcome = OUTCOMES.find((o): o is Outcome => o === tag);
+  return outcome === undefined ? control : { ...control, outcome };
 }

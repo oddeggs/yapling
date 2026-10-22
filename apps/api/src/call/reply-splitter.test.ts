@@ -52,6 +52,10 @@ describe('the reply splitter', () => {
     );
     expect(spoken).toBe('That is great. I love boxes.');
     expect(control).toContain('fine');
+    // A short exclamation doesn't use up a sentence: the question after it is kept.
+    expect(stream('Hi! Oh, hello Khanh! What is your job? Tell me.', 4).spoken).toBe(
+      'Hi! Oh, hello Khanh! What is your job?',
+    );
   });
 
   it('cuts a long sentence at the next clause end past the word limit', () => {
