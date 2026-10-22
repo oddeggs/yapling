@@ -67,6 +67,8 @@ export function MicPrePrompt({ roommateName, onAllow, busy = false }: MicPreProm
 export interface UnpackScreenProps {
   readonly species: PipSpecies;
   readonly roommateName: string;
+  /** The chip at the top: the first chat's length, or Linh at the door. */
+  readonly chip?: string;
   /** Show the microphone pre-prompt. */
   readonly askMic: boolean;
   readonly asking: boolean;
@@ -77,6 +79,7 @@ export interface UnpackScreenProps {
 export function UnpackScreen({
   species,
   roommateName,
+  chip,
   askMic,
   asking,
   onAllowMic,
@@ -102,7 +105,9 @@ export function UnpackScreen({
             justifyContent: 'center',
           }}
         >
-          <Txt variant={{ ...type.buttonSmall, size: 13 }}>{t('onboarding.unpack.chip')}</Txt>
+          <Txt variant={{ ...type.buttonSmall, size: 13 }}>
+            {chip ?? t('onboarding.unpack.chip')}
+          </Txt>
         </GlassView>
         {askMic ? (
           <MicPrePrompt roommateName={roommateName} onAllow={onAllowMic} busy={asking} />

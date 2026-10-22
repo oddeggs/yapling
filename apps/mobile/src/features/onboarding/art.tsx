@@ -3,6 +3,7 @@ import { useArtRenderer } from '@yapling/art/native';
 import { layout } from '@yapling/theme';
 import { useMemo, type ReactNode } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 /*
  * The onboarding's backdrops, drawn by `@yapling/art`'s generators and recorded once into the
@@ -15,6 +16,18 @@ export function useScale(): { width: number; height: number; k: number; u: (n: n
   const { width, height } = useWindowDimensions();
   const k = width / layout.screen.width;
   return { width, height, k, u: (n: number) => n * k };
+}
+
+/** The design's status bar: its screens place things this far under the top of the phone. */
+const DESIGN_STATUS_BAR = 54;
+
+/**
+ * How far to move the design's top-pinned positions on this phone: up by what a shorter status
+ * bar saves (the iPhone SE's 20 points), never down, so a short screen keeps its room.
+ */
+export function useTopShift(): number {
+  const { top } = useSafeAreaInsets();
+  return Math.min(0, top - DESIGN_STATUS_BAR);
 }
 
 /** The generator calls the backdrops use, as the prototype makes them. */

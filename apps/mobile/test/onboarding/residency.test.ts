@@ -5,6 +5,8 @@ import { translator } from '@yapling/i18n';
 import {
   placementSummaryOf,
   residencyView,
+  visitorCardView,
+  visitorConfirmView,
   type PlacementSummary,
 } from '../../src/features/onboarding/residency';
 
@@ -129,5 +131,51 @@ describe('the placement call’s summary', () => {
     expect(placementSummaryOf(record({ summaryPending: true }), true, true)).toEqual({
       kind: 'none',
     });
+  });
+});
+
+describe('the Visitor’s card', () => {
+  const view = (tGloss: typeof vi | null) =>
+    visitorCardView({
+      learnerName: 'Lan',
+      now: NOW,
+      timezone: 'Asia/Ho_Chi_Minh',
+      t: vi,
+      tEn: en,
+      tGloss,
+    });
+
+  it('shows the stage without a number, with the visitor’s stamp and the day', () => {
+    const v = view(vi);
+    expect(v).toMatchObject({
+      learnerName: 'Lan',
+      stageName: 'Visitor',
+      stageSub: 'Khách mới đến',
+      stamp: ['VISITOR', 'KHÁCH', 'OCT 21'],
+    });
+  });
+
+  it('lists hello and “again” in English, with their meaning for a Vietnamese learner', () => {
+    expect(view(vi).aims).toEqual([
+      {
+        id: 'say-hello-and-your-name',
+        text: 'Say hello and your name',
+        gloss: 'Chào hỏi và nói tên mình',
+      },
+      {
+        id: 'ask-again-or-slower',
+        text: 'Ask someone to say it again or slower',
+        gloss: 'Nhờ người khác nói lại hoặc nói chậm hơn',
+      },
+    ]);
+    expect(view(null).aims.map((a) => a.gloss)).toEqual([null, null]);
+  });
+
+  it('puts the call’s two pills in bold in “Go straight to the story?”', () => {
+    const body = visitorConfirmView(vi).body;
+    expect(body.filter((r) => r.bold).map((r) => r.text)).toEqual(['Nói lại', 'Chậm thôi']);
+    expect(body.map((r) => r.text).join('')).toBe(
+      'Truyện sẽ nhanh hơn một chút. Trong mọi cuộc gọi, bạn vẫn có thể bấm Nói lại hoặc Chậm thôi.',
+    );
   });
 });

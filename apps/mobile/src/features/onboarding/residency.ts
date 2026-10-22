@@ -5,8 +5,10 @@ import {
   type Stage,
   type TimeZone,
 } from '@yapling/contracts';
-import { PLACEMENT_CAN_DOS, localDateOf } from '@yapling/domain';
+import { PLACEMENT_CAN_DOS, VISITOR_CARD_CAN_DOS, localDateOf } from '@yapling/domain';
 import type { StringKey, Translate } from '@yapling/i18n';
+
+import type { VisitorCardView, VisitorConfirmView } from './visitor-card-screen';
 
 /*
  * The residency card after the placement call: the stage, the day's stamp, three things the
@@ -100,12 +102,17 @@ type StageKey = Extract<StringKey, `me.stage.${string}`>;
 type MonthKey = Extract<StringKey, `common.monthShort.${string}`>;
 type CanDoKey = Extract<StringKey, `cando.${string}`>;
 
+/** The stamp's day in English capitals: "SEP 21". */
+export function stampDateOf(now: EpochMs, timezone: TimeZone, tEn: Translate): string {
+  const [, month = '1', day = '1'] = localDateOf(now, timezone).split('-');
+  const monthName = tEn(`common.monthShort.${Number(month)}` as MonthKey);
+  return `${monthName.toUpperCase()} ${Number(day)}`;
+}
+
 export function residencyView(i: ResidencyInputs): ResidencyView {
-  // Visitor shows Newcomer's card until its own is designed; "Chặng N/5" counts from Newcomer.
+  // A Visitor has a card of its own (`visitorCardView`); "Chặng N/5" counts from Newcomer.
   const stage = i.stage === 'visitor' ? 'newcomer' : i.stage;
   const stageKey = `me.stage.${stage}` as StageKey;
-  const [, month = '1', day = '1'] = localDateOf(i.now, i.timezone).split('-');
-  const monthName = i.tEn(`common.monthShort.${Number(month)}` as MonthKey);
   return {
     stageName: i.tEn(stageKey),
     stageLocal: i.t(stageKey),
@@ -114,10 +121,74 @@ export function residencyView(i: ResidencyInputs): ResidencyView {
       stages: RESIDENCY_STAGES.length,
     }),
     stampTown: i.t('onboarding.card.stampTown'),
-    stampDate: `${monthName.toUpperCase()} ${Number(day)}`,
+    stampDate: stampDateOf(i.now, i.timezone, i.tEn),
     strengths: i.summary.kind === 'pending' ? null : strengthsOf(summaryWins(i.summary), i.t),
     aims: PLACEMENT_CAN_DOS.map((c) => ({ id: c.id, text: i.t(c.titleKey as CanDoKey) })),
   };
 }
 
 const summaryWins = (s: PlacementSummary): readonly string[] => (s.kind === 'ready' ? s.wins : []);
+
+// --- The Visitor's card ---
+
+export interface VisitorCardInputs {
+  readonly learnerName: string;
+  readonly now: EpochMs;
+  readonly timezone: TimeZone;
+  /** The chrome's translator and English's (the stage name, the stamp, the can-dos). */
+  readonly t: Translate;
+  readonly tEn: Translate;
+  /** The learner's language's, for the meanings under English lines; null when none is written. */
+  readonly tGloss: Translate | null;
+}
+
+/** The Visitor's residency card: the stage without a number, Linh's promise, two can-dos. */
+export function visitorCardView(i: VisitorCardInputs): VisitorCardView {
+  return {
+    top: i.t('onboarding.card.top'),
+    learnerName: i.learnerName,
+    stageName: i.tEn('onboarding.visitor.stage'),
+    stageSub: i.t('onboarding.visitor.stageSub'),
+    welcome: i.t('onboarding.visitor.welcome'),
+    stamp: [
+      i.tEn('onboarding.visitor.stage').toUpperCase(),
+      i.t('onboarding.visitor.stamp'),
+      stampDateOf(i.now, i.timezone, i.tEn),
+    ],
+    aimsTitle: i.t('onboarding.visitor.aimsTitle'),
+    // The can-do catalogue's English, its Vietnamese as the meaning under it.
+    aims: VISITOR_CARD_CAN_DOS.map((c) => {
+      const key = c.titleKey as CanDoKey;
+      return { id: c.id, text: i.tEn(key), gloss: i.tGloss ? i.tGloss(key) : null };
+    }),
+    chip: i.t('onboarding.visitor.chip'),
+    how: i.t('onboarding.visitor.how'),
+    start: i.t('onboarding.visitor.start'),
+    skip: i.t('onboarding.visitor.skip'),
+  };
+}
+
+/** "Go straight to the story?", its body cut where the call's two pills go in bold. */
+export function visitorConfirmView(t: Translate): VisitorConfirmView {
+  const again = t('onboarding.visitor.confirm.again');
+  const slower = t('onboarding.visitor.confirm.slower');
+  // The placeholders are kept, to cut the text where the pills go.
+  const template = t('onboarding.visitor.confirm.body', { again: '{again}', slower: '{slower}' });
+  const body = template
+    .split(/(\{again\}|\{slower\})/)
+    .filter((part) => part !== '')
+    .map((part) =>
+      part === '{again}'
+        ? { text: again, bold: true }
+        : part === '{slower}'
+          ? { text: slower, bold: true }
+          : { text: part, bold: false },
+    );
+  return {
+    title: t('onboarding.visitor.confirm.title'),
+    body,
+    linh: t('onboarding.visitor.confirm.linh'),
+    go: t('onboarding.visitor.confirm.go'),
+    stay: t('onboarding.visitor.confirm.stay'),
+  };
+}
