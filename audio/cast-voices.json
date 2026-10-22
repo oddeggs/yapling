@@ -39,6 +39,25 @@
       "design": "A cheerful British woman in her late forties with a warm regional English accent. Brisk, chatty and affectionate, a smile in every line, a bus driver who calls everyone 'love' and always leaves on time.",
       "_voice_name": "Yapling Bea (designed, preview 3)"
     },
+    "dex": {
+      "design": "An American man in his mid-forties with a clear General American accent. Calm, deep and warm, measured and unhurried, a fair and encouraging interviewer who makes people feel at ease. Professional but friendly, reassuring, speaks clearly with natural pauses, never stiff or salesy.",
+      "candidates": {
+        "1": {
+          "voice_id": "ugSabLIXzwLBKZk3jMTV",
+          "_voice_name": "Yapling Dex (candidate 1)"
+        },
+        "2": {
+          "voice_id": "1DEdvFXrvpcwIg7NWEqZ",
+          "_voice_name": "Yapling Dex (candidate 2)"
+        },
+        "3": {
+          "voice_id": "3obsfZTkCLh1pcOtVExU",
+          "_voice_name": "Yapling Dex (candidate 3)"
+        }
+      },
+      "voice_id": "1DEdvFXrvpcwIg7NWEqZ",
+      "_voice_name": "Yapling Dex (candidate 2, provisional pick; audition in audio/auditions-dex, swap with `pick dex <n>`)"
+    },
     "mags": {
       "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
       "_voice_name": "Alice (premade, British). Minor role in E6; swap for a designed voice later if needed."
