@@ -97,6 +97,8 @@ Gate 2 progress (22 Oct 2026): all lanes and the connecting pass merged (vitest 
 | 3b Test kit | [`docs/learner-test.md`](../../docs/learner-test.md): the session script, tasks per day, questions, what to watch; consent copy for recording; a reset and seed flow per tester |
 | 3c Hardening | Audit of the call path (latency, reconnect, audio session), accessibility pass, copy review list for a native Vietnamese reviewer |
 
+Wave 3 progress (22 Oct 2026): 3a, 3b, 3c merged (vitest 2707, mobile 392, API 153). Call audio after a story or an earlier call fixed (voice processing was enabled on the previous player's engine before the call's graph existed); reconnect, slow reply, interruption and route-change paths land in designed states; hold-to-talk reacts in under 1 s; the voicemail accepts the story's "Can I help?"; the dev Worker honours the test menu's clock so the day-6 leaf grows. PostHog, Sentry and per-call cost records (migration 0200) are in and stay off until the keys are set. Dev Worker `65e5708d` at `5b53dd2`; TestFlight build 5 carries all of it. Still needs a phone: echo cancellation, interruptions, Bluetooth, latency from Vietnam. Founder: PostHog and Sentry keys, the questions at the end of `docs/learner-test.md`, the Vietnamese review in `docs/vi-copy-review.md`.
+
 Gate 3 (founder): run the 5–8 learner sessions.
 
 ---
