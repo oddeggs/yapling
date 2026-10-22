@@ -87,6 +87,8 @@ Gate 1: on the simulator, a full Episode 1 call with Mei and Pip runs against th
 Done when (every lane): each screen matches its render on the simulator side by side; every interaction works against the dev Worker; copy comes from i18n; VoiceOver labels set.
 Gate 2: TestFlight build 1 ("Yapling Dev") installs on a phone and plays day 1 to day 8 with live calls.
 
+Gate 2 progress (22 Oct 2026): all lanes and the connecting pass merged (vitest 2706, mobile 348, API 139). The connecting pass joined every screen to live data, added pace on the profile (migration 0007), fixed hold-to-talk quiet time and redeployed the dev Worker. On the simulator a fresh install plays day 1 to day 8 against the dev Worker. Build 3 (pipeline check) is valid in TestFlight; **build 4** is TestFlight build 1. Open: call audio on the simulator fails after another audio player in the same session (relaunch works; hardening lane), the voicemail fixture reaches the "Pip worked it out" ending, and a phone run.
+
 ## Wave 3: Learner test · critical path 1 run
 
 | Lane | Does |
