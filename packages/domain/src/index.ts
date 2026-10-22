@@ -9,6 +9,7 @@ export * from './phrases';
 export * from './errors';
 export * from './ring';
 export * from './story-week';
+export * from './pips-minute';
 export * from './ledger';
 export * from './fluency';
 export * from './knocks';
