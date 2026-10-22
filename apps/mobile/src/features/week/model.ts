@@ -7,13 +7,20 @@ import type {
   Roommate,
 } from '@yapling/contracts';
 import { addDays, dateOfDay, firstDayOfWeek, slotOpensOnDay } from '@yapling/domain';
-import { findPhrase, glossFor, SEASON_1, type Episode } from '@yapling/story';
+import { findPhrase, findScene, glossFor, SEASON_1, type Episode } from '@yapling/story';
 import type { Language, Translate } from '@yapling/i18n';
 import { colours, palette } from '@yapling/theme';
 import type { Href } from 'expo-router';
 
 import { copy, text, type Copy } from '../burrow/copy';
-import { currentRing, type BurrowProgress, type FaceSpec } from '../burrow/model';
+import {
+  currentRing,
+  LATER_WEEKS_FROM_DAY,
+  storyWeekOfInput,
+  type BurrowProgress,
+  type FaceSpec,
+} from '../burrow/model';
+import { episodeOfScene, guestOf, ringSceneFor, SEASON_WEEKS } from '../burrow/ring-scenes';
 import { callRoute } from '../burrow/routes';
 
 /*
@@ -34,7 +41,11 @@ export interface WeekInput {
 }
 
 export interface WeekRow {
+  /** Stable per row (the slot's kind, or the waiting call's week and kind). */
+  readonly key: string;
   readonly kind: RingSlotKind;
+  /** A call still waiting from an earlier week: that week; null for this week's calls. */
+  readonly fromWeek: number | null;
   readonly tag: Copy;
   readonly title: Copy;
   /** "Hôm nay", or the weekday it opens. */
@@ -45,7 +56,7 @@ export interface WeekRow {
   /** The call kind's colour, filling the status ring when done. */
   readonly accent: string;
   readonly status: RingSlotStatus;
-  /** Where the row goes when tapped: only an open call starts. */
+  /** Where the row goes when tapped: an open call starts; from week 2, a done one plays again. */
   readonly target: Href | null;
 }
 
@@ -60,6 +71,8 @@ export interface WeekModel {
   readonly dates: WeekDates;
   readonly roommate: Roommate;
   readonly rows: readonly WeekRow[];
+  /** The oldest call still open from an earlier week, waiting; null when none is. */
+  readonly waiting: WeekRow | null;
   readonly phrases: readonly WeekPhrase[];
   readonly ring: { readonly done: number; readonly total: number };
   /** The button under the phrases: the first open call of the week, or none when all are done. */
@@ -144,6 +157,11 @@ const SLOT_TAG: Readonly<Record<RingSlotKind, Copy>> = {
 
 /** The week view for the week the learner is in. */
 export function weekModel(input: WeekInput): WeekModel {
+  return input.day >= LATER_WEEKS_FROM_DAY ? laterWeekModel(input) : firstWeekModel(input);
+}
+
+/** The first week, on the calendar. */
+function firstWeekModel(input: WeekInput): WeekModel {
   const ring = currentRing(input);
   const episode = episodeOf(ring.week);
   const name = input.roommate.name;
@@ -188,7 +206,9 @@ export function weekModel(input: WeekInput): WeekModel {
     const opensToday = slotOpensOnDay(ring.week, slot.kind) === input.day;
     const scene = sceneOf(slot.kind);
     return {
+      key: slot.kind,
       kind: slot.kind,
+      fromWeek: null,
       tag: SLOT_TAG[slot.kind],
       title: titles[slot.kind],
       when: opensToday
@@ -219,6 +239,7 @@ export function weekModel(input: WeekInput): WeekModel {
     dates: weekDates(input.startedOn, ring.week),
     roommate: input.roommate,
     rows,
+    waiting: null,
     phrases,
     ring: { done: rows.filter((r) => r.status === 'done').length, total: rows.length },
     cta:
@@ -231,5 +252,118 @@ export function weekModel(input: WeekInput): WeekModel {
             target: firstOpen.target,
           }
         : null,
+  };
+}
+
+const LOOKS: Readonly<Record<RingSlotKind, Pick<WeekRow, 'pictureFill' | 'accent'>>> = {
+  episode: { pictureFill: palette.apricot, accent: colours.accent },
+  real_week: { pictureFill: colours.accentSoft, accent: colours.secondary },
+  practice: { pictureFill: colours.secondarySoft, accent: colours.success },
+};
+
+/** A ring call's title: the episode's "S1 · E3 · Cheaper Beans", else the scene's own. */
+const callTitle = (kind: RingSlotKind, sceneId: string): Copy => {
+  const episode = kind === 'episode' ? episodeOfScene(sceneId) : undefined;
+  return episode === undefined
+    ? text(findScene(sceneId)?.title ?? '')
+    : copy('week.slot.episodeTitle', {
+        season: SEASON_1.number,
+        episode: episode.number,
+        title: episode.title,
+      });
+};
+
+const faceFor = (kind: RingSlotKind, sceneId: string): FaceSpec => {
+  const guest = guestOf(sceneId);
+  return { character: guest, mood: kind === 'real_week' && guest === 'pip' ? 'think' : 'happy' };
+};
+
+const STATE_ORDER: readonly PhraseState[] = ['seed', 'sprout', 'leaf', 'bloom'];
+
+/**
+ * From week 2: the story week (the week of the next episode, never ahead of the calendar), its
+ * three calls from their slots' scenes, the oldest call still waiting from an earlier week, and
+ * the week's phrases. A week with no episode of its own (the festival and after) is a ring of
+ * replays, and its phrases are the learner's own that have the most growing to do.
+ */
+function laterWeekModel(input: WeekInput): WeekModel {
+  const week = storyWeekOfInput(input);
+  const rows: WeekRow[] = week.ring.map((slot) => {
+    const sceneId = ringSceneFor(week.week, slot.kind, slot.sceneId);
+    const when: Copy =
+      slot.opensOnDay === input.day
+        ? copy('week.slot.today')
+        : week.behind && slot.status === 'open'
+          ? copy('week.waiting.when')
+          : copy(`common.weekdayShort.${weekdayOf(slot.opensOn)}` as 'common.weekdayShort.mon');
+    return {
+      key: slot.kind,
+      kind: slot.kind,
+      fromWeek: null,
+      tag: slot.sceneId === null ? copy('week.slot.replay') : SLOT_TAG[slot.kind],
+      title: callTitle(slot.kind, sceneId),
+      when,
+      face: faceFor(slot.kind, sceneId),
+      ...LOOKS[slot.kind],
+      status: slot.status,
+      target: slot.status === 'upcoming' ? null : callRoute(sceneId),
+    };
+  });
+
+  const oldest = week.waiting[0];
+  const waiting: WeekRow | null =
+    oldest === undefined
+      ? null
+      : (() => {
+          const sceneId = ringSceneFor(oldest.week, oldest.kind, oldest.sceneId);
+          return {
+            key: `waiting-${oldest.week}-${oldest.kind}`,
+            kind: oldest.kind,
+            fromWeek: oldest.week,
+            tag: copy('week.waiting.tag', { week: oldest.week }),
+            title: callTitle(oldest.kind, sceneId),
+            when: copy('week.waiting.when'),
+            face: faceFor(oldest.kind, sceneId),
+            ...LOOKS[oldest.kind],
+            status: 'open',
+            target: callRoute(sceneId),
+          };
+        })();
+
+  const shape = SEASON_WEEKS[week.week - 1];
+  const own = shape !== undefined && 'phrases' in shape ? shape.phrases : null;
+  const met = new Map(input.progress.phrases.map((p) => [p.id, p]));
+  const ids =
+    own ??
+    [...input.progress.phrases]
+      .sort(
+        (a, b) =>
+          STATE_ORDER.indexOf(a.state) - STATE_ORDER.indexOf(b.state) || b.seedAt - a.seedAt,
+      )
+      .slice(0, 4)
+      .map((p) => p.id);
+  const phrases: WeekPhrase[] = ids.flatMap((id) => {
+    const phrase = findPhrase(id);
+    const mine = met.get(id);
+    if (phrase === undefined && mine === undefined) return [];
+    return [
+      {
+        id,
+        phrase: phrase?.en ?? mine?.text ?? id,
+        gloss: phrase === undefined ? '' : (glossFor(phrase.glosses, input.firstLanguage) ?? ''),
+        art: PHRASE_ART[mine?.state ?? 'seed'],
+      },
+    ];
+  });
+
+  const next = rows.find((r) => r.status === 'open') ?? waiting;
+  return {
+    dates: weekDates(input.startedOn, week.week),
+    roommate: input.roommate,
+    rows,
+    waiting,
+    phrases,
+    ring: { done: rows.filter((r) => r.status === 'done').length, total: rows.length },
+    cta: next?.target != null ? { label: next.title, target: next.target } : null,
   };
 }
