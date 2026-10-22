@@ -1,4 +1,5 @@
 import type { BurrowObjectId } from '@yapling/art';
+import type { Roommate } from '@yapling/contracts';
 import {
   colours,
   glass,
@@ -90,7 +91,9 @@ export function BurrowHomeScreen({
               }}
             />
           ) : null}
-          {model.keepsake ? <WallKeepsake keepsake={model.keepsake} /> : null}
+          {model.keepsake ? (
+            <WallKeepsake keepsake={model.keepsake} species={model.roommate.species} />
+          ) : null}
         </>
       }
     >
@@ -222,7 +225,14 @@ function ShelfArt({ id, size }: { id: BurrowObjectId; size: number }) {
 }
 
 /** The newest keepsake, hung on the wall over the map: the drawn frame, small. */
-function WallKeepsake({ keepsake }: { keepsake: HungKeepsake }) {
+function WallKeepsake({
+  keepsake,
+  species,
+}: {
+  keepsake: HungKeepsake;
+  /** The roommate's species, when the roommate signed it. */
+  species: Roommate['species'];
+}) {
   const { t } = useLocale();
   const { u, y } = useStage();
   const full = 278;
@@ -247,7 +257,12 @@ function WallKeepsake({ keepsake }: { keepsake: HungKeepsake }) {
         {...(keepsake.witness
           ? {
               witnessFace: (
-                <Face character={keepsake.witness} size={44} background={colours.secondarySoft} />
+                <Face
+                  character={keepsake.witness}
+                  species={species}
+                  size={44}
+                  background={colours.secondarySoft}
+                />
               ),
             }
           : {})}
