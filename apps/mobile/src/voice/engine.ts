@@ -3,7 +3,9 @@ import {
   type AudioFrame,
   type CallServerFrame,
   type CharacterId,
+  type HangupReason,
   type MeaningSubject,
+  type Pace,
   type ReadyFrame,
   type TurnMode,
 } from '@yapling/contracts';
@@ -283,16 +285,31 @@ export class VoiceEngine {
     return this.socket.send({ type: 'meaning_request', subject });
   }
 
+  /** "Nói lại" / "Chậm thôi": the character says the last line again (slower), never a try. */
+  requestReplay(slower: boolean): boolean {
+    return this.socket.send({ type: 'replay', slower });
+  }
+
+  /** The learner changed the pace mid-call ("Khó quá" → slower): from the next line. */
+  changePace(pace: Pace | null): boolean {
+    return this.socket.send({ type: 'pace', pace });
+  }
+
+  /** "Bỏ qua": the turn waiting moves on. */
+  skipTurn(): boolean {
+    return this.socket.send({ type: 'skip' });
+  }
+
   /** Ends the call: `hangup`, then closes after `ended` (or a short wait). */
-  hangup(): void {
+  hangup(reason?: HangupReason): void {
     this.player?.stopAll();
-    if (!this.socket.send({ type: 'hangup' })) {
+    if (!this.socket.send(reason ? { type: 'hangup', reason } : { type: 'hangup' })) {
       void this.teardown();
-      this.patch({ endReason: 'hangup' });
+      this.patch({ endReason: reason ?? 'hangup' });
       return;
     }
     this.hangupTimer = setTimeout(() => {
-      this.patch({ endReason: 'hangup' });
+      this.patch({ endReason: reason ?? 'hangup' });
       void this.teardown();
     }, 3_000);
   }
