@@ -1,4 +1,4 @@
-import { RESIDENCY_STAGES, STAGES } from '@yapling/contracts';
+import { STAGES } from '@yapling/contracts';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 
@@ -10,9 +10,11 @@ import {
   nextStage,
   pipStage,
   previousStage,
+  residencyNumber,
   shouldShowHint,
   SPEECH_SETTINGS,
   speechSettings,
+  tooHardOffers,
   ttsSpeedFactor,
 } from './stages';
 
@@ -20,6 +22,7 @@ const stage = fc.constantFrom(...STAGES);
 
 describe('stage speech settings', () => {
   it.each([
+    ['visitor', 85, 'one_short_sentence', 'none', 'never', 0.7],
     ['newcomer', 110, 'short_one_idea', 'none', 'never', 0.8],
     ['neighbour', 130, 'one_or_two_ideas', 'rare_explained', 'never', 0.9],
     ['regular', 150, 'normal', 'some', 'rarely_gently', 1.0],
@@ -49,6 +52,19 @@ describe('stage speech settings', () => {
     expect(shouldShowHint('regular', 60_000, false)).toBe(false);
   });
 
+  it('keeps a Visitor to one short sentence of at most 8 words, everyone else under 25', () => {
+    expect(SPEECH_SETTINGS.visitor.maxWordsPerTurn).toBe(8);
+    for (const s of STAGES.filter((x) => x !== 'visitor')) {
+      expect(SPEECH_SETTINGS[s].maxWordsPerTurn).toBe(25);
+    }
+  });
+
+  it('shows the say-this card from the start at Visitor, so the long-quiet offer never applies', () => {
+    expect(hintPolicy('visitor')).toEqual({ kind: 'from_start' });
+    expect(shouldShowHint('visitor', 0, false)).toBe(true);
+    expect(shouldShowHint('visitor', LONG_QUIET_MS, false)).toBe(true);
+  });
+
   it('always hints when asked', () => {
     fc.assert(
       fc.property(stage, fc.nat(), (s, silence) => {
@@ -58,10 +74,9 @@ describe('stage speech settings', () => {
   });
 
   it('gets faster, never slower, stage by stage; Hard mode only speeds up from Local', () => {
-    // From Newcomer: Visitor has Newcomer's row until its own is set.
-    for (let i = 1; i < RESIDENCY_STAGES.length; i++) {
-      const before = SPEECH_SETTINGS[RESIDENCY_STAGES[i - 1]!];
-      const after = SPEECH_SETTINGS[RESIDENCY_STAGES[i]!];
+    for (let i = 1; i < STAGES.length; i++) {
+      const before = SPEECH_SETTINGS[STAGES[i - 1]!];
+      const after = SPEECH_SETTINGS[STAGES[i]!];
       expect(after.wordsPerMinute).toBeGreaterThan(before.wordsPerMinute);
       expect(after.ttsSpeed.min).toBeGreaterThanOrEqual(before.ttsSpeed.min);
     }
@@ -79,6 +94,10 @@ describe('stage speech settings', () => {
 });
 
 describe('phrase breaks', () => {
+  it('give a Visitor the longest break, half a second', () => {
+    expect(SPEECH_SETTINGS.visitor.phraseBreakSeconds).toBe(0.5);
+  });
+
   it('slow the two slowest stages, Newcomer most, and stop from Regular', () => {
     expect(SPEECH_SETTINGS.newcomer.phraseBreakSeconds).toBe(0.35);
     expect(SPEECH_SETTINGS.neighbour.phraseBreakSeconds).toBe(0.2);
@@ -115,6 +134,13 @@ describe('moving between stages', () => {
     expect(isStageAtLeast('visitor', 'newcomer')).toBe(false);
   });
 
+  it('makes Pip a Visitor alongside a Visitor, and at least a Newcomer for everyone else', () => {
+    expect(pipStage('visitor')).toBe('visitor');
+    for (const s of STAGES.filter((x) => x !== 'visitor')) {
+      expect(isStageAtLeast(pipStage(s), 'newcomer')).toBe(true);
+    }
+  });
+
   it('keeps Pip one stage below the learner, never below Newcomer', () => {
     expect(pipStage('newcomer')).toBe('newcomer');
     expect(pipStage('neighbour')).toBe('newcomer');
@@ -123,5 +149,28 @@ describe('moving between stages', () => {
         expect(isStageAtLeast(s, pipStage(s))).toBe(true);
       }),
     );
+  });
+});
+
+describe('"too hard"', () => {
+  it('offers a Newcomer practising with Linh as a Visitor, next to the slower pace', () => {
+    expect(tooHardOffers('newcomer')).toEqual([
+      { kind: 'slower' },
+      { kind: 'practise_with_linh', to: 'visitor' },
+    ]);
+  });
+
+  it('offers only the slower pace at every other stage', () => {
+    for (const s of STAGES.filter((x) => x !== 'newcomer')) {
+      expect(tooHardOffers(s)).toEqual([{ kind: 'slower' }]);
+    }
+  });
+});
+
+describe('the residency number', () => {
+  it('counts from Newcomer and shows none at Visitor', () => {
+    expect(residencyNumber('visitor')).toBeNull();
+    expect(residencyNumber('newcomer')).toBe(1);
+    expect(residencyNumber('voice')).toBe(5);
   });
 });

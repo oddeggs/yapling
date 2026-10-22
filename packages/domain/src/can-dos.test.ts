@@ -10,7 +10,10 @@ import {
   PLACEMENT_CAN_DOS,
   SEASON_1_CAN_DOS,
   SEASON_1_EPISODES,
+  SETTLING_CAN_DOS,
+  settlingCanDoFor,
   tickCanDo,
+  VISITOR_CARD_CAN_DOS,
 } from './can-dos';
 
 const HCM = 'Asia/Ho_Chi_Minh';
@@ -130,5 +133,55 @@ describe('ticking a can-do with evidence', () => {
         HCM,
       ),
     ).toThrow();
+  });
+});
+
+describe('the Visitor can-dos', () => {
+  it('has one per Settling-in chapter, all at Visitor, with valid unique ids', () => {
+    expect(SETTLING_CAN_DOS.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5, 6]);
+    for (const c of SETTLING_CAN_DOS) {
+      expect(Id.safeParse(c.id).success).toBe(true);
+      expect(c.stage).toBe('visitor');
+      expect(c.titleKey).toBe(`cando.${c.id}`);
+      expect(settlingCanDoFor(c.chapter)).toBe(c);
+      expect(canDoById(c.id)).toBe(c);
+    }
+    const ids = [...SETTLING_CAN_DOS, ...SEASON_1_CAN_DOS].map((c) => c.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('splits four Life (hello, yes or no, again, ordering) and two Work (numbers, about me)', () => {
+    expect(SETTLING_CAN_DOS.filter((c) => c.track === 'life').map((c) => c.chapter)).toEqual([
+      1, 2, 3, 5,
+    ]);
+    expect(SETTLING_CAN_DOS.filter((c) => c.track === 'work').map((c) => c.chapter)).toEqual([
+      4, 6,
+    ]);
+  });
+
+  it('shows hello and your name, and asking again, on the Visitor’s card', () => {
+    expect(VISITOR_CARD_CAN_DOS.map((c) => c.id)).toEqual([
+      'say-hello-and-your-name',
+      'ask-again-or-slower',
+    ]);
+  });
+
+  it('stays out of the Season 1 lists, and ticks like any can-do', () => {
+    expect(SEASON_1_CAN_DOS.some((c) => c.stage === 'visitor')).toBe(false);
+    expect(canDosForTrack('both')).toHaveLength(12);
+    const hello = canDoById('say-hello-and-your-name')!;
+    const { canDo, keepsake } = tickCanDo(
+      newCanDo(hello),
+      {
+        canDoId: hello.id,
+        callRecordId: 'call_1',
+        quote: "Hi! I'm Lan.",
+        witness: 'linh',
+        at: Date.UTC(2026, 8, 21, 12),
+      },
+      HCM,
+    );
+    expect(CanDoProgress.parse(canDo).stage).toBe('visitor');
+    expect(keepsake && Keepsake.parse(keepsake).signedBy).toBe('linh');
   });
 });

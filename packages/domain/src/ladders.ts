@@ -9,10 +9,13 @@ import { isStageAtLeast, ttsSpeedFactor } from './stages';
  * checkpoint is replayed slower with Pip, and every rung can be stepped down without losing anything.
  */
 
-/** The new voices each stage brings (Voice of Natterwick: everyone, mixed, natural speed). */
+/**
+ * The new voices each stage brings (Voice of Natterwick: everyone, mixed, natural speed). A Visitor
+ * settles in with Pip and Linh; Mei and Bea each have one short Settling-in scene, but Mei's voice
+ * arrives with the story at Newcomer and Bea moves in at Neighbour.
+ */
 export const NEW_VOICES_BY_STAGE: Readonly<Record<Stage, readonly CharacterId[]>> = {
-  // Visitor: Newcomer's voices until its own are set.
-  visitor: ['pip', 'linh', 'mei'],
+  visitor: ['pip', 'linh'],
   newcomer: ['pip', 'linh', 'mei'],
   neighbour: ['sol', 'bea', 'nell'],
   regular: ['arjun', 'dex'],

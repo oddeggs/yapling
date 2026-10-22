@@ -10,6 +10,7 @@ import type {
   Track,
 } from '@yapling/contracts';
 
+import type { SettlingChapter } from './settling';
 import { localDateOf } from './time';
 
 /*
@@ -27,16 +28,30 @@ export type Season1EpisodeId = (typeof SEASON_1_EPISODES)[number];
 
 export type CanDoTrack = Exclude<Track, 'both'>;
 
-export interface CanDoDefinition {
+interface CanDoBase {
   readonly id: Id;
   readonly stage: Stage;
   readonly track: CanDoTrack;
-  /** The episode whose call gives the learner the chance to show it. */
-  readonly episode: Season1EpisodeId;
   readonly titleKey: string;
-  /** Shown on the residency card after placement: "aim for these first". */
+  /** Shown on the residency card (the stage's own card): "aim for these first". */
   readonly placement: boolean;
 }
+
+/** A Season 1 can-do, shown in an episode's call. */
+export interface CanDoDefinition extends CanDoBase {
+  /** The episode whose call gives the learner the chance to show it. */
+  readonly episode: Season1EpisodeId;
+}
+
+/** A Visitor's can-do, one per Settling-in chapter. */
+export interface SettlingCanDoDefinition extends CanDoBase {
+  readonly stage: 'visitor';
+  /** The Settling-in chapter whose call gives the learner the chance to show it. */
+  readonly chapter: SettlingChapter;
+}
+
+/** Any can-do in the catalogue. */
+export type AnyCanDoDefinition = CanDoDefinition | SettlingCanDoDefinition;
 
 const canDo = (
   id: Id,
@@ -85,8 +100,48 @@ export const PLACEMENT_CAN_DOS: readonly CanDoDefinition[] = SEASON_1_CAN_DOS.fi
   (c) => c.placement,
 );
 
-export const canDoById = (id: Id): CanDoDefinition | undefined =>
-  SEASON_1_CAN_DOS.find((c) => c.id === id);
+const settlingCanDo = (
+  id: Id,
+  chapter: SettlingChapter,
+  track: CanDoTrack,
+  placement = false,
+): SettlingCanDoDefinition => ({
+  id,
+  stage: 'visitor',
+  track,
+  chapter,
+  titleKey: `cando.${id}`,
+  placement,
+});
+
+/** The Visitor's can-dos, one per Settling-in chapter, in chapter order. */
+export const SETTLING_CAN_DOS: readonly SettlingCanDoDefinition[] = [
+  // "Say hello and your name"
+  settlingCanDo('say-hello-and-your-name', 1, 'life', true),
+  // "Answer yes or no politely"
+  settlingCanDo('answer-yes-or-no-politely', 2, 'life'),
+  // "Ask someone to say it again or slower"
+  settlingCanDo('ask-again-or-slower', 3, 'life', true),
+  // "Understand a number, a time and a price"
+  settlingCanDo('understand-number-time-price', 4, 'work'),
+  // "Order one thing"
+  settlingCanDo('order-one-thing', 5, 'life'),
+  // "Say where you're from and what you do"
+  settlingCanDo('say-where-youre-from-and-what-you-do', 6, 'work'),
+];
+
+/** The two can-dos the Visitor's residency card shows: hello and your name, and "again". */
+export const VISITOR_CARD_CAN_DOS: readonly SettlingCanDoDefinition[] = SETTLING_CAN_DOS.filter(
+  (c) => c.placement,
+);
+
+/** The can-do a Settling-in chapter gives the chance to show. */
+export const settlingCanDoFor = (chapter: SettlingChapter): SettlingCanDoDefinition | undefined =>
+  SETTLING_CAN_DOS.find((c) => c.chapter === chapter);
+
+/** Any can-do by id, Visitor or Season 1. */
+export const canDoById = (id: Id): AnyCanDoDefinition | undefined =>
+  SEASON_1_CAN_DOS.find((c) => c.id === id) ?? SETTLING_CAN_DOS.find((c) => c.id === id);
 
 /**
  * The can-dos a learner's track shows. Life and Work share stages; "both" shows every one. The
@@ -96,7 +151,7 @@ export const canDosForTrack = (track: Track): readonly CanDoDefinition[] =>
   SEASON_1_CAN_DOS.filter((c) => track === 'both' || c.track === track || c.placement);
 
 /** A can-do not yet started. */
-export const newCanDo = (definition: CanDoDefinition): CanDoProgress => ({
+export const newCanDo = (definition: AnyCanDoDefinition): CanDoProgress => ({
   id: definition.id,
   stage: definition.stage,
   status: 'in_progress',

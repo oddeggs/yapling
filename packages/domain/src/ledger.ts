@@ -1,4 +1,5 @@
 import type {
+  CallKind,
   EpochMs,
   LocalDate,
   MinutesSummary,
@@ -18,11 +19,12 @@ import {
 
 /*
  * The live-minute ledger. Only live calls cost minutes; stories, postcards, voicemails and voice
- * notes never do. A call charges the seconds the learner talked plus the seconds the character
- * talked. Periods are in the learner's timezone:
+ * notes never do, and neither do Settling-in calls. A call charges the seconds the learner talked
+ * plus the seconds the character talked. Periods are in the learner's timezone:
  *
- * - Free, days 1–7 after install: a generous first week.
- * - Free, after that: 10 minutes a week, the week rolling from the install day's weekday (the same
+ * - Free, days 1–7 of the story: a generous first week. The story starts on `storyStartedOn` (the
+ *   letter under the café door): the install day for a Newcomer, after Settling in for a Visitor.
+ * - Free, after that: 10 minutes a week, the week rolling from the story start's weekday (the same
  *   seven-day weeks as the ring).
  * - Plus: 150 minutes a calendar month, fair use.
  *
@@ -42,12 +44,27 @@ export const PLUS_MONTHLY_SECONDS = 150 * 60;
 /** From this many seconds left, the character wraps the scene up. */
 export const WRAP_UP_SECONDS = 60;
 
+/** The calls that never cost live minutes: Settling in is free. */
+export const UNMETERED_CALL_KINDS: ReadonlySet<CallKind> = new Set<CallKind>(['settling']);
+
+/** Whether a call of this kind costs live minutes. */
+export const isMeteredCall = (kind: CallKind): boolean => !UNMETERED_CALL_KINDS.has(kind);
+
 export interface LedgerContext {
   readonly plan: Plan;
   readonly installedOn: LocalDate;
+  /**
+   * The day the story started, which the free weeks count from. Null or left out: the install day
+   * (a profile from before it was kept, or a Visitor still settling in, whose calls are free).
+   */
+  readonly storyStartedOn?: LocalDate | null;
   readonly timezone: TimeZone;
   readonly now: EpochMs;
 }
+
+/** The day the free weeks count from: the story's start, or the install day until it is known. */
+export const freeWeeksStartOn = (ctx: LedgerContext): LocalDate =>
+  ctx.storyStartedOn ?? ctx.installedOn;
 
 export interface LedgerPeriod {
   readonly plan: Plan;
@@ -69,8 +86,9 @@ export const ledgerPeriod = (ctx: LedgerContext): LedgerPeriod => {
       firstWeek: false,
     };
   }
-  const week = Math.max(0, Math.floor(daysBetween(ctx.installedOn, today) / 7));
-  const start = addDays(ctx.installedOn, week * 7);
+  const from = freeWeeksStartOn(ctx);
+  const week = Math.max(0, Math.floor(daysBetween(from, today) / 7));
+  const start = addDays(from, week * 7);
   return {
     plan: 'free',
     periodStart: startOfLocalDay(start, ctx.timezone),
@@ -112,9 +130,21 @@ const statusOf = (period: LedgerPeriod, used: Seconds): LedgerStatus => {
 export const ledgerStatus = (state: LedgerState | null, ctx: LedgerContext): LedgerStatus =>
   statusOf(ledgerPeriod(ctx), currentLedger(state, ctx).usedSeconds);
 
+/**
+ * Whether a live call of this kind may start now: an unmetered call always may; a metered one
+ * while the period has seconds left.
+ */
+export const canStartCall = (
+  state: LedgerState | null,
+  ctx: LedgerContext,
+  kind: CallKind,
+): boolean => !isMeteredCall(kind) || !ledgerStatus(state, ctx).exhausted;
+
 export interface TalkSeconds {
   readonly learnerSeconds: Seconds;
   readonly characterSeconds: Seconds;
+  /** The call's kind; an unmetered call (Settling in) charges nothing. Left out: metered. */
+  readonly callKind?: CallKind;
 }
 
 export interface ChargeResult extends LedgerStatus {
@@ -123,9 +153,10 @@ export interface ChargeResult extends LedgerStatus {
 }
 
 /**
- * Charges talk time to the period `now` falls in. Seconds are whole and never negative. The last
- * chunk of a call may take the used seconds past the allowance; the learner is never cut off
- * mid-word, so the overrun is kept and `secondsLeft` stays at zero.
+ * Charges talk time to the period `now` falls in. Seconds are whole and never negative; an
+ * unmetered call charges none. The last chunk of a call may take the used seconds past the
+ * allowance; the learner is never cut off mid-word, so the overrun is kept and `secondsLeft` stays
+ * at zero.
  */
 export const chargeTalk = (
   state: LedgerState | null,
@@ -133,8 +164,10 @@ export const chargeTalk = (
   talk: TalkSeconds,
 ): ChargeResult => {
   const current = currentLedger(state, ctx);
-  const chargedSeconds =
-    Math.max(0, Math.round(talk.learnerSeconds)) + Math.max(0, Math.round(talk.characterSeconds));
+  const metered = talk.callKind === undefined || isMeteredCall(talk.callKind);
+  const chargedSeconds = metered
+    ? Math.max(0, Math.round(talk.learnerSeconds)) + Math.max(0, Math.round(talk.characterSeconds))
+    : 0;
   const next: LedgerState = { ...current, usedSeconds: current.usedSeconds + chargedSeconds };
   return { state: next, chargedSeconds, ...statusOf(ledgerPeriod(ctx), next.usedSeconds) };
 };

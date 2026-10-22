@@ -7,6 +7,8 @@ import {
   FREE_WEEK_ENDS_ON_DAY,
   planWeekOneKnocks,
   recapFor,
+  storyDayIndexOf,
+  storyStartOn,
   WEEK_ONE_PLAN,
   weekOneUnlocks,
   welcomeFor,
@@ -167,5 +169,59 @@ describe('coming back after days away', () => {
       seedPhrase('can-i-help', 'Can I help?', at('2026-09-22')),
     );
     expect(duePhrases([leaf], at('2027-03-01'), HCM)[0]?.state).toBe('leaf');
+  });
+});
+
+describe('week 1 for a Visitor', () => {
+  // Installed on Monday 21 September; the letter came on Thursday 24 September, after Settling in.
+  const visitor = { installedOn, storyStartedOn: '2026-09-24' } as const;
+
+  it('counts week 1’s days from the day the story starts', () => {
+    expect(storyStartOn(visitor)).toBe('2026-09-24');
+    expect(storyDayIndexOf(visitor, at('2026-09-24', '20:00'), HCM)).toBe(1);
+    expect(storyDayIndexOf(visitor, at('2026-09-25', '00:00'), HCM)).toBe(2);
+    expect(storyDayIndexOf(visitor, at('2026-10-01'), HCM)).toBe(8);
+    // The install day is still day 1 of the app.
+    expect(dayIndexOf(installedOn, at('2026-09-25'), HCM)).toBe(5);
+    expect(dateOfDay(storyStartOn(visitor), 2)).toBe('2026-09-25');
+    expect(weekOneUnlocks(storyDayIndexOf(visitor, at('2026-09-25'), HCM))).toContain(
+      'episode_call',
+    );
+    expect(weekOneUnlocks(storyDayIndexOf(visitor, at('2026-09-23'), HCM))).not.toContain(
+      'episode_call',
+    );
+  });
+
+  it('is the install day for a Newcomer, and for a profile from before the start was kept', () => {
+    expect(storyStartOn({ installedOn, storyStartedOn: installedOn })).toBe(installedOn);
+    expect(storyStartOn({ installedOn, storyStartedOn: null })).toBe(installedOn);
+    expect(storyDayIndexOf({ installedOn, storyStartedOn: null }, at('2026-09-28'), HCM)).toBe(8);
+  });
+
+  it('knocks from the story’s day 2, not the install day’s', () => {
+    const knocks = planWeekOneKnocks({
+      installedOn,
+      storyStartedOn: visitor.storyStartedOn,
+      timezone: HCM,
+      now: at('2026-09-24', '20:00'),
+      notificationsAllowed: true,
+      lastOpenedOn: '2026-09-24',
+    });
+    expect(knocks.map((k) => [k.day, k.date])).toEqual([
+      [2, '2026-09-25'],
+      [3, '2026-09-26'],
+      [4, '2026-09-27'],
+      [5, '2026-09-28'],
+      [6, '2026-09-29'],
+      [7, '2026-09-30'],
+      [8, '2026-10-01'],
+    ]);
+  });
+
+  it('ends the free week on the story’s day 7', () => {
+    const ctx = { plan: 'free', ...visitor, timezone: HCM } as const;
+    const day7 = dateOfDay(visitor.storyStartedOn, FREE_WEEK_ENDS_ON_DAY);
+    expect(ledgerPeriod({ ...ctx, now: at(day7, '23:00') }).firstWeek).toBe(true);
+    expect(ledgerPeriod({ ...ctx, now: at(dateOfDay(day7, 2), '00:00') }).firstWeek).toBe(false);
   });
 });

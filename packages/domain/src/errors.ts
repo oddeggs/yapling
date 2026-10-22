@@ -5,9 +5,11 @@ import {
   type ErrorTargetStatus,
   type Id,
   type LocalDate,
+  type Stage,
   type TimeZone,
 } from '@yapling/contracts';
 
+import { isStageAtLeast } from './stages';
 import { localDateOf } from './time';
 
 /*
@@ -82,6 +84,12 @@ export const noteRecurringError = (
  */
 export const errorResponse = (targets: ErrorTargets, errorId: Id): 'prompt' | 'recast' =>
   targets.some((t) => t.id === errorId && t.status === 'active') ? 'prompt' : 'recast';
+
+/**
+ * Whether error targets apply at a stage. They start at Newcomer: at Visitor nothing is ever asked
+ * back, and every error is recast (the story's beats accept the turn).
+ */
+export const errorTargetsApply = (stage: Stage): boolean => isStageAtLeast(stage, 'newcomer');
 
 /** The targets the call prompts, in activation order. */
 export const activeTargets = (targets: ErrorTargets): ErrorTargets =>
