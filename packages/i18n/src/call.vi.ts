@@ -27,6 +27,7 @@ export const callVi = {
   'call.a11y.mic': 'Giữ để nói',
   'call.a11y.thinking': '{name} đang nghĩ',
   'call.a11y.seconds': '{count} giây',
+  'call.a11y.letter': 'Lá thư. Chạm để đọc lại',
   'call.didntCatch': "Sorry, I didn't catch that. Say it another way?",
   'call.reconnecting': 'Đang nối lại…',
   'call.interrupted': 'Tạm dừng trong lúc bạn nghe máy',

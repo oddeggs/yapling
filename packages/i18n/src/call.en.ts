@@ -42,6 +42,8 @@ export const callEn = {
   'call.a11y.thinking': '{name} is thinking',
   /** Read for a timer and a Pass it on round (shown as "60s"). */
   'call.a11y.seconds': '{count} seconds',
+  /** Read for the letter tucked into the corner of the counter. */
+  'call.a11y.letter': 'The letter. Tap to read it again',
 
   /** The last button of each scene. */
   'call.done.wrapUp': 'Wrap up',

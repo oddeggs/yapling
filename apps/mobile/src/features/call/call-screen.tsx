@@ -10,7 +10,7 @@ import {
   type TurnMode,
 } from '@yapling/contracts';
 import { callKindOf, CAST as STORY_CAST, type LetterLine, type Scene } from '@yapling/story';
-import { colours, layout as space } from '@yapling/theme';
+import { colours, controls, layout as space } from '@yapling/theme';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, Linking, View, useWindowDimensions } from 'react-native';
 import { makeMutable } from 'react-native-reanimated';
@@ -29,15 +29,16 @@ import { CritterFace } from './call-art';
 import {
   FixedSticker,
   HintCard,
-  LetterCard,
   MeaningWhisper,
   PhonePill,
   ThinkingBubble,
   YouCaption,
 } from './call-cards';
 import { CallErrorSheet } from './call-errors';
+import { CallLetter } from './call-letter';
 import { CallStage } from './call-stage';
 import { useDevMic } from './dev-mic';
+import { bandOf } from './letter-place';
 import { CallTimer, MirrorCard, RoundsStrip } from './pass-it-on';
 import { FRAME_WIDTH, layoutFor } from './scene-layout';
 import { useCall } from './use-call';
@@ -116,6 +117,10 @@ export function CallScreen({
   const k = width / FRAME_WIDTH;
   const layout = useMemo(() => layoutFor(scene), [scene]);
   const kind = callKindOf(scene.kind) ?? 'episode';
+  // The edges the letter keeps clear of: the pills at the top and the cards over the call bar.
+  const [pillBottom, setPillBottom] = useState(0);
+  const [phoneBottom, setPhoneBottom] = useState(0);
+  const [stackTop, setStackTop] = useState(height - space.callBarBottom - controls.callBar.height);
   const log = useCallback((m: string) => {
     if (__DEV__) console.log(`[call] ${m}`);
   }, []);
@@ -260,6 +265,7 @@ export function CallScreen({
         ? `${place} · ${clock(view.wrapUpSeconds)}`
         : place;
   const spot = bubble ? (layout.bubbles[bubble.speaker] ?? layout.bubbleDefault) : null;
+  const phoneShown = view.phone || view.mode === 'ringing';
 
   return (
     <View style={{ flex: 1, backgroundColor: colours.accentSoft, overflow: 'hidden' }}>
@@ -278,8 +284,9 @@ export function CallScreen({
         thinker={view.thinker}
       />
 
-      {view.letter ? (
-        <LetterCard
+      {view.letter && layout.letter ? (
+        <CallLetter
+          key={view.letter.id}
           letter={view.letter}
           language={firstLanguage}
           onLineGloss={(line: LetterLine) => {
@@ -290,7 +297,14 @@ export function CallScreen({
               );
             }
           }}
-          style={{ position: 'absolute', top: 156 * k + dy, left: 150 * k, width: 222 }}
+          spots={layout.letter}
+          frame={{
+            k,
+            width,
+            topBound: Math.max(pillBottom, phoneShown ? phoneBottom : 0, top),
+            bottomBound: stackTop,
+          }}
+          band={spot ? bandOf(layout.letter, spot) : null}
         />
       ) : null}
 
@@ -366,14 +380,18 @@ export function CallScreen({
         />
       ) : null}
 
-      <SpeakerPill
-        name={nameOf(layout.pill)}
-        aiTag={t('common.aiTag')}
-        place={pillPlace}
-        face={<CritterFace character={layout.pill} species={roommate.species} size={26} />}
-        {...(layout.episodeTag ? { episode: layout.episodeTag } : {})}
+      <View
         style={{ position: 'absolute', top, left: 62, right: space.marginScreen }}
-      />
+        onLayout={(e) => setPillBottom(e.nativeEvent.layout.y + e.nativeEvent.layout.height)}
+      >
+        <SpeakerPill
+          name={nameOf(layout.pill)}
+          aiTag={t('common.aiTag')}
+          place={pillPlace}
+          face={<CritterFace character={layout.pill} species={roommate.species} size={26} />}
+          {...(layout.episodeTag ? { episode: layout.episodeTag } : {})}
+        />
+      </View>
 
       {view.rounds ? (
         <RoundsStrip
@@ -396,9 +414,10 @@ export function CallScreen({
         />
       ) : null}
 
-      {view.phone || view.mode === 'ringing' ? (
+      {phoneShown ? (
         <View
           style={{ position: 'absolute', top: 108 + dy, left: 0, right: 0, alignItems: 'center' }}
+          onLayout={(e) => setPhoneBottom(e.nativeEvent.layout.y + e.nativeEvent.layout.height)}
         >
           <PhonePill
             label={
@@ -418,6 +437,7 @@ export function CallScreen({
           bottom: space.callBarBottom,
           gap: 10,
         }}
+        onLayout={(e) => setStackTop(e.nativeEvent.layout.y)}
       >
         {view.meaning ? (
           <MeaningWhisper
