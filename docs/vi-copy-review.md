@@ -224,10 +224,6 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | "Too hard" sheet · option 1 | Slower, please | Nói chậm hơn | | |
 | "Too hard" sheet · option 2 | Practise with Linh first | Tập với Linh trước | | |
 | "Too hard" sheet · body | Linh will practise with you in a few short visits. Mei's café will wait for you. | Linh sẽ tập cùng bạn vài buổi ngắn. Quán của Mei vẫn chờ bạn. | | From the design; never says "level", "down", "fail" or "beginner" |
-| Burrow · path name | Settling in | Làm quen | Term | Also the start of "Làm quen với Linh"; fine together? |
-| Burrow · after two chapters | Tomorrow | Để mai | | |
-| Burrow · keep going | Keep going | Làm tiếp | | |
-| Burrow · skip to the story | Start the story | Vào truyện luôn | | |
 | Call · replay pill | Again | Nói lại | | |
 | Call · slower pill | Slower | Chậm thôi | | |
 | Call · skip pill | Skip | Bỏ qua | | |
@@ -319,7 +315,7 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 
 ## The burrow (home), day by day
 
-`packages/i18n/src/burrow.vi.ts` · 45 strings
+`packages/i18n/src/burrow.vi.ts` · 88 strings
 
 | Key | English | Tiếng Việt | Flag | Notes |
 |---|---|---|---|---|
@@ -368,6 +364,49 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `burrow.a11y.keepsake` | Keepsake on the wall: {canDo} | Kỷ niệm trên tường: {canDo} | Meaning | Same as the keepsake card: "kỷ vật" |
 | `burrow.a11y.object` | {phrase}: {stage} | {phrase}: {stage} |  |  |
 | `burrow.back.done` | Back to the burrow | Về hang |  |  |
+| `burrow.settling.when` | Day {day} · {time} | Ngày {day} · {time} | New |  |
+| `burrow.settling.time.morning` | morning | sáng | New |  |
+| `burrow.settling.time.afternoon` | afternoon | chiều | New |  |
+| `burrow.settling.time.evening` | evening | tối | New |  |
+| `burrow.settling.time.dusk` | dusk | hoàng hôn | New | The letter's evening, as the design writes it |
+| `burrow.settling.kicker` | SETTLING IN · {chapter}/{total} | LÀM QUEN · {chapter}/{total} | New |  |
+| `burrow.settling.kickerRest` | SETTLING IN · {chapter}/{total} · TOMORROW? | LÀM QUEN · {chapter}/{total} · NGÀY MAI? | New |  |
+| `burrow.settling.kickerDone` | SETTLING IN · {done}/{total} DONE | LÀM QUEN · XONG {done}/{total} | New |  |
+| `burrow.settling.sub.1` | Linh from next door comes to say hi. | Linh ở nhà bên sang chào bạn. | New |  |
+| `burrow.settling.sub.2` | Linh brings the boxes over to help you unpack. | Linh mang thùng sang giúp bạn dọn. | New |  |
+| `burrow.settling.sub.3` | Linh has two lifesavers to show you. | Linh có hai câu cứu nguy muốn chỉ bạn. | New |  |
+| `burrow.settling.sub.4` | Linh is waiting for you at the bus stop. | Linh đang đợi bạn ở bến xe buýt. | New | "bến xe buýt", as the Chapter 4 knock; the line gloss says "trạm xe buýt" |
+| `burrow.settling.sub.5` | Mei’s café is open. Come for tea. | Quán của Mei mở cửa rồi. Ghé uống trà nhé. | New | Same wording as the Chapter 5 knock draft |
+| `burrow.settling.sub.6` | {name} is writing a page about you. | {name} đang viết một trang về bạn. | New |  |
+| `burrow.settling.restSub` | Two chapters done today. Time for a rest? | Hôm nay bạn xong hai chương rồi. Nghỉ chút nhé? | New |  |
+| `burrow.settling.restedSub` | See you tomorrow. The next chapter will wait. | Hẹn bạn ngày mai nhé. Chương sau vẫn chờ bạn. | New | Shown after "Để mai"; no design for this state |
+| `burrow.settling.go.linh` | Meet Linh · {minutes} min | Gặp Linh · {minutes} phút | New |  |
+| `burrow.settling.go.mei` | Go to Mei’s · {minutes} min | Đến quán Mei · {minutes} phút | New | "Đến quán Mei": Chapter 5 is with Mei, not Linh |
+| `burrow.settling.tomorrow` | Tomorrow | Để mai | New |  |
+| `burrow.settling.keepGoing` | Keep going | Làm tiếp | New |  |
+| `burrow.settling.settled` | Settled in! | Settled in! | English on purpose? | The design keeps "Settled in!" in English, like the chapter titles; confirm or translate |
+| `burrow.settling.settledSub` | The burrow is full. Tomorrow, the story begins. | Hang đã đầy đồ. Ngày mai, truyện bắt đầu. | New |  |
+| `burrow.settling.goodnight` | Good night | Chúc ngủ ngon | New |  |
+| `burrow.settling.list.title` | Settling in | Làm quen | Term | Also the start of "Làm quen với Linh"; fine together? |
+| `burrow.settling.list.count` | {done}/{total} done | Settling in · {done}/{total} | English on purpose? | The design shows "Settling in · 3/6" under "Làm quen" |
+| `burrow.settling.list.replay` | Play again | Chơi lại | New |  |
+| `burrow.settling.list.next` | Next | Tiếp | New |  |
+| `burrow.settling.list.minutes` | 2–3 min | 2–3 phút | New |  |
+| `burrow.settling.list.skip` | Start the story | Vào truyện luôn | New |  |
+| `burrow.settling.chapter.1` | Saying hello | Chào hỏi | New |  |
+| `burrow.settling.chapter.2` | Unpacking | Dỡ thùng | New |  |
+| `burrow.settling.chapter.3` | Say it again | Nói lại nhé | New |  |
+| `burrow.settling.chapter.4` | Bus 45 · with Bea | Xe buýt 45 · với Bea | New |  |
+| `burrow.settling.chapter.5` | Mei’s café | Quán của Mei | New |  |
+| `burrow.settling.chapter.6` | About me | Về mình | New |  |
+| `burrow.settling.a11y.list` | Settling-in list | Danh sách Làm quen | New |  |
+| `burrow.settling.a11y.close` | Close the list | Đóng danh sách | New |  |
+| `burrow.settling.a11y.progress` | {done} of {total} chapters done | Đã xong {done}/{total} chương | New |  |
+| `burrow.settling.a11y.box` | A box still to unpack: {title} | Thùng chưa dỡ: {title} | New |  |
+| `burrow.settling.a11y.chapter` | Chapter {chapter}: {title}, {about} | Chương {chapter}: {title}, {about} | New |  |
+| `burrow.settling.a11y.done` | done | đã xong | New |  |
+| `burrow.settling.a11y.next` | up next | chương tiếp theo | New |  |
+| `burrow.settling.a11y.later` | later, {minutes} | để sau, {minutes} | New |  |
 
 ## The week view
 

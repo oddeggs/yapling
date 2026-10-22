@@ -83,6 +83,38 @@ export function WordObject({
   );
 }
 
+/**
+ * A burrow object drawn with the prototype's own options (a jar's fill, a plant's lid), `size`
+ * wide and 4/3 as tall: what comes out of a box while settling in.
+ */
+export function ShelfObject({
+  fam,
+  stage,
+  extra,
+  size,
+  style,
+}: {
+  fam: string;
+  stage: number;
+  extra?: object;
+  size: number;
+  style?: CanvasStyle;
+}) {
+  const renderer = useArtRenderer();
+  const key = JSON.stringify(extra ?? {});
+  const art = useMemo(
+    () =>
+      renderer.art({ fn: 's_obj', w: size, h: (size * 4) / 3, o: { t: 0, fam, stage, ...extra } }),
+    // `key` holds the options' content.
+    [renderer, fam, stage, key, size],
+  );
+  return (
+    <Canvas style={[{ width: size, height: (size * 4) / 3 }, style]}>
+      <Picture picture={art.picture} />
+    </Canvas>
+  );
+}
+
 /** A CSS filter as a 4 × 5 colour matrix, multiplied in the order CSS applies them. */
 type Matrix = number[];
 
@@ -180,7 +212,16 @@ const saturate = (v: number): Matrix => [
 export const DUSK_FILTER = multiply(multiply(hueRotate(-20), brightness(0.62)), saturate(1.3));
 
 /** The café at dusk as seen through the burrow window: dimmed, with a lilac-to-night wash. */
-export function DuskCafe({ width, height }: { width: number; height: number }) {
+export function DuskCafe({
+  width,
+  height,
+  offset = { x: 15, y: 20 },
+}: {
+  width: number;
+  height: number;
+  /** Where the café's 300 × 220 picture sits in the window. */
+  offset?: { readonly x: number; readonly y: number };
+}) {
   const renderer = useArtRenderer();
   const cafe = useMemo(
     () => renderer.art({ fn: 's_cafeWarm', w: 300, h: 220, o: { t: 0 } }),
@@ -189,7 +230,7 @@ export function DuskCafe({ width, height }: { width: number; height: number }) {
   return (
     <Canvas style={{ width, height }}>
       <Group
-        transform={[{ translateX: 15 }, { translateY: 20 }]}
+        transform={[{ translateX: offset.x }, { translateY: offset.y }]}
         layer={
           <Paint opacity={0.85}>
             <ColorMatrix matrix={DUSK_FILTER} />

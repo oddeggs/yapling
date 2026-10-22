@@ -1,28 +1,30 @@
-import type { Profile, Progress } from '@yapling/contracts';
-import { localTimeOf, type Welcome, type WeekOneUnlock } from '@yapling/domain';
+import type { Progress } from '@yapling/contracts';
+import {
+  settlingSceneId,
+  type SettlingChapter,
+  type Welcome,
+  type WeekOneUnlock,
+} from '@yapling/domain';
 import { CAST } from '@yapling/story';
 import { colours } from '@yapling/theme';
 import { Redirect, useLocalSearchParams, useRouter, type Href } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import {
-  useAppNow,
-  useLastOpen,
-  useProfile,
-  useProgress,
-  useSeen,
-  useSession,
-  useWeek,
-  type SeenMoment,
-} from '../../data';
+import { useLastOpen, useSeen, useSession, type SeenMoment } from '../../data';
 import { useReturnState, type ReturnState } from '../knocks';
 import { BurrowHomeScreen } from './home-screen';
 import { useLinePlayer } from './line-player';
 import { burrowHomeModel, burrowVariant, type BurrowInput } from './model';
-import { previewModel, previewOptionsFrom } from './preview';
-import { BURROW_ROUTES } from './routes';
+import { previewModel, previewOptionsFrom, settlingPreviewFrom } from './preview';
+import { BURROW_ROUTES, callRoute } from './routes';
 import { backModel, doorModel } from './scenes';
+import type { SettlingDay } from './settling';
+import { SettlingList } from './settling-list';
+import { useSettlingLive, type SettlingLive } from './settling-live';
+import { settlingHomeModel, settlingListModel, type SettlingInput } from './settling-model';
+import { SettlingScreen } from './settling-screen';
+import { devSeedSettling } from './settling-store';
 import { BackScreen, DoorScreen, type DoorPhase } from './talk-screens';
 
 /*
@@ -56,55 +58,35 @@ const welcomeOf = (state: ReturnState): Welcome =>
 
 /**
  * Moments the learner's own progress shows they are past: a call already taken means they moved
- * in and met Linh, and Linh knocks only on the first evening.
+ * in and met Linh, and Linh knocks only on the first evening. A learner who settled in with Linh
+ * met her in Chapter 1, so she doesn't knock again.
  */
-function impliedSeen(day: number, progress: Progress): WeekOneUnlock[] {
+function impliedSeen(day: number, progress: Progress, visitorPath: boolean): WeekOneUnlock[] {
   const called = progress.weeks.some((w) => w.slots.some((s) => s.status === 'done'));
-  return called || day >= 2 ? ['placement_chat', 'linh_welcome'] : [];
+  return called || day >= 2 || visitorPath ? ['placement_chat', 'linh_welcome'] : [];
 }
 
-function liveInput(
-  profile: Profile,
-  progress: Progress,
-  day: number,
-  hour: number,
-  seen: ReadonlySet<WeekOneUnlock>,
-  welcome: Welcome,
-): BurrowInput {
-  return {
-    day,
-    hour,
-    roommate: profile.roommate,
-    learnerName: profile.displayName,
-    firstLanguage: profile.firstLanguage,
-    progress,
-    seen: new Set([...seen, ...impliedSeen(day, progress)]),
-    welcome,
-  };
-}
-
-/** The learner's burrow input from the app's data; null while it loads. */
-function useLiveInput(): BurrowInput | null {
-  const { profile } = useProfile();
-  const { progress } = useProgress();
-  const week = useWeek();
+/** The learner's burrow input from the app's data, on the story's day; null while it loads. */
+function useLiveInput(live: SettlingLive | null): BurrowInput | null {
   const seen = useSeen();
-  const now = useAppNow(profile?.timezone);
   const returnState = useReturnState();
   const { previousAt } = useLastOpen();
   return useMemo(() => {
-    if (profile === null || progress === null || week === null || !seen.loaded) return null;
-    const hour = Number(localTimeOf(now, profile.timezone).slice(0, 2));
+    if (live === null || !seen.loaded) return null;
+    const { profile, progress, clock } = live;
     const welcome = welcomed.has(previousAt) ? welcomeOf({ ...returnState, away: false }) : null;
-    return liveInput(
-      profile,
+    return {
+      day: clock.storyDay,
+      hour: live.hour,
+      roommate: profile.roommate,
+      learnerName: profile.displayName,
+      firstLanguage: profile.firstLanguage,
       progress,
-      week.dayIndex,
-      hour,
-      seen.seen,
-      welcome ?? welcomeOf(returnState),
-    );
-  }, [profile, progress, week, seen, now, returnState, previousAt]);
+      seen: new Set([...seen.seen, ...impliedSeen(clock.storyDay, progress, live.visitorPath)]),
+      welcome: welcome ?? welcomeOf(returnState),
+      settledIn: live.visitorPath && live.day.letterOn !== null,
+    };
+  }, [live, seen, returnState, previousAt]);
 }
 
 /** Development only: the preview learner the route's params ask for, or null. */
@@ -120,14 +102,57 @@ function usePreviewInput(params: Params): BurrowInput | null {
   }, [key]);
 }
 
+/** Development only: a Visitor settling in, as the route's params ask (`?settle=N`), or null. */
+function useSettlingPreview(params: Params): SettlingInput | null {
+  const key = JSON.stringify(params);
+  // `key` holds the params' content.
+  return useMemo(() => (__DEV__ ? settlingPreviewFrom(params) : null), [key]);
+}
+
+/** Settling in on the learner's data: their chapters, the day's rest and goodnight. */
+function liveSettling(live: SettlingLive): SettlingInput {
+  return {
+    roommate: live.profile.roommate,
+    firstLanguage: live.profile.firstLanguage,
+    hour: live.hour,
+    installDay: live.clock.installDay,
+    day: live.day,
+  };
+}
+
 export function BurrowHome() {
   const params = useLocalSearchParams();
   const router = useRouter();
-  const live = useLiveInput();
+  const settling = useSettlingLive();
+  const live = useLiveInput(settling);
   const preview = usePreviewInput(params);
+  const settlingPreview = useSettlingPreview(params);
+  const session = useSession();
+  // Development only: `?visitor=1&chapters=N` starts the live learner with Linh, chapters done.
+  const seedKey = __DEV__
+    ? `${one(params, 'visitor') ?? ''}:${one(params, 'chapters') ?? ''}`
+    : ':';
+  const userId = session.session?.userId ?? null;
+  const today = settling?.day.today ?? null;
+  useEffect(() => {
+    if (seedKey === ':' || userId === null || today === null) return;
+    const [visitor, chapters] = seedKey.split(':');
+    void devSeedSettling(userId, {
+      visitor: visitor === '1',
+      upTo: Number(chapters) || 0,
+      today,
+    });
+  }, [seedKey, userId, today]);
+  // The Settling-in list, opened from the card, or by a link (`?settling=1`, the Me sheet's).
+  // A new link decides afresh: open with `settling=1`, closed without.
+  const linkKey = JSON.stringify(params);
+  const [listOpen, setListOpen] = useState(one(params, 'settling') === '1');
+  useEffect(() => {
+    setListOpen(one(params, 'settling') === '1');
+    // `linkKey` holds the params' content.
+  }, [linkKey]);
   const { markSeen } = useSeen();
   const { previousAt } = useLastOpen();
-  const session = useSession();
   // Scenes finished in this session, for the preview (the live ones are marked in the data).
   const [finished, setFinished] = useState<readonly WeekOneUnlock[]>([]);
   const base = preview ?? live;
@@ -152,10 +177,58 @@ export function BurrowHome() {
   const go = (to: Href) => router.push(to);
   const back = () => (router.canGoBack() ? router.back() : undefined);
 
+  const playChapter = (chapter: SettlingChapter) => {
+    setListOpen(false);
+    go(callRoute(settlingSceneId(chapter)));
+  };
+
+  // Settling in: the preview's Visitor, or a learner before the story (or on the letter's day).
+  const settlingInput =
+    settlingPreview ??
+    (preview === null && settling !== null && settling.clock.phase !== 'story'
+      ? liveSettling(settling)
+      : null);
+  const list = (day: Pick<SettlingDay, 'chapters' | 'letterOn'>) =>
+    listOpen ? (
+      <SettlingList
+        model={settlingListModel(day)}
+        onClose={() => setListOpen(false)}
+        onPlay={playChapter}
+        onSkip={() => {
+          setListOpen(false);
+          if (settlingPreview === null) settling?.skipToStory();
+        }}
+      />
+    ) : null;
+  if (settlingInput !== null) {
+    return (
+      <SettlingScreen
+        model={settlingHomeModel(settlingInput)}
+        onOpenMe={() => go(BURROW_ROUTES.me)}
+        onOpenList={() => setListOpen(true)}
+        onStartChapter={playChapter}
+        onRest={() => settling?.rest()}
+        onGoodnight={() => settling?.goodnight()}
+        list={list(settlingInput.day)}
+      />
+    );
+  }
+
   // No learner on this phone any more (the test menu's reset): the first run again.
   if (input === null && (session.status === 'signed_out' || session.status === 'awaiting_age'))
     return <Redirect href="/" />;
   if (input === null) return <View style={{ flex: 1, backgroundColor: colours.background }} />;
+  // In the story, the Settling-in list still opens from a link, to replay a chapter.
+  const storyList = settling !== null && preview === null ? list(settling.day) : null;
+  const withList = (screen: ReactNode) =>
+    storyList === null ? (
+      screen
+    ) : (
+      <View style={StyleSheet.absoluteFill}>
+        {screen}
+        {storyList}
+      </View>
+    );
   const variant = burrowVariant(input);
   if (variant === 'door') {
     const phase = one(params, 'phase') as DoorPhase | undefined;
@@ -177,13 +250,13 @@ export function BurrowHome() {
         onBack={back}
       />
     );
-  return (
+  return withList(
     <BurrowHomeScreen
       model={burrowHomeModel(input)}
       onOpenMe={() => go(BURROW_ROUTES.me)}
       onOpenWeek={() => go(BURROW_ROUTES.week)}
       onNavigate={go}
-    />
+    />,
   );
 }
 
