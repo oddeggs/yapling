@@ -3,7 +3,7 @@
  * knows their routes.
  */
 
-/** A call: `/(call)/call?scene=s1-e1`. */
+/** A call: `/(call)/call?scene=s1-e1` (or `/(call)/s1-e1`, the same screen). */
 export const CALL_ROUTE = '/(call)/call';
 
 /** After a call: the summary and the seeds turning into sprouts. */

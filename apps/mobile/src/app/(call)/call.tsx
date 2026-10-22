@@ -29,7 +29,11 @@ export default function CallRoute() {
   }>();
   const router = useRouter();
   const { profile, status } = useProfile();
-  const scene = findScene(params.scene ?? 's1-e1') ?? findScene('s1-e1');
+  const scene = params.scene ? findScene(params.scene) : undefined;
+  // No such scene (a stale link): back to the burrow rather than a call that can't run.
+  useEffect(() => {
+    if (!scene) navigate(router.replace, BURROW_ROUTE);
+  }, [scene, router]);
 
   // Call with the learner's stage and language once the profile is known. The placement call runs
   // before there is one: it uses what onboarding chose (language, roommate) and a newcomer's stage.
