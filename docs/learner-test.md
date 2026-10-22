@@ -90,6 +90,12 @@ Open it with a **three-finger tap anywhere** on the screen, or a **long press (a
 | Day N, a minute before its knock | Moves the clock to a minute before day N's scheduled knock; the real notification rings about a minute later |
 | Fire day N's knock in 5 s | Rings today's knock in 5 seconds, even with the app open. None on day 1 |
 | Ask for notifications | Shown only when notifications aren't allowed |
+| SETTLING IN (LÀM QUEN): status | Where the learner is: settling in with N of 6 chapters done and the next one, or the letter's day |
+| Start as a Visitor | Clears this phone's learner, makes a new one at Visitor (onboarding skipped, the name "Lan" unless one was typed) and opens the burrow with Chapter 1 next. Asks for notifications |
+| JUMP TO CHAPTER: 1–6 | Marks the chapters before it done, one a day from the install day, and moves the clock to that chapter's day. Jumps go forward; to go back, start a new Visitor |
+| Jump to the letter day | All six chapters done and the clock on Chapter 6's day: the letter comes that evening, and it is week 1's day 1 (JUMP TO DAY then counts from it) |
+| SETTLING-IN KNOCKS: Chapter 2–6 | That chapter's morning knock as the lock screen shows it; tapping the preview opens the chapter's call. "A minute before its knock" jumps to the chapter and rings the real scheduled knock; "Fire … in 5 s" rings it now, and tapping it opens the call |
+| BEGINNER PREVIEWS (development builds) | Sample screens with a stand-in learner, nothing sent: a Visitor's after-call card, Linh's Newcomer card, a Visitor's Me sheet |
 | RESET | Clears everything on this phone: the learner (signed out), the debug clock and the knocks, and goes back to the first run. The account stays on the server |
 
 The day and the learner survive closing and relaunching the app. There is no way to seed a learner mid-week: each tester creates theirs on day 1. If a session is cut short, the phone keeps the tester's week; reopen the app and jump to where you stopped.
@@ -598,6 +604,25 @@ After each session, score the tester (0, 1 or 2). After the last session, read a
 | Worker logs (if `wrangler tail` ran) | One "call ended" line per call: seconds, cost and timing medians. Look for the calls the notes flag as slow |
 | Crash reports | TestFlight crashes and feedback for the build |
 | Recordings and notes | Quotes for the synthesis; the exact moment of every cut-off, confusion and assist |
+
+### PostHog events for the beginner path
+
+Every event carries `app_variant`, `test_session` and `debug_clock`; filter on `test_session` for session days. What the call's turn log keeps on the server (each turn's outcome and pass kind: match, generous or skip; "again" and "slowly" said aloud; first-word times) is read from the Worker logs, not PostHog.
+
+| Event | Properties | Sent when | Measures |
+|---|---|---|---|
+| `path_chosen` | `path` (`visitor` · `placement`) | The profile first has the level question's answer (once per install) | B7 |
+| `placement_result` | `stage`, `path` | The placement call ended complete and the server set the stage (once per install) | B7 |
+| `chapter_started` | `chapter` (1–6), `scene_id`, `replay`, `turn_mode` | A Settling-in call answers | B1, B2, B6 |
+| `chapter_ended` | as above, `ended_reason`, `complete`, `duration_seconds`, `learner_seconds` | A Settling-in call ends (`complete`: the scene played to its end) | B1, B2, B6, B8 |
+| `call_started` · `call_ended` | `kind`, `scene_id`, `chapter`, `turn_mode`; the end adds `ended_reason`, durations | Every call; the café call is `scene_id` `s1-e1` | B2, B8 (`ended_reason` `too_hard`) |
+| `replay_tapped` | call properties, `slower` | "Nói lại" or "Chậm thôi" tapped | B5 (with the turn log's spoken ones) |
+| `too_hard_opened` · `too_hard_chosen` | `place` (`residency_card` · `call_exit` · `after_call` · `me`), `stage`; `choice` (`slower` · `practise_with_linh` · `closed`) | The "Khó quá" sheet opens, and what was chosen | B7, B8 |
+| `stage_up_offered` · `stage_up_answered` | `week`; `accepted` | Linh's Newcomer card is offered, and taken or "Ở lại thêm" | (after week 1) |
+| `turn_mode_switched` | call properties, `to` | Hold to talk ↔ hands-free during a call | — |
+| `time_travel_used` | `action` (adds `start_visitor`, `jump_chapter`, `letter_day`), `day` | Any test-menu action; marks the install a test session | — |
+
+B3 and B4 come from the turn log; B9 and B10 from the survey and interview.
 
 ## Before the first session: founder decisions
 

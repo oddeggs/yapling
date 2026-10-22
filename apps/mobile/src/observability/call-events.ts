@@ -1,4 +1,4 @@
-import type { CallEndReason, CallErrorCode } from '@yapling/contracts';
+import type { CallEndReason, CallErrorCode, TurnMode } from '@yapling/contracts';
 
 import type { CallProblem } from './events';
 
@@ -20,6 +20,8 @@ export interface CallSnapshot {
   readonly endReason: CallEndReason | null;
   readonly learnerFinal: boolean;
   readonly learnerText: string;
+  /** Hold to talk or hands-free; left out when the screen doesn't say. */
+  readonly turnMode?: TurnMode;
   /** Lag samples, oldest first; only the last few are kept. */
   readonly latency: readonly {
     readonly streamId: number;
@@ -31,6 +33,7 @@ export interface CallSnapshot {
 export type CallAnalyticsEvent =
   | { readonly type: 'started' }
   | { readonly type: 'problem'; readonly problem: CallProblem; readonly code: string | null }
+  | { readonly type: 'turn_mode'; readonly to: TurnMode }
   | { readonly type: 'ended'; readonly reason: CallEndReason };
 
 const newSamples = (prev: CallSnapshot | null, next: CallSnapshot) => {
@@ -64,6 +67,12 @@ export function callEventsBetween(
   if (next.warning !== null && next.warning !== prev?.warning) {
     events.push({ type: 'problem', problem: 'reply_failed', code: next.warning });
   }
+  const switched =
+    started && prev?.turnMode !== undefined && next.turnMode !== undefined
+      ? prev.turnMode !== next.turnMode
+      : false;
+  if (switched && next.turnMode !== undefined)
+    events.push({ type: 'turn_mode', to: next.turnMode });
   if (next.endReason !== null && (prev?.endReason ?? null) === null) {
     events.push({ type: 'ended', reason: next.endReason });
   }

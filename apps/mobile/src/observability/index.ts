@@ -8,4 +8,13 @@ export {
 } from './runtime';
 export { reportError } from './sentry';
 export { useAppAnalytics, useCallAnalytics, useTrackOnce } from './hooks';
-export type { AnalyticsEvent, AnalyticsEvents, CallProblem, TimeTravelAction } from './events';
+export type {
+  AnalyticsEvent,
+  AnalyticsEvents,
+  CallProblem,
+  CallProperties,
+  TimeTravelAction,
+  TooHardChoice,
+  TooHardPlace,
+} from './events';
+export { callPropertiesOf, chapterOfScene } from './beginner-events';

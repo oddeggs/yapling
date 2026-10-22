@@ -38,6 +38,7 @@ export function KnockPreview({
   language,
   t,
   onPress,
+  tag,
 }: {
   readonly day: number;
   readonly date: LocalDate;
@@ -47,9 +48,11 @@ export function KnockPreview({
   readonly language: Language;
   readonly t: Translate;
   readonly onPress?: () => void;
+  /** The tag under the clock; the knock's day when left out. */
+  readonly tag?: string;
 }) {
   // The test menu's own labels; the lock screen around a real knock is the system's.
-  const dayTag = language === 'vi' ? `Ngày ${day}` : `Day ${day}`;
+  const dayTag = tag ?? (language === 'vi' ? `Ngày ${day}` : `Day ${day}`);
   const justNow = language === 'vi' ? 'bây giờ' : 'now';
   return (
     <View

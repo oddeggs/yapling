@@ -11,4 +11,9 @@ export const knocksVi = {
   'knocks.day7': 'Tuần đầu tiên của bạn đã xong. Có một điều nhỏ muốn nói với bạn.',
   'knocks.day8': 'How was your week?',
   'knocks.day8_back': 'You’re back? I kept your seat warm.',
+  'knocks.settling.2': 'Linh sang phụ bạn dỡ thùng đồ đây.',
+  'knocks.settling.3': 'Linh có hai câu cứu nguy muốn chỉ bạn.',
+  'knocks.settling.4': 'Linh đang đợi bạn ở bến xe buýt.',
+  'knocks.settling.5': 'Quán của Mei mở cửa rồi. Ghé uống tách trà nhé.',
+  'knocks.settling.6': '{name} đang viết một trang về bạn.',
 } as const satisfies Translation<typeof knocksEn>;

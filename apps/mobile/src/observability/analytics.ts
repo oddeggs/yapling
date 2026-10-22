@@ -25,6 +25,7 @@ export interface AnalyticsStorage {
 const KEYS = {
   funnel: 'yapling.analytics.funnel',
   testSession: 'yapling.analytics.test-session',
+  once: 'yapling.analytics.once',
 } as const;
 
 export interface AnalyticsOptions {
@@ -57,6 +58,15 @@ export class Analytics {
   track<E extends AnalyticsEvent>(event: E, properties: AnalyticsEvents[E]): void {
     if (this.sink === null) return;
     this.sink.capture(event, { ...this.superProperties(), ...properties });
+  }
+
+  /** Sends an event the first time only, per install (until a reset). */
+  trackOnce<E extends AnalyticsEvent>(event: E, properties: AnalyticsEvents[E]): void {
+    if (this.sink === null) return;
+    const sent = this.readList(KEYS.once);
+    if (sent.includes(event)) return;
+    this.storage.set(KEYS.once, JSON.stringify([...sent, event]));
+    this.track(event, properties);
   }
 
   /** Events from now on (and the anonymous ones before) belong to this learner. */
@@ -92,6 +102,7 @@ export class Analytics {
   reset({ testSession }: { readonly testSession: boolean }): void {
     if (this.sink === null) return;
     this.storage.remove(KEYS.funnel);
+    this.storage.remove(KEYS.once);
     if (testSession) this.storage.set(KEYS.testSession, '1');
     else this.storage.remove(KEYS.testSession);
     this.identified = null;
@@ -107,13 +118,15 @@ export class Analytics {
   }
 
   private sentSteps(): FunnelStep[] {
-    const raw = this.storage.get(KEYS.funnel);
+    return this.readList(KEYS.funnel) as FunnelStep[];
+  }
+
+  private readList(key: string): string[] {
+    const raw = this.storage.get(key);
     if (raw === null) return [];
     try {
       const value: unknown = JSON.parse(raw);
-      return Array.isArray(value)
-        ? value.filter((s): s is FunnelStep => typeof s === 'string')
-        : [];
+      return Array.isArray(value) ? value.filter((s): s is string => typeof s === 'string') : [];
     } catch {
       return [];
     }

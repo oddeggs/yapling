@@ -25,4 +25,19 @@ export const knocksEn = {
   'knocks.day8': 'How was your week?',
   /** From the roommate, when the learner comes back after days away: nothing lost, no guilt. */
   'knocks.day8_back': 'You’re back? I kept your seat warm.',
+  /*
+   * Settling in, before the story: one morning knock from Yapling announcing the chapter that
+   * waits (Chapter 1 is Linh at the door, in the app). Chrome, so translated; an invitation, never
+   * a reminder of what is left.
+   */
+  /** Chapter 2, Boxes. */
+  'knocks.settling.2': 'Linh’s coming over to help you unpack.',
+  /** Chapter 3, Again, please. */
+  'knocks.settling.3': 'Linh has two lifesavers to show you.',
+  /** Chapter 4, Bus 45. */
+  'knocks.settling.4': 'Linh is waiting for you at the bus stop.',
+  /** Chapter 5, Mei's café. */
+  'knocks.settling.5': 'Mei’s café is open. Come for a cup of tea.',
+  /** Chapter 6, About me. */
+  'knocks.settling.6': '{name} is writing a page about you.',
 } as const satisfies EnCatalogue;

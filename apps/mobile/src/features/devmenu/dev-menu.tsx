@@ -27,11 +27,14 @@ import {
   useDebugClock,
   backToRealTime,
 } from './debug-clock';
+import { onboardingStore } from '../onboarding';
 import { CostPage } from './cost-page';
 import { useResetLocalData } from './dev-menu-host';
 import { devStorage } from './dev-storage';
 import { KnockPreview } from './knock-preview';
-import { dayOf, testLearnerOf } from './test-learner';
+import { SettlingSection } from './settling-section';
+import { createVisitor, seedOf } from './settling-tools';
+import { dayOf, deviceTimeZone, settlingOf, testLearnerOf } from './test-learner';
 
 const DAYS = WEEK_ONE_PLAN.map((d) => d.day);
 
@@ -99,12 +102,16 @@ export function DevMenu() {
     return () => clearTimeout(later);
   }, [refresh, clock, language]);
 
-  const preview = knockOfDay(previewDay, learner, language, clock.cameBackAfterAway);
-  const today = knockOfDay(day, learner, language, clock.cameBackAfterAway);
+  // Week 1's days count from the story's start (the letter's day for a Visitor).
+  const dayOne = learner.storyDayOne ?? learner.installedOn;
+  const weekLearner = { ...learner, storyDayOne: dayOne };
+  const settling = settlingOf(learner);
+  const preview = knockOfDay(previewDay, weekLearner, language, clock.cameBackAfterAway);
+  const today = settling ? null : knockOfDay(day, weekLearner, language, clock.cameBackAfterAway);
 
   const jump = (to: number) => {
     used('jump_day', to);
-    jumpToDay(to, learner.installedOn, learner.timezone);
+    jumpToDay(to, dayOne, learner.timezone);
     setPreviewDay(Math.max(to, 2));
   };
 
@@ -127,14 +134,34 @@ export function DevMenu() {
     );
   };
 
-  const reset = async () => {
-    used('reset');
+  /** A fresh install: no learner, the real clock, no knocks. */
+  const clearPhone = async () => {
     await cancelKnocks();
     resetDebugClock();
     devStorage.clear();
     reloadDebugClock();
     await resetLocalData?.();
+  };
+
+  const reset = async () => {
+    used('reset');
+    await clearPhone();
     router.dismissAll();
+    router.replace('/');
+  };
+
+  // A new learner who starts with Linh, onboarding skipped: the burrow once the server has them.
+  const startVisitor = async () => {
+    const seed = seedOf(onboardingStore().store.get());
+    used('start_visitor');
+    await clearPhone();
+    router.dismissAll();
+    router.replace('/');
+    try {
+      await createVisitor(seed, deviceTimeZone());
+    } catch (error) {
+      if (__DEV__) console.warn('The Visitor was not made', error);
+    }
     router.replace('/');
   };
 
@@ -161,7 +188,7 @@ export function DevMenu() {
         <StickerButton label="Close" tone="glass" size="small" onPress={() => router.back()} />
       </View>
       <Txt variant="note" colour={colours.textMuted}>
-        {`Day ${day} · ${localDateOf(appNow, learner.timezone)} ${localTimeOf(appNow, learner.timezone)}` +
+        {`${settling ? t('devmenu.settling.day', { day }) : `Day ${day}`} · ${localDateOf(appNow, learner.timezone)} ${localTimeOf(appNow, learner.timezone)}` +
           (clock.offsetMs === 0 ? ' · real clock' : ' · debug clock') +
           ` · installed ${learner.installedOn}`}
       </Txt>
@@ -191,6 +218,8 @@ export function DevMenu() {
           setCameBackAfterAway(on);
         }}
       />
+
+      <SettlingSection learner={learner} onUsed={used} onStartVisitor={() => void startVisitor()} />
 
       <Section title="LANGUAGE">
         <Row>
@@ -230,7 +259,7 @@ export function DevMenu() {
             onPress={() => {
               // As on the lock screens between days: tapping the knock opens the app on its day.
               used('jump_day', previewDay);
-              jumpToDay(previewDay, learner.installedOn, learner.timezone);
+              jumpToDay(previewDay, dayOne, learner.timezone);
               router.dismissAll();
               router.navigate(knockHref(previewDay));
             }}
@@ -242,7 +271,13 @@ export function DevMenu() {
           onPress={ringSoon}
         />
         <StickerButton
-          label={today === null ? 'No knock on day 1' : `Fire day ${day}'s knock in 5 s`}
+          label={
+            today === null
+              ? settling
+                ? t('devmenu.settling.noWeekKnock')
+                : 'No knock on day 1'
+              : `Fire day ${day}'s knock in 5 s`
+          }
           tone="secondary"
           disabled={today === null}
           onPress={fire}

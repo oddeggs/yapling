@@ -1,6 +1,14 @@
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { AppState } from 'react-native';
 
 import { now, useDebugClock } from '../devmenu/debug-clock';
@@ -10,7 +18,7 @@ import { onKnockPermissionChange } from './permission';
 import {
   NOT_AWAY,
   knockDataOf,
-  knockHref,
+  knockTarget,
   planKnockRequests,
   returnStateOf,
   type ReturnState,
@@ -42,15 +50,20 @@ const handleInApp = (): void =>
     },
   });
 
-/** Opens the place a tapped knock points at, whether it woke the app or found it running. */
-function useKnockTaps() {
+/**
+ * Opens the place a tapped knock points at, whether it woke the app or found it running: the
+ * burrow on its day, or a Settling-in chapter's call while that chapter is still the next one.
+ */
+function useKnockTaps(inputs: KnockInputs | null) {
+  const latest = useRef(inputs);
+  latest.current = inputs;
   useEffect(() => {
     const open = (response: Notifications.NotificationResponse | null) => {
       if (response === null) return;
       const knock = knockDataOf(response.notification.request.content.data);
       if (knock === null) return;
       Notifications.clearLastNotificationResponse();
-      router.navigate(knockHref(knock.day));
+      router.navigate(knockTarget(knock, latest.current));
     };
     open(Notifications.getLastNotificationResponse());
     const subscription = Notifications.addNotificationResponseReceivedListener(open);
@@ -79,7 +92,7 @@ function usePermissionAsks(): number {
 
 /**
  * The knocks: on every open (and whenever the learner's answers, the language or the debug clock
- * change) the week's knocks are planned and the phone's schedule is replaced with them; a tapped
+ * change) the knocks (Settling in's next one, or the first week's) are planned and the phone's schedule is replaced with them; a tapped
  * knock opens its place; the welcome for this open is worked out for the burrow. Sits inside the
  * router and the locale; `inputs` is null until there is a profile.
  */
@@ -95,7 +108,7 @@ export function KnocksProvider({
   const opens = useOpens();
   const asks = usePermissionAsks();
   useEffect(handleInApp, []);
-  useKnockTaps();
+  useKnockTaps(inputs);
 
   // Keyed by value: a new inputs object with the same answers does not reschedule.
   const key = inputs === null ? null : JSON.stringify(inputs);

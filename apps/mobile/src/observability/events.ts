@@ -1,4 +1,4 @@
-import type { CallEndReason, CallKind } from '@yapling/contracts';
+import type { CallEndReason, CallKind, Stage, StartPath, TurnMode } from '@yapling/contracts';
 
 /*
  * Every event the app sends, with its properties. Nothing else goes out: no autocapture, no
@@ -33,11 +33,45 @@ export type CallProblem =
 
 /** What a time-travel menu action was. */
 export type TimeTravelAction =
-  'opened' | 'jump_day' | 'real_clock' | 'came_back_after_away' | 'knock' | 'reset' | 'cost_page';
+  | 'opened'
+  | 'jump_day'
+  | 'real_clock'
+  | 'came_back_after_away'
+  | 'knock'
+  | 'reset'
+  | 'cost_page'
+  /** A new learner who starts with Linh, onboarding skipped. */
+  | 'start_visitor'
+  /** A Settling-in chapter next (`day` is the chapter). */
+  | 'jump_chapter'
+  /** All six chapters done, the clock on the letter's day. */
+  | 'letter_day';
 
-interface CallProperties {
+export interface CallProperties {
   readonly kind: CallKind;
   readonly scene_id: string;
+  /** The Settling-in chapter the call plays, 1 to 6; null for any other call. */
+  readonly chapter: number | null;
+  /** Hold to talk or hands-free, when the call answered (or at its end); null when unknown. */
+  readonly turn_mode: TurnMode | null;
+}
+
+/** Where the learner said "too hard" ("Khó quá"). */
+export type TooHardPlace = 'residency_card' | 'call_exit' | 'after_call' | 'me';
+
+/**
+ * What they chose on the "too hard" sheet: `slower` ("Nói chậm hơn", the pace from the next line),
+ * `practise_with_linh` ("Tập với Linh trước", Visitor and Settling in), `closed` (neither).
+ */
+export type TooHardChoice = 'slower' | 'practise_with_linh' | 'closed';
+
+/** A Settling-in chapter's call (the `settling` kind). */
+interface ChapterProperties {
+  readonly chapter: number;
+  readonly scene_id: string;
+  /** The chapter was done before this call: a replay from the list or the Me sheet. */
+  readonly replay: boolean;
+  readonly turn_mode: TurnMode | null;
 }
 
 export interface AnalyticsEvents {
@@ -62,6 +96,39 @@ export interface AnalyticsEvents {
     readonly code: string | null;
   };
   readonly paywall_viewed: { readonly store_available: boolean };
+
+  // --- The beginner path. Turn outcomes, pass kinds (match, generous, skip), spoken "again" and
+  // "slowly" and first-word times are in the call's turn log on the server, not here. ---
+
+  /** The onboarding level question's answer, once per install (from the profile). */
+  readonly path_chosen: { readonly path: StartPath };
+  /** The stage the placement call's end left, once per install (the server sets it). */
+  readonly placement_result: { readonly stage: Stage; readonly path: StartPath | null };
+  /** A Settling-in chapter's call answered. */
+  readonly chapter_started: ChapterProperties;
+  /** A Settling-in chapter's call ended; `complete` when its scene played to the end. */
+  readonly chapter_ended: ChapterProperties & {
+    readonly ended_reason: CallEndReason;
+    readonly complete: boolean;
+    readonly duration_seconds: number;
+    readonly learner_seconds: number | null;
+  };
+  /** "Nói lại" or "Chậm thôi" tapped during a call (said aloud: the turn log). */
+  readonly replay_tapped: CallProperties & { readonly slower: boolean };
+  /** The "too hard" sheet opened. */
+  readonly too_hard_opened: { readonly place: TooHardPlace; readonly stage: Stage };
+  /** What the learner chose on it. */
+  readonly too_hard_chosen: {
+    readonly place: TooHardPlace;
+    readonly stage: Stage;
+    readonly choice: TooHardChoice;
+  };
+  /** Linh's Newcomer card offered (the stage-up rule met at the end of a week's ring). */
+  readonly stage_up_offered: { readonly week: number };
+  /** The answer: the card taken, or "Ở lại thêm". */
+  readonly stage_up_answered: { readonly week: number; readonly accepted: boolean };
+  /** The learner switched between hold to talk and hands-free during a call. */
+  readonly turn_mode_switched: CallProperties & { readonly to: TurnMode };
   readonly time_travel_used: {
     readonly action: TimeTravelAction;
     /** The day jumped to, for a jump. */
