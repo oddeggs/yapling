@@ -51,7 +51,13 @@ describe('the merged catalogues', () => {
   it('carry the keys the learning model schedules and shows', () => {
     const days = ['2', '3', '4', '5', '6', '7', '8', '8_back'].map((d) => `knocks.day${d}`);
     for (const key of days) expect(Object.keys(catalogues.vi)).toContain(key);
-    expect(Object.keys(en).filter((k) => k.startsWith('cando.'))).toHaveLength(12);
+    const canDos = Object.keys(en).filter((k) => k.startsWith('cando.'));
+    const titles = canDos.filter((k) => !k.endsWith('.certificate'));
+    expect(titles).toHaveLength(12);
+    // Each can-do has its keepsake wording too.
+    expect(canDos.filter((k) => k.endsWith('.certificate')).sort()).toEqual(
+      titles.map((k) => `${k}.certificate`).sort(),
+    );
   });
 });
 

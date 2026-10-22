@@ -40,7 +40,7 @@ describe('the keepsake', () => {
     expect(earned?.certificates).toHaveLength(1);
     expect(earned?.certificates[0]).toMatchObject({
       heading: 'Lan can now…',
-      canDo: 'Introduce yourself in 30 seconds',
+      canDo: 'Introduced myself in 30 seconds',
       witnessed: 'witnessed by Linh · Sep 25',
       witness: 'linh',
       witnessName: 'Linh',
@@ -99,7 +99,7 @@ describe('the keepsake', () => {
       learner,
     );
     expect(earned?.certificates.map((c) => [c.id, c.canDo, c.witnessed])).toEqual([
-      ['week-1', 'Introduce yourself in 30 seconds', 'witnessed by Linh · Sep 25'],
+      ['week-1', 'Introduced myself in 30 seconds', 'witnessed by Linh · Sep 25'],
     ]);
   });
 

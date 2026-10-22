@@ -56,9 +56,12 @@ export interface EarnedKeepsakes {
 
 const en = translator('en');
 
+/** The can-do as the keepsake words it, in the learner's voice ("Introduced myself in 30 seconds"). */
 function canDoWording(canDoId: string): string {
   const definition = canDoById(canDoId);
-  return definition ? en(definition.titleKey as StringKey as 'cando.ask-whats-wrong') : canDoId;
+  return definition
+    ? en(`${definition.titleKey}.certificate` as StringKey as 'cando.ask-whats-wrong.certificate')
+    : canDoId;
 }
 
 function trackOf(canDoId: string): Certificate['track'] {
