@@ -19,6 +19,7 @@ import {
   typeExtras,
   useKeyframes,
   useLocale,
+  useReduceMotion,
   type CaptionClock,
   type MicState,
 } from '../../ui';
@@ -100,6 +101,7 @@ export function VoicemailScreen({
   onBack,
 }: VoicemailScreenProps) {
   const { t } = useLocale();
+  const reduce = useReduceMotion();
   const { u, y } = useFrame();
   const lipsync = useMemo(() => engine?.lipsync ?? createLipsync(), [engine]);
   // A new call brings a new clock.
@@ -138,6 +140,7 @@ export function VoicemailScreen({
         mood={mood}
         size={u(210)}
         mouth={pipTalking ? lipsync.mouth : 'rest'}
+        animated={!reduce}
         style={{ position: 'absolute', left: u(90), top: y(360) }}
       />
       <ListenTop

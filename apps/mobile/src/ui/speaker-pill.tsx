@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { AiTag } from './chip';
 import { CritterSlot } from './critter-slot';
 import { GlassView } from './surface';
-import { Txt } from './text';
+import { FRAME_TEXT_MAX_SCALE, Txt } from './text';
 import { typeExtras } from './type-extras';
 import type { ViewStyleProp } from './style';
 
@@ -67,11 +67,12 @@ export function SpeakerPill({ name, aiTag, place, face, episode, style }: Speake
           >
             {face ?? <CritterSlot kind="face" size={FACE - outline.thin * 2} />}
           </View>
-          <Txt variant="speaker" numberOfLines={1}>
+          <Txt maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE} variant="speaker" numberOfLines={1}>
             {name}
           </Txt>
           <AiTag label={aiTag} />
           <Txt
+            maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}
             variant="note"
             colour={colours.textMuted}
             numberOfLines={1}
@@ -93,7 +94,9 @@ export function SpeakerPill({ name, aiTag, place, face, episode, style }: Speake
             justifyContent: 'center',
           }}
         >
-          <Txt variant={typeExtras.episodeTag}>{episode}</Txt>
+          <Txt maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE} variant={typeExtras.episodeTag}>
+            {episode}
+          </Txt>
         </View>
       ) : null}
     </View>

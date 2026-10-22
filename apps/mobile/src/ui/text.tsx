@@ -9,6 +9,12 @@ import type { ReactNode } from 'react';
 import { Text, type TextProps, type TextStyle } from 'react-native';
 import type { TextStyleProp } from './style';
 
+/**
+ * How far text in the call frame grows with Dynamic Type. The call's bubble, pill and bar each have
+ * a fixed place over the scene, so their text grows up to this and no further.
+ */
+export const FRAME_TEXT_MAX_SCALE = 1.3;
+
 export interface TxtProps extends Omit<TextProps, 'style'> {
   /** The theme type style (`bubble`, `button`, `gloss`…), or one of `typeExtras`. */
   readonly variant: TypeStyleKey | TypeStyle;

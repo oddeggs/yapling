@@ -17,7 +17,7 @@ import { AiTag } from './chip';
 import { useKeyframes } from './motion/play';
 import { Press } from './press';
 import { Sticker } from './surface';
-import { Txt } from './text';
+import { FRAME_TEXT_MAX_SCALE, Txt } from './text';
 import { typeExtras } from './type-extras';
 import type { ViewStyleProp } from './style';
 
@@ -97,16 +97,25 @@ export function SpeechBubble({
         contentStyle={{ paddingVertical: 11, paddingHorizontal: 15, gap: 3 }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          <Txt variant="bubbleName">{name}</Txt>
+          <Txt maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE} variant="bubbleName">
+            {name}
+          </Txt>
           <AiTag label={aiTag} small />
         </View>
-        <Text style={[fontFor('bubble'), { color: colours.text }]}>
+        <Text
+          maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}
+          style={[fontFor('bubble'), { color: colours.text }]}
+        >
           <Text>{text.slice(0, said)}</Text>
           <Text style={{ opacity: 0.3 }}>{text.slice(said)}</Text>
         </Text>
         {canGloss && glossShown ? <Gloss text={gloss} /> : null}
         {canGloss && !glossShown && !talking && glossHint ? (
-          <Txt variant={typeExtras.tapHint} style={{ opacity: 0.6 }}>
+          <Txt
+            maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}
+            variant={typeExtras.tapHint}
+            style={{ opacity: 0.6 }}
+          >
             {glossHint}
           </Txt>
         ) : null}
@@ -138,7 +147,7 @@ function Gloss({ text }: { text: string }) {
   return (
     <Animated.View style={[{ paddingTop: 4 }, easeIn]}>
       <DashedRule />
-      <Txt variant="gloss" colour={colours.textGloss}>
+      <Txt maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE} variant="gloss" colour={colours.textGloss}>
         {text}
       </Txt>
     </Animated.View>

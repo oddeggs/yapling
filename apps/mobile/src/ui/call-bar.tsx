@@ -14,7 +14,7 @@ import { useLocale } from './locale';
 import { MicButton, type MicState } from './mic-button';
 import { Press } from './press';
 import { GlassView, Sticker } from './surface';
-import { Txt } from './text';
+import { FRAME_TEXT_MAX_SCALE, Txt } from './text';
 import { typeExtras } from './type-extras';
 import type { ViewStyleObject, ViewStyleProp } from './style';
 
@@ -94,7 +94,11 @@ export function CallBar({
           justifyContent: 'center',
         }}
       >
-        <Txt variant="buttonSmall" colour={paused ? colours.textOnInk : colours.text}>
+        <Txt
+          maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}
+          variant="buttonSmall"
+          colour={paused ? colours.textOnInk : colours.text}
+        >
           {paused ? t('call.ready') : t('call.holdOn')}
         </Txt>
       </Press>
@@ -106,6 +110,7 @@ export function CallBar({
           {...(onTalkEnd ? { onTalkEnd } : {})}
         />
         <Txt
+          maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}
           variant="micLabel"
           numberOfLines={1}
           accessibilityLiveRegion="polite"
@@ -120,7 +125,12 @@ export function CallBar({
           {caption}
         </Txt>
         {/* Holds the caption's line in the column so the mic sits where the design puts it. */}
-        <Txt variant="micLabel" style={{ opacity: 0 }} importantForAccessibility="no">
+        <Txt
+          maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}
+          variant="micLabel"
+          style={{ opacity: 0 }}
+          importantForAccessibility="no"
+        >
           {' '}
         </Txt>
       </View>
@@ -140,7 +150,12 @@ function ExitButton({
   onPress?: () => void;
 }) {
   const text = (
-    <Txt variant={typeExtras.callExit} align="center" numberOfLines={2}>
+    <Txt
+      maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}
+      variant={typeExtras.callExit}
+      align="center"
+      numberOfLines={2}
+    >
       {label}
     </Txt>
   );
@@ -215,7 +230,11 @@ export function ListenBar({ paused, doneLabel, done, onHoldToggle, onDone }: Lis
           { backgroundColor: paused ? palette.ink : translucent.frost },
         ]}
       >
-        <Txt variant="buttonGlass" colour={paused ? colours.textOnInk : colours.text}>
+        <Txt
+          maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE}
+          variant="buttonGlass"
+          colour={paused ? colours.textOnInk : colours.text}
+        >
           {paused ? t('call.ready') : t('call.holdOn')}
         </Txt>
       </Press>
@@ -228,11 +247,15 @@ export function ListenBar({ paused, doneLabel, done, onHoldToggle, onDone }: Lis
             fill={colours.accent}
             contentStyle={{ height: h, alignItems: 'center', justifyContent: 'center' }}
           >
-            <Txt variant="buttonGlass">{doneLabel}</Txt>
+            <Txt maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE} variant="buttonGlass">
+              {doneLabel}
+            </Txt>
           </Sticker>
         ) : (
           <View style={[glassButton, { backgroundColor: translucent.frost }]}>
-            <Txt variant="buttonGlass">{doneLabel}</Txt>
+            <Txt maxFontSizeMultiplier={FRAME_TEXT_MAX_SCALE} variant="buttonGlass">
+              {doneLabel}
+            </Txt>
           </View>
         )}
       </Press>
