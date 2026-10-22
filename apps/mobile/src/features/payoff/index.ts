@@ -21,3 +21,7 @@ export {
   type AfterCallReady,
 } from './model';
 export { AfterCallRoute, KeepsakeRoute, PAYOFF_ROUTES } from './routes';
+export { keepWhatWasSaid, whatWasSaid } from './said-store';
+export { stageUpOffer, stageUpView, STAGE_UP_REQUESTS, type StageUpPhase } from './stage-up-model';
+export { TooHardSheet, type TooHardChoice } from './too-hard-sheet';
+export { buildVisitorAfterCall, isVisitorCall, type VisitorAfterCall } from './visitor-model';

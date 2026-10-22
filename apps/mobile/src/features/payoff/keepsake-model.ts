@@ -160,7 +160,7 @@ export function ringOfCall(weeks: readonly WeekRing[], callId: string): WeekRing
 }
 
 /** Whether this call filled the last open slot of its week. */
-function filledRing(weeks: readonly WeekRing[], callId: string): WeekRing | null {
+export function filledRing(weeks: readonly WeekRing[], callId: string): WeekRing | null {
   const ring = ringOfCall(weeks, callId);
   if (!ring || !isRingFull(ring)) return null;
   const last = [...ring.slots].sort((a, b) => (a.doneAt ?? 0) - (b.doneAt ?? 0)).at(-1);
