@@ -1,5 +1,6 @@
+import { glossPolicy } from '@yapling/domain';
 import {
-  RESIDENCY_STAGES,
+  STAGES,
   type CharacterId,
   type FirstLanguage,
   type Id,
@@ -108,8 +109,7 @@ const staticPrefix = (character: CharacterId): string => {
     bullets(SHARED_RULES),
     '',
     "Speech settings by the learner's stage:",
-    // The residency stages only, until Visitor has its own prose (its row is in the learner line).
-    bullets(RESIDENCY_STAGES.map((s) => `${STAGE_SPEECH[s].label}: ${stageSpeechLine(s)}.`)),
+    bullets(STAGES.map((s) => `${STAGE_SPEECH[s].label}: ${stageSpeechLine(s)}.`)),
   );
   return lines.join('\n');
 };
@@ -135,7 +135,10 @@ export const personaPrompt = (character: CharacterId, context: PersonaContext): 
     `The learner is ${name}, stage ${STAGE_SPEECH[context.stage].label} (${stageSpeechLine(context.stage)}).`,
     language === null
       ? 'If they ask what something means, explain it in simple English.'
-      : `Their first language is ${language}. If they ask what something means, explain it in simple English first; the app shows the ${language} gloss.`,
+      : glossPolicy(context.stage, 'live_call', { firstLanguage: context.firstLanguage })
+            .layers[0] === 'l1'
+        ? `Their first language is ${language}. If they ask what something means, the app shows the ${language} first; just say it again in a few simple English words.`
+        : `Their first language is ${language}. If they ask what something means, explain it in simple English first; the app shows the ${language} gloss.`,
     `This scene: ${context.scene.summary} Goal for the learner: ${context.scene.goal}`,
     `Phrases to give chances to use: ${due.length > 0 ? due.join(' · ') : 'none today'}.`,
     `Target errors: ${targets.length > 0 ? targets.join(' · ') : 'none yet'}.`,

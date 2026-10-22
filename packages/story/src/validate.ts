@@ -1,10 +1,32 @@
 import { STAGES, type CharacterId, type Id } from '@yapling/contracts';
-import { canDoById } from '@yapling/domain';
+import { canDoById, SPEECH_SETTINGS } from '@yapling/domain';
 
 import { findPhrase } from './catalogue';
 import { findLine } from './lines';
 import { activeBeats, nextBeat } from './runner';
 import type { Beat, Scene } from './types';
+
+/** The most words in a character's line at Visitor. */
+export const VISITOR_MAX_WORDS = SPEECH_SETTINGS.visitor.maxWordsPerTurn;
+
+/**
+ * Visitor lines longer on purpose, as the script marks them: Pip's fast line in Chapter 3, there
+ * so the learner has a reason to say "Sorry? Again, please."
+ */
+export const LONG_VISITOR_LINES: readonly Id[] = ['s1-set3-04'];
+
+/** Words in a caption, the spliced name counted as one. */
+export const wordCount = (text: string, nameSplice = false): number =>
+  text.split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length + (nameSplice ? 1 : 0);
+
+/** Problems with a Visitor line: an English line over the word limit (unless marked long). */
+export const visitorLineProblems = (id: Id): string[] => {
+  const line = findLine(id);
+  if (!line) return [`unknown line ${id}`];
+  if (line.language !== 'en' || LONG_VISITOR_LINES.includes(id)) return [];
+  const words = wordCount(line.caption, line.nameSplice !== null);
+  return words > VISITOR_MAX_WORDS ? [`${id} has ${words} words at Visitor`] : [];
+};
 
 /** Where a beat can go next: its own next, the fine exit and the fallback exit (after real tries). */
 const targetsOf = (beat: Beat): Id[] => {
@@ -73,6 +95,24 @@ export const validateScene = (scene: Scene): string[] => {
       if (answer.canDo !== null && !canDoById(answer.canDo)) {
         at(beat, `unknown can-do ${answer.canDo}`);
       }
+    }
+    // Visitors' lines stay short: the chapters of Settling in and every Visitor-only beat.
+    const visitorOnly = scene.kind === 'settling' || beat.maxStage === 'visitor';
+    if (visitorOnly && beat.kind === 'rec') {
+      for (const p of visitorLineProblems(beat.line)) at(beat, p);
+    }
+    if (visitorOnly && beat.kind === 'gen' && beat.example !== null) {
+      const words = wordCount(beat.example);
+      if (words > VISITOR_MAX_WORDS) at(beat, `example has ${words} words at Visitor`);
+    }
+    if (answer) {
+      for (const id of [...answer.praise, ...(answer.model === null ? [] : [answer.model])]) {
+        if (!findLine(id)) at(beat, `unknown line ${id}`);
+        else if (visitorOnly) for (const p of visitorLineProblems(id)) at(beat, p);
+      }
+      if (answer.choices.length > 2) at(beat, 'more than two cards');
+      if (answer.accept.some((w) => w !== w.toLowerCase()))
+        at(beat, 'accepted words not lower case');
     }
     if (beat.kind === 'ui' && beat.ui.type === 'phrase_grows' && !findPhrase(beat.ui.phrase)) {
       at(beat, `unknown phrase ${beat.ui.phrase}`);
