@@ -182,7 +182,8 @@ export class CardTurns {
     // A name is no English: "Mình là Lan." is Vietnamese, though it holds the card's name.
     const kind = speechKind(text);
     const name = kind === 'english' ? data.learner.name : '';
-    if (matchesCard(text, cardWords(answer.accept, name))) {
+    const accepted = cardWords(answer.accept, name);
+    if (matchesCard(text, accepted)) {
       return { event: 'fine', again: null, ...words() };
     }
     if (ask !== null) return { event: null, again: ask, ...words() };
@@ -196,7 +197,11 @@ export class CardTurns {
     if (judged === null) return { event: 'unclear', again: null, ...words(), jev: 'failed' };
     data.jevInputTokens = (data.jevInputTokens ?? 0) + judged.inputTokens;
     addSample(data.samples, 'judge', judged.ms);
-    const passed = mistake === null ? judged.card !== null : judged.card === 0;
+    // A fix turn passes only on the corrected card; any other turn on a card the beat's words pass
+    // (reading "Fifty." when the bus is 45 is a miss).
+    const read = judged.card === null ? undefined : cards[judged.card];
+    const passed =
+      mistake === null ? read !== undefined && matchesCard(read, accepted) : judged.card === 0;
     return {
       event: passed ? 'fine' : 'unclear',
       again: null,

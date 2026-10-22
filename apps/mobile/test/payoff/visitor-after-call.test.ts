@@ -72,6 +72,22 @@ describe('the Visitor’s after-call card', () => {
     });
   });
 
+  it('leaves the box packed when the chapter was left before its end', () => {
+    for (const endReason of ['hangup', 'too_hard'] as const) {
+      const card = buildVisitorAfterCall(
+        {
+          call: { ...chapterOne, endReason },
+          progress: progress(),
+          learner,
+          firstLanguage: 'vi',
+          heard: ['Hi!'],
+        },
+        vi,
+      );
+      expect(card.box).toBeNull();
+    }
+  });
+
   it('never scores or fixes: no wins, no fix, no receipt on the card', () => {
     const card = buildVisitorAfterCall(
       { call: chapterOne, progress: null, learner, firstLanguage: 'vi', heard: ['Hi!'] },
