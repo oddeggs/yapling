@@ -132,6 +132,23 @@ describe('unmetered calls', () => {
     expect(await user.canStart('placement')).toBe(false);
   });
 
+  it("charges Pip's minute nothing, and lets it start in a week with no minutes left", async () => {
+    const { userId } = await newGuest();
+    const user = userObject(env, userId);
+    await user.charge(3_000, 'learner', 'episode');
+    const before = await user.balance();
+    expect(await user.charge(45, 'learner', 'daily')).toEqual({
+      secondsLeft: before.leftSeconds,
+      wrappingUp: false,
+      exhausted: false,
+    });
+    expect(await user.charge(40, 'character', 'daily')).toMatchObject({ wrappingUp: false });
+    expect(await user.balance()).toMatchObject({ usedSeconds: before.usedSeconds });
+    await user.charge(600, 'learner', 'practice');
+    expect(await user.canStart('practice')).toBe(false);
+    expect(await user.canStart('daily')).toBe(true);
+  });
+
   it('refuses an unknown call kind', async () => {
     const { userId } = await newGuest();
     const user = userObject(env, userId);
