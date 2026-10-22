@@ -27,4 +27,12 @@ export const seasonEn = {
   'season.a11y.done': 'done',
   'season.a11y.current': 'next up',
   'season.a11y.upcoming': 'coming later',
+  /** A finished episode, picked on the map: it plays again at the learner's stage today. */
+  'season.replayKicker': 'EPISODE {episode} · PLAY IT AGAIN',
+  'season.replay': 'Play again',
+  /** Every episode done: the festival week, and the map's pins to play any episode again. */
+  'season.festivalKicker': 'SEASON {season} · EVERY EPISODE DONE',
+  'season.festivalHint': 'Tap an episode to play it again',
+  'season.a11y.replayHint': 'Plays this episode again',
+  'season.a11y.playHint': 'Plays this episode',
 } as const satisfies EnCatalogue;
