@@ -92,9 +92,10 @@ function usePermissionAsks(): number {
 
 /**
  * The knocks: on every open (and whenever the learner's answers, the language or the debug clock
- * change) the knocks (Settling in's next one, or the first week's) are planned and the phone's schedule is replaced with them; a tapped
- * knock opens its place; the welcome for this open is worked out for the burrow. Sits inside the
- * router and the locale; `inputs` is null until there is a profile.
+ * change) the knocks (Settling in's next one, or the weeks' from the story's start) are planned
+ * and the phone's schedule is replaced with them; a tapped knock opens its place; the welcome for
+ * this open is worked out for the burrow. Sits inside the router and the locale; `inputs` is null
+ * until there is a profile.
  */
 export function KnocksProvider({
   inputs,
@@ -131,6 +132,7 @@ export function KnocksProvider({
             timezone: inputs.timezone,
             completedEpisodes: inputs.completedEpisodes,
             cameBackAfterAway: clock.cameBackAfterAway,
+            awayDays: clock.awayDays,
           }),
     [key, clock, opens],
   );

@@ -7,18 +7,35 @@ import {
   dateOfDay,
   localDateOf,
   placeKnock,
+  LATER_WEEK_KNOCK_KINDS,
+  LATER_WEEK_KNOCK_TIMES,
+  firstDayOfWeek,
+  oneKnockPerDay,
   planWeekOneKnocks,
   welcomeFor,
   type KnockPlan,
   type KnockSender,
+  type LaterWeekKnockKind,
+  type ScheduledKnock,
   type Season1EpisodeId,
+  type SeasonWeeks,
   type WeekOneUnlock,
 } from '@yapling/domain';
 import { t, type Language, type StringKey } from '@yapling/i18n';
 import { CAST } from '@yapling/story';
 import type { Href } from 'expo-router';
 
+import { SEASON_WEEKS } from '../../data/season';
 import { settlingStateOf, type KnockInputs } from './inputs';
+import {
+  planWeekKnocks,
+  weekEpisodeDone,
+  weekKnockDays,
+  weekKnockKey,
+  weekKnockPath,
+  weekKnockSender,
+  type WeekKnock,
+} from './later-weeks';
 import {
   SETTLING_KNOCKS,
   isKnockedChapter,
@@ -75,6 +92,9 @@ export interface KnockData {
   readonly url: string;
   /** The Settling-in chapter it announces (its call is `url`); left out for the first week's. */
   readonly chapter?: number;
+  /** A later week's knock: its week and what it announces (its place is `url`). */
+  readonly week?: number;
+  readonly announces?: LaterWeekKnockKind;
   /** Fired from the test menu: shown even with the app open. */
   readonly test?: boolean;
   /** When a scheduled knock rings, on the phone's clock. */
@@ -91,21 +111,40 @@ export const knockDataOf = (data: unknown): KnockData | null => {
   // Only paths inside the app: a payload never sends the learner somewhere else.
   if (!d['url'].startsWith('/')) return null;
   const chapter = d['chapter'];
+  const week = d['week'];
+  const announces = d['announces'];
+  const later =
+    typeof week === 'number' &&
+    Number.isInteger(week) &&
+    week >= 2 &&
+    typeof announces === 'string' &&
+    (LATER_WEEK_KNOCK_KINDS as readonly string[]).includes(announces);
   return {
     kind: 'knock',
     day: d['day'],
     url: d['url'],
     ...(typeof chapter === 'number' && isKnockedChapter(chapter) ? { chapter } : {}),
+    ...(later ? { week, announces: announces as LaterWeekKnockKind } : {}),
     test: d['test'] === true,
   };
 };
 
 /**
  * Where a tapped knock goes. A Settling-in knock opens its chapter's call, unless the learner has
- * finished that chapter since or left Settling in (then the burrow, which shows what's next). Any
- * other knock opens the burrow on its day. `inputs` null: not known yet, so the knock's own place.
+ * finished that chapter since or left Settling in (then the burrow, which shows what's next). A
+ * later week's knock opens what it announced: the episode's call (the burrow once that episode has
+ * been played since), the story or the voicemail. A first-week knock opens the burrow on its day.
+ * `inputs` null: not known yet, so the knock's own place.
  */
 export const knockTarget = (knock: KnockData, inputs: KnockInputs | null): Href => {
+  if (knock.week !== undefined && knock.announces !== undefined) {
+    const played =
+      knock.announces === 'episode' &&
+      inputs !== null &&
+      knock.test !== true &&
+      weekEpisodeDone(inputs.weeks ?? [], knock.week);
+    return played ? '/' : knock.url;
+  }
   if (knock.chapter === undefined) return knockHref(knock.day);
   // A test knock from the test menu always opens what it shows.
   if (inputs !== null && knock.test !== true) {
@@ -166,13 +205,22 @@ export interface KnockClock {
   readonly now: EpochMs;
   /** App time minus phone time; 0 outside the test builds. */
   readonly offsetMs: number;
-  /** The test menu's "came back after 3 days". */
+  /** The test menu's "came back after N days". */
   readonly cameBackAfterAway: boolean;
+  /** How many days away when `cameBackAfterAway`; left out for three. */
+  readonly awayDays?: number;
 }
 
-/** The last day the learner opened the app, as the knock plan sees it: today, or three days ago. */
+/** The days away the test menu's return stands for. */
+const awayDaysOf = (clock: Pick<KnockClock, 'awayDays'>): number =>
+  clock.awayDays !== undefined && clock.awayDays >= AWAY_DAYS ? clock.awayDays : AWAY_DAYS;
+
+/** The last day the learner opened the app, as the knock plan sees it: today, or N days ago. */
 const lastOpenedOn = (clock: KnockClock, timezone: TimeZone): LocalDate =>
-  localDateOf(clock.cameBackAfterAway ? clock.now - AWAY_DAYS * DAY_MS : clock.now, timezone);
+  localDateOf(
+    clock.cameBackAfterAway ? clock.now - awayDaysOf(clock) * DAY_MS : clock.now,
+    timezone,
+  );
 
 /** A Settling-in knock's content: from Yapling, in the app's language, opening its chapter. */
 export const settlingKnockContent = (
@@ -186,21 +234,48 @@ export const settlingKnockContent = (
   data: { kind: 'knock', day, url: settlingCallPath(chapter), chapter },
 });
 
+/** A later week's knock: from its character or from Yapling, opening what it announces. */
+export const weekKnockContent = (
+  knock: Pick<WeekKnock, 'week' | 'dayOfWeek' | 'kind' | 'scene' | 'day'>,
+  language: Language,
+  roommateName: string,
+  atVisitor: boolean,
+  season: SeasonWeeks = SEASON_WEEKS,
+): KnockContent => ({
+  title: knockTitle(weekKnockSender(knock.week, knock.kind, atVisitor), language, roommateName),
+  body: knockBody(weekKnockKey(knock.week, knock.kind, atVisitor), language, roommateName),
+  data: {
+    kind: 'knock',
+    day: knock.day,
+    url: weekKnockPath(season, knock),
+    week: knock.week,
+    announces: knock.kind,
+  },
+});
+
+/** Later weeks' knocks carry this identifier, by week and what each announces. */
+export const weekKnockId = (week: number, kind: LaterWeekKnockKind): string =>
+  `${KNOCK_ID_PREFIX}week${week}-${kind}`;
+
+const isWeekKnock = (knock: ScheduledKnock | WeekKnock): knock is WeekKnock => 'week' in knock;
+
 /** Settling-in knocks carry this identifier, by chapter. */
 export const settlingKnockId = (chapter: KnockedChapter): string =>
   `${KNOCK_ID_PREFIX}settling-${chapter}`;
 
 /**
  * The knocks to schedule now. While a Visitor settles in: the next Settling-in knock, if any.
- * Otherwise the week-one plan from the app's time on, its days counted from the story's start,
- * moved out of quiet hours, at most one a day. None when the learner said no. Planned on each
- * open, with today as the last day opened, so day 8 says "you're back" only to a learner who then
- * stays away three days.
+ * Otherwise the week-one plan and the later weeks' from the app's time on, their days counted from
+ * the story's start, moved out of quiet hours, at most one a day, none past 14 days from this
+ * open. None when the learner said no. Planned on each open, with today as the last day opened,
+ * so day 8 says "you're back" only to a learner who then stays away three days, and a learner who
+ * stays away two weeks simply stops hearing from us.
  */
 export const planKnockRequests = (
   inputs: KnockInputs,
   language: Language,
   clock: KnockClock,
+  season: SeasonWeeks = SEASON_WEEKS,
 ): readonly KnockRequest[] => {
   const state = settlingStateOf(inputs);
   const quiet = inputs.quietHours === undefined ? {} : { quietHours: inputs.quietHours };
@@ -225,7 +300,7 @@ export const planKnockRequests = (
       },
     ];
   }
-  return planWeekOneKnocks({
+  const context = {
     installedOn: inputs.installedOn,
     storyStartedOn: storyDayOneOf(state, inputs.installedOn),
     timezone: inputs.timezone,
@@ -233,9 +308,18 @@ export const planKnockRequests = (
     notificationsAllowed: inputs.notificationsAllowed,
     ...quiet,
     lastOpenedOn: lastOpenedOn(clock, inputs.timezone),
-  }).map((knock) => ({
-    ...knockContent(knock.day, knock, language, inputs.roommateName),
-    identifier: `${KNOCK_ID_PREFIX}day-${knock.day}`,
+  };
+  const knocks = oneKnockPerDay<ScheduledKnock | WeekKnock>([
+    ...planWeekOneKnocks(context),
+    ...planWeekKnocks({ ...context, season, weeks: inputs.weeks ?? [] }),
+  ]);
+  return knocks.map((knock) => ({
+    ...(isWeekKnock(knock)
+      ? weekKnockContent(knock, language, inputs.roommateName, inputs.atVisitor === true, season)
+      : knockContent(knock.day, knock, language, inputs.roommateName)),
+    identifier: isWeekKnock(knock)
+      ? weekKnockId(knock.week, knock.kind)
+      : `${KNOCK_ID_PREFIX}day-${knock.day}`,
     day: knock.day,
     date: knock.date,
     time: knock.time,
@@ -279,6 +363,45 @@ export const knockOfDay = (
   };
 };
 
+/** A later week's knock as previewed: where it lands, and its day within the week. */
+export type WeekKnockPreview = KnockContent & {
+  readonly date: LocalDate;
+  readonly time: string;
+  readonly dayOfWeek: number;
+};
+
+/**
+ * A later week's knock where it lands in the learner's day, for previews: null when that week has
+ * nothing of that kind to announce. Days count from `storyDayOne`.
+ */
+export const weekKnockOf = (
+  week: number,
+  kind: LaterWeekKnockKind,
+  inputs: Pick<KnockInputs, 'timezone' | 'quietHours' | 'roommateName'> & {
+    readonly storyDayOne: LocalDate;
+    readonly atVisitor?: boolean;
+  },
+  language: Language,
+  season: SeasonWeeks = SEASON_WEEKS,
+): WeekKnockPreview | null => {
+  const found = weekKnockDays(season, week).find((d) => d.kind === kind);
+  if (found === undefined) return null;
+  const day = firstDayOfWeek(week) - 1 + found.dayOfWeek;
+  const slot = placeKnock(
+    dateOfDay(inputs.storyDayOne, day),
+    LATER_WEEK_KNOCK_TIMES[kind],
+    inputs.timezone,
+    inputs.quietHours === undefined ? DEFAULT_QUIET_HOURS : inputs.quietHours,
+  );
+  const knock = { week, kind, day, dayOfWeek: found.dayOfWeek, scene: found.scene };
+  return {
+    ...weekKnockContent(knock, language, inputs.roommateName, inputs.atVisitor === true, season),
+    date: slot.date,
+    time: slot.time,
+    dayOfWeek: found.dayOfWeek,
+  };
+};
+
 /**
  * A Settling-in knock where it lands when its chapter is next on settling day N (as the test
  * menu's chapter jump leaves it: chapter N on day N), for previews.
@@ -319,8 +442,10 @@ export const returnStateOf = (input: {
   readonly timezone: TimeZone;
   readonly completedEpisodes: readonly Season1EpisodeId[];
   readonly cameBackAfterAway: boolean;
+  /** How many days away the test menu's return stands for; left out for three. */
+  readonly awayDays?: number;
 }): ReturnState => {
-  const away = input.now - AWAY_DAYS * DAY_MS;
+  const away = input.now - awayDaysOf(input) * DAY_MS;
   const lastOpenedAt = input.cameBackAfterAway
     ? Math.min(input.lastOpenedAt ?? away, away)
     : input.lastOpenedAt;

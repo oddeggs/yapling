@@ -90,9 +90,11 @@ export const fireTestKnock = (
 ): Promise<string> =>
   api.scheduleNotificationAsync({
     identifier:
-      knock.data.chapter === undefined
-        ? `test-${KNOCK_ID_PREFIX}day-${knock.data.day}`
-        : `test-${KNOCK_ID_PREFIX}settling-${knock.data.chapter}`,
+      knock.data.week !== undefined && knock.data.announces !== undefined
+        ? `test-${KNOCK_ID_PREFIX}week${knock.data.week}-${knock.data.announces}`
+        : knock.data.chapter === undefined
+          ? `test-${KNOCK_ID_PREFIX}day-${knock.data.day}`
+          : `test-${KNOCK_ID_PREFIX}settling-${knock.data.chapter}`,
     content: contentOf({ ...knock, data: { ...knock.data, test: true } }),
     trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds },
   });

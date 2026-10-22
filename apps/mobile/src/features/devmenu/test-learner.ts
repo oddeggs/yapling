@@ -12,7 +12,13 @@ export const deviceTimeZone = (): TimeZone => Intl.DateTimeFormat().resolvedOpti
 /** What the test menu needs from the learner. */
 export type TestLearner = Pick<
   KnockInputs,
-  'installedOn' | 'timezone' | 'quietHours' | 'roommateName' | 'notificationsAllowed'
+  | 'installedOn'
+  | 'timezone'
+  | 'quietHours'
+  | 'roommateName'
+  | 'notificationsAllowed'
+  | 'weeks'
+  | 'atVisitor'
 > & {
   readonly completedEpisodes: readonly Season1EpisodeId[];
   readonly settling: SettlingState;

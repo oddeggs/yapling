@@ -80,4 +80,56 @@ export const devmenuEn = {
   'devmenu.previews.stageUp': 'Linh’s Newcomer card',
   'devmenu.previews.me': 'A Visitor’s Me sheet',
   'devmenu.previews.hint': 'A sample learner; nothing is sent',
+  /*
+   * Weeks 2 on (test builds only): jump to a day of a later week with the weeks before it played,
+   * fill a week's ring, and preview, ring or fire that week's knocks.
+   */
+  'devmenu.weeks.heading': 'LATER WEEKS',
+  /** `{done}`: the story week's calls done, of 3. */
+  'devmenu.weeks.status': 'Story week {week}, day {day} · ring {done} of 3',
+  'devmenu.weeks.needsStory':
+    'The story hasn’t started: finish Settling in first (the letter day).',
+  'devmenu.weeks.needsLearner': 'No learner yet: onboarding hasn’t made one.',
+  'devmenu.weeks.weekChip': 'Week {week}',
+  'devmenu.weeks.a11y.weekChip': 'Choose week {week}',
+  'devmenu.weeks.dayChip': '{day}',
+  'devmenu.weeks.a11y.dayChip': 'Choose day {day} of the week',
+  'devmenu.weeks.jump': 'Jump to week {week}, day {day}',
+  /** VoiceOver hint on the jump. */
+  'devmenu.weeks.jumpHint':
+    'Every week before it played in full, its own calls not yet; the clock on that day',
+  'devmenu.weeks.fill': 'Fill week {week}’s ring',
+  'devmenu.weeks.fillHint': 'Marks the week’s three calls done and hangs its keepsake',
+  'devmenu.weeks.working': 'Working…',
+  /** `{reason}`: the error, for the team. */
+  'devmenu.weeks.failed': 'Didn’t work: {reason}',
+  'devmenu.weeks.done.jump': 'Week {week}, day {day}. Every week before it is played.',
+  'devmenu.weeks.done.fill': 'Week {week}’s ring is full.',
+  'devmenu.weeks.knocksHeading': 'WEEK {week}’S KNOCKS',
+  'devmenu.weeks.knockChip': 'Day {day}',
+  'devmenu.weeks.a11y.knockChip': 'Preview the knock on day {day} of week {week}',
+  'devmenu.weeks.noKnocks': 'Nothing in this week knocks.',
+  /** The tag on the lock-screen preview. */
+  'devmenu.weeks.tag': 'Week {week} · day {day}',
+  /** VoiceOver hint on the lock-screen preview. */
+  'devmenu.weeks.previewHint': 'Jumps to that day and opens what the tapped knock opens',
+  'devmenu.weeks.ringSoon': 'Week {week} day {day}, a minute before its knock',
+  'devmenu.weeks.ringSoonHint':
+    'Jumps to that day and moves the clock to a minute before its scheduled knock',
+  'devmenu.weeks.ringNote':
+    'Week {week}’s scheduled knock rings in a minute. Lock the phone or leave the app.',
+  'devmenu.weeks.fire': 'Fire it in 5 s',
+  'devmenu.weeks.fireNote': 'The knock rings in 5 s. Lock the phone or leave the app.',
+  /** The first week's fire button on a later day: its knocks are the later weeks' (above). */
+  'devmenu.weeks.noWeekOneKnock': 'Day {day} has no week-1 knock: see the later weeks',
+  /** Back after days away: the welcome back and the recap, never anything lost. */
+  'devmenu.back.heading': 'BACK AFTER DAYS AWAY',
+  'devmenu.back.off': 'Not away',
+  'devmenu.back.days': '{days} days',
+  'devmenu.back.a11y': 'Treat this open as a return after {days} days',
+  'devmenu.back.offA11y': 'Treat this open as an ordinary one',
+  'devmenu.back.note': 'The welcome back with the story so far; everything waits where it was.',
+  /** How the learner takes turns in calls, kept on this phone. */
+  'devmenu.handsFree.title': 'Hands-free calls',
+  'devmenu.handsFree.sub': 'Talk and pause to answer, without holding the mic',
 } as const satisfies EnCatalogue;
