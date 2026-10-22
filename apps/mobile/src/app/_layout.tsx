@@ -20,6 +20,7 @@ import { appClock, DevMenuHost, devToolsEnabled, now } from '../features/devmenu
 import { KnocksProvider, knockInputsOf } from '../features/knocks';
 import { onboardingStore } from '../features/onboarding';
 import { identifyPurchaser } from '../features/plus';
+import { OverTheAir } from '../features/updates';
 import { resetObservability, startCrashReports, useAppAnalytics } from '../observability';
 import { AppArtProvider } from '../ui/art-provider';
 import { UiProvider } from '../ui/ui-provider';
@@ -129,6 +130,7 @@ function AppShell() {
         <Knocks>
           <DevMenuHost onReset={reset}>
             <StatusBar style="dark" />
+            <OverTheAir />
             <RootStack />
           </DevMenuHost>
         </Knocks>

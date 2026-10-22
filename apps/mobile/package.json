@@ -7,6 +7,7 @@
     "dev": "expo start --dev-client",
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
+    "update:dev": "APP_VARIANT=dev EAS_PROJECT_ID=3a0b1da8-0906-4d5c-bba7-c4b639048e37 API_BASE=https://yapling-api-dev.bkdev98.workers.dev/api eas update --channel dev --environment production --non-interactive",
     "test": "jest"
   },
   "dependencies": {
@@ -36,6 +37,7 @@
     "expo-sqlite": "catalog:",
     "expo-status-bar": "catalog:",
     "expo-system-ui": "catalog:",
+    "expo-updates": "catalog:",
     "posthog-react-native": "catalog:",
     "react": "catalog:",
     "react-native": "catalog:",
