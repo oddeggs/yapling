@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import {
   activeTargets,
   errorResponse,
+  errorTargetsApply,
   graduatedTargets,
   noteRecurringError,
   recordSelfCorrection,
@@ -132,5 +133,14 @@ describe('two error targets at a time', () => {
         expect(Progress.safeParse(progress).success).toBe(true);
       }),
     );
+  });
+});
+
+describe('error targets by stage', () => {
+  it('start at Newcomer: a Visitor is never asked back, every error is recast', () => {
+    expect(errorTargetsApply('visitor')).toBe(false);
+    for (const s of ['newcomer', 'neighbour', 'regular', 'local', 'voice'] as const) {
+      expect(errorTargetsApply(s)).toBe(true);
+    }
   });
 });

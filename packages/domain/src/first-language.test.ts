@@ -78,3 +78,30 @@ describe('first-language help', () => {
     expect(phrases[0]?.state).toBe('seed');
   });
 });
+
+describe('first-language help at Visitor', () => {
+  it('shows the line gloss under every line without a tap', () => {
+    expect(glossPolicy('visitor', 'captions', vi)).toEqual({
+      unit: 'line',
+      layers: ['l1'],
+      reveal: 'shown',
+    });
+  });
+
+  it('answers "What does that mean?" in the first language first, simple English one tap further', () => {
+    expect(glossPolicy('visitor', 'live_call', vi)).toEqual({
+      unit: 'line',
+      layers: ['l1', 'english'],
+      reveal: 'on_tap',
+    });
+  });
+
+  it('keeps Pass it on and listening checkpoints English only, and English only without a first language', () => {
+    expect(glossPolicy('visitor', 'pass_it_on', vi).layers).toEqual([]);
+    expect(glossPolicy('visitor', 'listening_checkpoint', vi).layers).toEqual([]);
+    expect(glossPolicy('visitor', 'captions', { firstLanguage: 'other' }).unit).toBeNull();
+    expect(glossPolicy('visitor', 'live_call', { firstLanguage: 'other' }).layers).toEqual([
+      'english',
+    ]);
+  });
+});

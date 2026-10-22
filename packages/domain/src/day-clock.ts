@@ -16,15 +16,38 @@ import { addDays, daysBetween, localDateOf } from './time';
  * The day clock and the first week. Day 1 is the install day; a new day starts at local midnight
  * in the learner's timezone. The first week is a fixed plan: what each day opens and the knock that
  * announces it. Everything a day opens stays open: coming back late finds it all waiting.
+ *
+ * Week 1's days count from the day the story starts (`storyStartedOn`, the letter under the café
+ * door), not the install day. For a Newcomer the two are the same day; a Visitor settles in first,
+ * and their week 1 starts on the letter's day. Pass the story's start wherever a function below
+ * takes the day that day 1 falls on.
  */
 
-/** Days since install in the learner's timezone; the install day is day 1. */
-export const dayIndexOf = (installedOn: LocalDate, now: EpochMs, timezone: TimeZone): number =>
-  Math.max(1, daysBetween(installedOn, localDateOf(now, timezone)) + 1);
+/** Days since `startedOn` in the learner's timezone; that day is day 1. */
+export const dayIndexOf = (startedOn: LocalDate, now: EpochMs, timezone: TimeZone): number =>
+  Math.max(1, daysBetween(startedOn, localDateOf(now, timezone)) + 1);
 
-/** The calendar day of a day index. */
-export const dateOfDay = (installedOn: LocalDate, dayIndex: number): LocalDate =>
-  addDays(installedOn, dayIndex - 1);
+/** The calendar day of a day index counted from `startedOn`. */
+export const dateOfDay = (startedOn: LocalDate, dayIndex: number): LocalDate =>
+  addDays(startedOn, dayIndex - 1);
+
+/** When the learner installed the app and when their story started. */
+export interface StoryStart {
+  readonly installedOn: LocalDate;
+  /**
+   * The letter's day. Null until it is recorded: a Visitor still settling in (who has no week 1
+   * yet), or a profile from before it was kept, whose story started on the install day.
+   */
+  readonly storyStartedOn: LocalDate | null;
+}
+
+/** The day week 1's day 1 falls on: the story's start, or the install day when not recorded. */
+export const storyStartOn = (start: StoryStart): LocalDate =>
+  start.storyStartedOn ?? start.installedOn;
+
+/** The day of the story (week 1's day N, then on through the weeks); its first day is day 1. */
+export const storyDayIndexOf = (start: StoryStart, now: EpochMs, timezone: TimeZone): number =>
+  dayIndexOf(storyStartOn(start), now, timezone);
 
 /** What the first week opens, day by day. */
 export type WeekOneUnlock =
@@ -110,7 +133,10 @@ export const WEEK_ONE_PLAN: readonly WeekOneDay[] = [
   },
 ];
 
-/** The free first week's last day: the Plus offer shows; the weekly free allowance starts the next day. */
+/**
+ * The free first week's last day, counted from the story's start: the Plus offer shows; the weekly
+ * free allowance starts the next day.
+ */
 export const FREE_WEEK_ENDS_ON_DAY = 7;
 
 /** Everything opened up to and including a day. Nothing ever closes again. */
@@ -129,6 +155,8 @@ export interface ScheduledKnock extends KnockSlot {
 
 export interface KnockPlanContext {
   readonly installedOn: LocalDate;
+  /** The story's start, which week 1's days count from; null or left out: the install day. */
+  readonly storyStartedOn?: LocalDate | null;
   readonly timezone: TimeZone;
   readonly now: EpochMs;
   readonly notificationsAllowed: boolean;
@@ -140,13 +168,18 @@ export interface KnockPlanContext {
 
 /**
  * The first week's knocks still to come: each day's knock at its time, moved out of quiet hours,
- * at most one a day, none in the past, none without permission. Rebuilt whenever the app opens.
+ * at most one a day, none in the past, none without permission. Days count from the story's start.
+ * Rebuilt whenever the app opens. A Visitor still settling in has no week 1 to plan yet.
  */
 export const planWeekOneKnocks = (ctx: KnockPlanContext): readonly ScheduledKnock[] => {
   if (!ctx.notificationsAllowed) return [];
   const quiet = ctx.quietHours === undefined ? DEFAULT_QUIET_HOURS : ctx.quietHours;
+  const dayOne = storyStartOn({
+    installedOn: ctx.installedOn,
+    storyStartedOn: ctx.storyStartedOn ?? null,
+  });
   const knocks = WEEK_ONE_PLAN.flatMap((d): ScheduledKnock[] => {
-    const date = dateOfDay(ctx.installedOn, d.day);
+    const date = dateOfDay(dayOne, d.day);
     const away = ctx.lastOpenedOn !== null && daysBetween(ctx.lastOpenedOn, date) >= AWAY_DAYS;
     const plan = away && d.knockAfterAway !== undefined ? d.knockAfterAway : d.knock;
     if (plan === null) return [];

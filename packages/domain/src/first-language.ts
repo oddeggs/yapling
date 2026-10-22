@@ -59,22 +59,26 @@ const surfacePolicy = (stage: Stage, surface: HelpSurface): GlossPolicy => {
     case 'pass_it_on':
       return NO_HELP;
     case 'live_call':
-      return { unit: 'line', layers: ['english', 'l1'], reveal: 'on_tap' };
+      // Visitor: "What does that mean?" answers in the first language first.
+      return stage === 'visitor'
+        ? { unit: 'line', layers: ['l1', 'english'], reveal: 'on_tap' }
+        : { unit: 'line', layers: ['english', 'l1'], reveal: 'on_tap' };
     case 'post_call_fixes':
       return isStageAtLeast(stage, 'regular')
         ? { unit: 'line', layers: ['english', 'l1'], reveal: 'shown' }
         : { unit: 'line', layers: ['l1'], reveal: 'shown' };
     case 'captions':
-      // Visitor: Newcomer's help until its own policy is set.
-      if (stage === 'visitor' || stage === 'newcomer')
-        return { unit: 'line', layers: ['l1'], reveal: 'marked' };
+      // Visitor: the gloss is shown under every line and card without a tap.
+      if (stage === 'visitor') return { unit: 'line', layers: ['l1'], reveal: 'shown' };
+      if (stage === 'newcomer') return { unit: 'line', layers: ['l1'], reveal: 'marked' };
       if (stage === 'neighbour') return { unit: 'line', layers: ['l1'], reveal: 'on_tap' };
       return { unit: 'word', layers: ['english', 'l1'], reveal: 'on_tap' };
   }
 };
 
 /**
- * The help a surface gives at a stage. It fades: line glosses everywhere at Newcomer, line glosses
+ * The help a surface gives at a stage. It fades: line glosses shown under every line at Visitor,
+ * with meanings in the first language first; line glosses everywhere at Newcomer, line glosses
  * on tap at Neighbour, word-level English first from Regular, and English only from Local unless
  * the learner turns their first language back on. With no supported first language (`other`)
  * there is no first-language layer.
