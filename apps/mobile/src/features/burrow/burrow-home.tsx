@@ -2,7 +2,7 @@ import type { Profile, Progress } from '@yapling/contracts';
 import { localTimeOf, type Welcome, type WeekOneUnlock } from '@yapling/domain';
 import { CAST } from '@yapling/story';
 import { colours } from '@yapling/theme';
-import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
+import { Redirect, useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
@@ -12,6 +12,7 @@ import {
   useProfile,
   useProgress,
   useSeen,
+  useSession,
   useWeek,
   type SeenMoment,
 } from '../../data';
@@ -126,6 +127,7 @@ export function BurrowHome() {
   const preview = usePreviewInput(params);
   const { markSeen } = useSeen();
   const { previousAt } = useLastOpen();
+  const session = useSession();
   // Scenes finished in this session, for the preview (the live ones are marked in the data).
   const [finished, setFinished] = useState<readonly WeekOneUnlock[]>([]);
   const base = preview ?? live;
@@ -150,6 +152,9 @@ export function BurrowHome() {
   const go = (to: Href) => router.push(to);
   const back = () => (router.canGoBack() ? router.back() : undefined);
 
+  // No learner on this phone any more (the test menu's reset): the first run again.
+  if (input === null && (session.status === 'signed_out' || session.status === 'awaiting_age'))
+    return <Redirect href="/" />;
   if (input === null) return <View style={{ flex: 1, backgroundColor: colours.background }} />;
   const variant = burrowVariant(input);
   if (variant === 'door') {
