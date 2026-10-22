@@ -1,5 +1,6 @@
 import type { CanDoProgress, Keepsake, WeekRing } from '@yapling/contracts';
 import {
+  addDays,
   DAY_MS,
   fillRingSlot,
   localDateOf,
@@ -15,6 +16,7 @@ import {
 import { findPhrase, S1_E1 } from '@yapling/story';
 
 import type { BurrowInput, BurrowProgress } from './model';
+import type { SettlingInput } from './settling-model';
 
 /*
  * Development only: a learner who has done everything the first week offered up to a given day,
@@ -155,6 +157,48 @@ export function previewOptionsFrom(
       away: one('away') === '1',
       beforeDoor: one('door') === '1',
       ...(hour !== undefined ? { hour: Number(hour) } : {}),
+    },
+  };
+}
+
+/**
+ * Development only: a Visitor settling in (`?settle=N`: chapters done, `today=K` of them today,
+ * `rested=1`, `letter=1` for the letter's evening, `hour=H`), for looking at the burrow during
+ * Settling in without playing the chapters.
+ */
+export function settlingPreviewFrom(
+  params: Readonly<Record<string, string | string[] | undefined>>,
+  now = Date.now(),
+): SettlingInput | null {
+  const one = (key: string) => {
+    const v = params[key];
+    return Array.isArray(v) ? v[0] : v;
+  };
+  const settle = one('settle');
+  if (settle === undefined) return null;
+  const done = Math.max(0, Math.min(6, Number(settle) || 0));
+  const doneToday = Math.min(done, Number(one('today') ?? Math.min(done, 1)) || 0);
+  const today = localDateOf(now, PREVIEW_TIMEZONE);
+  // One chapter a day before today's, as a learner who started on day 1 would have.
+  const earlier = done - doneToday;
+  const chapters = Array.from({ length: done }, (_, i) => ({
+    chapter: i + 1,
+    doneOn: i < earlier ? addDays(today, i - earlier) : today,
+    callRecordId: `preview-chapter-${i + 1}`,
+  }));
+  const letter = one('letter') === '1';
+  const hour = one('hour');
+  return {
+    roommate: { species: 'redpanda', name: 'Pip' },
+    firstLanguage: 'vi',
+    hour: hour !== undefined ? Number(hour) : new Date(now).getHours(),
+    installDay: earlier + 1,
+    day: {
+      chapters,
+      today,
+      letterOn: letter ? today : null,
+      restedOn: one('rested') === '1' ? today : null,
+      goodnightOn: null,
     },
   };
 }

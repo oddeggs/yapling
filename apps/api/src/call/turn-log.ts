@@ -1,3 +1,5 @@
+import type { TurnPass } from '@yapling/domain';
+
 import type { LineResult, LineTimings } from './line';
 
 /*
@@ -8,8 +10,11 @@ import type { LineResult, LineTimings } from './line';
 
 /** Who judged a turn, and how Jev's case met the line's. */
 export interface JudgeLog {
-  /** `jev` when Jev's outcome was applied (or it asked for the replay), else the line's own. */
-  readonly by: 'jev' | 'haiku';
+  /**
+   * `jev` when Jev's outcome was applied (or it asked for the replay), `haiku` for the line's own,
+   * `words` for a card turn decided by its words (or the again phrase list) with no model.
+   */
+  readonly by: 'jev' | 'haiku' | 'words';
   /** `late`: Jev answered after the line reached the phone; `failed`: no answer (see its warning). */
   readonly status: 'pending' | 'answered' | 'failed' | 'late';
   /** Request to answer or failure, in ms. */
@@ -41,6 +46,15 @@ export interface TurnLog {
   readonly timings: LineTimings;
   /** End of the learner's speech, or 0 for hold-to-talk without one. */
   readonly speechEndAt: number;
+  /**
+   * How the turn left its beat (`match`, `generous`, `skip`, `fallback`), or null while the beat
+   * still waits (a try, a replay, an answer that wasn't English).
+   */
+  readonly pass: TurnPass | null;
+  /** A card turn whose words missed and Jev's card question passed (null: not asked). */
+  readonly cardMatch: boolean | null;
+  /** A card turn: end of the learner's speech → the turn decided, with no model to wait for. */
+  readonly decidedAt?: number;
 }
 
 const since = (from: number | undefined, to: number | undefined): number | null =>
@@ -57,6 +71,9 @@ export function logTurn(t: TurnLog): void {
     applied: t.applied,
     speech: t.speech,
     judge: t.judge,
+    pass: t.pass,
+    replay: t.judge.replay,
+    cardMatch: t.cardMatch,
     guard: result?.guard?.action ?? null,
     guardDropped: result?.guard?.dropped ?? null,
     failed: result?.failed ?? null,
@@ -64,6 +81,7 @@ export function logTurn(t: TurnLog): void {
     audioMs: result?.audioMs ?? 0,
     ms: {
       judge: t.judge.ms,
+      decide: since(t.speechEndAt, t.decidedAt),
       llmFirstToken: since(s.start, s.llmFirstToken),
       ttsFirstAudio: since(s.ttsFirstText, s.ttsFirstAudio),
       firstAudioOut: since(s.start, s.firstAudioOut),

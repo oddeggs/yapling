@@ -51,7 +51,7 @@ const PLACE = {
 } as const;
 
 /** "Xong rồi!" typing itself in, its letters closing up (the design's `ytype`). */
-function DoneTitle({ text }: { text: string }) {
+export function DoneTitle({ text }: { text: string }) {
   const reduce = useReduceMotion();
   const anim = motion.screens.postDone;
   const clock = useClock(anim);

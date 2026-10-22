@@ -4,7 +4,8 @@ import type { Usage } from '../call/llm';
 /*
  * Each call's cost record (`call_costs`): what the providers were used for, the estimated dollars
  * at list prices (`tech-decisions.md` §3: speech-to-text $0.39 an audio hour, text-to-speech $0.04
- * per 1,000 characters, Claude Haiku per token; the post-call summary on Sonnet), and how fast the
+ * per 1,000 characters, Claude Haiku per token; Jev, the turn judge, per input token; the post-call
+ * summary on Sonnet), and how fast the
  * call answered (end of learner speech → first reply audio, per turn, with P50 and P90).
  */
 
@@ -22,6 +23,8 @@ export interface CostInputs {
   readonly sttSeconds: number;
   readonly ttsChars: number;
   readonly llm: Usage;
+  /** Jev's input tokens (its output is free); 0 for a call before the turn judge. */
+  readonly jevInputTokens?: number;
   /** Per-stage latency samples; missing from a call object older than the cost record. */
   readonly samples: Pick<Samples, 'replyOut' | 'phoneLag'> | null;
 }
@@ -40,10 +43,13 @@ export interface CostRecord {
   readonly sttSeconds: number;
   readonly ttsChars: number;
   readonly llm: Usage;
+  readonly jevInputTokens: number;
   readonly usd: {
     readonly stt: number;
     readonly tts: number;
     readonly llm: number;
+    /** Jev, the turn judge. */
+    readonly judge: number;
     readonly summary: number;
     readonly total: number;
   };
@@ -57,7 +63,12 @@ const num = (value: unknown): number =>
   typeof value === 'number' && Number.isFinite(value) ? value : 0;
 
 /** The provider usage in a call record's `cost` (`callCost`); zeros for anything missing. */
-export function usageOf(cost: unknown): { sttSeconds: number; ttsChars: number; llm: Usage } {
+export function usageOf(cost: unknown): {
+  sttSeconds: number;
+  ttsChars: number;
+  llm: Usage;
+  jevInputTokens: number;
+} {
   const c = (typeof cost === 'object' && cost !== null ? cost : {}) as Record<string, unknown>;
   const llm = (typeof c['llm'] === 'object' && c['llm'] !== null ? c['llm'] : {}) as Record<
     string,
@@ -72,6 +83,7 @@ export function usageOf(cost: unknown): { sttSeconds: number; ttsChars: number; 
       cacheWrite: num(llm['cacheWrite']),
       output: num(llm['output']),
     },
+    jevInputTokens: num(c['jevInputTokens']),
   };
 }
 
@@ -88,12 +100,15 @@ export function percentile(values: readonly number[], p: number): number | null 
 
 const sttUsd = (seconds: number) => (seconds / 3_600) * PRICES.sttPerHour;
 const ttsUsd = (chars: number) => (chars / 1_000) * PRICES.ttsPerThousandChars;
+const judgeUsd = (tokens: number) => (tokens / 1_000_000) * PRICES.jevInputPerMillion;
 
 export function costRecordOf(call: CostInputs, summaryUsd = 0): CostRecord {
   const replyMs = (call.samples?.replyOut ?? []).map(Math.round);
   const stt = roundUsd(sttUsd(call.sttSeconds));
   const tts = roundUsd(ttsUsd(call.ttsChars));
   const llm = roundUsd(tokenUsd(call.llm, PRICES.haiku));
+  const jevInputTokens = call.jevInputTokens ?? 0;
+  const judge = roundUsd(judgeUsd(jevInputTokens));
   return {
     callId: call.callId,
     userId: call.userId,
@@ -108,7 +123,15 @@ export function costRecordOf(call: CostInputs, summaryUsd = 0): CostRecord {
     sttSeconds: Math.round(call.sttSeconds * 10) / 10,
     ttsChars: call.ttsChars,
     llm: call.llm,
-    usd: { stt, tts, llm, summary: summaryUsd, total: roundUsd(stt + tts + llm + summaryUsd) },
+    jevInputTokens,
+    usd: {
+      stt,
+      tts,
+      llm,
+      judge,
+      summary: summaryUsd,
+      total: roundUsd(stt + tts + llm + judge + summaryUsd),
+    },
     replyMs,
     replyP50Ms: percentile(replyMs, 50),
     replyP90Ms: percentile(replyMs, 90),
@@ -122,9 +145,10 @@ export async function insertCallCost(db: D1Database, record: CostRecord): Promis
       `INSERT INTO call_costs (call_id, user_id, kind, scene_id, started_at, ended_at, end_reason,
          learner_seconds, character_seconds, turns, stt_seconds, tts_chars, llm_input_tokens,
          llm_cache_read_tokens, llm_cache_write_tokens, llm_output_tokens, stt_usd, tts_usd,
-         llm_usd, summary_usd, reply_ms, reply_p50_ms, reply_p90_ms, phone_ms)
+         llm_usd, summary_usd, reply_ms, reply_p50_ms, reply_p90_ms, phone_ms,
+         judge_input_tokens, judge_usd)
        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18,
-         ?19, ?20, ?21, ?22, ?23, ?24)
+         ?19, ?20, ?21, ?22, ?23, ?24, ?25, ?26)
        ON CONFLICT (call_id) DO NOTHING`,
     )
     .bind(
@@ -152,6 +176,8 @@ export async function insertCallCost(db: D1Database, record: CostRecord): Promis
       record.replyP50Ms,
       record.replyP90Ms,
       JSON.stringify(record.phoneMs),
+      record.jevInputTokens,
+      record.usd.judge,
     )
     .run();
 }
@@ -194,6 +220,8 @@ interface CostRow {
   reply_p50_ms: number | null;
   reply_p90_ms: number | null;
   phone_ms: string;
+  judge_input_tokens: number;
+  judge_usd: number;
 }
 
 const numbers = (raw: string): number[] => {
@@ -224,12 +252,14 @@ const recordOfRow = (row: CostRow): CostRecord => ({
     cacheWrite: row.llm_cache_write_tokens,
     output: row.llm_output_tokens,
   },
+  jevInputTokens: row.judge_input_tokens,
   usd: {
     stt: row.stt_usd,
     tts: row.tts_usd,
     llm: row.llm_usd,
+    judge: row.judge_usd,
     summary: row.summary_usd,
-    total: roundUsd(row.stt_usd + row.tts_usd + row.llm_usd + row.summary_usd),
+    total: roundUsd(row.stt_usd + row.tts_usd + row.llm_usd + row.judge_usd + row.summary_usd),
   },
   replyMs: numbers(row.reply_ms),
   replyP50Ms: row.reply_p50_ms,

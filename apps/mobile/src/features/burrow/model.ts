@@ -48,6 +48,8 @@ export interface BurrowInput {
   readonly seen: ReadonlySet<WeekOneUnlock>;
   /** How the burrow greets this open: normal, or back after a few days away. */
   readonly welcome: Welcome;
+  /** The learner settled in with Linh first: every box is already unpacked. */
+  readonly settledIn?: boolean;
 }
 
 /** Which burrow screen the home shows. */
@@ -240,7 +242,7 @@ export function burrowHomeModel(input: BurrowInput): BurrowHomeModel {
   const ring = currentRing(input);
   const plan = planFor(input, ring);
   return {
-    scene: firstEpisodeDone(input.progress) ? 'burrow' : 'burrow-day1',
+    scene: firstEpisodeDone(input.progress) || input.settledIn === true ? 'burrow' : 'burrow-day1',
     timeOfDay: timeOfDayAt(input.hour),
     roommate: input.roommate,
     pipMood: plan.pipMood,

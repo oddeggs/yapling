@@ -28,7 +28,12 @@ export type LineSource =
       readonly params: Anthropic.MessageStreamParams;
       readonly hedge: number;
     }
-  | { readonly kind: 'text'; readonly text: string };
+  | { readonly kind: 'text'; readonly text: string }
+  /**
+   * Says nothing: a turn decided without a reply (a card turn's word match) is held like one, so a
+   * learner still speaking in hands-free is never cut off. It ends at once, or on `release()`.
+   */
+  | { readonly kind: 'hold' };
 
 export interface LineTimings {
   start: number;
@@ -208,6 +213,11 @@ export class SpokenLine {
   }
 
   private async run(): Promise<void> {
+    if (this.options.source.kind === 'hold') {
+      this.ttsDone = true;
+      if (!this.gated) this.finish();
+      return;
+    }
     const ttsSocket = this.host.takeTts(this.options.voice).catch(() => null);
     const openTts = async (): Promise<boolean> => {
       if (this.tts) return true;

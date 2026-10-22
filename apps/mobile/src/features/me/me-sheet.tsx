@@ -1,9 +1,13 @@
-import { colours, outline, palette, type, type TypeStyle } from '@yapling/theme';
+import type { PipSpecies } from '@yapling/art';
+import { colours, outline, palette, stickerShadows, type, type TypeStyle } from '@yapling/theme';
+import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 
-import { CritterSlot, Press, Txt } from '../../ui';
+import { Press, Sticker, Txt } from '../../ui';
+import { Face } from '../burrow/art';
+import { Dial } from '../payoff/too-hard-sheet';
 import { RowsCard } from './me-frame';
-import type { CanDoGroup, MeView } from './me-model';
+import type { CanDoGroup, MeView, SettlingCard } from './me-model';
 
 /** The prototype's Me sheet sizes, from the nearest theme styles. */
 const meType = {
@@ -12,11 +16,16 @@ const meType = {
   section: { ...type.section, size: 12, uppercase: true },
   group: type.label,
   canDo: { ...type.item, size: 13.5, lineHeight: 1.2 },
-  rowTitle: type.item,
+  canDoVisitor: { ...type.item, size: 14, lineHeight: 1.3 },
+  settlingCount: { ...type.note, weight: 700 },
+  rowTitle: { ...type.item, size: 14, lineHeight: 1.3 },
   rowNote: { ...type.rowSub, size: 11.5 },
   rowLink: { ...type.note, weight: 800 },
   rowValue: type.rowSub,
   chevron: { ...type.buttonPair },
+  canDoGloss: { ...type.glossSmall, size: 15, lineHeight: 1.2 },
+  settlingTitle: { ...type.item, weight: 800, lineHeight: 1.3 },
+  settlingSub: { ...type.rowSub, size: 11.5, lineHeight: 1.3 },
 } as const satisfies Record<string, TypeStyle>;
 
 /** The plum of the "Get more with Plus" link; the theme has no name for it yet. */
@@ -26,6 +35,8 @@ const GROUP_FILL = { life: colours.successSoft, work: colours.secondarySoft } as
 
 export interface MeSheetProps {
   readonly view: MeView;
+  /** The roommate's species, for its face at the top. */
+  readonly species?: PipSpecies;
   readonly onPlus: () => void;
   readonly onMinutes: () => void;
   readonly onProgress: () => void;
@@ -34,11 +45,18 @@ export interface MeSheetProps {
   readonly onHelp: () => void;
   readonly onAiExplainer: () => void;
   readonly onDeleteData: () => void;
+  /** The Settling-in card's rows. */
+  readonly onReplay?: () => void;
+  readonly onFaster?: () => void;
+  readonly onTooHard?: () => void;
+  /** The faster row stays pressed while its confirm sheet is up. */
+  readonly fasterOpen?: boolean;
 }
 
 /** The learner's page: their stage, what they can now do, and the rows below. */
 export function MeSheet({
   view,
+  species = 'redpanda',
   onPlus,
   onMinutes,
   onProgress,
@@ -47,6 +65,10 @@ export function MeSheet({
   onHelp,
   onAiExplainer,
   onDeleteData,
+  onReplay,
+  onFaster,
+  onTooHard,
+  fasterOpen = false,
 }: MeSheetProps) {
   return (
     <>
@@ -63,13 +85,17 @@ export function MeSheet({
             justifyContent: 'center',
           }}
         >
-          <CritterSlot kind="face" size={52} />
+          <Face character="pip" species={species} size={58} background={colours.accentSoft} />
         </View>
         <View style={{ flex: 1, gap: 4 }}>
           <Txt variant={meType.name} accessibilityRole="header">
             {view.name}
           </Txt>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <View
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}
+            accessible
+            accessibilityLabel={view.stage.a11y}
+          >
             <View
               style={{
                 paddingVertical: 2,
@@ -77,30 +103,34 @@ export function MeSheet({
                 borderRadius: 8,
                 borderWidth: outline.thin,
                 borderColor: colours.outline,
-                backgroundColor: colours.successSoft,
+                backgroundColor: view.stage.visitor ? colours.secondarySoft : colours.successSoft,
               }}
             >
               <Txt variant={meType.stage} numberOfLines={1}>
                 {view.stage.label}
               </Txt>
             </View>
-            <View
-              style={{ flexDirection: 'row', gap: 3 }}
-              accessible
-              accessibilityLabel={view.stage.a11y}
-            >
-              {Array.from({ length: view.stage.of }, (_, i) => (
-                <View
-                  key={i}
-                  style={{
-                    width: 14,
-                    height: 6,
-                    borderRadius: 3,
-                    backgroundColor: i < view.stage.step ? colours.outline : palette.line,
-                  }}
-                />
-              ))}
-            </View>
+            {view.stage.settling ? (
+              <Txt variant={meType.settlingCount} colour={colours.textMuted} numberOfLines={1}>
+                {view.stage.settling}
+              </Txt>
+            ) : null}
+            {view.stage.steps ? (
+              <View style={{ flexDirection: 'row', gap: 3 }}>
+                {Array.from({ length: view.stage.steps.of }, (_, i) => (
+                  <View
+                    key={i}
+                    style={{
+                      width: 14,
+                      height: 6,
+                      borderRadius: 3,
+                      backgroundColor:
+                        i < (view.stage.steps?.step ?? 0) ? colours.outline : palette.line,
+                    }}
+                  />
+                ))}
+              </View>
+            ) : null}
           </View>
         </View>
       </View>
@@ -112,15 +142,28 @@ export function MeSheet({
         <Group key={g.track} group={g} />
       ))}
 
-      <RowsCard>
-        <Row
-          first
-          dot={palette.honey}
-          title={view.progress.title}
-          note={view.progress.note}
-          onPress={onProgress}
+      {view.settling ? (
+        <Settling
+          card={view.settling}
+          fasterOpen={fasterOpen}
+          onReplay={onReplay}
+          onFaster={onFaster}
+          onTooHard={onTooHard}
         />
+      ) : null}
+
+      <RowsCard>
+        {view.progress ? (
+          <Row
+            first
+            dot={palette.honey}
+            title={view.progress.title}
+            note={view.progress.note}
+            onPress={onProgress}
+          />
+        ) : null}
         <Row
+          first={view.progress === null}
           dot={colours.success}
           title={view.minutes.title}
           value={view.minutes.value}
@@ -139,6 +182,10 @@ export function MeSheet({
           value={view.notifications.value}
           onPress={onNotifications}
         />
+        {/*
+          Hands-free: the turn-mode setting ("Rảnh tay") goes here, between quiet hours and help,
+          once the hands-free preference is on main.
+        */}
         <Row dot={colours.surface} title={view.help} onPress={onHelp} />
       </RowsCard>
 
@@ -153,31 +200,33 @@ export function MeSheet({
 function Group({ group }: { group: CanDoGroup }) {
   return (
     <RowsCard>
-      <View
-        style={{
-          paddingVertical: 6,
-          paddingHorizontal: 12,
-          backgroundColor: GROUP_FILL[group.track],
-        }}
-      >
-        <Txt variant={meType.group} accessibilityRole="header">
-          {group.name}
-        </Txt>
-      </View>
-      {group.items.map((item) => (
+      {group.name !== null ? (
+        <View
+          style={{
+            paddingVertical: 6,
+            paddingHorizontal: 12,
+            backgroundColor: GROUP_FILL[group.track],
+          }}
+        >
+          <Txt variant={meType.group} accessibilityRole="header">
+            {group.name}
+          </Txt>
+        </View>
+      ) : null}
+      {group.items.map((item, i) => (
         <View
           key={item.id}
           accessible
           accessibilityRole="checkbox"
           accessibilityState={{ checked: item.ticked }}
-          accessibilityLabel={item.title}
+          accessibilityLabel={item.gloss ? `${item.title}. ${item.gloss}` : item.title}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             gap: 10,
-            paddingVertical: 8,
+            paddingVertical: item.gloss ? 9 : 8,
             paddingHorizontal: 12,
-            borderTopWidth: 1,
+            borderTopWidth: group.name === null && i === 0 ? 0 : 1,
             borderTopColor: colours.divider,
           }}
         >
@@ -198,16 +247,168 @@ function Group({ group }: { group: CanDoGroup }) {
               <Text style={{ fontSize: 11, fontWeight: '900', color: colours.text }}>✓</Text>
             ) : null}
           </View>
-          <Txt
-            variant={meType.canDo}
-            colour={item.ticked ? colours.text : colours.textMuted}
-            style={{ flex: 1 }}
-          >
-            {item.title}
-          </Txt>
+          <View style={{ flex: 1 }}>
+            <Txt
+              variant={item.gloss ? meType.canDoVisitor : meType.canDo}
+              colour={item.ticked ? colours.text : colours.textMuted}
+            >
+              {item.title}
+            </Txt>
+            {item.gloss ? (
+              <Txt variant={meType.canDoGloss} colour={colours.textGloss}>
+                {item.gloss}
+              </Txt>
+            ) : null}
+          </View>
         </View>
       ))}
     </RowsCard>
+  );
+}
+
+/** A Settling-in row: its round picture, title and line, and a chevron. */
+function SettlingRowView({
+  icon,
+  title,
+  sub,
+  first,
+  pressed,
+  onPress,
+}: {
+  icon: ReactNode;
+  title: string;
+  sub: string;
+  first: boolean;
+  pressed: boolean;
+  onPress: (() => void) | undefined;
+}) {
+  return (
+    <Press
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${title}. ${sub}`}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+        minHeight: 54,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderTopWidth: first ? 0 : 1,
+        borderTopColor: colours.divider,
+        backgroundColor: pressed ? colours.divider : colours.surface,
+      }}
+    >
+      {icon}
+      <View style={{ flex: 1 }}>
+        <Txt variant={meType.settlingTitle}>{title}</Txt>
+        <Txt variant={meType.settlingSub} colour={colours.textMuted}>
+          {sub}
+        </Txt>
+      </View>
+      <Txt variant={meType.chevron} colour={palette.dotted}>
+        ›
+      </Txt>
+    </Press>
+  );
+}
+
+const roundIcon = {
+  width: 34,
+  height: 34,
+  borderRadius: 17,
+  borderWidth: outline.thin,
+  borderColor: colours.outline,
+  overflow: 'hidden',
+  alignItems: 'center',
+  justifyContent: 'center',
+} as const;
+
+/** "LÀM QUEN": replay a chapter with Linh, try it faster, or "too hard?". */
+function Settling({
+  card,
+  fasterOpen,
+  onReplay,
+  onFaster,
+  onTooHard,
+}: {
+  card: SettlingCard;
+  fasterOpen: boolean;
+  onReplay: (() => void) | undefined;
+  onFaster: (() => void) | undefined;
+  onTooHard: (() => void) | undefined;
+}) {
+  const rows = [
+    card.replay
+      ? {
+          key: 'replay',
+          row: card.replay,
+          onPress: onReplay,
+          icon: (
+            <View style={roundIcon}>
+              <Face character="linh" size={30} background={colours.secondarySoft} />
+            </View>
+          ),
+        }
+      : null,
+    card.faster
+      ? {
+          key: 'faster',
+          row: card.faster,
+          onPress: onFaster,
+          icon: (
+            <View style={[roundIcon, { backgroundColor: colours.success }]}>
+              <Dial size={18} speed="fast" />
+            </View>
+          ),
+        }
+      : null,
+    card.tooHard
+      ? {
+          key: 'tooHard',
+          row: card.tooHard,
+          onPress: onTooHard,
+          icon: (
+            <View style={[roundIcon, { backgroundColor: colours.accentSoft }]}>
+              <Txt variant={{ ...type.item, size: 15, weight: 900 }}>?</Txt>
+            </View>
+          ),
+        }
+      : null,
+  ].filter((r) => r !== null);
+  return (
+    <Sticker
+      shadow={stickerShadows.button}
+      radius={18}
+      outline={outline.regular}
+      fill={colours.surface}
+      contentStyle={{ overflow: 'hidden', borderRadius: 16 }}
+    >
+      <View
+        style={{
+          paddingVertical: 6,
+          paddingHorizontal: 12,
+          backgroundColor: colours.highlight,
+          borderBottomWidth: outline.thin,
+          borderBottomColor: colours.outline,
+        }}
+      >
+        <Txt variant={meType.group} accessibilityRole="header">
+          {card.title}
+        </Txt>
+      </View>
+      {rows.map((r, i) => (
+        <SettlingRowView
+          key={r.key}
+          icon={r.icon}
+          title={r.row.title}
+          sub={r.row.sub}
+          first={i === 0}
+          pressed={r.key === 'faster' && fasterOpen}
+          onPress={r.onPress}
+        />
+      ))}
+    </Sticker>
   );
 }
 
@@ -231,19 +432,19 @@ function Row({ dot, title, note, value, link, onPress, first = false }: RowProps
         flexDirection: 'row',
         alignItems: 'center',
         gap: 10,
-        minHeight: 42,
+        minHeight: 44,
         paddingVertical: 5,
         paddingHorizontal: 12,
         borderTopWidth: first ? 0 : 1,
         borderTopColor: colours.divider,
       }}
     >
-      {/* The prototype's 10-point dot inside its 2-point edge. */}
+      {/* The design's 10-point dot inside its 2-point edge, its corners rounded by 5. */}
       <View
         style={{
           width: 14,
           height: 14,
-          borderRadius: 7,
+          borderRadius: 5,
           borderWidth: outline.thin,
           borderColor: colours.outline,
           backgroundColor: dot,
