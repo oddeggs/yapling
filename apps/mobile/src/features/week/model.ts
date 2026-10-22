@@ -20,7 +20,13 @@ import {
   type BurrowProgress,
   type FaceSpec,
 } from '../burrow/model';
-import { episodeOfScene, guestOf, ringSceneFor, SEASON_WEEKS } from '../burrow/ring-scenes';
+import {
+  episodeOfScene,
+  guestOf,
+  isReplay,
+  ringSceneFor,
+  SEASON_WEEKS,
+} from '../burrow/ring-scenes';
 import { callRoute } from '../burrow/routes';
 
 /*
@@ -300,7 +306,9 @@ function laterWeekModel(input: WeekInput): WeekModel {
       key: slot.kind,
       kind: slot.kind,
       fromWeek: null,
-      tag: slot.sceneId === null ? copy('week.slot.replay') : SLOT_TAG[slot.kind],
+      tag: isReplay(week.week, slot.kind, slot.sceneId)
+        ? copy('week.slot.replay')
+        : SLOT_TAG[slot.kind],
       title: callTitle(slot.kind, sceneId),
       when,
       face: faceFor(slot.kind, sceneId),

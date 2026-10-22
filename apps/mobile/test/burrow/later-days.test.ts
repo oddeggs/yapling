@@ -215,6 +215,17 @@ describe('the week view after the first week', () => {
     expect(w.phrases).toHaveLength(SEASON_1.episodes[2]?.phrases.length ?? 0);
   });
 
+  it('names a call whose day hasn’t come by its own week’s scene, not as a replay', () => {
+    const w = week(22);
+    expect(w.rows.map((r) => render(vi, r.tag))).toEqual(['Tập truyện', 'Tuần thật', 'Luyện tập']);
+    expect(w.rows.map((r) => render(vi, r.title))).toEqual([
+      'S1 · E4 · The Plan',
+      'Speak up in your meeting',
+      "Nell's time, then two words",
+    ]);
+    expect(w.rows.map((r) => r.target)).toEqual(['/(call)/s1-e4', null, null]);
+  });
+
   it('keeps a call from an earlier week waiting in its own row', () => {
     // Away in week 3; back on day 22 the learner plays Episode 3 only.
     const p = previewModel(22, { missed: [3] }, NOW);

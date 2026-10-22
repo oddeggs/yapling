@@ -1,6 +1,6 @@
 import type { Character } from '@yapling/art';
 import type { CharacterId, Id, LocalDate, RingSlotKind, WeekRing } from '@yapling/contracts';
-import { storyWeek, type StoryWeek } from '@yapling/domain';
+import { ringSceneOf, storyWeek, type StoryWeek } from '@yapling/domain';
 import { findScene, SEASON_1, seasonWeeks, type Episode, type Scene } from '@yapling/story';
 
 /*
@@ -30,11 +30,19 @@ const REPLAYS: Readonly<Record<RingSlotKind, readonly Scene[]>> = {
 export const FIRST_REPLAY_WEEK = EPISODES.length + 1;
 
 /**
+ * A slot's own scene: the one it carries, or (a slot whose day hasn't come carries none yet) the
+ * one its week names. Null for a week with no call of that kind: its slot replays.
+ */
+const ownScene = (week: number, kind: RingSlotKind, sceneId: Id | null): Id | null =>
+  sceneId ?? ringSceneOf(SEASON_WEEKS[week - 1], kind);
+
+/**
  * The scene a ring slot plays: its own scene when the week names one, else a replay. Replays go
  * round the season's scenes of the slot's kind, Episode 1's first in the first replay week.
  */
 export function ringSceneFor(week: number, kind: RingSlotKind, sceneId: Id | null): Id {
-  if (sceneId !== null) return sceneId;
+  const own = ownScene(week, kind, sceneId);
+  if (own !== null) return own;
   const replays = REPLAYS[kind];
   const index = (((week - FIRST_REPLAY_WEEK) % replays.length) + replays.length) % replays.length;
   const scene = replays[index] ?? replays[0];
@@ -43,7 +51,8 @@ export function ringSceneFor(week: number, kind: RingSlotKind, sceneId: Id | nul
 }
 
 /** Whether a slot plays a replay (its week names no scene of its own for it). */
-export const isReplay = (sceneId: Id | null): boolean => sceneId === null;
+export const isReplay = (week: number, kind: RingSlotKind, sceneId: Id | null): boolean =>
+  ownScene(week, kind, sceneId) === null;
 
 /** The episode a scene belongs to, if any. */
 export const episodeOfScene = (sceneId: Id): Episode | undefined =>

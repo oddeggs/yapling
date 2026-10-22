@@ -72,7 +72,7 @@ export const CARD_IDS = {
 
 const ringThing = (week: number, kind: RingSlotKind, own: Id | null, done: boolean): Thing => {
   const sceneId = ringSceneFor(week, kind, own);
-  const replay = isReplay(own);
+  const replay = isReplay(week, kind, own);
   return {
     id: replay ? `replay-${week}-${sceneId}` : sceneId,
     kind,
