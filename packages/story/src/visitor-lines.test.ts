@@ -18,7 +18,7 @@ import {
 import type { Answer, Beat } from './types';
 
 const source = JSON.parse(readFileSync(LINES_JSON, 'utf8')) as {
-  lines: { id: string }[];
+  lines: { id: string; lang?: string }[];
   pending?: { id: string; lang?: string }[];
 };
 const pendingIds = (source.pending ?? []).map((l) => l.id);
@@ -76,7 +76,9 @@ describe('lines waiting for their recording', () => {
   });
 
   it('marks Linh’s Vietnamese, and carries the English it means', () => {
-    const vi = (source.pending ?? []).filter((l) => l.lang === 'vi').map((l) => l.id);
+    const vi = [...source.lines, ...(source.pending ?? [])]
+      .filter((l) => l.lang === 'vi')
+      .map((l) => l.id);
     expect(vi).toHaveLength(7);
     for (const id of vi) {
       const line = findLine(id);

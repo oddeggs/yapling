@@ -379,40 +379,30 @@
       "char": "office",
       "text": "[thoughtful] Hmm,",
       "kind": "reaction"
-    }
-  ],
-  "pending": [
+    },
     {
       "id": "s1-set1-01",
       "char": "linh",
       "text": "[warmly, slowly] Hi! [pause] I'm Linh.",
-      "speed": 0.7,
-      "mp3": "s1-set1-01-linh.mp3",
-      "timing": "s1-set1-01-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set1-02",
       "char": "linh",
       "text": "[warmly] Chào bạn! Mình là Linh, ở nhà bên cạnh. Hồi mới xuống phà, mình cũng chưa nói được câu nào đâu. Giờ mình nói trước, bạn nói theo nhé.",
-      "lang": "vi",
-      "mp3": "s1-set1-02-linh.mp3",
-      "timing": "s1-set1-02-linh.timing.json"
+      "lang": "vi"
     },
     {
       "id": "s1-set1-03",
       "char": "pip",
       "text": "[excited, slowly] Hi! [pause] Hi, Linh!",
-      "speed": 0.7,
-      "mp3": "s1-set1-03-pip.mp3",
-      "timing": "s1-set1-03-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set1-04",
       "char": "linh",
       "text": "[slowly, clearly] I'm Linh. [pause] And you?",
-      "speed": 0.7,
-      "mp3": "s1-set1-04-linh.mp3",
-      "timing": "s1-set1-04-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set1-05",
@@ -420,498 +410,375 @@
       "text": "[warmly, slowly] Nice [long pause] to meet you.",
       "speed": 0.7,
       "name_splice": "before",
-      "_full": "{name}! Nice to meet you.",
-      "mp3": "s1-set1-05-linh.mp3",
-      "timing": "s1-set1-05-linh.timing.json"
+      "_full": "{name}! Nice to meet you."
     },
     {
       "id": "s1-set1-06",
       "char": "pip",
       "text": "[excited, slowly] Nice [pause] to meet you, [pause] too! [long pause] I'm Pip!",
-      "speed": 0.7,
-      "mp3": "s1-set1-06-pip.mp3",
-      "timing": "s1-set1-06-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set1-07",
       "char": "linh",
       "text": "[slowly, clearly] Bye! [pause] See you tomorrow.",
-      "speed": 0.7,
-      "mp3": "s1-set1-07-linh.mp3",
-      "timing": "s1-set1-07-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set1-08",
       "char": "linh",
       "text": "[warmly] Bạn vừa nói tiếng Anh rồi đó! Mai gặp lại nhé.",
-      "lang": "vi",
-      "mp3": "s1-set1-08-linh.mp3",
-      "timing": "s1-set1-08-linh.timing.json"
+      "lang": "vi"
     },
     {
       "id": "s1-set2-01",
       "char": "pip",
       "text": "[slowly, clearly] So many boxes! [pause] Help, please!",
-      "speed": 0.7,
-      "mp3": "s1-set2-01-pip.mp3",
-      "timing": "s1-set2-01-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set2-02",
       "char": "linh",
       "text": "[warmly] Mình hỏi, bạn chọn một thẻ rồi đọc to lên nhé.",
-      "lang": "vi",
-      "mp3": "s1-set2-02-linh.mp3",
-      "timing": "s1-set2-02-linh.timing.json"
+      "lang": "vi"
     },
     {
       "id": "s1-set2-03",
       "char": "linh",
       "text": "[slowly, clearly] Is this [pause] your box?",
-      "speed": 0.7,
-      "mp3": "s1-set2-03-linh.mp3",
-      "timing": "s1-set2-03-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set2-04",
       "char": "linh",
       "text": "[slowly, clearly] Books or clothes?",
-      "speed": 0.7,
-      "mp3": "s1-set2-04-linh.mp3",
-      "timing": "s1-set2-04-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set2-05",
       "char": "pip",
       "text": "[excited, slowly] Tea? [pause] For you!",
-      "speed": 0.7,
-      "mp3": "s1-set2-05-pip.mp3",
-      "timing": "s1-set2-05-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set2-06",
       "char": "linh",
       "text": "[warmly, slowly] A gift [pause] for you. [long pause] Here you go!",
-      "speed": 0.7,
-      "mp3": "s1-set2-06-linh.mp3",
-      "timing": "s1-set2-06-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set2-07",
       "char": "linh",
       "text": "[warmly, slowly] You're welcome!",
-      "speed": 0.7,
-      "mp3": "s1-set2-07-linh.mp3",
-      "timing": "s1-set2-07-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set2-08",
       "char": "pip",
       "text": "[excited, slowly] One box done! [pause] Thank you!",
-      "speed": 0.7,
-      "mp3": "s1-set2-08-pip.mp3",
-      "timing": "s1-set2-08-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set3-01",
       "char": "linh",
       "text": "[warmly] Mình chỉ bạn hai câu cứu nguy nhé. Không nghe kịp thì nói: Sorry? Again, please. Người ta nói nhanh quá thì nói: Slowly, please. Ở Natterwick, ai cũng sẵn lòng nói lại cho bạn.",
-      "lang": "vi",
-      "mp3": "s1-set3-01-linh.mp3",
-      "timing": "s1-set3-01-linh.timing.json"
+      "lang": "vi"
     },
     {
       "id": "s1-set3-02",
       "char": "linh",
       "text": "[warmly, slowly] Sorry? [pause] Again, please.",
-      "speed": 0.7,
-      "mp3": "s1-set3-02-linh.mp3",
-      "timing": "s1-set3-02-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set3-03",
       "char": "linh",
       "text": "[slowly, clearly] Slowly, please.",
-      "speed": 0.7,
-      "mp3": "s1-set3-03-linh.mp3",
-      "timing": "s1-set3-03-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set3-04",
       "char": "pip",
       "text": "[excited, fast] Ooh, I found my snacks and my map and my notebook!",
-      "speed": 1.0,
-      "mp3": "s1-set3-04-pip.mp3",
-      "timing": "s1-set3-04-pip.timing.json"
+      "speed": 1.0
     },
     {
       "id": "s1-set3-05",
       "char": "pip",
       "text": "[slowly, clearly] Snacks. [pause] Map. [pause] Notebook!",
-      "speed": 0.7,
-      "mp3": "s1-set3-05-pip.mp3",
-      "timing": "s1-set3-05-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set3-06",
       "char": "linh",
       "text": "[warmly, slowly] See? [pause] It works. [pause] Every time.",
-      "speed": 0.7,
-      "mp3": "s1-set3-06-linh.mp3",
-      "timing": "s1-set3-06-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set3-07",
       "char": "linh",
       "text": "[warmly, slowly] Use them every day. [pause] Bye!",
-      "speed": 0.7,
-      "mp3": "s1-set3-07-linh.mp3",
-      "timing": "s1-set3-07-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set4-01",
       "char": "linh",
       "text": "[slowly, clearly] This is [long pause] the bus stop.",
-      "speed": 0.7,
-      "mp3": "s1-set4-01-linh.mp3",
-      "timing": "s1-set4-01-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set4-02",
       "char": "bea",
       "text": "[cheerful, slowly] Morning! [pause] This is Bus forty-five.",
-      "speed": 0.7,
-      "mp3": "s1-set4-02-bea.mp3",
-      "timing": "s1-set4-02-bea.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set4-03",
       "char": "linh",
       "text": "[slowly, clearly] Which bus? [pause] Forty-five or fifty?",
-      "speed": 0.7,
-      "mp3": "s1-set4-03-linh.mp3",
-      "timing": "s1-set4-03-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set4-04",
       "char": "bea",
       "text": "[cheerful, slowly] I leave [pause] at nine.",
-      "speed": 0.7,
-      "mp3": "s1-set4-04-bea.mp3",
-      "timing": "s1-set4-04-bea.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set4-05",
       "char": "linh",
       "text": "[slowly, clearly] What time? [pause] Nine [pause] or ten?",
-      "speed": 0.7,
-      "mp3": "s1-set4-05-linh.mp3",
-      "timing": "s1-set4-05-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set4-06",
       "char": "bea",
       "text": "[cheerful] Tickets are two dollars each, love.",
-      "speed": 0.92,
-      "mp3": "s1-set4-06-bea.mp3",
-      "timing": "s1-set4-06-bea.timing.json"
+      "speed": 0.92
     },
     {
       "id": "s1-set4-07",
       "char": "linh",
       "text": "[slowly, clearly] How many tickets? [pause] One [pause] or two?",
-      "speed": 0.7,
-      "mp3": "s1-set4-07-linh.mp3",
-      "timing": "s1-set4-07-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set4-08",
       "char": "bea",
       "text": "[cheerful, slowly] Two tickets. [long pause] Here you go!",
-      "speed": 0.7,
-      "mp3": "s1-set4-08-bea.mp3",
-      "timing": "s1-set4-08-bea.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set4-09",
       "char": "bea",
       "text": "[cheerful, slowly] Lovely! [long pause] Have a nice day!",
-      "speed": 0.7,
-      "mp3": "s1-set4-09-bea.mp3",
-      "timing": "s1-set4-09-bea.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set5-01",
       "char": "mei",
       "text": "[cheerful, slowly] Hi! [long pause] Welcome to my café!",
-      "speed": 0.7,
-      "mp3": "s1-set5-01-mei.mp3",
-      "timing": "s1-set5-01-mei.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set5-02",
       "char": "mei",
       "text": "[slowly, clearly] I'm Mei. [pause] Tea or coffee?",
-      "speed": 0.7,
-      "mp3": "s1-set5-02-mei.mp3",
-      "timing": "s1-set5-02-mei.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set5-03",
       "char": "mei",
       "text": "[cheerful, slowly] Kaya toast too? [long pause] It's really good!",
-      "speed": 0.7,
-      "mp3": "s1-set5-03-mei.mp3",
-      "timing": "s1-set5-03-mei.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set5-04",
       "char": "pip",
       "text": "[whispers, slowly] Ask her: [pause] how much?",
-      "speed": 0.7,
-      "mp3": "s1-set5-04-pip.mp3",
-      "timing": "s1-set5-04-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set5-05",
       "char": "mei",
       "text": "[slowly, clearly] Three dollars, [pause] please.",
-      "speed": 0.7,
-      "mp3": "s1-set5-05-mei.mp3",
-      "timing": "s1-set5-05-mei.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set5-06",
       "char": "mei",
       "text": "[cheerful, slowly] Thanks lah. [pause] Enjoy!",
-      "speed": 0.7,
-      "mp3": "s1-set5-06-mei.mp3",
-      "timing": "s1-set5-06-mei.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set5-07",
       "char": "mei",
       "text": "[tired, slowly] [sighs] Okay. [pause] Back [pause] to work.",
-      "speed": 0.7,
-      "mp3": "s1-set5-07-mei.mp3",
-      "timing": "s1-set5-07-mei.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set5-08",
       "char": "pip",
       "text": "[whispers, slowly] Mei [pause] looks tired.",
-      "speed": 0.7,
-      "mp3": "s1-set5-08-pip.mp3",
-      "timing": "s1-set5-08-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set6-01",
       "char": "pip",
       "text": "[excited, slowly] I'm writing a page [pause] about you!",
-      "speed": 0.7,
-      "mp3": "s1-set6-01-pip.mp3",
-      "timing": "s1-set6-01-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set6-02",
       "char": "linh",
       "text": "[slowly, clearly] I'm from Vietnam. [pause] And you?",
-      "speed": 0.7,
-      "mp3": "s1-set6-02-linh.mp3",
-      "timing": "s1-set6-02-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set6-03",
       "char": "linh",
       "text": "[slowly, clearly] I work [pause] at the library. [pause] And you?",
-      "speed": 0.7,
-      "mp3": "s1-set6-03-linh.mp3",
-      "timing": "s1-set6-03-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set6-04",
       "char": "pip",
       "text": "[slowly, clearly] I like snacks! [pause] And you?",
-      "speed": 0.7,
-      "mp3": "s1-set6-04-pip.mp3",
-      "timing": "s1-set6-04-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set6-05",
       "char": "linh",
       "text": "[warmly] Giỏi lắm! Bạn sẵn sàng rồi đó. Mai mình gặp nhau ở quán của Mei nhé.",
-      "lang": "vi",
-      "mp3": "s1-set6-05-linh.mp3",
-      "timing": "s1-set6-05-linh.timing.json"
+      "lang": "vi"
     },
     {
       "id": "s1-set6-06",
       "char": "pip",
       "text": "[surprised, slowly] Look! [pause] A letter [pause] under Mei's door!",
-      "speed": 0.7,
-      "mp3": "s1-set6-06-pip.mp3",
-      "timing": "s1-set6-06-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-linh-great",
       "char": "linh",
       "text": "[warmly, slowly] Great!",
-      "speed": 0.7,
-      "mp3": "s1-set-linh-great-linh.mp3",
-      "timing": "s1-set-linh-great-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-linh-yes",
       "char": "linh",
       "text": "[warmly, slowly] Yes!",
-      "speed": 0.7,
-      "mp3": "s1-set-linh-yes-linh.mp3",
-      "timing": "s1-set-linh-yes-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-pip-great",
       "char": "pip",
       "text": "[excited, slowly] Great!",
-      "speed": 0.7,
-      "mp3": "s1-set-pip-great-pip.mp3",
-      "timing": "s1-set-pip-great-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-pip-yes",
       "char": "pip",
       "text": "[excited, slowly] Yes!",
-      "speed": 0.7,
-      "mp3": "s1-set-pip-yes-pip.mp3",
-      "timing": "s1-set-pip-yes-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-mei-great",
       "char": "mei",
       "text": "[cheerful, slowly] Great!",
-      "speed": 0.7,
-      "mp3": "s1-set-mei-great-mei.mp3",
-      "timing": "s1-set-mei-great-mei.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-bea-lovely",
       "char": "bea",
       "text": "[cheerful, slowly] Lovely!",
-      "speed": 0.7,
-      "mp3": "s1-set-bea-lovely-bea.mp3",
-      "timing": "s1-set-bea-lovely-bea.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-linh-okay",
       "char": "linh",
       "text": "[slowly, clearly] Okay!",
-      "speed": 0.7,
-      "mp3": "s1-set-linh-okay-linh.mp3",
-      "timing": "s1-set-linh-okay-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-linh-again",
       "char": "linh",
       "text": "[warmly, slowly] Again?",
-      "speed": 0.7,
-      "mp3": "s1-set-linh-again-linh.mp3",
-      "timing": "s1-set-linh-again-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-mei-okay",
       "char": "mei",
       "text": "[slowly, clearly] Okay!",
-      "speed": 0.7,
-      "mp3": "s1-set-mei-okay-mei.mp3",
-      "timing": "s1-set-mei-okay-mei.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-bea-right",
       "char": "bea",
       "text": "[cheerful, slowly] Right!",
-      "speed": 0.7,
-      "mp3": "s1-set-bea-right-bea.mp3",
-      "timing": "s1-set-bea-right-bea.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-linh-slowly",
       "char": "linh",
       "text": "[warmly, clearly] Sure. [pause] Slowly.",
-      "speed": 0.7,
-      "mp3": "s1-set-linh-slowly-linh.mp3",
-      "timing": "s1-set-linh-slowly-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-pip-slowly",
       "char": "pip",
       "text": "[slowly, clearly] Okay! [pause] Slowly.",
-      "speed": 0.7,
-      "mp3": "s1-set-pip-slowly-pip.mp3",
-      "timing": "s1-set-pip-slowly-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-mei-slowly",
       "char": "mei",
       "text": "[warmly, slowly] Sure, sure.",
-      "speed": 0.7,
-      "mp3": "s1-set-mei-slowly-mei.mp3",
-      "timing": "s1-set-mei-slowly-mei.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-bea-slowly",
       "char": "bea",
       "text": "[warmly, slowly] Of course, [pause] love.",
-      "speed": 0.7,
-      "mp3": "s1-set-bea-slowly-bea.mp3",
-      "timing": "s1-set-bea-slowly-bea.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-set-linh-together",
       "char": "linh",
       "text": "[warmly] Mình nói cùng nhau nhé.",
-      "lang": "vi",
-      "mp3": "s1-set-linh-together-linh.mp3",
-      "timing": "s1-set-linh-together-linh.timing.json"
+      "lang": "vi"
     },
     {
       "id": "s1-set-linh-english",
       "char": "linh",
       "text": "[warmly] Bạn thử nói bằng tiếng Anh nhé, cứ đọc thẻ gợi ý là được.",
-      "lang": "vi",
-      "mp3": "s1-set-linh-english-linh.mp3",
-      "timing": "s1-set-linh-english-linh.timing.json"
+      "lang": "vi"
     },
     {
       "id": "s1-set-linh-skip",
       "char": "linh",
       "text": "[warmly, slowly] That's okay!",
-      "speed": 0.7,
-      "mp3": "s1-set-linh-skip-linh.mp3",
-      "timing": "s1-set-linh-skip-linh.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-e1-visitor-rent",
       "char": "pip",
       "text": "[curious, slowly] Rent… is it bread? [pause] Or money?",
-      "speed": 0.7,
-      "mp3": "s1-e1-visitor-rent-pip.mp3",
-      "timing": "s1-e1-visitor-rent-pip.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-e1-visitor-call",
       "char": "mei",
       "text": "[tired, slowly] Can you call them? [long pause] Please?",
-      "speed": 0.7,
-      "mp3": "s1-e1-visitor-call-mei.mp3",
-      "timing": "s1-e1-visitor-call-mei.timing.json"
+      "speed": 0.7
     },
     {
       "id": "s1-e1-visitor-postcard",
       "char": "linh",
       "text": "[warmly, slowly] Remember: [pause] Sorry? [pause] Again, please. [pause] It always works!",
       "kind": "postcard",
-      "speed": 0.7,
-      "mp3": "s1-e1-visitor-postcard-linh.mp3",
-      "timing": "s1-e1-visitor-postcard-linh.timing.json"
+      "speed": 0.7
     }
-  ]
+  ],
+  "pending": []
 }

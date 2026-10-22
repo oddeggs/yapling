@@ -177,20 +177,20 @@ describe('Settling in', () => {
     expect(types(resumeScene(scene, asking.state).effects)).toEqual(['beat_changed', 'hint']);
   });
 
-  it('plays pending lines with the live voice, in Vietnamese for Linh’s', () => {
+  it('plays the recorded lines, in Vietnamese for Linh’s', () => {
     const scene = getScene('s1-set1');
     const hi = startScene(scene, 'visitor');
     expect(hi.effects.at(-1)).toMatchObject({
       type: 'play_rec',
       lineId: 's1-set1-01',
       caption: "Hi! I'm Linh.",
-      recorded: false,
+      recorded: true,
     });
     const vi = send(scene, hi, 'rec_played');
     expect(vi.effects.at(-1)).toMatchObject({
       lineId: 's1-set1-02',
       language: 'vi',
-      recorded: false,
+      recorded: true,
     });
   });
 

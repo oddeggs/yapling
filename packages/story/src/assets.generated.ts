@@ -282,6 +282,270 @@ export const RECORDED_LINE_ASSETS: Readonly<Record<RecordedLineId, RecordedLineA
     audio: () => require("../../../audio/season-1/lines/s1-react-office-hmm-office.mp3") as number,
     timing: () => require("../../../audio/season-1/lines/s1-react-office-hmm-office.timing.json") as LineTiming,
   },
+  "s1-set1-01": {
+    audio: () => require("../../../audio/season-1/lines/s1-set1-01-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set1-01-linh.timing.json") as LineTiming,
+  },
+  "s1-set1-02": {
+    audio: () => require("../../../audio/season-1/lines/s1-set1-02-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set1-02-linh.timing.json") as LineTiming,
+  },
+  "s1-set1-03": {
+    audio: () => require("../../../audio/season-1/lines/s1-set1-03-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set1-03-pip.timing.json") as LineTiming,
+  },
+  "s1-set1-04": {
+    audio: () => require("../../../audio/season-1/lines/s1-set1-04-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set1-04-linh.timing.json") as LineTiming,
+  },
+  "s1-set1-05": {
+    audio: () => require("../../../audio/season-1/lines/s1-set1-05-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set1-05-linh.timing.json") as LineTiming,
+  },
+  "s1-set1-06": {
+    audio: () => require("../../../audio/season-1/lines/s1-set1-06-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set1-06-pip.timing.json") as LineTiming,
+  },
+  "s1-set1-07": {
+    audio: () => require("../../../audio/season-1/lines/s1-set1-07-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set1-07-linh.timing.json") as LineTiming,
+  },
+  "s1-set1-08": {
+    audio: () => require("../../../audio/season-1/lines/s1-set1-08-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set1-08-linh.timing.json") as LineTiming,
+  },
+  "s1-set2-01": {
+    audio: () => require("../../../audio/season-1/lines/s1-set2-01-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set2-01-pip.timing.json") as LineTiming,
+  },
+  "s1-set2-02": {
+    audio: () => require("../../../audio/season-1/lines/s1-set2-02-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set2-02-linh.timing.json") as LineTiming,
+  },
+  "s1-set2-03": {
+    audio: () => require("../../../audio/season-1/lines/s1-set2-03-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set2-03-linh.timing.json") as LineTiming,
+  },
+  "s1-set2-04": {
+    audio: () => require("../../../audio/season-1/lines/s1-set2-04-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set2-04-linh.timing.json") as LineTiming,
+  },
+  "s1-set2-05": {
+    audio: () => require("../../../audio/season-1/lines/s1-set2-05-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set2-05-pip.timing.json") as LineTiming,
+  },
+  "s1-set2-06": {
+    audio: () => require("../../../audio/season-1/lines/s1-set2-06-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set2-06-linh.timing.json") as LineTiming,
+  },
+  "s1-set2-07": {
+    audio: () => require("../../../audio/season-1/lines/s1-set2-07-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set2-07-linh.timing.json") as LineTiming,
+  },
+  "s1-set2-08": {
+    audio: () => require("../../../audio/season-1/lines/s1-set2-08-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set2-08-pip.timing.json") as LineTiming,
+  },
+  "s1-set3-01": {
+    audio: () => require("../../../audio/season-1/lines/s1-set3-01-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set3-01-linh.timing.json") as LineTiming,
+  },
+  "s1-set3-02": {
+    audio: () => require("../../../audio/season-1/lines/s1-set3-02-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set3-02-linh.timing.json") as LineTiming,
+  },
+  "s1-set3-03": {
+    audio: () => require("../../../audio/season-1/lines/s1-set3-03-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set3-03-linh.timing.json") as LineTiming,
+  },
+  "s1-set3-04": {
+    audio: () => require("../../../audio/season-1/lines/s1-set3-04-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set3-04-pip.timing.json") as LineTiming,
+  },
+  "s1-set3-05": {
+    audio: () => require("../../../audio/season-1/lines/s1-set3-05-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set3-05-pip.timing.json") as LineTiming,
+  },
+  "s1-set3-06": {
+    audio: () => require("../../../audio/season-1/lines/s1-set3-06-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set3-06-linh.timing.json") as LineTiming,
+  },
+  "s1-set3-07": {
+    audio: () => require("../../../audio/season-1/lines/s1-set3-07-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set3-07-linh.timing.json") as LineTiming,
+  },
+  "s1-set4-01": {
+    audio: () => require("../../../audio/season-1/lines/s1-set4-01-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set4-01-linh.timing.json") as LineTiming,
+  },
+  "s1-set4-02": {
+    audio: () => require("../../../audio/season-1/lines/s1-set4-02-bea.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set4-02-bea.timing.json") as LineTiming,
+  },
+  "s1-set4-03": {
+    audio: () => require("../../../audio/season-1/lines/s1-set4-03-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set4-03-linh.timing.json") as LineTiming,
+  },
+  "s1-set4-04": {
+    audio: () => require("../../../audio/season-1/lines/s1-set4-04-bea.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set4-04-bea.timing.json") as LineTiming,
+  },
+  "s1-set4-05": {
+    audio: () => require("../../../audio/season-1/lines/s1-set4-05-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set4-05-linh.timing.json") as LineTiming,
+  },
+  "s1-set4-06": {
+    audio: () => require("../../../audio/season-1/lines/s1-set4-06-bea.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set4-06-bea.timing.json") as LineTiming,
+  },
+  "s1-set4-07": {
+    audio: () => require("../../../audio/season-1/lines/s1-set4-07-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set4-07-linh.timing.json") as LineTiming,
+  },
+  "s1-set4-08": {
+    audio: () => require("../../../audio/season-1/lines/s1-set4-08-bea.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set4-08-bea.timing.json") as LineTiming,
+  },
+  "s1-set4-09": {
+    audio: () => require("../../../audio/season-1/lines/s1-set4-09-bea.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set4-09-bea.timing.json") as LineTiming,
+  },
+  "s1-set5-01": {
+    audio: () => require("../../../audio/season-1/lines/s1-set5-01-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set5-01-mei.timing.json") as LineTiming,
+  },
+  "s1-set5-02": {
+    audio: () => require("../../../audio/season-1/lines/s1-set5-02-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set5-02-mei.timing.json") as LineTiming,
+  },
+  "s1-set5-03": {
+    audio: () => require("../../../audio/season-1/lines/s1-set5-03-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set5-03-mei.timing.json") as LineTiming,
+  },
+  "s1-set5-04": {
+    audio: () => require("../../../audio/season-1/lines/s1-set5-04-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set5-04-pip.timing.json") as LineTiming,
+  },
+  "s1-set5-05": {
+    audio: () => require("../../../audio/season-1/lines/s1-set5-05-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set5-05-mei.timing.json") as LineTiming,
+  },
+  "s1-set5-06": {
+    audio: () => require("../../../audio/season-1/lines/s1-set5-06-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set5-06-mei.timing.json") as LineTiming,
+  },
+  "s1-set5-07": {
+    audio: () => require("../../../audio/season-1/lines/s1-set5-07-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set5-07-mei.timing.json") as LineTiming,
+  },
+  "s1-set5-08": {
+    audio: () => require("../../../audio/season-1/lines/s1-set5-08-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set5-08-pip.timing.json") as LineTiming,
+  },
+  "s1-set6-01": {
+    audio: () => require("../../../audio/season-1/lines/s1-set6-01-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set6-01-pip.timing.json") as LineTiming,
+  },
+  "s1-set6-02": {
+    audio: () => require("../../../audio/season-1/lines/s1-set6-02-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set6-02-linh.timing.json") as LineTiming,
+  },
+  "s1-set6-03": {
+    audio: () => require("../../../audio/season-1/lines/s1-set6-03-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set6-03-linh.timing.json") as LineTiming,
+  },
+  "s1-set6-04": {
+    audio: () => require("../../../audio/season-1/lines/s1-set6-04-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set6-04-pip.timing.json") as LineTiming,
+  },
+  "s1-set6-05": {
+    audio: () => require("../../../audio/season-1/lines/s1-set6-05-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set6-05-linh.timing.json") as LineTiming,
+  },
+  "s1-set6-06": {
+    audio: () => require("../../../audio/season-1/lines/s1-set6-06-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set6-06-pip.timing.json") as LineTiming,
+  },
+  "s1-set-linh-great": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-linh-great-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-linh-great-linh.timing.json") as LineTiming,
+  },
+  "s1-set-linh-yes": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-linh-yes-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-linh-yes-linh.timing.json") as LineTiming,
+  },
+  "s1-set-pip-great": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-pip-great-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-pip-great-pip.timing.json") as LineTiming,
+  },
+  "s1-set-pip-yes": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-pip-yes-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-pip-yes-pip.timing.json") as LineTiming,
+  },
+  "s1-set-mei-great": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-mei-great-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-mei-great-mei.timing.json") as LineTiming,
+  },
+  "s1-set-bea-lovely": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-bea-lovely-bea.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-bea-lovely-bea.timing.json") as LineTiming,
+  },
+  "s1-set-linh-okay": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-linh-okay-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-linh-okay-linh.timing.json") as LineTiming,
+  },
+  "s1-set-linh-again": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-linh-again-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-linh-again-linh.timing.json") as LineTiming,
+  },
+  "s1-set-mei-okay": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-mei-okay-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-mei-okay-mei.timing.json") as LineTiming,
+  },
+  "s1-set-bea-right": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-bea-right-bea.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-bea-right-bea.timing.json") as LineTiming,
+  },
+  "s1-set-linh-slowly": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-linh-slowly-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-linh-slowly-linh.timing.json") as LineTiming,
+  },
+  "s1-set-pip-slowly": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-pip-slowly-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-pip-slowly-pip.timing.json") as LineTiming,
+  },
+  "s1-set-mei-slowly": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-mei-slowly-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-mei-slowly-mei.timing.json") as LineTiming,
+  },
+  "s1-set-bea-slowly": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-bea-slowly-bea.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-bea-slowly-bea.timing.json") as LineTiming,
+  },
+  "s1-set-linh-together": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-linh-together-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-linh-together-linh.timing.json") as LineTiming,
+  },
+  "s1-set-linh-english": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-linh-english-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-linh-english-linh.timing.json") as LineTiming,
+  },
+  "s1-set-linh-skip": {
+    audio: () => require("../../../audio/season-1/lines/s1-set-linh-skip-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-set-linh-skip-linh.timing.json") as LineTiming,
+  },
+  "s1-e1-visitor-rent": {
+    audio: () => require("../../../audio/season-1/lines/s1-e1-visitor-rent-pip.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-e1-visitor-rent-pip.timing.json") as LineTiming,
+  },
+  "s1-e1-visitor-call": {
+    audio: () => require("../../../audio/season-1/lines/s1-e1-visitor-call-mei.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-e1-visitor-call-mei.timing.json") as LineTiming,
+  },
+  "s1-e1-visitor-postcard": {
+    audio: () => require("../../../audio/season-1/lines/s1-e1-visitor-postcard-linh.mp3") as number,
+    timing: () => require("../../../audio/season-1/lines/s1-e1-visitor-postcard-linh.timing.json") as LineTiming,
+  },
 };
 
 /** Sound effects (Metro asset ids). */
