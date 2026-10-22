@@ -3,8 +3,9 @@ import { localDateOf, localTimeOf } from '@yapling/domain';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { useAppNow, useCalls, useProfile, useProgress, useSession } from '../../data';
+import { useAppNow, useCalls, useData, useProfile, useProgress, useSession } from '../../data';
 import {
+  callDayOnAppClock,
   chaptersFromCalls,
   letterDayOf,
   mergeChapters,
@@ -48,6 +49,7 @@ export function useSettlingLive(): SettlingLive | null {
   const { progress, updateProgress, refresh: refreshProgress } = useProgress();
   const { calls, refresh: refreshCalls } = useCalls();
   const session = useSession();
+  const data = useData();
   const userId = session.session?.userId ?? null;
   const local = useLocalSettling();
   const timezone = profile?.timezone;
@@ -73,9 +75,12 @@ export function useSettlingLive(): SettlingLive | null {
   const live = useMemo(() => {
     if (profile === null || progress === null || mine === null || timezone === undefined)
       return null;
-    // The test menu's clock may run ahead: a call's day is read on the app's clock.
-    const offset = now - Date.now();
-    const fromCalls = chaptersFromCalls(calls, (at) => localDateOf(at + offset, timezone));
+    // The test menu's clock may run ahead: a call's day is read on the app's clock, by its offset
+    // now (`now` itself only moves with the clock and at midnight, so it can be minutes old).
+    const fromCalls = chaptersFromCalls(
+      calls,
+      callDayOnAppClock(data.clock.now(), Date.now(), timezone),
+    );
     const chapters = mergeChapters(progress.settlingChaptersDone, mine.chapters, fromCalls);
     const storyStartedOn = profile.storyStartedOn ?? mine.storyStartedOn;
     const visitorPath =
@@ -92,7 +97,7 @@ export function useSettlingLive(): SettlingLive | null {
     };
     const hour = Number(localTimeOf(now, timezone).slice(0, 2));
     return { clock, visitorPath, day, hour };
-  }, [profile, progress, mine, calls, now, timezone]);
+  }, [profile, progress, mine, calls, now, timezone, data]);
 
   // Keep the phone's copy, and send the server what it lacks.
   useEffect(() => {
