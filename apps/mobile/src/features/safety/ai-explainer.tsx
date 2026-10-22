@@ -1,3 +1,4 @@
+import { Critter } from '@yapling/art/native';
 import type { Roommate } from '@yapling/contracts';
 import {
   colours,
@@ -14,7 +15,6 @@ import Animated from 'react-native-reanimated';
 
 import {
   BackButton,
-  CritterSlot,
   GlassSheet,
   GlassView,
   StickerButton,
@@ -22,6 +22,8 @@ import {
   useKeyframes,
   useLocale,
 } from '../../ui';
+import { Face } from '../burrow';
+import { BlurredScene } from '../onboarding/art';
 
 /** The neighbours whose faces line up under the title, in the cast's order. */
 const NEIGHBOURS = ['linh', 'mei', 'sol', 'hank', 'nell', 'bea', 'dex'] as const;
@@ -33,7 +35,7 @@ const sheetGlass: Glass = { ...glass.panel, fill: 'rgba(251,250,253,0.9)', blur:
 const SHEET_TOP = 300;
 
 export interface AiExplainerProps {
-  /** The learner's roommate: named in the title, drawn above the sheet once `@yapling/art` lands. */
+  /** The learner's roommate: named in the title and drawn waving above the sheet. */
   readonly roommate: Roommate;
   readonly onDone: () => void;
   /**
@@ -59,15 +61,15 @@ export function AiExplainer({ roommate, onDone, look, onBack }: AiExplainerProps
   ];
   return (
     <View style={{ flex: 1, backgroundColor: colours.surfaceSunken }}>
-      {/* The burrow goes here, blurred, once `@yapling/art` draws it. */}
-      <View
-        pointerEvents="none"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundColor: look === 'sheet' ? 'rgba(23,19,28,0.14)' : translucent.paperWash,
-        }}
-      />
+      {look === 'onboarding' ? (
+        // The day-one burrow softly behind, as the prototype draws it under the info sheet.
+        <BlurredScene fn="s_burrowDay1" blur={10} wash={translucent.paperWash} />
+      ) : (
+        <View
+          pointerEvents="none"
+          style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(23,19,28,0.14)' }}
+        />
+      )}
       {look === 'onboarding' && onBack ? (
         <BackButton
           onPress={onBack}
@@ -87,7 +89,9 @@ export function AiExplainer({ roommate, onDone, look, onBack }: AiExplainerProps
           hero,
         ]}
       >
-        <CritterSlot kind="critter" size={150} accessibilityLabel={roommateName} />
+        <View accessible accessibilityRole="image" accessibilityLabel={roommateName}>
+          <Critter character="pip" species={roommate.species} mood="wave" size={150} />
+        </View>
       </Animated.View>
       {look === 'onboarding' ? (
         <GlassSheet kind="info" top={SHEET_TOP} entrance={motion.screens.infoSheet}>
@@ -154,7 +158,7 @@ export function AiExplainer({ roommate, onDone, look, onBack }: AiExplainerProps
                   justifyContent: 'center',
                 }}
               >
-                <CritterSlot kind="face" size={28} />
+                <Face character={who} size={28} />
               </View>
             ))}
           </View>
