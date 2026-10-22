@@ -104,6 +104,7 @@ describe('progress sync', () => {
       canDos: [],
       keepsakes: [],
       weeks: [],
+      settlingChaptersDone: [],
     });
   });
 

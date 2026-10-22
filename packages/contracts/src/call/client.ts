@@ -109,9 +109,38 @@ export const SpeechFrame = z.object({
 });
 export type SpeechFrame = z.infer<typeof SpeechFrame>;
 
-/** The learner ended the call. The call answers `ended` and closes. */
-export const HangupFrame = z.object({ type: z.literal('hangup'), seq: Seq });
+/** Why the learner hung up, when the exit sheet says: `too_hard` is its "Khó quá". */
+export const HANGUP_REASONS = ['too_hard'] as const;
+export const HangupReason = z.enum(HANGUP_REASONS);
+export type HangupReason = z.infer<typeof HangupReason>;
+
+/**
+ * The learner ended the call. The call answers `ended` and closes. `reason` is left out for a
+ * plain hang-up (and by older apps); `too_hard` ends the call with that end reason.
+ */
+export const HangupFrame = z.object({
+  type: z.literal('hangup'),
+  seq: Seq,
+  reason: HangupReason.optional(),
+});
 export type HangupFrame = z.infer<typeof HangupFrame>;
+
+// --- Again and slowly (beginner path): replay the last line, change the pace mid-call. ---
+
+/**
+ * "Nói lại" / "Chậm thôi" (or "Sorry? Again, please" / "Slowly, please" said aloud, which the call
+ * detects itself): the character says the last line again, one speed step slower with longer
+ * breaks when `slower`. Never counts as a try. An older call ignores it.
+ */
+export const ReplayFrame = z.object({ type: z.literal('replay'), seq: Seq, slower: z.boolean() });
+export type ReplayFrame = z.infer<typeof ReplayFrame>;
+
+/**
+ * The learner changed the pace during the call ("Khó quá" → slower): it applies from the next
+ * line. Null goes back to the stage's own. An older call ignores it.
+ */
+export const PaceFrame = z.object({ type: z.literal('pace'), seq: Seq, pace: Pace.nullable() });
+export type PaceFrame = z.infer<typeof PaceFrame>;
 
 export const CALL_CLIENT_FRAME_TYPES = [
   'hello',
@@ -122,6 +151,8 @@ export const CALL_CLIENT_FRAME_TYPES = [
   'played',
   'speech',
   'hangup',
+  'replay',
+  'pace',
 ] as const;
 export type CallClientFrameType = (typeof CALL_CLIENT_FRAME_TYPES)[number];
 
@@ -134,6 +165,8 @@ const callClientFrames = z.discriminatedUnion('type', [
   PlayedFrame,
   SpeechFrame,
   HangupFrame,
+  ReplayFrame,
+  PaceFrame,
 ]);
 
 /** Any JSON frame the phone sends to the call; an unknown `type` parses as `unknown`. */

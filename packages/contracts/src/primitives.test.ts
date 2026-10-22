@@ -1,4 +1,7 @@
+import { describe, expect, it } from 'vitest';
+
 import * as primitives from './primitives';
+import { DEFAULT_STAGE, RESIDENCY_STAGES, STAGES } from './primitives';
 import { describeSchemas } from './schema-runner.test-data';
 
 describeSchemas('primitives', primitives, {
@@ -47,8 +50,8 @@ describeSchemas('primitives', primitives, {
     ['red_panda', 'otter'],
   ],
   Stage: [
-    ['newcomer', 'neighbour', 'regular', 'local', 'voice'],
-    ['neighbor', 'b1'],
+    ['visitor', 'newcomer', 'neighbour', 'regular', 'local', 'voice'],
+    ['neighbor', 'b1', 'beginner'],
   ],
   Track: [['life', 'work', 'both'], ['play']],
   Pace: [
@@ -60,8 +63,8 @@ describeSchemas('primitives', primitives, {
     ['en', 'vi-VN', ''],
   ],
   CallKind: [
-    ['placement', 'episode', 'real_week', 'practice', 'voicemail_reply'],
-    ['real-week', 'camera'],
+    ['placement', 'episode', 'real_week', 'practice', 'voicemail_reply', 'settling'],
+    ['real-week', 'camera', 'settling_in'],
   ],
   RingSlotKind: [['episode', 'real_week', 'practice'], ['placement']],
   PhraseState: [
@@ -72,4 +75,16 @@ describeSchemas('primitives', primitives, {
     ['free', 'plus'],
     ['pro', 'lifetime'],
   ],
+});
+
+describe('the stages', () => {
+  it('put Visitor below the five residency stages, which keep their order', () => {
+    expect(STAGES[0]).toBe('visitor');
+    expect(STAGES.slice(1)).toEqual([...RESIDENCY_STAGES]);
+    expect(RESIDENCY_STAGES).toHaveLength(5);
+  });
+
+  it('start every profile at Newcomer', () => {
+    expect(DEFAULT_STAGE).toBe('newcomer');
+  });
 });

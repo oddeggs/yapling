@@ -27,6 +27,8 @@ export interface StageSpeech {
 
 /** The pause before a nudge at stages that hint only when asked (the model sets none). */
 const NUDGE_AFTER_MS: Readonly<Record<Stage, number>> = {
+  // Visitor: Newcomer's value until its own is set.
+  visitor: 8_000,
   newcomer: 8_000,
   neighbour: 8_000,
   regular: 8_000,
@@ -37,6 +39,15 @@ const NUDGE_AFTER_MS: Readonly<Record<Stage, number>> = {
 const PROSE: Readonly<
   Record<Stage, Omit<StageSpeech, 'hintsOnSilence' | 'silenceMs' | 'glossHints'>>
 > = {
+  // Visitor: Newcomer's prose until its own row is written.
+  visitor: {
+    label: 'Visitor',
+    wordsPerMinute: '~110',
+    sentences: 'short, one idea',
+    idioms: 'none',
+    interruptions: 'never',
+    hints: 'phrase hint after a 4 s pause',
+  },
   newcomer: {
     label: 'Newcomer',
     wordsPerMinute: '~110',
@@ -90,6 +101,7 @@ const speech = (stage: Stage): StageSpeech => {
 };
 
 export const STAGE_SPEECH: Readonly<Record<Stage, StageSpeech>> = {
+  visitor: speech('visitor'),
   newcomer: speech('newcomer'),
   neighbour: speech('neighbour'),
   regular: speech('regular'),

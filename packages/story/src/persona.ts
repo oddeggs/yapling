@@ -1,5 +1,5 @@
 import {
-  STAGES,
+  RESIDENCY_STAGES,
   type CharacterId,
   type FirstLanguage,
   type Id,
@@ -108,7 +108,8 @@ const staticPrefix = (character: CharacterId): string => {
     bullets(SHARED_RULES),
     '',
     "Speech settings by the learner's stage:",
-    bullets(STAGES.map((s) => `${STAGE_SPEECH[s].label}: ${stageSpeechLine(s)}.`)),
+    // The residency stages only, until Visitor has its own prose (its row is in the learner line).
+    bullets(RESIDENCY_STAGES.map((s) => `${STAGE_SPEECH[s].label}: ${stageSpeechLine(s)}.`)),
   );
   return lines.join('\n');
 };

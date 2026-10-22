@@ -8,7 +8,7 @@ import type {
   Stage,
   Track,
 } from '@yapling/contracts';
-import { MEMORY_CATEGORIES, STAGES } from '@yapling/contracts';
+import { MEMORY_CATEGORIES, RESIDENCY_STAGES, STAGES } from '@yapling/contracts';
 import { SEASON_1_CAN_DOS, type CanDoTrack } from '@yapling/domain';
 import type { StringKey, Translate } from '@yapling/i18n';
 
@@ -79,6 +79,8 @@ export interface MeView {
 }
 
 const STAGE_KEYS = {
+  // Visitor: Newcomer's label until its own is written.
+  visitor: 'me.stage.newcomer',
   newcomer: 'me.stage.newcomer',
   neighbour: 'me.stage.neighbour',
   regular: 'me.stage.regular',
@@ -164,15 +166,16 @@ export function memoryGroups(items: readonly MemoryItem[], copy: Translate): Mem
 }
 
 export function meView(inputs: MeInputs, copy: Translate): MeView {
-  const step = STAGES.indexOf(inputs.stage) + 1;
+  // "Chặng N/5" counts the residency stages from Newcomer; Visitor shows as Newcomer for now.
+  const step = Math.max(1, STAGES.indexOf(inputs.stage) - STAGES.indexOf('newcomer') + 1);
   const name = { name: inputs.roommateName };
   return {
     name: inputs.displayName,
     stage: {
       label: copy(STAGE_KEYS[inputs.stage]),
       step,
-      of: STAGES.length,
-      a11y: copy('me.a11y.stageOf', { n: step, total: STAGES.length }),
+      of: RESIDENCY_STAGES.length,
+      a11y: copy('me.a11y.stageOf', { n: step, total: RESIDENCY_STAGES.length }),
     },
     canDoTitle: copy('me.canDoTitle'),
     groups: canDoGroups(inputs.track, inputs.canDos, copy),

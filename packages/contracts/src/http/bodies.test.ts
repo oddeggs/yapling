@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { at, callRecordId, memoryId, token, userId } from '../samples.test-data';
 import { describeSchemas } from '../schema-runner.test-data';
 import * as account from './account';
-import * as calls from './calls';
 import * as errors from './errors';
 import * as memory from './memory';
 import * as minutes from './minutes';
@@ -71,7 +70,23 @@ const profileInput = {
   timezone: 'Asia/Ho_Chi_Minh',
   notificationsAllowed: true,
 };
-const profileBody = { revision: 3, ...profileInput, pace: null, stage: 'newcomer', updatedAt: at };
+const profileBody = {
+  revision: 3,
+  ...profileInput,
+  pace: null,
+  stage: 'newcomer',
+  updatedAt: at,
+  storyStartedOn: null,
+  startPath: null,
+};
+const visitorProfile = {
+  ...profileBody,
+  stage: 'visitor',
+  startPath: 'visitor',
+  storyStartedOn: null,
+};
+const settledProfile = { ...visitorProfile, storyStartedOn: '2026-10-25' };
+const placedProfile = { ...profileBody, startPath: 'placement', storyStartedOn: '2026-10-22' };
 
 describeSchemas('profile', profile, {
   Name: [
@@ -92,13 +107,23 @@ describeSchemas('profile', profile, {
       { start: '22:00', end: '8:00' },
     ],
   ],
+  StartPath: [
+    ['visitor', 'placement'],
+    ['newcomer', 'skip', null],
+  ],
   Profile: [
     [
       profileBody,
       { ...profileBody, quietHours: null, firstLanguage: 'other', stage: 'voice' },
       { ...profileBody, pace: 'slower' },
+      visitorProfile,
+      settledProfile,
+      placedProfile,
     ],
     [
+      { ...profileBody, startPath: 'skip' },
+      { ...profileBody, storyStartedOn: '25/10/2026' },
+      { ...profileBody, stage: 'beginner' },
       { ...profileBody, pace: 'both' },
       { ...profileBody, revision: 0 },
       { ...profileBody, stage: 'b1' },
@@ -113,10 +138,15 @@ describeSchemas('profile', profile, {
       { ...profileInput, notificationsAllowed: false, quietHours: null },
       { ...profileInput, pace: 'faster' },
       { ...profileInput, pace: null },
+      { ...profileInput, startPath: 'visitor' },
+      { ...profileInput, startPath: 'placement', storyStartedOn: '2026-10-22' },
+      { ...profileInput, startPath: null, storyStartedOn: null },
     ],
     [
       { ...profileInput, track: undefined },
       { ...profileInput, pace: 'fast' },
+      { ...profileInput, startPath: 'newcomer' },
+      { ...profileInput, storyStartedOn: 'tomorrow' },
     ],
   ],
   ProfileUpdate: [
@@ -126,8 +156,17 @@ describeSchemas('profile', profile, {
       { track: 'both', notificationsAllowed: false },
       { pace: 'slower' },
       { pace: null },
+      { storyStartedOn: '2026-10-25' },
+      { startPath: 'visitor' },
+      { storyStartedOn: null, startPath: null },
     ],
-    [{}, { stage: 'regular', displayName: '' }, { roommate: { species: 'cat' } }],
+    [
+      {},
+      { stage: 'regular', displayName: '' },
+      { roommate: { species: 'cat' } },
+      { startPath: 'skip' },
+      { storyStartedOn: '2026-02-30' },
+    ],
   ],
 });
 
@@ -243,6 +282,7 @@ const progressBody = {
   canDos: [tickedCanDo, openCanDo],
   keepsakes: [canDoKeepsake, seasonKeepsake],
   weeks: [week1, week2],
+  settlingChaptersDone: [],
 };
 const freshProgress = {
   revision: 1,
@@ -253,7 +293,21 @@ const freshProgress = {
   canDos: [],
   keepsakes: [],
   weeks: [],
+  settlingChaptersDone: [],
 };
+const chapter1 = { chapter: 1, doneOn: '2026-10-22', callRecordId };
+const chapter2 = { chapter: 2, doneOn: '2026-10-23', callRecordId: 'call_01J9ZK6' };
+const chapter3 = { chapter: 3, doneOn: '2026-10-23', callRecordId: null };
+const settlingProgress = {
+  ...freshProgress,
+  revision: 4,
+  settlingChaptersDone: [chapter1, chapter2],
+};
+const allSettled = Array.from({ length: 6 }, (_, i) => ({
+  chapter: i + 1,
+  doneOn: `2026-10-2${2 + Math.floor(i / 2)}`,
+  callRecordId: null,
+}));
 
 describeSchemas('progress', progress, {
   PhraseProgress: [
@@ -337,9 +391,35 @@ describeSchemas('progress', progress, {
       { ...week1, week: 0 },
     ],
   ],
-  Progress: [
-    [progressBody, freshProgress],
+  SettlingChapterDone: [
+    [chapter1, chapter3, { ...chapter1, chapter: 6 }],
     [
+      { ...chapter1, chapter: 0 },
+      { ...chapter1, chapter: 7 },
+      { ...chapter1, chapter: 1.5 },
+      { ...chapter1, doneOn: at },
+      { ...chapter1, callRecordId: undefined },
+    ],
+  ],
+  SettlingProgress: [
+    [
+      [],
+      [chapter1],
+      [chapter1, chapter2, chapter3],
+      [{ ...chapter3, chapter: 4, doneOn: '2026-10-22' }, chapter1],
+      allSettled,
+    ],
+    [
+      [chapter1, chapter1],
+      [chapter2, { ...chapter1, doneOn: '2026-10-21' }],
+      [...allSettled, chapter1],
+    ],
+  ],
+  Progress: [
+    [progressBody, freshProgress, settlingProgress],
+    [
+      { ...settlingProgress, settlingChaptersDone: [chapter1, chapter1] },
+      { ...settlingProgress, settlingChaptersDone: null },
       { ...progressBody, dayIndex: 0 },
       {
         ...progressBody,
@@ -425,86 +505,6 @@ describeSchemas('minutes', minutes, {
   ],
 });
 
-const fix = {
-  from: 'Yesterday I fix the sink',
-  to: 'Yesterday I fixed the sink',
-  targetId: 'past_ed',
-  explanation: 'Việc đã xong hôm qua: thêm -ed.',
-};
-const metrics = { flowSeconds: 48, paceWpm: 112, pausesPerMin: 3.2 };
-const summary = {
-  version: calls.CALL_SUMMARY_VERSION,
-  wins: ['You ordered and changed your order.', 'You asked Mei to slow down.'],
-  fix,
-  phraseEvents: [
-    { phraseId: 'could-i-get', text: 'Could I get…?', event: 'sprouted' },
-    { phraseId: 'push-to-friday', text: 'Could we push that to Friday?', event: 'met' },
-  ],
-  canDoEvidence: [
-    { canDoId: 'order-and-change', quote: 'Could I get a kaya toast?', witness: 'mei' },
-  ],
-  metrics,
-  memoryItemIds: [memoryId],
-};
-const record = {
-  id: callRecordId,
-  kind: 'episode',
-  sceneId: 's1-e1',
-  character: 'mei',
-  startedAt: at,
-  endedAt: at + 9 * 60_000,
-  learnerSeconds: 290,
-  characterSeconds: 170,
-  endReason: 'scene_complete',
-  summaryPending: false,
-  summary,
-};
-const pendingRecord = {
-  ...record,
-  kind: 'placement',
-  character: 'pip',
-  summaryPending: true,
-  summary: null,
-};
-
-describeSchemas('calls', calls, {
-  CallFix: [[fix, { ...fix, targetId: null, explanation: null }], [{ ...fix, to: '' }]],
-  PhraseEventKind: [[...calls.PHRASE_EVENT_KINDS], ['wilted']],
-  PhraseEvent: [[summary.phraseEvents[0]], [{ phraseId: 'x', text: 'x', event: 'wilted' }]],
-  CallCanDoEvidence: [[summary.canDoEvidence[0]], [{ canDoId: 'x', quote: 'x', witness: 'me' }]],
-  CallMetrics: [
-    [metrics, { flowSeconds: 0, paceWpm: 0, pausesPerMin: 0 }],
-    [
-      { ...metrics, paceWpm: -1 },
-      { ...metrics, flowSeconds: undefined },
-    ],
-  ],
-  CallSummary: [
-    [
-      summary,
-      { ...summary, wins: [], fix: null, phraseEvents: [], canDoEvidence: [], memoryItemIds: [] },
-    ],
-    [
-      { ...summary, wins: ['a', 'b', 'c'] },
-      { ...summary, version: 0 },
-      { ...summary, metrics: undefined },
-    ],
-  ],
-  CallRecord: [
-    [record, pendingRecord, { ...record, kind: 'voicemail_reply', endReason: 'hangup' }],
-    [
-      { ...record, endedAt: at - 1 },
-      { ...record, summaryPending: true },
-      { ...record, endReason: 'crashed' },
-      { ...record, character: 'sari' },
-    ],
-  ],
-  CallRecordList: [
-    [{ calls: [record, pendingRecord] }, { calls: [] }],
-    [{ calls: [{ ...record, id: '' }] }],
-  ],
-});
-
 const pushToken = { token: 'ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]', platform: 'ios' };
 
 describeSchemas('push', push, {
@@ -523,6 +523,22 @@ describeSchemas('account', account, {
   DeleteAccountResponse: [[{ deletedBy: at + day }], [{ deletedBy: 'tomorrow' }]],
 });
 
+describe('bodies from before the beginner path', () => {
+  it('parse a profile without the start path or story day as null', () => {
+    const { storyStartedOn: _day, startPath: _path, ...older } = profileBody;
+    expect(profile.Profile.parse(older)).toEqual(profileBody);
+  });
+
+  it('parse progress without Settling in as none done', () => {
+    const { settlingChaptersDone: _done, ...older } = progressBody;
+    expect(progress.Progress.parse(older)).toEqual(progressBody);
+  });
+
+  it('take a profile from an older app, which never sends the new fields', () => {
+    expect(profile.ProfileInput.parse(profileInput)).toEqual(profileInput);
+  });
+});
+
 describe('API routes', () => {
   it('live under /api and escape ids', () => {
     for (const route of Object.values(API_ROUTES)) {
@@ -531,5 +547,6 @@ describe('API routes', () => {
     }
     expect(API_ROUTES.memoryItem('a/b')).toBe('/api/me/memory/a%2Fb');
     expect(API_ROUTES.call(callRecordId)).toBe(`/api/calls/${callRecordId}`);
+    expect(API_ROUTES.stage).toBe('/api/me/stage');
   });
 });

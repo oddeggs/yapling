@@ -7,6 +7,7 @@
  *   GET    /api/me/profile           → Profile
  *   PUT    /api/me/profile           ProfileInput → Profile (onboarding)
  *   PATCH  /api/me/profile           ProfileUpdate → Profile
+ *   POST   /api/me/stage             StageRequest → Profile
  *   GET    /api/me/progress          → Progress
  *   PUT    /api/me/progress          ProgressPut → Progress (409 stale_revision when based on an old revision)
  *   GET    /api/me/memory            → MemoryList
@@ -26,6 +27,7 @@ export const API_ROUTES = {
   guestSession: '/api/session/guest',
   appleSession: '/api/session/apple',
   profile: '/api/me/profile',
+  stage: '/api/me/stage',
   progress: '/api/me/progress',
   memory: '/api/me/memory',
   memoryItem: (id: string) => `/api/me/memory/${encodeURIComponent(id)}`,

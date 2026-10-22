@@ -65,7 +65,9 @@ const surfacePolicy = (stage: Stage, surface: HelpSurface): GlossPolicy => {
         ? { unit: 'line', layers: ['english', 'l1'], reveal: 'shown' }
         : { unit: 'line', layers: ['l1'], reveal: 'shown' };
     case 'captions':
-      if (stage === 'newcomer') return { unit: 'line', layers: ['l1'], reveal: 'marked' };
+      // Visitor: Newcomer's help until its own policy is set.
+      if (stage === 'visitor' || stage === 'newcomer')
+        return { unit: 'line', layers: ['l1'], reveal: 'marked' };
       if (stage === 'neighbour') return { unit: 'line', layers: ['l1'], reveal: 'on_tap' };
       return { unit: 'word', layers: ['english', 'l1'], reveal: 'on_tap' };
   }
