@@ -12,6 +12,12 @@
  * - A sentence shaped like the direction the model was given, not a line ("Say that's okay, no
  *   rush.", "Then open the next box.", "React warmly."), is narration too: held for a word or two
  *   and dropped. "Say that again?" or "Tell me more!" are speech.
+ * - A sentence about the call's own workings is narration: the line, the prompt or the writing of
+ *   either ("Since you're asking me to write the line now: I'll wait…", "I'll write my next line."),
+ *   or the learner in the third person anywhere in its opening clause. Such a sentence opens with
+ *   a clause ("Since…", "Because…"), a request ("You want me to…") or the speaker ("I'll…",
+ *   "Let me…"), which is held to the clause's comma or colon and read whole. "Hold the line,
+ *   please.", "Let me write that down!" and "You want me to play your manager?" are speech.
  * - Asides in brackets and stage directions in asterisks are dropped wherever they appear, a
  *   speaker label ("Mei:") is dropped, and quotation marks are never spoken.
  */
@@ -33,6 +39,7 @@ const META_NOUNS = new Set([
   "student's",
   'narrator',
   'assistant',
+  'prompt',
 ]);
 
 /** A first word that only ever opens a note about the scene. */
@@ -64,9 +71,39 @@ const META_VERBS = new Set([
   'nudge',
   'rephrase',
   'output',
-  'write',
   'stay',
 ]);
+
+/** Writing, as the model talks about writing its line ("write the line", "writing my reply"). */
+const WRITE_VERBS = new Set(['write', 'writing', 'wrote', 'written', 'generate', 'generating']);
+/** What the model writes, after "the", "my", "your", "this" or "next" ("write the line"). */
+const WRITTEN_THINGS = new Set(['line', 'lines', 'prompt', 'dialogue', 'script', 'output', 'turn']);
+const WRITTEN_DETERMINERS = new Set(['the', 'my', 'your', 'this', 'next', 'another', 'system']);
+/** Words that only ever name the call's workings, wherever they stand. */
+const MECHANICS = new Set(['prompts', 'roleplay', 'role-play', 'narrator', 'narration']);
+
+/** "You …" opens a request about the call when one of these follows ("You want me to write…"). */
+const YOU_LEADS = new Set(['you', "you're", "you've", "you'd"]);
+const YOU_ASKS = new Set([
+  'asking',
+  'asked',
+  'want',
+  'wanted',
+  'need',
+  'needed',
+  'told',
+  'telling',
+  'expect',
+  'expected',
+  'like',
+  'prompted',
+  'instructed',
+]);
+
+/** A held clause is read up to this many words, then decided as it stands. */
+const CLAUSE_MAX = 12;
+/** A word that closes a clause: the rest of the sentence is decided at it. */
+const CLAUSE_CLOSE = /[,:;—–]["'”’)\]]*$/;
 
 /** "Say …" / "Tell …" open a direction when what follows is reported, not the words to say. */
 const TELLS = new Set(['say', 'tell']);
@@ -260,12 +297,11 @@ export class NarrationGuard {
       if (short) return short;
       return META_NOUNS.has(w[1] ?? '') ? 'narration' : 'speech';
     }
-    if (CLAUSE_LEADS.has(first)) {
-      for (let i = 1; i < Math.min(w.length, 5); i++) {
-        if (w[i] === 'the' && META_NOUNS.has(w[i + 1] ?? '')) return 'narration';
-        if (META_NOUNS.has(w[i] ?? '') && w[i - 1] === 'the') return 'narration';
-      }
-      return w.length >= 5 || ended ? 'speech' : 'wait';
+    if (CLAUSE_LEADS.has(first)) return clause(words, w, ended);
+    if (YOU_LEADS.has(first)) {
+      const short = enough(2);
+      if (short) return short;
+      return YOU_ASKS.has(w[1] ?? '') ? clause(words, w, ended) : 'speech';
     }
     if (first === 'i' || first === "i'll" || first === 'let') {
       let i = 1;
@@ -282,6 +318,8 @@ export class NarrationGuard {
       }
       while (i < w.length && SOFTENERS.has(w[i] ?? '')) i++;
       if (i >= w.length) return ended ? 'speech' : 'wait';
+      // "I'll write the line" is about the call; "Let me write that down" is speech.
+      if (WRITE_VERBS.has(w[i] ?? '')) return clause(words, w, ended);
       return META_VERBS.has(w[i] ?? '') ? 'narration' : 'speech';
     }
     return 'speech';
@@ -318,6 +356,7 @@ export class NarrationGuard {
       DIRECTION_LEADS.has(w) ||
       w === 'the' ||
       CLAUSE_LEADS.has(w) ||
+      YOU_LEADS.has(w) ||
       w === 'i' ||
       w === "i'll" ||
       w === 'let'
@@ -338,6 +377,35 @@ export class NarrationGuard {
   private afterWord(raw: string): void {
     if (this.mode === 'pass' && SENTENCE_END.test(raw)) this.mode = 'start';
   }
+}
+
+/**
+ * A held opening clause: narration when it talks about the call's workings, speech once it closes
+ * (a comma or colon), reaches `CLAUSE_MAX` words or the sentence ends without them.
+ */
+function clause(words: readonly string[], w: readonly string[], ended: boolean): Verdict {
+  if (aboutTheCall(w)) return 'narration';
+  if (ended || w.length >= CLAUSE_MAX || CLAUSE_CLOSE.test(words.at(-1) ?? '')) return 'speech';
+  return 'wait';
+}
+
+/**
+ * Whether bare words talk about the call itself: the learner in the third person ("the learner"),
+ * a word that only names its workings ("the prompt"), or writing the line ("write the line",
+ * "writing my next line"). "Hold the line" and "write your name" are not.
+ */
+export function aboutTheCall(w: readonly string[]): boolean {
+  for (let i = 0; i < w.length; i++) {
+    const word = w[i] ?? '';
+    if (MECHANICS.has(word)) return true;
+    if (word === 'the' && META_NOUNS.has(w[i + 1] ?? '')) return true;
+    if (word === 'prompt' && WRITTEN_DETERMINERS.has(w[i - 1] ?? '')) return true;
+    if (!WRITE_VERBS.has(word)) continue;
+    for (let j = i + 1; j <= i + 4 && j < w.length; j++) {
+      if (WRITTEN_THINGS.has(w[j] ?? '') && WRITTEN_DETERMINERS.has(w[j - 1] ?? '')) return true;
+    }
+  }
+  return false;
 }
 
 function opens(raw: string): ')' | ']' | '*' | null {
