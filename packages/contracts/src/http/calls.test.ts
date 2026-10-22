@@ -36,6 +36,7 @@ const record = {
   summaryPending: false,
   summary,
 };
+const passes = { match: 7, generous: 2, skip: 1, fallback: 0 };
 const pendingRecord = {
   ...record,
   kind: 'placement',
@@ -67,9 +68,18 @@ describeSchemas('calls', calls, {
       { ...summary, metrics: undefined },
     ],
   ],
+  TurnPassCounts: [
+    [passes, { match: 0, generous: 0, skip: 0, fallback: 0 }],
+    [
+      { ...passes, skip: -1 },
+      { ...passes, match: 1.5 },
+      { match: 1, generous: 0, skip: 0 },
+    ],
+  ],
   CallRecord: [
     [
       record,
+      { ...record, turnPasses: passes },
       pendingRecord,
       { ...record, kind: 'voicemail_reply', endReason: 'hangup' },
       { ...record, kind: 'settling', sceneId: 's1-set1', character: 'linh', endReason: 'too_hard' },
@@ -79,6 +89,7 @@ describeSchemas('calls', calls, {
       { ...record, summaryPending: true },
       { ...record, endReason: 'crashed' },
       { ...record, character: 'sari' },
+      { ...record, turnPasses: { ...passes, fallback: -2 } },
     ],
   ],
   CallRecordList: [

@@ -47,6 +47,7 @@ const replay = { type: 'replay', seq: 52, slower: false };
 const replaySlower = { type: 'replay', seq: 53, slower: true };
 const paceSlower = { type: 'pace', seq: 54, pace: 'slower' };
 const paceOwn = { type: 'pace', seq: 55, pace: null };
+const skip = { type: 'skip', seq: 56 };
 
 const clientFrames = [
   hello,
@@ -68,6 +69,7 @@ const clientFrames = [
   replaySlower,
   paceSlower,
   paceOwn,
+  skip,
 ];
 
 const ready = {
@@ -275,6 +277,7 @@ describeSchemas('call client frames', client, {
       { ...paceSlower, pace: 'normal' },
     ],
   ],
+  SkipFrame: [[skip], [{ type: 'skip' }, { ...skip, seq: 0 }, { type: 'skipped', seq: 1 }]],
   CallClientFrame: [
     clientFrames,
     [{ ...hello, stage: 'b1' }, { ...hold, seconds: 99 }, { seq: 1 }, 'hello', null],

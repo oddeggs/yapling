@@ -63,6 +63,19 @@ export const CallSummary = z.object({
 export type CallSummary = z.infer<typeof CallSummary>;
 
 /** `GET /api/calls/:id`. `summary` is null while `summaryPending` (and for a call too short for one). */
+/**
+ * How the call's learner turns passed, counted (the turn log's pass kinds): `match` on their own
+ * (the beat's word heard, or judged fine), `generous` on the second English try without it, `skip`
+ * ("Bỏ qua"), `fallback` (the tries ran out and someone else said it).
+ */
+export const TurnPassCounts = z.object({
+  match: z.int().min(0),
+  generous: z.int().min(0),
+  skip: z.int().min(0),
+  fallback: z.int().min(0),
+});
+export type TurnPassCounts = z.infer<typeof TurnPassCounts>;
+
 export const CallRecord = z
   .object({
     id: OpaqueId,
@@ -77,6 +90,8 @@ export const CallRecord = z
     endReason: CallEndReason,
     summaryPending: z.boolean(),
     summary: CallSummary.nullable(),
+    /** How its learner turns passed; left out by older calls (and for calls before it was kept). */
+    turnPasses: TurnPassCounts.optional(),
   })
   .refine((c) => c.endedAt >= c.startedAt, { message: 'A call ends after it starts' })
   .refine((c) => !(c.summaryPending && c.summary !== null), {
