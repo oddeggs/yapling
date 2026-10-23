@@ -104,10 +104,15 @@ export function useSettlingLive(): SettlingLive | null {
     if (live === null || userId === null || mine === null || profile === null || progress === null)
       return;
     const { chapters, letterOn } = live.day;
+    // The phone keeps the story's start only when it worked it out itself (Chapter 6's day, with
+    // no start on the profile): mirroring the profile's would let a profile still in memory from
+    // the learner before a reset become the next learner's start, and be sent back to the server.
     const kept: LocalSettling = {
       ...mine,
       chapters: mergeChapters(mine.chapters, chapters),
-      storyStartedOn: mine.storyStartedOn ?? (live.visitorPath ? letterOn : null),
+      storyStartedOn:
+        mine.storyStartedOn ??
+        (live.visitorPath && profile.storyStartedOn === null ? letterOn : null),
     };
     if (JSON.stringify(kept) !== JSON.stringify(mine)) {
       void settlingStore.update(userId, (s) => ({

@@ -42,8 +42,9 @@ export class ProfileRepo {
 
   /** The whole profile, at the end of onboarding. Needs the server: it is never queued. */
   async put(input: ProfileInput): Promise<Profile> {
+    const generation = this.resource.generation;
     const profile = await this.api.putProfile(input);
-    await this.resource.setFromServer(profile);
+    await this.resource.setFromServer(profile, generation);
     return profile;
   }
 
@@ -52,11 +53,13 @@ export class ProfileRepo {
    * the server's copy back and throws.
    */
   async patch(update: ProfileUpdate): Promise<Profile | null> {
+    // Answers that come back after a reset belong to the learner before; they are dropped.
+    const generation = this.resource.generation;
     const before = this.resource.data;
     if (before === null) {
       // Nothing to patch on the phone yet: the server decides (404 before onboarding).
       const profile = await this.api.patchProfile(update);
-      await this.resource.setFromServer(profile);
+      await this.resource.setFromServer(profile, generation);
       return profile;
     }
     await this.resource.setLocal((p) => (p === null ? p : applyPatch(p, update)));
@@ -67,14 +70,15 @@ export class ProfileRepo {
     }
     try {
       const profile = await this.api.patchProfile(update);
-      await this.resource.setFromServer(profile);
+      await this.resource.setFromServer(profile, generation);
       return profile;
     } catch (error) {
+      if (generation !== this.resource.generation) throw error;
       if (isDataError(error, 'network')) {
         await this.outbox.add({ kind: 'profile.patch', body: update });
         return this.resource.data;
       }
-      await this.resource.setLocal(() => before);
+      await this.resource.setLocal(() => before, generation);
       void this.refresh().catch(() => undefined);
       throw error;
     }
@@ -82,7 +86,8 @@ export class ProfileRepo {
 
   /** Sends a queued patch. */
   async send(update: ProfileUpdate): Promise<void> {
-    await this.resource.setFromServer(await this.api.patchProfile(update));
+    const generation = this.resource.generation;
+    await this.resource.setFromServer(await this.api.patchProfile(update), generation);
   }
 }
 

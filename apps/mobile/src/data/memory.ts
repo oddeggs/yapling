@@ -49,6 +49,7 @@ export class MemoryRepo {
       createdAt: this.now(),
       sourceCallId: null,
     };
+    const generation = this.resource.generation;
     const before = this.resource.data;
     await this.resource.setLocal((items) => [draft, ...(items ?? [])]);
     if (this.outbox.touches('memory')) {
@@ -58,14 +59,15 @@ export class MemoryRepo {
     }
     try {
       const item = await this.api.createMemory(body);
-      await this.replace(draft.id, item);
+      await this.replace(draft.id, item, generation);
       return item;
     } catch (error) {
+      if (generation !== this.resource.generation) throw error;
       if (isDataError(error, 'network')) {
         await this.outbox.add({ kind: 'memory.create', localId: draft.id, body });
         return draft;
       }
-      await this.resource.setLocal(() => before);
+      await this.resource.setLocal(() => before, generation);
       throw error;
     }
   }
@@ -116,6 +118,7 @@ export class MemoryRepo {
       | { kind: 'memory.delete'; itemId: string },
     direct: (() => Promise<unknown>) | null,
   ): Promise<void> {
+    const generation = this.resource.generation;
     const before = this.resource.data;
     await this.resource.setLocal((items) => change(items ?? []));
     if (direct === null || this.outbox.touches('memory')) {
@@ -126,18 +129,22 @@ export class MemoryRepo {
     try {
       await direct();
     } catch (error) {
+      if (generation !== this.resource.generation) throw error;
       if (isDataError(error, 'network')) {
         await this.outbox.add(queued);
         return;
       }
-      await this.resource.setLocal(() => before);
+      await this.resource.setLocal(() => before, generation);
       throw error;
     }
   }
 
   /** The server's copy of an item in place of the phone's (one removed meanwhile stays removed). */
-  private async replace(id: string, item: MemoryItem): Promise<void> {
-    await this.resource.setLocal((items) => (items ?? []).map((i) => (i.id === id ? item : i)));
+  private async replace(id: string, item: MemoryItem, generation?: number): Promise<void> {
+    await this.resource.setLocal(
+      (items) => (items ?? []).map((i) => (i.id === id ? item : i)),
+      generation,
+    );
   }
 }
 

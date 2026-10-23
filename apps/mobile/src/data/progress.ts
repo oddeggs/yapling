@@ -51,14 +51,16 @@ export class ProgressRepo {
    * offline and leaves the phone's copy as it was.
    */
   async save(next: Progress): Promise<ProgressSave> {
+    // An answer that comes back after a reset belongs to the learner before; it is dropped.
+    const generation = this.resource.generation;
     try {
       const progress = await this.api.putProgress(next);
-      await this.resource.setFromServer(progress);
+      await this.resource.setFromServer(progress, generation);
       return { saved: true, progress };
     } catch (error) {
       if (!isDataError(error, 'stale_revision')) throw error;
       const server = await this.api.getProgress();
-      await this.resource.setFromServer(server);
+      await this.resource.setFromServer(server, generation);
       return { saved: false, progress: server };
     }
   }
