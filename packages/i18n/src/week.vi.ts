@@ -16,6 +16,7 @@ export const weekVi = {
   'week.slot.a11y.open': 'Sẵn sàng',
   'week.slot.a11y.upcoming': 'Sắp tới',
   'week.phrasesTitle': 'CỤM TỪ TUẦN NÀY',
+  'week.next': 'Cuộc gọi tiếp theo mở vào {when}: {title}',
   'week.seedNote': 'Gói hạt: bạn mới nghe thấy. Nói ra để chúng nảy mầm.',
   'week.cta': 'Đến quán cà phê với {name}',
   'week.waiting.tag': 'Tuần {week} · đang đợi bạn',

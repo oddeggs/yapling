@@ -46,6 +46,7 @@ export const burrowVi = {
   'burrow.action.voicemail': 'Nghe thư thoại',
   'burrow.action.firstWeek': 'Xem đó là gì',
   'burrow.action.week': 'Xem tuần này',
+  'burrow.action.whatsNext': 'Xem cuộc gọi tiếp theo',
 
   'burrow.ring': '{done}/{total} cuộc gọi',
   'burrow.a11y.me': 'Bạn và {name}',

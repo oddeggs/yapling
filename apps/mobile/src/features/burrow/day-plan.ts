@@ -92,9 +92,15 @@ function callLabel(kind: 'episode' | 'real_week' | 'practice', name: string, wee
 function catchUp(input: BurrowInput, ring: WeekRing): PrimaryAction {
   const calls = ringCalls(ring.week);
   const open = calls.find((c, i) => ring.slots[i]?.status === 'open' && c.to !== null);
-  return open?.to
-    ? { label: callLabel(open.kind, input.roommate.name, ring.week), target: open.to }
-    : { label: copy('burrow.action.week'), target: BURROW_ROUTES.week };
+  if (open?.to) {
+    return { label: callLabel(open.kind, input.roommate.name, ring.week), target: open.to };
+  }
+  // A call still to open this week: the week view says which day.
+  const ahead = ring.slots.some((s) => s.status === 'upcoming');
+  return {
+    label: ahead ? copy('burrow.action.whatsNext') : copy('burrow.action.week'),
+    target: BURROW_ROUTES.week,
+  };
 }
 
 const isDone = (ring: WeekRing, index: number) => ring.slots[index]?.status === 'done';

@@ -22,6 +22,8 @@ export const weekEn = {
   'week.slot.a11y.open': 'Ready',
   'week.slot.a11y.upcoming': 'Coming up',
   'week.phrasesTitle': 'THIS WEEK’S PHRASES',
+  /** No call open yet this week: the next one and its day ("Mon"). */
+  'week.next': 'Next call opens {when}: {title}',
   'week.seedNote': 'Seed packets: heard, not said yet. Say them to sprout.',
   'week.cta': 'Go to the café with {name}',
   /** A call still open from an earlier week: it waits, it never expires. */

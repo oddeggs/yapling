@@ -83,6 +83,8 @@ export interface WeekModel {
   readonly ring: { readonly done: number; readonly total: number };
   /** The button under the phrases: the first open call of the week, or none when all are done. */
   readonly cta: { readonly label: Copy; readonly target: Href } | null;
+  /** With no call open yet, the next one and the day it opens, so the week never looks stuck. */
+  readonly next: { readonly title: Copy; readonly when: Copy } | null;
 }
 
 const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
@@ -163,11 +165,13 @@ const SLOT_TAG: Readonly<Record<RingSlotKind, Copy>> = {
 
 /** The week view for the week the learner is in. */
 export function weekModel(input: WeekInput): WeekModel {
-  return input.day >= LATER_WEEKS_FROM_DAY ? laterWeekModel(input) : firstWeekModel(input);
+  const model = input.day >= LATER_WEEKS_FROM_DAY ? laterWeekModel(input) : firstWeekModel(input);
+  const upcoming = model.cta === null ? model.rows.find((r) => r.status === 'upcoming') : undefined;
+  return { ...model, next: upcoming ? { title: upcoming.title, when: upcoming.when } : null };
 }
 
 /** The first week, on the calendar. */
-function firstWeekModel(input: WeekInput): WeekModel {
+function firstWeekModel(input: WeekInput): Omit<WeekModel, 'next'> {
   const ring = currentRing(input);
   const episode = episodeOf(ring.week);
   const name = input.roommate.name;
@@ -292,7 +296,7 @@ const STATE_ORDER: readonly PhraseState[] = ['seed', 'sprout', 'leaf', 'bloom'];
  * the week's phrases. A week with no episode of its own (the festival and after) is a ring of
  * replays, and its phrases are the learner's own that have the most growing to do.
  */
-function laterWeekModel(input: WeekInput): WeekModel {
+function laterWeekModel(input: WeekInput): Omit<WeekModel, 'next'> {
   const week = storyWeekOfInput(input);
   const rows: WeekRow[] = week.ring.map((slot) => {
     const sceneId = ringSceneFor(week.week, slot.kind, slot.sceneId);

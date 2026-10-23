@@ -53,6 +53,8 @@ export const burrowEn = {
   'burrow.action.voicemail': 'Play the voicemail',
   'burrow.action.firstWeek': 'See what it is',
   'burrow.action.week': 'See this week',
+  /** No call open today: the week view says when the next one opens. */
+  'burrow.action.whatsNext': "See what's next",
 
   /** The ring chip: calls done this week. */
   'burrow.ring': '{done} of {total} calls',

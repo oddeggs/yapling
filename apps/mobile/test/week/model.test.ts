@@ -136,3 +136,20 @@ describe('week 1 after Settling in', () => {
     );
   });
 });
+
+describe('a week with no call open yet', () => {
+  it('names the next call and its day, so the week never looks stuck', () => {
+    const model = weekModel(weekOn(2, true));
+    expect(model.cta).toBeNull();
+    expect(model.next).not.toBeNull();
+    const note = vi('week.next', {
+      when: render(vi, model.next!.when),
+      title: render(vi, model.next!.title),
+    });
+    expect(note).toContain('Dạy');
+  });
+
+  it('says nothing extra while a call is open', () => {
+    expect(weekModel(weekOn(2)).next).toBeNull();
+  });
+});

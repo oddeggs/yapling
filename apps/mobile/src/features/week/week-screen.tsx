@@ -100,6 +100,14 @@ export function WeekScreen({ model, onBack, onNavigate }: WeekScreenProps) {
           <Txt variant="note" colour={colours.textMuted}>
             {t('week.seedNote')}
           </Txt>
+          {model.next ? (
+            <Txt variant="body">
+              {t('week.next', {
+                when: render(t, model.next.when),
+                title: render(t, model.next.title),
+              })}
+            </Txt>
+          ) : null}
           {model.cta ? (
             <StickerButton
               label={render(t, model.cta.label)}
