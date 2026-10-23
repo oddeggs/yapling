@@ -435,6 +435,10 @@ describeSchemas('progress', progress, {
     ],
   ],
   ProgressPut: [[progressBody], [{ ...progressBody, dayIndex: 0 }]],
+  SeasonKeepsakeRequest: [
+    [{ season: 1 }, { season: 2 }],
+    [{ season: 0 }, { season: 1.5 }, { season: '1' }, {}],
+  ],
 });
 
 const memoryItem = {
@@ -553,5 +557,6 @@ describe('API routes', () => {
     expect(API_ROUTES.memoryItem('a/b')).toBe('/api/me/memory/a%2Fb');
     expect(API_ROUTES.call(callRecordId)).toBe(`/api/calls/${callRecordId}`);
     expect(API_ROUTES.stage).toBe('/api/me/stage');
+    expect(API_ROUTES.seasonKeepsake).toBe('/api/me/keepsakes/season');
   });
 });
