@@ -231,3 +231,20 @@ describe('the room after Settling in', () => {
     expect(burrowHomeModel({ ...input(2), settledIn: true }).scene).toBe('burrow');
   });
 });
+
+describe('day 1 in the burrow', () => {
+  it('says week one starts tomorrow and offers the week, so it never looks stuck', () => {
+    const model = burrowHomeModel(input(1, { after: true }));
+    expect(render(vi, model.delta.sub ?? model.delta.title)).toContain('Ngày mai');
+    expect(model.action?.target).toBe('/(home)/week');
+  });
+
+  it('promises the letter once the shelves already hold words from Settling in', () => {
+    const day1 = input(1, { after: true });
+    const shelved = input(2, { after: true }).progress.phrases;
+    const settled = { ...day1, progress: { ...day1.progress, phrases: shelved } };
+    expect(shelved.length).toBeGreaterThan(0);
+    expect(render(vi, burrowHomeModel(settled).delta.title)).toContain('thư');
+    expect(render(vi, burrowHomeModel(day1).delta.title)).toContain('kệ');
+  });
+});

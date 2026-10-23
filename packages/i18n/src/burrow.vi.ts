@@ -17,6 +17,8 @@ export const burrowVi = {
   'burrow.delta.today': 'HÔM NAY',
   'burrow.delta.day': 'NGÀY {day}',
   'burrow.delta.firstWords': 'Những từ đầu tiên của bạn sẽ lấp đầy các kệ này.',
+  'burrow.delta.letterTomorrow': 'Ngày mai có thư gửi bạn đấy.',
+  'burrow.delta.tomorrowSub': 'Hôm nay vậy là xong. Ngày mai, tuần đầu tiên bắt đầu.',
   'burrow.delta.letter': 'Một lá thư dưới cửa quán cà phê',
   'burrow.delta.letterSub': 'Có ai đó nhét vào tối qua',
   'burrow.delta.boxUnpacked': 'Một thùng đã được dỡ',

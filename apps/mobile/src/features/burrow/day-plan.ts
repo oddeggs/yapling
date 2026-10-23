@@ -107,20 +107,23 @@ export function planFor(input: BurrowInput, ring: WeekRing): DayPlan {
   const kicker = away ? copy('burrow.delta.sinceAway') : copy('burrow.delta.today');
   const happy: Mood = 'happy';
 
+  // Day 1 has no call: week 1 opens tomorrow with Mei's letter. The card says so, so the burrow
+  // never looks stuck; a learner who settled in with Linh already has words on the shelves.
   if (day <= 1) {
+    const shelved = input.progress.phrases.length > 0;
     return {
       delta: {
         id: 'first-words',
         kicker: copy('burrow.delta.day', { day: 1 }),
         style: 'day-tag',
-        title: copy('burrow.delta.firstWords'),
-        sub: null,
+        title: shelved ? copy('burrow.delta.letterTomorrow') : copy('burrow.delta.firstWords'),
+        sub: copy('burrow.delta.tomorrowSub'),
         face: null,
         target: null,
       },
       line: null,
-      action: null,
-      pipMood: 'surprised',
+      action: { label: copy('burrow.action.week'), target: BURROW_ROUTES.week },
+      pipMood: shelved ? happy : 'surprised',
     };
   }
 

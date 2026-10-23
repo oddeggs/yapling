@@ -23,6 +23,8 @@ export const burrowEn = {
   /** The day tag on the first day's card. */
   'burrow.delta.day': 'DAY {day}',
   'burrow.delta.firstWords': 'Your first words will fill these shelves.',
+  'burrow.delta.letterTomorrow': 'A letter comes for you tomorrow.',
+  'burrow.delta.tomorrowSub': "That's all for today. Week one starts tomorrow.",
   'burrow.delta.letter': 'A letter under the café door',
   'burrow.delta.letterSub': 'Someone pushed it in last night',
   'burrow.delta.boxUnpacked': 'A box got unpacked',
