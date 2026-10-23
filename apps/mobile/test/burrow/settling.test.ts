@@ -154,6 +154,32 @@ describe('the day plan', () => {
   });
 });
 
+describe('a letter dated ahead of today', () => {
+  it('waits for its day: the next chapter shows until the app clock reaches it', () => {
+    const early = { chapters: chaptersOn('2026-10-23'), letterOn: '2026-10-25' as const };
+    expect(settlingPlan(day(early))).toEqual({ kind: 'chapter', chapter: 2, done: 1 });
+    expect(settlingPlan(day({ ...early, today: '2026-10-24' }))).toMatchObject({
+      kind: 'chapter',
+    });
+    expect(settlingPlan(day({ ...early, today: '2026-10-25' }))).toEqual({
+      kind: 'letter',
+      done: 1,
+      goodnight: false,
+    });
+    expect(settlingPlan(day({ ...early, today: '2026-10-26' }))).toMatchObject({
+      kind: 'letter',
+    });
+  });
+
+  it('suggests a rest rather than the letter after two chapters on the day before it', () => {
+    const two = chaptersOn('2026-10-23', '2026-10-23');
+    expect(settlingPlan(day({ chapters: two, letterOn: '2026-10-24' }))).toMatchObject({
+      kind: 'rest',
+      chapter: 3,
+    });
+  });
+});
+
 describe('the day plan on a moved clock', () => {
   it('counts two chapters played on a moved day as that day, and suggests a rest', () => {
     const real = Date.UTC(2026, 9, 23, 3, 0); // 10:00 in Hồ Chí Minh City, on the 23rd

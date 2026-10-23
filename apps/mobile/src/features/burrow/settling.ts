@@ -196,7 +196,10 @@ export type SettlingPlan =
 export function settlingPlan(day: SettlingDay): SettlingPlan {
   const done = day.chapters.length;
   const next = nextChapter(day.chapters);
-  if (day.letterOn !== null || next === null) {
+  // A letter dated ahead of today (the test menu's clock went back, or the skip was made on a
+  // moved day) waits for its day: the chapters carry on until the app's clock reaches it.
+  const letterCame = day.letterOn !== null && day.letterOn <= day.today;
+  if (letterCame || next === null) {
     return { kind: 'letter', done, goodnight: day.goodnightOn === day.today };
   }
   if (chaptersDoneOn(day.chapters, day.today) >= CHAPTERS_BEFORE_REST) {
