@@ -11,7 +11,7 @@ import { drawable, sceneOfPlace, Silhouette } from './places';
 
 /*
  * The end of an episode's week, as a title card: the episode's place behind its cast, its title
- * large, and next week's teaser (who's coming as a silhouette, when it opens; missed weeks wait).
+ * large, and next week's teaser (who's coming as a silhouette, when it opens; every week stays open).
  * "Về thị trấn" goes home, the season map shows the way ahead.
  */
 

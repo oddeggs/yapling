@@ -1078,8 +1078,8 @@ Copy the design gives (`beginner-path.md` §2, §4, §5) plus drafts for the res
 | `story.end.nextEpisode` | NEXT WEEK · EPISODE {episode} | TUẦN SAU · TẬP {episode} | New |  |
 | `story.end.nextWeek` | NEXT WEEK | TUẦN SAU | New | Before Bunting Week |
 | `story.end.nextTitle` | {title}… | {title}… | New | The next episode's English title |
-| `story.end.outOn` | Out {day} · missed weeks wait | Ra mắt {day} · tuần lỡ vẫn chờ bạn | New | From the design; `{day}` is a weekday ("Thứ Hai") |
-| `story.end.readyNow` | Ready now · missed weeks wait | Đã sẵn sàng · tuần lỡ vẫn chờ bạn | New |  |
+| `story.end.outOn` | Out {day} · every week stays open | Ra mắt {day} · tuần nào cũng vẫn mở | New | Reworded from the design's "missed weeks wait" so nothing mentions a miss; `{day}` is a weekday ("Thứ Hai") |
+| `story.end.readyNow` | Ready now · every week stays open | Đã sẵn sàng · tuần nào cũng vẫn mở | New | Reworded as above |
 | `story.end.backToTown` | Back to town | Về thị trấn | New | From the design |
 | `story.end.a11y.next` | Next week: {title}. {when} | Tuần sau: {title}. {when} | New | VoiceOver |
 | `story.recap.title` | Previously in Natterwick | Chuyện trước ở Natterwick | New | From the design; two lines |

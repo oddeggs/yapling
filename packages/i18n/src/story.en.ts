@@ -45,8 +45,8 @@ export const storyEn = {
   'story.end.nextWeek': 'NEXT WEEK',
   'story.end.nextTitle': '{title}…',
   /** When the next episode opens. Missed weeks never close: they wait. */
-  'story.end.outOn': 'Out {day} · missed weeks wait',
-  'story.end.readyNow': 'Ready now · missed weeks wait',
+  'story.end.outOn': 'Out {day} · every week stays open',
+  'story.end.readyNow': 'Ready now · every week stays open',
   'story.end.backToTown': 'Back to town',
   'story.end.a11y.next': 'Next week: {title}. {when}',
   /** Pip's recap for a learner coming back, as a comic page. */

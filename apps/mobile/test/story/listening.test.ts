@@ -167,7 +167,7 @@ describe('the card that closes an episode’s week', () => {
     });
   });
 
-  it('says the next episode is ready when its day has passed (missed weeks wait)', () => {
+  it('says the next episode is ready when its day has passed (every week stays open)', () => {
     const m = episodeEndModel(3, datedFor(5, 1, 4));
     expect(m?.next).toMatchObject({ kind: 'episode', episode: 4, open: true });
   });

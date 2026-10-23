@@ -23,12 +23,6 @@ const GUILT: readonly RegExp[] = [
   /quá hạn/i,
 ];
 
-/**
- * Strings that say "missed" to reassure ("missed weeks wait"), from the design's episode-end card.
- * The gate asks that no screen mention anything missed: these wait on the founder's call.
- */
-const WAITING_ON_FOUNDER: ReadonlySet<string> = new Set(['story.end.outOn', 'story.end.readyNow']);
-
 describe('care without guilt', () => {
   it('never counts a miss, keeps a streak or threatens a loss, in any learner-facing string', () => {
     const found = features
@@ -36,9 +30,7 @@ describe('care without guilt', () => {
       .flatMap((f) =>
         Object.entries(f.catalogues).flatMap(([language, catalogue]) =>
           Object.entries(catalogue as Record<string, string>)
-            .filter(
-              ([key, text]) => !WAITING_ON_FOUNDER.has(key) && GUILT.some((p) => p.test(text)),
-            )
+            .filter(([, text]) => GUILT.some((p) => p.test(text)))
             .map(([key, text]) => `${language} ${key}: ${text}`),
         ),
       );
