@@ -176,12 +176,13 @@ describe('the bubble', () => {
     expect(view(connected({ playing: true, caption: caption(6, 'mei', '') }), t).bubble).toBeNull();
   });
 
-  it('tilts the head and shows the dots while the server thinks', () => {
+  it('thinks and shows the dots while the server thinks', () => {
     const t = track(episode, [frame({ type: 'beat', beatId: 'ask-whats-wrong', progress: 0.1 })]);
     const v = view(connected({ awaitingReply: true, serverThinking: true }), t);
     expect(v.bubble?.thinking).toBe(true);
     expect(v.thinker).toBe('mei');
-    expect(v.moods.mei).toBe('think');
+    // A face the rig moves: the thinking is her act.
+    expect(v.moods.mei).toBe('listen');
   });
 });
 

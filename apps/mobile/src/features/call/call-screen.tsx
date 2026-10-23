@@ -138,6 +138,7 @@ export function CallScreen({
   // The edges the letter keeps clear of: the pills at the top and the cards over the call bar.
   const [pillBottom, setPillBottom] = useState(0);
   const [phoneBottom, setPhoneBottom] = useState(0);
+  const [bubbleBottom, setBubbleBottom] = useState(0);
   const [stackTop, setStackTop] = useState(height - space.callBarBottom - controls.callBar.height);
   const log = useCallback((m: string) => {
     if (__DEV__) console.log(`[call] ${m}`);
@@ -320,15 +321,10 @@ export function CallScreen({
         <LipsyncClock key={engine.state.get().sessionId ?? 'call'} lipsync={engine.lipsync} />
       ) : null}
       <CallStage
-        layout={layout}
-        k={k}
-        width={width}
-        height={height}
+        {...{ layout, k, width, height, view, tracker }}
         species={roommate.species}
-        moods={view.moods}
-        talking={view.talking}
         mouth={engine?.lipsync.mouth ?? restMouth}
-        thinker={view.thinker}
+        fit={{ topBound: Math.max(pillBottom, spot ? bubbleBottom : 0), bottomBound: stackTop }}
       />
 
       {view.letter && layout.letter ? (
@@ -365,6 +361,7 @@ export function CallScreen({
             right: spot.right,
             gap: 8,
           }}
+          onLayout={(e) => setBubbleBottom(e.nativeEvent.layout.y + e.nativeEvent.layout.height)}
         >
           {bubble.thinking ? (
             <ThinkingBubble name={nameOf(bubble.speaker)} tone={bubbleTone(bubble.speaker)} />

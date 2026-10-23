@@ -1,7 +1,9 @@
 import type { CharacterId } from '@yapling/contracts';
 import { SETTLING_SCENES, type SettlingSceneId } from '@yapling/domain';
 import type { Translate } from '@yapling/i18n';
-import type { Scene } from '@yapling/story';
+import { getLine, type Scene } from '@yapling/story';
+
+import { timedBeats } from './tracker';
 
 /*
  * Where everything sits in a call, by the scene's place and kind, in the prototype's 390-point
@@ -10,7 +12,8 @@ import type { Scene } from '@yapling/story';
  */
 
 /** The art scenes a call is drawn over (names from `@yapling/art`). */
-export type CallSceneName = 'cafe' | 'bus' | 'office' | 'burrow' | 'burrow-day1';
+export type CallSceneName =
+  'cafe' | 'bus' | 'office' | 'burrow' | 'burrow-day1' | 'town' | 'square';
 
 export type Backdrop =
   /**
@@ -32,6 +35,11 @@ export interface CastSpot {
   readonly size: number;
   readonly left: number;
   readonly top: number;
+  /**
+   * Lifted clear of the cards over the call bar when they would cover its face (Pip in the burrow
+   * for Pip's minute, Pip at the meeting): see `place-fit.ts`.
+   */
+  readonly clear?: true;
 }
 
 /** A bubble's top and its left and right insets. */
@@ -92,7 +100,14 @@ export type PlaceCopy =
     }
   | {
       readonly key:
-        'call.place.cafe' | 'call.place.fromBurrow' | 'call.place.busStop' | 'call.place.onCall';
+        | 'call.place.cafe'
+        | 'call.place.fromBurrow'
+        | 'call.place.busStop'
+        | 'call.place.onCall'
+        | 'call.place.inn'
+        | 'call.place.square'
+        | 'call.place.interviewRoom'
+        | 'call.place.pipsMinute';
     };
 
 /** The prototype's frame width: every number here is in its points. */
@@ -126,10 +141,33 @@ export function episodeTagOf(sceneId: string): string | null {
   return m ? `S${m[1]} · E${m[2]}` : null;
 }
 
-/** The neighbour a scene is with: its first cast member who isn't the roommate or a voice. */
-function neighbourOf(scene: Scene): CharacterId | null {
-  return scene.cast.find((c) => c !== 'pip' && c !== 'office' && c !== 'mags') ?? null;
+/** Characters heard but never drawn: the office on the phone, Mags at the town meeting. */
+const VOICES: ReadonlySet<CharacterId> = new Set(['office', 'mags']);
+
+/**
+ * The neighbours a scene is with, drawn on the stage: its cast but the roommate and the voices,
+ * the one who speaks and is answered most first (Hank at the café in Episode 3, not Mei), the
+ * cast's order between equals.
+ */
+export function neighboursOf(scene: Scene): readonly CharacterId[] {
+  const said = new Map<CharacterId, number>();
+  const count = (c: CharacterId | null | undefined) => {
+    if (c) said.set(c, (said.get(c) ?? 0) + 1);
+  };
+  for (const beat of scene.beats) {
+    if (beat.kind === 'rec') count(getLine(beat.line).character);
+    if (beat.kind === 'gen') count(beat.speaker);
+    if (beat.kind === 'gen' || beat.kind === 'learner') count(beat.answer?.listener);
+  }
+  return scene.cast
+    .filter((c) => c !== 'pip' && !VOICES.has(c))
+    .map((c, i) => ({ c, i, n: said.get(c) ?? 0 }))
+    .sort((a, b) => b.n - a.n || a.i - b.i)
+    .map((x) => x.c);
 }
+
+/** The neighbour a scene is with: the one it is most with. */
+const neighbourOf = (scene: Scene): CharacterId | null => neighboursOf(scene)[0] ?? null;
 
 /** The speaker pill's place line. */
 export function placeText(place: PlaceCopy, t: Translate): string {
@@ -142,6 +180,10 @@ export function placeText(place: PlaceCopy, t: Translate): string {
     case 'call.place.fromBurrow':
     case 'call.place.busStop':
     case 'call.place.onCall':
+    case 'call.place.inn':
+    case 'call.place.square':
+    case 'call.place.interviewRoom':
+    case 'call.place.pipsMinute':
       return t(place.key);
   }
 }
@@ -203,29 +245,152 @@ function settlingLayout(scene: Scene, chapter: number): CallLayout {
   }
 }
 
+/** "S1 · E4" on an episode call, none on the week's other calls. */
+const tagOf = (scene: Scene): string | null =>
+  scene.kind === 'episode' ? episodeTagOf(scene.id) : null;
+
+/**
+ * Behind a counter (the café's, the office's): the host large on the left, a second neighbour
+ * smaller behind the counter on the right (Mei while Hank orders), the roommate small in front at
+ * the side. In Pass it on the strip of rounds sits up top, so the bubbles start under it.
+ */
+function counterLayout(
+  scene: Scene,
+  host: CharacterId,
+  name: 'cafe' | 'office',
+): Pick<CallLayout, 'backdrop' | 'cast' | 'castFront' | 'bubbles' | 'bubbleDefault' | 'pill'> {
+  const second = neighboursOf(scene).find((c) => c !== host) ?? null;
+  const top = scene.kind === 'practice' ? 160 : 124;
+  return {
+    backdrop: { kind: 'sharp', name, front: true },
+    cast: [at(host, 220, 40, 212), ...(second ? [at(second, 150, 236, 262)] : [])],
+    // Small at the side, it rises over the cards on a short phone.
+    castFront: [{ ...at('pip', 130, 252, 486), clear: true }],
+    bubbles: {
+      [host]: bubble(top, 16, 120),
+      ...(second ? { [second]: bubble(top, 120, 16) } : {}),
+      pip: bubble(404, 96, 16),
+      // Under the phone pill while the office is on the line.
+      office: bubble(160, 16, 16),
+    },
+    bubbleDefault: bubble(top, 16, 120),
+    pill: host,
+  };
+}
+
+/**
+ * A neighbour on their own, the roommate not in the scene: Dex across the interview room's desk,
+ * large and in the middle, his line over his head the full width.
+ */
+function aloneLayout(scene: Scene, host: CharacterId): CallLayout {
+  const top = bubble(124, 16, 16);
+  return {
+    backdrop: { kind: 'sharp', name: 'office', front: true },
+    cast: [at(host, 250, 56, 202)],
+    castFront: [],
+    bubbles: { [host]: top },
+    bubbleDefault: top,
+    pill: host,
+    place: { key: scene.kind === 'real_week' ? 'call.place.interviewRoom' : 'call.place.onCall' },
+    exit: 'call.done.wrapUp',
+    episodeTag: tagOf(scene),
+    rounds: scene.kind === 'practice',
+    letter: null,
+  };
+}
+
+/** Up to three neighbours in the Inn's back row, left, right, then the middle. */
+const BACK_ROW = [
+  { size: 112, left: 10, top: 268 },
+  { size: 112, left: 268, top: 268 },
+  { size: 104, left: 143, top: 258 },
+] as const;
+
+/**
+ * A gathering (the Inn, the town meeting), every line up top over the heads. At the Inn, which
+ * borrows the town softly behind until its own set exists: the host large in front on the left,
+ * the roommate in front on the right, up to three more neighbours behind them. At the meeting in
+ * the square: a row by the fountain, the roommate in the middle beside the learner, neighbours
+ * either side.
+ */
+function gatheringLayout(scene: Scene, where: 'inn' | 'square'): CallLayout {
+  const neighbours = neighboursOf(scene);
+  // A timed speech's ring sits up top on the right: the lines leave it room.
+  const top = bubble(124, 16, timedBeats(scene).length > 0 ? 112 : 16);
+  const pipIn = scene.cast.includes('pip') || neighbours.length === 0;
+  const pip = (size: number, left: number, y: number): CastSpot[] =>
+    pipIn ? [{ ...at('pip', size, left, y), clear: true }] : [];
+  const [first = null, second = null, ...rest] = neighbours;
+  const spots =
+    where === 'square'
+      ? {
+          cast: rest.slice(0, 2).map((c, i) => at(c, 100, i === 0 ? 70 : 220, 330)),
+          castFront: [
+            ...(first ? [at(first, 124, 6, 412)] : []),
+            ...(second ? [at(second, 124, 262, 412)] : []),
+            ...pip(140, 128, 470),
+          ],
+        }
+      : {
+          cast: [second, ...rest].flatMap((c, i) => {
+            const slot = BACK_ROW[i];
+            return c && slot ? [at(c, slot.size, slot.left, slot.top)] : [];
+          }),
+          castFront: [...(first ? [at(first, 190, 14, 380)] : []), ...pip(140, 240, 420)],
+        };
+  return {
+    backdrop:
+      where === 'square'
+        ? { kind: 'sharp', name: 'square', front: false }
+        : { kind: 'blur', name: 'town' },
+    ...spots,
+    bubbles: {},
+    bubbleDefault: top,
+    pill: where === 'square' && pipIn ? 'pip' : (first ?? 'pip'),
+    place: { key: where === 'square' ? 'call.place.square' : 'call.place.inn' },
+    exit: 'call.done.wrapUp',
+    episodeTag: tagOf(scene),
+    rounds: scene.kind === 'practice',
+    letter: null,
+  };
+}
+
+/**
+ * Pip's minute: in the burrow itself, not on the phone. The room is lifted so the roommate stands
+ * on the rug mid-screen with the line over its head, clear of the cards over the call bar.
+ */
+function pipsMinuteLayout(): CallLayout {
+  const top = bubble(132, 20, 20);
+  return {
+    backdrop: { kind: 'sharp', name: 'burrow', front: false, top: -170 },
+    cast: [],
+    castFront: [{ ...at('pip', 190, 100, 330), clear: true }],
+    bubbles: { pip: top },
+    bubbleDefault: top,
+    pill: 'pip',
+    place: { key: 'call.place.pipsMinute' },
+    exit: 'common.done',
+    episodeTag: null,
+    rounds: false,
+    letter: null,
+  };
+}
+
 export function layoutFor(scene: Scene): CallLayout {
   const chapter = SETTLING_SCENES.indexOf(scene.id as SettlingSceneId);
   if (scene.kind === 'settling' && chapter >= 0) return settlingLayout(scene, chapter + 1);
+  if (scene.kind === 'daily') return pipsMinuteLayout();
   const neighbour = neighbourOf(scene);
   switch (scene.place) {
     case 'lantern-cafe': {
       const host = neighbour ?? 'mei';
+      if (!scene.cast.includes('pip') && neighbour) return aloneLayout(scene, host);
       return {
-        backdrop: { kind: 'sharp', name: 'cafe', front: true },
-        cast: [at(host, 220, 40, 212)],
-        castFront: [at('pip', 130, 252, 486)],
-        bubbles: {
-          [host]: bubble(124, 16, 120),
-          pip: bubble(404, 96, 16),
-          // Under the phone pill while the office is on the line.
-          office: bubble(160, 16, 16),
-        },
-        bubbleDefault: bubble(124, 16, 120),
-        pill: host,
+        ...counterLayout(scene, host, 'cafe'),
         place: { key: 'call.place.cafe' },
         exit: 'call.done.wrapUp',
-        episodeTag: scene.kind === 'episode' ? episodeTagOf(scene.id) : null,
-        rounds: false,
+        episodeTag: tagOf(scene),
+        rounds: scene.kind === 'practice',
         letter: COUNTER_LETTER,
       };
     }
@@ -243,23 +408,19 @@ export function layoutFor(scene: Scene): CallLayout {
         pill: 'bea',
         place: { key: 'call.place.busStop' },
         exit: 'call.done.hopOff',
-        episodeTag: scene.kind === 'episode' ? episodeTagOf(scene.id) : null,
+        episodeTag: tagOf(scene),
         rounds: scene.kind === 'practice',
         letter: null,
       };
     case 'hollowbrook-office': {
       const host = neighbour ?? 'sol';
+      if (!scene.cast.includes('pip') && neighbour) return aloneLayout(scene, host);
       return {
-        backdrop: { kind: 'sharp', name: 'office', front: true },
-        cast: [at(host, 220, 40, 212)],
-        castFront: [at('pip', 130, 252, 486)],
-        bubbles: { [host]: bubble(124, 16, 120), pip: bubble(404, 96, 16) },
-        bubbleDefault: bubble(124, 16, 120),
-        pill: host,
+        ...counterLayout(scene, host, 'office'),
         place: { key: 'call.place.onCall' },
         exit: 'call.done.wrapUp',
-        episodeTag: scene.kind === 'episode' ? episodeTagOf(scene.id) : null,
-        rounds: false,
+        episodeTag: tagOf(scene),
+        rounds: scene.kind === 'practice',
         letter: COUNTER_LETTER,
       };
     }
@@ -293,21 +454,9 @@ export function layoutFor(scene: Scene): CallLayout {
         letter: null,
       };
     case 'lantern-inn':
+      return gatheringLayout(scene, 'inn');
     case 'town-square':
-      // Later episodes: the roommate on a call, the place softly behind.
-      return {
-        backdrop: { kind: 'blur', name: 'burrow' },
-        cast: [at('pip', 220, 85, 330)],
-        castFront: [],
-        bubbles: { pip: bubble(220, 20, 20) },
-        bubbleDefault: bubble(220, 20, 20),
-        pill: 'pip',
-        place: { key: 'call.place.onCall' },
-        exit: 'common.done',
-        episodeTag: episodeTagOf(scene.id),
-        rounds: false,
-        letter: null,
-      };
+      return gatheringLayout(scene, 'square');
   }
 }
 

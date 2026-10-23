@@ -103,8 +103,14 @@ export interface CallView {
   readonly phone: boolean;
   /** Each critter's mood on the stage. */
   readonly moods: Readonly<Partial<Record<CharacterId, Mood>>>;
-  /** Who tilts their head while a reply is on its way. */
+  /** Who thinks while a reply is on its way. */
   readonly thinker: CharacterId | null;
+  /** The learner has the floor (the talk button held, or hands-free hearing them): the stage listens. */
+  readonly learnerTalking: boolean;
+  /** Who waits for the reply once the learner is done, until it plays: they think. */
+  readonly awaiting: CharacterId | null;
+  /** Whom the learner is answering this turn (the scene's host when the beat names no one). */
+  readonly listener: CharacterId;
   /** Seconds left while the scene wraps up for today. */
   readonly wrapUpSeconds: number | null;
   /** A crisis: the safety sheet opens. */
@@ -240,8 +246,17 @@ export function callView(input: CallViewInput): CallView {
     mirror,
     letter: live ? tracker.letter : null,
     phone: live && tracker.phone,
-    moods: moodsOf(input, { mic, thinking, fixed, listener, talking }),
+    moods: moodsOf(input, {
+      mic,
+      awaiting: live && call.phase === 'thinking',
+      fixed,
+      listener,
+      talking,
+    }),
     thinker: thinking ? (listener ?? layout.pill) : null,
+    learnerTalking: live && call.phase === 'listening',
+    awaiting: live && call.phase === 'thinking' ? (listener ?? layout.pill) : null,
+    listener: listener ?? layout.pill,
     wrapUpSeconds:
       live && call.wrappingUp && call.secondsLeft !== null ? Math.max(0, call.secondsLeft) : null,
     safety: call.safety === 'crisis',
@@ -411,7 +426,7 @@ function moodsOf(
   input: CallViewInput,
   s: {
     mic: MicState;
-    thinking: boolean;
+    awaiting: boolean;
     fixed: boolean;
     listener: CharacterId | null;
     talking: CharacterId | null;
@@ -426,7 +441,9 @@ function moodsOf(
     else if (s.fixed && (c === s.listener || c === 'pip')) mood = 'excited';
     else if (tracker.correction !== null && c === (s.listener ?? 'pip')) mood = 'confused';
     else if (call.notice === 'didnt_catch' && c === (s.listener ?? layout.pill)) mood = 'confused';
-    else if (s.thinking && c === (s.listener ?? layout.pill)) mood = 'think';
+    // Thinking is the critter's act (it glances up and aside); the listening face stays on, as the
+    // rig moves it and a held paw at the chin would not.
+    else if (s.awaiting && c === (s.listener ?? layout.pill)) mood = 'listen';
     else if (s.talking === c) mood = 'happy';
     else if (s.mic === 'yourTurn' || s.mic === 'listening') mood = 'listen';
     out[c] = mood;

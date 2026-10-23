@@ -81,6 +81,10 @@ export interface TrackerState {
   readonly beatTries: number;
   /** "Bỏ qua" was tapped on this beat: leaving it isn't a pass. */
   readonly skipped: boolean;
+  /** Turns the learner got past so far (a good answer, or "Bỏ qua"): the stage hops for each. */
+  readonly passes: number;
+  /** The beat last counted in `passes`, so a turn counts once. */
+  readonly passedBeat: string | null;
   /** The beat whose task card the learner put away ("OK"). */
   readonly taskDone: string | null;
   readonly correction: { readonly original: string; readonly prompt: string } | null;
@@ -115,6 +119,8 @@ export const initialTracker: TrackerState = {
   passed: null,
   beatTries: 0,
   skipped: false,
+  passes: 0,
+  passedBeat: null,
   taskDone: null,
   correction: null,
   fixedAt: null,
@@ -245,7 +251,7 @@ function onFrame(
       // The turn's praise plays: the card ticks.
       const praised = answerOf(beatOf(ctx.scene, state.beatId))?.praise.includes(frame.lineId);
       return {
-        ...state,
+        ...(praised && passedOf(state) ? countPass(state) : state),
         passed: praised ? (passedOf(state) ?? state.passed) : state.passed,
         recorded: { ...state.recorded, [frame.streamId]: frame.lineId },
         reactions: reaction ? [...state.reactions, frame.streamId] : state.reactions,
@@ -263,7 +269,7 @@ function onFrame(
       // The next turn's card while this beat waits: this turn passed.
       const moved = card.beatId !== state.beatId;
       return {
-        ...state,
+        ...(moved && passedOf(state) ? countPass(state) : state),
         cards: [...state.cards.filter((c) => c.beatId !== card.beatId), card].slice(-CARDS_KEPT),
         passed: moved ? (passedOf(state) ?? state.passed) : state.passed,
       };
@@ -337,8 +343,10 @@ function onBeat(state: TrackerState, beatId: string, ctx: TrackerContext): Track
   const beat = beatOf(ctx.scene, beatId);
   // The card of the turn left ticks if it passed, and stays through one beat change.
   const passed = passedOf(state) ?? (state.passed?.beatId === state.beatId ? state.passed : null);
+  // Leaving a turn the learner answered with words, or skipped, gets them past it.
+  const answered = expectsAnswer(ctx.scene, state.beatId) && (state.beatTries > 0 || state.skipped);
   const next: TrackerState = {
-    ...state,
+    ...(answered ? countPass(state) : state),
     beatId,
     beatSeq: state.beatSeq + 1,
     passed,
@@ -379,6 +387,12 @@ function onBeat(state: TrackerState, beatId: string, ctx: TrackerContext): Track
       // Shown by the screens that play those scenes, or by the answer's own timer.
       return next;
   }
+}
+
+/** One more turn passed, once per beat. */
+function countPass(state: TrackerState): TrackerState {
+  if (state.beatId === null || state.passedBeat === state.beatId) return state;
+  return { ...state, passes: state.passes + 1, passedBeat: state.beatId };
 }
 
 /** How many say-this cards are kept: this beat's, the next one's and the last one. */

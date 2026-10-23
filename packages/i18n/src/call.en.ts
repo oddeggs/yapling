@@ -11,6 +11,12 @@ export const callEn = {
   'call.place.fromBurrow': 'calling from the burrow',
   'call.place.busStop': 'Bus 45 stop',
   'call.place.onCall': 'on a call',
+  'call.place.inn': 'Lantern Inn',
+  'call.place.square': 'the town square',
+  /** Dex's calls: the interview room at the Hollowbrook office. */
+  'call.place.interviewRoom': 'Hollowbrook office · interview room',
+  /** Pip's minute, in the burrow. */
+  'call.place.pipsMinute': 'a minute in the burrow',
   /** The phone pill while the learner calls someone for a character. */
   'call.calling': 'Calling {who}',
   'call.callee.harbourLaneOffice': 'Harbour Lane Office',

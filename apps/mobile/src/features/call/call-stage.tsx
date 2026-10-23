@@ -1,8 +1,8 @@
 import type { Mood, Mouth, PipSpecies } from '@yapling/art';
 import { Critter, Scene } from '@yapling/art/native';
 import type { CharacterId } from '@yapling/contracts';
-import { motion, translucent } from '@yapling/theme';
-import { useEffect } from 'react';
+import { liveCurves, translucent, type Transition } from '@yapling/theme';
+import { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import Animated, {
   makeMutable,
@@ -16,12 +16,25 @@ import { useLipsyncClock, type Lipsync } from '../../voice/lipsync';
 import { useReduceMotion } from '../../ui/motion/reduce-motion';
 import { artCharacter, BlurredScene } from './call-art';
 import type { BubbleTone } from '../../ui/speech-bubble';
-import type { CallLayout, CastSpot } from './scene-layout';
+import { liftFor, type FitFrame } from './place-fit';
+import type { TrackerState } from './tracker';
+import type { CallView } from './view-model';
+import { stageCast, type CallLayout, type CastSpot } from './scene-layout';
+import {
+  cueOf,
+  shotFor,
+  SHOT_MS,
+  type StageCue,
+  type StageMoment,
+  type StageShot,
+  type StageSignals,
+} from './stage-acts';
 
 /*
  * The scene behind the call and the cast in it: Mei behind the café counter for the whole call
- * with the roommate small at the side, Bea at the wheel of Bus 45, or the burrow softly blurred
- * behind the roommate. The speaking critter's mouth follows the lipsync clock on the UI thread.
+ * with the roommate small at the side, Bea at the wheel of Bus 45, the burrow softly blurred
+ * behind the roommate, the town meeting in the square. The speaking critter's mouth follows the
+ * lipsync clock on the UI thread; each critter acts on what the call is doing (`stage-acts.ts`).
  */
 
 export interface CallStageProps {
@@ -31,16 +44,17 @@ export interface CallStageProps {
   readonly width: number;
   readonly height: number;
   readonly species: PipSpecies;
-  readonly moods: Readonly<Partial<Record<CharacterId, Mood>>>;
-  /** Whose line is playing: their mouth follows `mouth`. */
-  readonly talking: CharacterId | null;
+  /** The call as the screen draws it: moods, who talks (their mouth follows `mouth`), who thinks. */
+  readonly view: Pick<
+    CallView,
+    'moods' | 'talking' | 'awaiting' | 'learnerTalking' | 'listener' | 'sceneDone'
+  >;
+  /** Passed turns and the first line: the hops and the hello. */
+  readonly tracker: Pick<TrackerState, 'passes' | 'lines'>;
   readonly mouth: SharedValue<Mouth>;
-  /** Who tilts their head while a reply is on its way. */
-  readonly thinker: CharacterId | null;
+  /** The edges a `clear` critter's face keeps away from (the bubble above, the cards below). */
+  readonly fit: Omit<FitFrame, 'k'>;
 }
-
-/** The head tilt while thinking, in degrees (the prototype's `tilt: 8`). */
-const TILT_DEG = 8;
 
 export function CallStage({
   layout,
@@ -48,12 +62,24 @@ export function CallStage({
   width,
   height,
   species,
-  moods,
-  talking,
+  view,
+  tracker,
   mouth,
-  thinker,
+  fit,
 }: CallStageProps) {
   const { backdrop } = layout;
+  const { moods, talking } = view;
+  const moment: StageMoment = {
+    learnerTalking: view.learnerTalking,
+    thinker: view.awaiting,
+    talking,
+  };
+  const signals: StageSignals = {
+    passes: tracker.passes,
+    greeter: tracker.lines[0]?.speaker ?? null,
+    done: view.sceneDone,
+  };
+  const cues = useStageCues(layout, moment, signals, view.listener);
   const spot = (s: CastSpot) => (
     <StageCritter
       key={s.character}
@@ -62,7 +88,8 @@ export function CallStage({
       species={species}
       mood={moods[s.character] ?? 'happy'}
       mouth={talking === s.character ? mouth : 'rest'}
-      tilted={thinker === s.character}
+      cue={cues(s)}
+      lift={liftFor(s, { ...fit, k })}
     />
   );
   return (
@@ -95,28 +122,70 @@ export function CallStage({
   );
 }
 
+/**
+ * Each critter's act from the call: its held act from the moment, and the one-shot (a hop, a wave)
+ * the latest change of signals started, for as long as it plays.
+ */
+function useStageCues(
+  layout: CallLayout,
+  moment: StageMoment,
+  signals: StageSignals,
+  listener: CharacterId,
+): (spot: CastSpot) => StageCue {
+  const cast = stageCast(layout);
+  const last = useRef(signals);
+  const plays = useRef<Partial<Record<CharacterId, number>>>({});
+  const [shot, setShot] = useState<StageShot | null>(null);
+  useEffect(() => {
+    const next = shotFor(last.current, signals, {
+      listener,
+      host: layout.pill,
+      cast,
+      now: Date.now(),
+    });
+    last.current = signals;
+    if (!next) return;
+    for (const c of next.cast) plays.current[c] = (plays.current[c] ?? 0) + 1;
+    setShot(next);
+    // Only a change of signals starts a one-shot.
+  }, [signals.passes, signals.greeter, signals.done]);
+  // When the one-shot is over, the call's state has the stage again.
+  useEffect(() => {
+    if (!shot) return undefined;
+    const timer = setTimeout(() => setShot(null), SHOT_MS[shot.act]);
+    return () => clearTimeout(timer);
+  }, [shot]);
+  const now = Date.now();
+  return (s) => cueOf(s, moment, cast, shot, plays.current[s.character] ?? 0, now);
+}
+
+/** A critter rising clear of the cards, or settling back: a calm travel, as the rig's own fades. */
+const LIFT: Transition = { durationMs: 520, easing: liveCurves.travel };
+
 function StageCritter({
   spot,
   k,
   species,
   mood,
   mouth,
-  tilted,
+  cue,
+  lift,
 }: {
   spot: CastSpot;
   k: number;
   species: PipSpecies;
   mood: Mood;
   mouth: Mouth | SharedValue<Mouth>;
-  tilted: boolean;
+  cue: StageCue;
+  /** Points up, to keep the face clear of the cards. */
+  lift: number;
 }) {
   const reduce = useReduceMotion();
-  const tilt = useSharedValue(0);
+  const rise = useSharedValue(0);
   useEffect(() => {
-    const to = tilted ? TILT_DEG : 0;
-    tilt.set(reduce ? to : transitionTo(to, motion.transitions.roommateLift));
-  }, [tilted, reduce, tilt]);
-  const style = useAnimatedStyle(() => ({ transform: [{ rotate: `${tilt.get()}deg` }] }));
+    rise.set(reduce ? -lift : transitionTo(-lift, LIFT));
+  }, [lift, reduce, rise]);
+  const style = useAnimatedStyle(() => ({ transform: [{ translateY: rise.get() }] }));
   const character = artCharacter(spot.character);
   if (!character) return null;
   const size = spot.size * k;
@@ -129,7 +198,6 @@ function StageCritter({
           top: spot.top * k,
           width: size,
           height: size * 1.2,
-          transformOrigin: 'bottom',
         },
         style,
       ]}
@@ -141,6 +209,9 @@ function StageCritter({
         mouth={mouth}
         size={size}
         animated={!reduce}
+        act={cue.act}
+        play={cue.play}
+        lookAt={cue.lookAt}
       />
     </Animated.View>
   );
