@@ -2,6 +2,7 @@ import { Progress, type EpochMs } from '@yapling/contracts';
 import {
   fromPhraseProgress,
   meetPhrase,
+  seasonKeepsakeId,
   seasonRingWeeks,
   toPhraseProgress,
   type SeasonWeeks,
@@ -92,6 +93,21 @@ export class ProgressRepo {
     const opened = (p: Progress) => [...seasonRingWeeks(p.weeks, dayIndex, this.season)];
     if (JSON.stringify(opened(current)) === JSON.stringify(current.weeks)) return null;
     return this.update((p) => ({ ...p, weeks: opened(p) }));
+  }
+
+  /**
+   * The season keepsake, kept on the server once its last episode is played, so the burrow wall
+   * hangs it on any phone. Nothing is asked when progress already has it. Throws `network` offline
+   * and 409 `season_not_finished` when the server's rings disagree; the next open asks again.
+   */
+  async keepSeasonKeepsake(season: number): Promise<Progress | null> {
+    const current = this.resource.data ?? (await this.refresh());
+    if (current === null) return null;
+    if (current.keepsakes.some((k) => k.id === seasonKeepsakeId(season))) return current;
+    const generation = this.resource.generation;
+    const progress = await this.api.keepSeasonKeepsake({ season });
+    await this.resource.setFromServer(progress, generation);
+    return progress;
   }
 
   /**
