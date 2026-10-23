@@ -137,6 +137,77 @@ describe('the narration guard', () => {
   });
 });
 
+describe('lines about the call itself', () => {
+  it('keeps a line about writing the line from the voice', () => {
+    for (const size of [1, 3, 7, 120]) {
+      const out = speak(
+        "Since you're asking me to write the line now: I'll wait for you to speak first…",
+        'Pip',
+        size,
+      );
+      expect(out.spoken).toBe('');
+      expect(out.action).toBe('dropped');
+    }
+  });
+
+  it('drops the call talked about and speaks the line after it', () => {
+    const lines: [string, string, string][] = [
+      [
+        "I'll write my next line now. Hi! Is this your first day?",
+        'Pip',
+        'Hi! Is this your first day?',
+      ],
+      ['Let me write the line first. What do you do for work?', 'Pip', 'What do you do for work?'],
+      ['You want me to write the dialogue, okay. So, a no!', 'Dex', 'So, a no!'],
+      ["You're asking me to continue the roleplay. Hello again!", 'Mei', 'Hello again!'],
+      ['Because the prompt says to wait, I will wait. Ready?', 'Pip', 'Ready?'],
+      ['As I was writing the line, I paused. Okay! Your turn.', 'Pip', 'Okay! Your turn.'],
+      [
+        'Since it seems that right now the learner is quiet, I will ask again. Coffee?',
+        'Mei',
+        'Coffee?',
+      ],
+      ['The prompt asks for one question. What is your job?', 'Dex', 'What is your job?'],
+    ];
+    for (const [line, speaker, spoken] of lines) {
+      const out = speak(line, speaker);
+      expect(out.spoken).toBe(spoken);
+      expect(out.action).toBe('dropped');
+    }
+  });
+
+  it('still speaks lines that only look like it', () => {
+    for (const [line, speaker] of [
+      ['Hold the line, please. Who is calling?', 'Office'],
+      ['Since you asked, I love writing!', 'Pip'],
+      ["Since you're asking, the line at the café is long!", 'Mei'],
+      ['Let me write that down!', 'Pip'],
+      ["I'll write your name on the cup, okay?", 'Mei'],
+      ['I need to write a line to Mei. Can you help?', 'Pip'],
+      ['You want me to play your manager? Okay!', 'Dex'],
+      ['You asked me to wait, so I waited!', 'Pip'],
+      ['You did it! That was your first no.', 'Dex'],
+      ["You're right, the café needs a sign.", 'Mei'],
+      ['Because you wrote me a letter, I am happy!', 'Pip'],
+      ['As you say, the next line is the hard one!', 'Hank'],
+      ['So, what do you do for work?', 'Pip'],
+      ['Because of the rent, we need a plan.', 'Mei'],
+      ["I'm an AI, so I can't drink coffee. But you can!", 'Pip'],
+    ] as const) {
+      const out = speak(line, speaker);
+      expect(out.spoken).toBe(line);
+      expect(out.action).toBeNull();
+    }
+  });
+
+  it('holds a clause only to its comma', () => {
+    const splitter = new ReplySplitter({ maxWords: 25, speaker: 'Mei' });
+    expect(splitter.push('Since ')).toBe('');
+    expect(splitter.push('Friday, ')).toBe('Since Friday, ');
+    expect(splitter.push('I ')).toBe('I ');
+  });
+});
+
 describe('the case tag', () => {
   it('is kept for the call and never spoken', () => {
     const splitter = new ReplySplitter({ maxWords: 25, speaker: 'Pip' });
