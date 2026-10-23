@@ -170,6 +170,32 @@ describe('the keepsake', () => {
     );
     expect(wall.map((k) => k.id)).toEqual(['cando-introduce-yourself-30s', 'week-1']);
   });
+
+  it('hangs the season keepsake from progress, signed by Mei, newest last', () => {
+    const wall = hungKeepsakes(
+      progress({
+        canDos: [introduced],
+        keepsakes: [
+          {
+            id: 'season-1',
+            kind: 'season',
+            canDoId: null,
+            signedBy: 'mei',
+            earnedOn: '2026-11-01',
+          },
+          canDoKeepsake,
+        ],
+      }),
+      learner,
+    );
+    expect(wall.map((k) => k.id)).toEqual(['cando-introduce-yourself-30s', 'season-1']);
+    expect(wall.at(-1)).toMatchObject({
+      canDo: 'keep the Lantern Café open!',
+      witness: 'mei',
+      earnedOn: '2026-11-01',
+      track: null,
+    });
+  });
 });
 
 describe('the keepsake’s track count', () => {

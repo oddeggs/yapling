@@ -45,6 +45,8 @@ export class Resource<T> {
   private cacheRead: Promise<void> | null = null;
   /** Bumped by every local change, so a refresh begun before it doesn't undo it. */
   private epoch = 0;
+  /** Bumped by `reset`, so a write begun for the learner before it never lands after it. */
+  private resets = 0;
 
   constructor(private readonly opts: ResourceOptions<T>) {}
 
@@ -83,15 +85,29 @@ export class Resource<T> {
     return this.data;
   }
 
-  /** A copy the server just answered with (a write's result). */
-  async setFromServer(data: T | null): Promise<void> {
+  /**
+   * Which learner's copy this is: a write takes it before asking the server and hands it back with
+   * the answer (`setFromServer`, `setLocal`), so an answer for the learner before a reset is dropped.
+   */
+  get generation(): number {
+    return this.resets;
+  }
+
+  /**
+   * A copy the server just answered with (a write's result). `generation`, when given, is the one
+   * the write began in: after a reset (the test menu's, account deletion, another learner) the
+   * answer belongs to the learner before and is dropped.
+   */
+  async setFromServer(data: T | null, generation?: number): Promise<void> {
+    if (generation !== undefined && generation !== this.resets) return;
     this.epoch += 1;
     this.store.set((s) => ({ ...s, data, status: 'ready', source: 'server', error: null }));
     await writeJson(this.opts.cache, this.opts.key, data);
   }
 
   /** A local change ahead of the server (optimistic, or queued offline); kept in the cache too. */
-  async setLocal(update: (data: T | null) => T | null): Promise<T | null> {
+  async setLocal(update: (data: T | null) => T | null, generation?: number): Promise<T | null> {
+    if (generation !== undefined && generation !== this.resets) return this.data;
     this.epoch += 1;
     const next = update(this.data);
     this.store.set((s) => ({ ...s, data: next, status: 'ready' }));
@@ -102,6 +118,7 @@ export class Resource<T> {
   /** Forgets the copy in memory (the caller clears the cache): account deletion, another learner. */
   reset(): void {
     this.epoch += 1;
+    this.resets += 1;
     this.cacheRead = Promise.resolve();
     this.store.set(EMPTY);
   }

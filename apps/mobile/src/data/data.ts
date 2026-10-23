@@ -233,9 +233,11 @@ export class Data {
    * learner confirms their age again and gets a new guest.
    */
   async resetLocal(): Promise<void> {
-    await this.forgetLocal();
+    // The session goes first, so no request starts under the learner being forgotten; answers to
+    // the ones already on their way are dropped by the resets that follow.
     await this.session.signOut();
     this.ownerCheck = null;
+    await this.forgetLocal();
   }
 
   private async forgetLocal(): Promise<void> {

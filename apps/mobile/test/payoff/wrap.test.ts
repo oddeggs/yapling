@@ -4,6 +4,8 @@ import { translator } from '@yapling/i18n';
 
 import {
   phrasesGrown,
+  closesSeason,
+  hasSeasonKeepsake,
   seasonEndedOn,
   seasonKeepsake,
   weekDates,
@@ -229,5 +231,28 @@ describe('the season keepsake', () => {
         track: null,
       },
     });
+  });
+});
+
+describe('the season’s end, once', () => {
+  it('closes the first wrap from the last episode’s week on, until the keepsake is kept', () => {
+    expect(closesSeason({ week: 6, seasonDone: true, kept: false })).toBe(true);
+    expect(closesSeason({ week: 8, seasonDone: true, kept: false })).toBe(true);
+    expect(closesSeason({ week: 5, seasonDone: true, kept: false })).toBe(false);
+    expect(closesSeason({ week: 6, seasonDone: false, kept: false })).toBe(false);
+    // Kept by an earlier wrap (on this phone or another): later wraps are ordinary weeks'.
+    expect(closesSeason({ week: 7, seasonDone: true, kept: true })).toBe(false);
+  });
+
+  it('reads the keepsake kept in progress', () => {
+    const season = {
+      id: 'season-1',
+      kind: 'season' as const,
+      canDoId: null,
+      signedBy: 'mei' as const,
+      earnedOn: '2026-10-12',
+    };
+    expect(hasSeasonKeepsake({ keepsakes: [] })).toBe(false);
+    expect(hasSeasonKeepsake({ keepsakes: [season] })).toBe(true);
   });
 });

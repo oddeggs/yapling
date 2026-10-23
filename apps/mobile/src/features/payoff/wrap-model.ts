@@ -15,13 +15,15 @@ import {
   localDateOf,
   nextEpisodeWeek,
   ringOpensOnDayOfWeek,
+  SEASON_KEEPSAKE_WITNESS,
+  seasonEndedOn as domainSeasonEndedOn,
+  seasonKeepsakeId,
   type SeasonWeeks,
 } from '@yapling/domain';
 import { translator, type StringKey, type Translate } from '@yapling/i18n';
 import { SEASON_1, seasonWeeks } from '@yapling/story';
 
-import { characterName, handDate } from './format';
-import type { Certificate, KeepsakeLearner } from './keepsake-model';
+import { seasonCertificate, type Certificate, type KeepsakeLearner } from './keepsake-model';
 import { episodeKicker, phraseTile, type PhraseTile, type RingChange } from './model';
 
 /*
@@ -196,18 +198,33 @@ export function weekWrap(input: WrapInput, t: Translate): WeekWrap {
 // --- The season's end ---
 
 /** Who signs the season keepsake: Mei, whose café the season saved. */
-export const SEASON_WITNESS: CharacterId = 'mei';
+export const SEASON_WITNESS: CharacterId = SEASON_KEEPSAKE_WITNESS;
 
 /**
  * The day the season ended: when its last episode's slot was done. Null while any episode of the
  * season is still to play.
  */
-export function seasonEndedOn(weeks: Progress['weeks'], timezone: TimeZone): LocalDate | null {
-  if (nextEpisodeWeek(SEASON, weeks) !== null) return null;
-  const last = SEASON_1.episodes.length;
-  const slot = weeks[last - 1]?.slots.find((s) => s.kind === 'episode');
-  return slot?.doneAt != null ? localDateOf(slot.doneAt, timezone) : null;
-}
+export const seasonEndedOn = (weeks: Progress['weeks'], timezone: TimeZone): LocalDate | null =>
+  domainSeasonEndedOn(SEASON, weeks, timezone);
+
+/** The first week whose wrap can close the season: the last episode's. */
+export const SEASON_END_WEEK = 6;
+
+/** Whether progress already keeps this season's keepsake (on this phone or another). */
+export const hasSeasonKeepsake = (progress: Pick<Progress, 'keepsakes'>): boolean =>
+  progress.keepsakes.some((k) => k.id === seasonKeepsakeId(SEASON_1.number));
+
+/**
+ * Whether a week's wrap closes the season (then and now, then the season keepsake): the first
+ * wrap from the last episode's week on once every episode is played, until the keepsake is kept.
+ * Later wraps are ordinary weeks', so the season's end comes once.
+ */
+export const closesSeason = (input: {
+  readonly week: number;
+  readonly seasonDone: boolean;
+  /** The season keepsake was already kept when the wrap opened. */
+  readonly kept: boolean;
+}): boolean => input.seasonDone && input.week >= SEASON_END_WEEK && !input.kept;
 
 export interface SeasonKeepsake {
   readonly certificate: Certificate;
@@ -231,18 +248,11 @@ export function seasonKeepsake(
   const endedOn = seasonEndedOn(weeks, timezone);
   if (endedOn === null) return null;
   const en = translator('en');
-  const witnessName = characterName(SEASON_WITNESS, learner.roommateName);
   return {
-    certificate: {
-      id: `season-${SEASON_1.number}`,
-      heading: en('payoff.season.heading', { learner: learner.name }),
-      canDo: en('payoff.season.canDo'),
-      witnessed: en('payoff.season.signed', { witness: witnessName, date: handDate(endedOn) }),
-      witness: SEASON_WITNESS,
-      witnessName,
-      earnedOn: endedOn,
-      track: null,
-    },
+    certificate: seasonCertificate(
+      { id: seasonKeepsakeId(SEASON_1.number), earnedOn: endedOn, signedBy: SEASON_WITNESS },
+      learner,
+    ),
     tag: t('payoff.season.tag'),
     title: t('payoff.season.title'),
     stamp: en('payoff.season.stamp'),

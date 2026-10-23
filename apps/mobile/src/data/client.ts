@@ -17,6 +17,7 @@ import {
   Progress,
   ProgressPut,
   PushTokenRegistration,
+  SeasonKeepsakeRequest,
   Session,
 } from '@yapling/contracts';
 
@@ -47,6 +48,8 @@ export interface ApiClient {
   getProgress(): Promise<Progress>;
   /** 409 `stale_revision` when `body.revision` is not the server's. */
   putProgress(body: ProgressPut): Promise<Progress>;
+  /** Keeps the season keepsake in progress; 409 `season_not_finished` before the season's end. */
+  keepSeasonKeepsake(body: SeasonKeepsakeRequest): Promise<Progress>;
   listMemory(): Promise<MemoryList>;
   createMemory(body: MemoryCreate): Promise<MemoryItem>;
   updateMemory(id: string, body: MemoryUpdate): Promise<MemoryItem>;
@@ -122,6 +125,8 @@ export function createApiClient(http: Http, auth: TokenSource): ApiClient {
     patchProfile: (body) => json('PATCH', API_ROUTES.profile, ProfileUpdate, Profile, body),
     getProgress: () => json('GET', API_ROUTES.progress, undefined, Progress),
     putProgress: (body) => json('PUT', API_ROUTES.progress, ProgressPut, Progress, body),
+    keepSeasonKeepsake: (body) =>
+      json('POST', API_ROUTES.seasonKeepsake, SeasonKeepsakeRequest, Progress, body),
     listMemory: () => json('GET', API_ROUTES.memory, undefined, MemoryList),
     createMemory: (body) => json('POST', API_ROUTES.memory, MemoryCreate, MemoryItem, body),
     updateMemory: (id, body) =>

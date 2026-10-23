@@ -1,4 +1,6 @@
 import type { MemoryItem, Profile, Progress, TimeZone } from '@yapling/contracts';
+import { seasonKeepsakeOf } from '@yapling/domain';
+import { SEASON_1, seasonWeeks } from '@yapling/story';
 
 import type { Schedule } from '../../src/data/connectivity';
 import { Data, type DataOptions } from '../../src/data/data';
@@ -136,6 +138,27 @@ export class FakeApi {
         const put = body as Progress;
         if (put.revision !== current.revision) return error(409, 'stale_revision');
         const next = { ...put, revision: current.revision + 1 };
+        this.progress.set(userId, next);
+        return { status: 200, body: next };
+      }
+      case 'POST /api/me/keepsakes/season': {
+        const { season } = body as { season: number };
+        if (season !== SEASON_1.number) return error(404, 'not_found');
+        const current = this.progressOf(userId);
+        const keepsake = seasonKeepsakeOf(
+          season,
+          seasonWeeks(SEASON_1),
+          current.weeks,
+          'Asia/Ho_Chi_Minh',
+        );
+        if (keepsake === null) return error(409, 'season_not_finished');
+        if (current.keepsakes.some((k) => k.id === keepsake.id))
+          return { status: 200, body: current };
+        const next = {
+          ...current,
+          keepsakes: [...current.keepsakes, keepsake],
+          revision: current.revision + 1,
+        };
         this.progress.set(userId, next);
         return { status: 200, body: next };
       }

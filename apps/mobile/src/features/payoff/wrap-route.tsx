@@ -1,7 +1,8 @@
 import { localDateOf } from '@yapling/domain';
+import { SEASON_1 } from '@yapling/story';
 import { colours } from '@yapling/theme';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useAppNow, useCalls, useProgress, useWeek } from '../../data';
 import { useLocale, useToast } from '../../ui';
@@ -11,7 +12,7 @@ import { PREVIEW_TIMEZONE, previewWeek } from './preview-weeks';
 import { PAYOFF_ROUTES, useLearner } from './routes';
 import { SeasonScreen } from './season-screen';
 import { thenAndNow } from './then-now-model';
-import { seasonKeepsake, weekWrap } from './wrap-model';
+import { closesSeason, hasSeasonKeepsake, seasonKeepsake, weekWrap } from './wrap-model';
 import { ThenNowScreen, WrapScreen } from './wrap-screen';
 
 /*
@@ -23,9 +24,6 @@ import { ThenNowScreen, WrapScreen } from './wrap-screen';
 
 type Phase = 'wrap' | 'thenNow' | 'season';
 
-/** The first week whose wrap can close the season: the last episode's. */
-const SEASON_END_WEEK = 6;
-
 export function WrapRoute({ week }: { week: number }) {
   const router = useRouter();
   const { t } = useLocale();
@@ -35,7 +33,7 @@ export function WrapRoute({ week }: { week: number }) {
     () => (__DEV__ && preview !== undefined ? previewWeek(week) : null),
     [preview, week],
   );
-  const { progress: liveProgress, refresh } = useProgress();
+  const { progress: liveProgress, refresh, keepSeasonKeepsake } = useProgress();
   const { calls: liveCalls } = useCalls();
   const current = useWeek();
   const { learner, species, timezone } = useLearner();
@@ -61,7 +59,14 @@ export function WrapRoute({ week }: { week: number }) {
         : null,
     [progress, startedOn, week, zone, today, t],
   );
-  const closes = wrap !== null && wrap.seasonDone && week >= SEASON_END_WEEK;
+  // Whether the season keepsake was already kept when the wrap opened (read once, so keeping it
+  // now doesn't take the season's end away mid-way): then this wrap is an ordinary week's.
+  const keptAtOpen = useRef<boolean | null>(null);
+  if (keptAtOpen.current === null && progress !== null)
+    keptAtOpen.current = sample === null && hasSeasonKeepsake(progress);
+  const closes =
+    wrap !== null &&
+    closesSeason({ week, seasonDone: wrap.seasonDone, kept: keptAtOpen.current ?? false });
   const thenNow = useMemo(
     () => (closes ? thenAndNow(calls, 'season', t) : null),
     [closes, calls, t],
@@ -70,6 +75,16 @@ export function WrapRoute({ week }: { week: number }) {
     () => (closes && progress ? seasonKeepsake(progress.weeks, who, zone, t) : null),
     [closes, progress, who, zone, t],
   );
+
+  // Earned: kept on the server at once, so the burrow wall hangs it on any phone. Offline (or a
+  // server that hasn't caught up) it is asked for again the next time the wrap opens.
+  const earned = season !== null && !sample;
+  const asked = useRef(false);
+  useEffect(() => {
+    if (!earned || asked.current) return;
+    asked.current = true;
+    void keepSeasonKeepsake(SEASON_1.number).catch(() => undefined);
+  }, [earned, keepSeasonKeepsake]);
 
   const home = () => router.replace(PAYOFF_ROUTES.home);
   if (!wrap) return null;

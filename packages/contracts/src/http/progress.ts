@@ -248,3 +248,12 @@ export type Progress = z.infer<typeof Progress>;
  */
 export const ProgressPut = Progress;
 export type ProgressPut = Progress;
+
+/**
+ * `POST /api/me/keepsakes/season`: keep the season keepsake (a `season` keepsake, `season-<n>`) in
+ * progress once every episode of season `season` is played, so the burrow wall hangs it on every
+ * phone. The server dates it from the last episode's slot. Answers `Progress`; asking again keeps
+ * the first one; 409 `season_not_finished` while an episode is still to play.
+ */
+export const SeasonKeepsakeRequest = z.object({ season: z.int().min(1).max(99) });
+export type SeasonKeepsakeRequest = z.infer<typeof SeasonKeepsakeRequest>;

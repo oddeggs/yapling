@@ -98,6 +98,8 @@ export function useProgress(): Loaded<Progress> & {
   readonly meetPhrase: (phrase: { readonly id: string; readonly text: string }) => Promise<void>;
   /** Opens on the server the ring's calls whose day has come on the app's clock. */
   readonly openRing: (dayIndex: number) => Promise<void>;
+  /** Keeps the season keepsake on the server once the season's last episode is played. */
+  readonly keepSeasonKeepsake: (season: number) => Promise<void>;
 } {
   const data = useData();
   const loaded = useResource(data.progress.resource);
@@ -111,6 +113,9 @@ export function useProgress(): Loaded<Progress> & {
       },
       openRing: async (dayIndex: number) => {
         await data.progress.openRing(dayIndex);
+      },
+      keepSeasonKeepsake: async (season: number) => {
+        await data.progress.keepSeasonKeepsake(season);
       },
     }),
     [loaded, data],

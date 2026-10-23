@@ -1,8 +1,9 @@
-import { Progress, type PhraseProgress } from '@yapling/contracts';
+import { Progress, SeasonKeepsakeRequest, type PhraseProgress } from '@yapling/contracts';
 import { Hono } from 'hono';
 
 import { errorResponse, parseBody, respond, type SessionEnv } from '../auth';
 import { ProgressPut, STALE_REVISION } from './schema';
+import { keepSeasonKeepsake, SEASON_NOT_FINISHED } from './season-keepsake';
 import { readProgress, writeProgress } from './store';
 
 /** Whether the raw body (already parsed once, so cached) has the Settling-in chapters. */
@@ -34,6 +35,9 @@ export function keepPipReuse(
  *   `stale_revision` over any other, when the phone reads the server's copy, which wins. A body
  *   without `settlingChaptersDone` (an older app's) keeps the saved chapters, and a phrase without
  *   `pipReusedAt` keeps the saved one.
+ * - `POST /me/keepsakes/season` (`SeasonKeepsakeRequest`): the season keepsake kept in progress once
+ *   the stored rings show every episode played; 409 `season_not_finished` before then, 404
+ *   `not_found` for a season there isn't. Asking again answers the same progress.
  */
 export function progressRoutes(): Hono<SessionEnv> {
   const routes = new Hono<SessionEnv>();
@@ -60,6 +64,18 @@ export function progressRoutes(): Hono<SessionEnv> {
       Date.now(),
     );
     if (!outcome.ok) return errorResponse(c, 409, STALE_REVISION);
+    return respond(c, Progress, outcome.progress);
+  });
+
+  routes.post('/me/keepsakes/season', async (c) => {
+    const body = await parseBody(c, SeasonKeepsakeRequest);
+    if (!body.ok) return body.response;
+    const outcome = await keepSeasonKeepsake(c.env.DB, c.var.userId, body.value.season, Date.now());
+    if (!outcome.ok) {
+      return outcome.error === 'no_season'
+        ? errorResponse(c, 404, 'not_found')
+        : errorResponse(c, 409, SEASON_NOT_FINISHED);
+    }
     return respond(c, Progress, outcome.progress);
   });
 

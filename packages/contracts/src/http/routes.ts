@@ -10,6 +10,7 @@
  *   POST   /api/me/stage             StageRequest → Profile
  *   GET    /api/me/progress          → Progress
  *   PUT    /api/me/progress          ProgressPut → Progress (409 stale_revision when based on an old revision)
+ *   POST   /api/me/keepsakes/season  SeasonKeepsakeRequest → Progress (409 season_not_finished)
  *   GET    /api/me/memory            → MemoryList
  *   POST   /api/me/memory            MemoryCreate → MemoryItem
  *   PATCH  /api/me/memory/:id        MemoryUpdate → MemoryItem
@@ -29,6 +30,7 @@ export const API_ROUTES = {
   profile: '/api/me/profile',
   stage: '/api/me/stage',
   progress: '/api/me/progress',
+  seasonKeepsake: '/api/me/keepsakes/season',
   memory: '/api/me/memory',
   memoryItem: (id: string) => `/api/me/memory/${encodeURIComponent(id)}`,
   minutes: '/api/me/minutes',

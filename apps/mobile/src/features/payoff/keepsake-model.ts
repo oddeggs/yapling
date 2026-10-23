@@ -8,6 +8,7 @@ import type {
 } from '@yapling/contracts';
 import {
   SEASON_1_CAN_DOS,
+  SEASON_KEEPSAKE_WITNESS,
   SETTLING_CAN_DOS,
   canDoById,
   isRingFull,
@@ -127,12 +128,38 @@ function canDoForWeek(keepsake: Keepsake, canDos: readonly CanDoProgress[]) {
     .at(-1);
 }
 
+/**
+ * The season keepsake's certificate: the café's little sign in the roommate's hand, "Lan helped…
+ * keep the Lantern Café open!", signed by Mei on the day the season's last episode was played.
+ */
+export function seasonCertificate(
+  keepsake: Pick<Keepsake, 'id' | 'earnedOn' | 'signedBy'>,
+  learner: KeepsakeLearner,
+): Certificate {
+  const witness = keepsake.signedBy ?? SEASON_KEEPSAKE_WITNESS;
+  const witnessName = characterName(witness, learner.roommateName);
+  return {
+    id: keepsake.id,
+    heading: en('payoff.season.heading', { learner: learner.name }),
+    canDo: en('payoff.season.canDo'),
+    witnessed: en('payoff.season.signed', {
+      witness: witnessName,
+      date: handDate(keepsake.earnedOn),
+    }),
+    witness: witness === 'office' ? null : witness,
+    witnessName,
+    earnedOn: keepsake.earnedOn,
+    track: null,
+  };
+}
+
 /** The certificate for any keepsake in progress (the burrow wall shows these). */
 export function certificateFor(
   keepsake: Keepsake,
   progress: { readonly canDos: readonly CanDoProgress[] },
   learner: KeepsakeLearner,
 ): Certificate {
+  if (keepsake.kind === 'season') return seasonCertificate(keepsake, learner);
   const canDo =
     keepsake.canDoId !== null
       ? progress.canDos.find((c) => c.id === keepsake.canDoId)
@@ -142,14 +169,15 @@ export function certificateFor(
 
 /**
  * The keepsakes hanging on the burrow wall, oldest first: every keepsake the learner has earned
- * is drawn and hung (hanging it is the payoff, not a choice to keep it).
+ * is drawn and hung (hanging it is the payoff, not a choice to keep it). The season keepsake comes
+ * from the server's progress too, so it hangs on any phone the learner signs in on.
  */
 export function hungKeepsakes(
   progress: { readonly canDos: readonly CanDoProgress[]; readonly keepsakes: readonly Keepsake[] },
   learner: KeepsakeLearner,
 ): readonly Certificate[] {
   return [...progress.keepsakes]
-    .filter((k) => k.kind === 'can_do' || k.kind === 'week')
+    .filter((k) => k.kind === 'can_do' || k.kind === 'week' || k.kind === 'season')
     .sort((a, b) => a.earnedOn.localeCompare(b.earnedOn))
     .map((k) => certificateFor(k, progress, learner));
 }

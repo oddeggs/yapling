@@ -49,27 +49,41 @@ export class SettlingStore {
     value: EMPTY_SETTLING,
   });
 
+  /** The read in flight, so a write waits for it rather than writing over the stored copy. */
+  private loading: { readonly userId: string; readonly done: Promise<void> } | null = null;
+
   constructor(private readonly cache: CacheStorage) {}
 
   /** Reads the learner's copy (once per learner); a copy that doesn't parse starts empty. */
-  async load(userId: string): Promise<void> {
+  load(userId: string): Promise<void> {
     const current = this.store.get();
-    if (current.userId === userId) return;
+    if (current.userId === userId)
+      return this.loading?.userId === userId ? this.loading.done : Promise.resolve();
     this.store.set({ userId, loaded: false, value: EMPTY_SETTLING });
-    let value = EMPTY_SETTLING;
-    try {
-      const raw = await this.cache.get(keyOf(userId));
-      const parsed = raw === null ? null : LocalSettling.safeParse(JSON.parse(raw));
-      if (parsed?.success) value = parsed.data;
-    } catch {
-      // Unreadable: start empty; the server's copy and the call records fill it again.
-    }
-    if (this.store.get().userId !== userId) return;
-    this.store.set((s) => ({ userId, loaded: true, value: mergeLocal(value, s.value) }));
+    const done = (async () => {
+      const value = await this.read(userId);
+      if (this.store.get().userId !== userId) return;
+      this.store.set((s) => ({ userId, loaded: true, value: mergeLocal(value, s.value) }));
+    })();
+    this.loading = { userId, done };
+    return done;
   }
 
-  /** Changes the learner's copy and writes it; a failing cache never fails the caller. */
+  /**
+   * Changes the learner's copy and writes it; a failing cache never fails the caller. A write for
+   * a learner other than the one the store holds (one signed out or reset a moment ago, or the next
+   * one before the burrow reads them) goes to that learner's own entry and leaves the store alone,
+   * so a late write never takes the store from the learner on screen.
+   */
   async update(userId: string, change: (current: LocalSettling) => LocalSettling): Promise<void> {
+    const holder = this.store.get().userId;
+    if (holder !== null && holder !== userId) {
+      const stored = await this.read(userId);
+      const next = change(stored);
+      if (JSON.stringify(next) === JSON.stringify(stored)) return;
+      await this.cache.set(keyOf(userId), JSON.stringify(next)).catch(() => undefined);
+      return;
+    }
     await this.load(userId);
     const state = this.store.get();
     if (state.userId !== userId) return;
@@ -77,6 +91,18 @@ export class SettlingStore {
     if (JSON.stringify(next) === JSON.stringify(state.value)) return;
     this.store.set({ ...state, value: next });
     await this.cache.set(keyOf(userId), JSON.stringify(next)).catch(() => undefined);
+  }
+
+  /** The learner's stored copy; one that is missing or doesn't parse is empty. */
+  private async read(userId: string): Promise<LocalSettling> {
+    try {
+      const raw = await this.cache.get(keyOf(userId));
+      const parsed = raw === null ? null : LocalSettling.safeParse(JSON.parse(raw));
+      if (parsed?.success) return parsed.data;
+    } catch {
+      // Unreadable: start empty; the server's copy and the call records fill it again.
+    }
+    return EMPTY_SETTLING;
   }
 }
 

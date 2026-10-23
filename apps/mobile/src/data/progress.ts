@@ -2,6 +2,7 @@ import { Progress, type EpochMs } from '@yapling/contracts';
 import {
   fromPhraseProgress,
   meetPhrase,
+  seasonKeepsakeId,
   seasonRingWeeks,
   toPhraseProgress,
   type SeasonWeeks,
@@ -51,14 +52,16 @@ export class ProgressRepo {
    * offline and leaves the phone's copy as it was.
    */
   async save(next: Progress): Promise<ProgressSave> {
+    // An answer that comes back after a reset belongs to the learner before; it is dropped.
+    const generation = this.resource.generation;
     try {
       const progress = await this.api.putProgress(next);
-      await this.resource.setFromServer(progress);
+      await this.resource.setFromServer(progress, generation);
       return { saved: true, progress };
     } catch (error) {
       if (!isDataError(error, 'stale_revision')) throw error;
       const server = await this.api.getProgress();
-      await this.resource.setFromServer(server);
+      await this.resource.setFromServer(server, generation);
       return { saved: false, progress: server };
     }
   }
@@ -90,6 +93,21 @@ export class ProgressRepo {
     const opened = (p: Progress) => [...seasonRingWeeks(p.weeks, dayIndex, this.season)];
     if (JSON.stringify(opened(current)) === JSON.stringify(current.weeks)) return null;
     return this.update((p) => ({ ...p, weeks: opened(p) }));
+  }
+
+  /**
+   * The season keepsake, kept on the server once its last episode is played, so the burrow wall
+   * hangs it on any phone. Nothing is asked when progress already has it. Throws `network` offline
+   * and 409 `season_not_finished` when the server's rings disagree; the next open asks again.
+   */
+  async keepSeasonKeepsake(season: number): Promise<Progress | null> {
+    const current = this.resource.data ?? (await this.refresh());
+    if (current === null) return null;
+    if (current.keepsakes.some((k) => k.id === seasonKeepsakeId(season))) return current;
+    const generation = this.resource.generation;
+    const progress = await this.api.keepSeasonKeepsake({ season });
+    await this.resource.setFromServer(progress, generation);
+    return progress;
   }
 
   /**
