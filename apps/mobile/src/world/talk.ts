@@ -134,9 +134,6 @@ export class Talk {
         pace: null,
       },
       minHoldMs: MIN_HOLD_MS,
-      // The mic is heard only while the learner holds the button, and no one speaks over them then,
-      // so there is no echo to cancel: the voices play at full quality, not as a phone call.
-      voiceProcessing: false,
       ...(__DEV__ ? { onLog: (m: string) => console.log('voice', m) } : {}),
     });
     this.engine = engine;
