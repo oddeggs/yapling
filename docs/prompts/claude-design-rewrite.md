@@ -1,3 +1,5 @@
+<!-- Kept as a written spec only. The rewrite is designed directly in design/rewrite/index.html, not through Claude Design. -->
+
 Yapling: walk into a quiet painted town that runs on your clock, and talk your way through it in English (iOS, portrait)
 
 An AI English speaking app for Vietnamese adults and teens who can read English but freeze when they have to speak it. Natterwick is a parallel town that runs alongside your real day: open the app at 7 am and Mei is raising the café shutters; open it at 1 am and Pip, your red-panda roommate, is asleep on the sofa and wakes with a yawn. You walk into a moment that was already happening, and someone there needs you to talk. You speak out loud, hands-free, and the conversation goes where you take it. An AI story director quietly learns how well you speak and what you care about, and writes the next moment just for you. Every conversation ends as a small painting with a wry title, and the paintings you keep become your journey. No lessons, no days, no streaks.

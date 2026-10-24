@@ -3,7 +3,7 @@
 Decided with the founder on 24 Oct 2026. This brief replaces the v1 app's look, home screen, day/week calendar and pre-scripted storyline. Wherever it contradicts `concept.md`, `journey-and-story.md`, `every-week-loop.md`, `story-engine.md` or `design-review.md`, this brief wins. The cast, Natterwick, the voices, the live-call pipeline and the product rules in `CLAUDE.md` stay.
 
 References:
-- Living prototype: https://claude.ai/artifact/CeLA1Wdb8kGbGQzMc3H24X
+- **The design:** `design/rewrite/index.html` (open it in a browser; also at https://claude.ai/artifact/CeLA1Wdb8kGbGQzMc3H24X). Every screen in §9 is designed and working there, and it is the visual and motion source of truth for the rewrite. Where it and this brief disagree, this brief wins for behaviour and the prototype wins for look and motion.
 - Cast sheet: https://claude.ai/artifact/7CMDjfjU4t8naPyo57JPfd
 - Proposal: https://claude.ai/artifact/Cj8Lyq534toJnVopovCCRf
 - Director test: `spikes/director/REPORT.md` on branch `spike/director`
