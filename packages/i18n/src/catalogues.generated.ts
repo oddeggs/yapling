@@ -31,6 +31,8 @@ import { storyVi } from './story.vi';
 import { storyEn } from './story.en';
 import { weekVi } from './week.vi';
 import { weekEn } from './week.en';
+import { worldVi } from './world.vi';
+import { worldEn } from './world.en';
 
 /** Every feature, in file-name order, with its catalogue in each language. */
 export const features: readonly FeatureCatalogues[] = [
@@ -49,6 +51,7 @@ export const features: readonly FeatureCatalogues[] = [
   { name: 'season', file: 'season', catalogues: { vi: seasonVi, en: seasonEn } },
   { name: 'story', file: 'story', catalogues: { vi: storyVi, en: storyEn } },
   { name: 'week', file: 'week', catalogues: { vi: weekVi, en: weekEn } },
+  { name: 'world', file: 'world', catalogues: { vi: worldVi, en: worldEn } },
 ];
 
 /** Every key, in vi. */
@@ -68,6 +71,7 @@ export const vi = {
   ...seasonVi,
   ...storyVi,
   ...weekVi,
+  ...worldVi,
 };
 
 /** The source catalogue: every key, in en. */
@@ -87,6 +91,7 @@ export const en = {
   ...seasonEn,
   ...storyEn,
   ...weekEn,
+  ...worldEn,
 };
 
 /** Each language's merged catalogue. */

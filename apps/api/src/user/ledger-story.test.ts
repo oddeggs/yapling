@@ -7,7 +7,8 @@ import { call, newGuest } from '../auth/testing/client';
 import { userObject } from './object';
 import { userClock } from './user-object';
 
-const DAY = 24 * 60 * 60_000;
+const HOUR = 60 * 60_000;
+const DAY = 24 * HOUR;
 const HCM = 'Asia/Ho_Chi_Minh';
 
 const onboarding = {
@@ -37,11 +38,11 @@ describe('the ledger and the story start', () => {
   const today = localDateOf(Date.now(), HCM);
   const installMidnight = startOfLocalDay(today, HCM);
 
-  it("starts a Visitor's generous first week on the day the story started, once it has", async () => {
+  it("counts a Visitor's generous first days from the day the story started, once it has", async () => {
     const { userId, token } = await newGuest();
     await profile(token, 'PUT', { ...onboarding, startPath: 'visitor', storyStartedOn: null });
     const user = userObject(env, userId);
-    // Settling in: the weeks count from the install day meanwhile.
+    // Settling in: the days count from the install day meanwhile.
     expect(await user.balance()).toMatchObject({ periodStart: installMidnight, firstWeek: true });
     await user.charge(300, 'learner');
 
@@ -51,23 +52,30 @@ describe('the ledger and the story start', () => {
     expect(await user.balance()).toMatchObject({ periodStart: installMidnight, usedSeconds: 300 });
 
     const storyMidnight = startOfLocalDay(storyDay, HCM);
-    setClock(storyMidnight + 60 * 60_000);
+    setClock(storyMidnight + HOUR);
     expect(await user.balance()).toMatchObject({
       periodStart: storyMidnight,
-      periodEnd: storyMidnight + 7 * DAY,
-      allowanceSeconds: 3_600,
+      periodEnd: storyMidnight + DAY,
+      allowanceSeconds: 1_200,
       usedSeconds: 0,
       firstWeek: true,
     });
     await user.charge(100, 'character');
 
-    // Pinned: moving the story start can't open a fresh first week.
+    // Pinned: moving the story start can't open fresh first days.
     await profile(token, 'PATCH', { storyStartedOn: addDays(today, 3) });
-    setClock(storyMidnight + DAY + 60 * 60_000);
     expect(await user.balance()).toMatchObject({ periodStart: storyMidnight, usedSeconds: 100 });
-    setClock(storyMidnight + 7 * DAY + 60 * 60_000);
+    // Day 7 from the story start (day 9 from install) is still a generous day.
+    setClock(storyMidnight + 6 * DAY + HOUR);
+    expect(await user.balance()).toMatchObject({
+      periodStart: storyMidnight + 6 * DAY,
+      allowanceSeconds: 1_200,
+      firstWeek: true,
+    });
+    setClock(storyMidnight + 7 * DAY + HOUR);
     expect(await user.balance()).toMatchObject({
       periodStart: storyMidnight + 7 * DAY,
+      periodEnd: storyMidnight + 8 * DAY,
       allowanceSeconds: 600,
       firstWeek: false,
     });
@@ -80,10 +88,15 @@ describe('the ledger and the story start', () => {
     const user = userObject(env, userId);
     await user.charge(200, 'learner');
     expect(await user.balance()).toMatchObject({ periodStart: installMidnight, usedSeconds: 200 });
-    // A story start sent later doesn't move the weeks: the story started on the install day.
+    // A story start sent later doesn't move the first days: the story started on the install day.
     await profile(token, 'PATCH', { storyStartedOn: addDays(today, 1) });
-    setClock(installMidnight + 2 * DAY);
     expect(await user.balance()).toMatchObject({ periodStart: installMidnight, usedSeconds: 200 });
+    setClock(installMidnight + 7 * DAY + HOUR);
+    expect(await user.balance()).toMatchObject({
+      periodStart: installMidnight + 7 * DAY,
+      allowanceSeconds: 600,
+      firstWeek: false,
+    });
   });
 
   it('never starts the story before the install day', async () => {
@@ -105,37 +118,37 @@ describe('unmetered calls', () => {
     const { userId } = await newGuest();
     const user = userObject(env, userId);
     expect(await user.charge(600, 'learner', 'settling')).toEqual({
-      secondsLeft: 3_600,
+      secondsLeft: 1_200,
       wrappingUp: false,
       exhausted: false,
     });
     expect(await user.balance()).toMatchObject({ usedSeconds: 0 });
 
     // A charge without a call kind (as the call sends it today) is metered.
-    expect(await user.charge(3_600, 'learner')).toMatchObject({ exhausted: true });
+    expect(await user.charge(1_200, 'learner')).toMatchObject({ exhausted: true });
     expect(await user.charge(10, 'character', 'episode')).toMatchObject({ exhausted: true });
     expect(await user.charge(30, 'character', 'settling')).toEqual({
       secondsLeft: 0,
       wrappingUp: false,
       exhausted: false,
     });
-    expect(await user.balance()).toMatchObject({ usedSeconds: 3_610 });
+    expect(await user.balance()).toMatchObject({ usedSeconds: 1_210 });
   });
 
   it('lets a Settling-in call start with no minutes left, and no metered call', async () => {
     const { userId } = await newGuest();
     const user = userObject(env, userId);
     expect(await user.canStart('placement')).toBe(true);
-    await user.charge(3_600, 'learner');
+    await user.charge(1_200, 'learner');
     expect(await user.canStart('settling')).toBe(true);
     expect(await user.canStart('episode')).toBe(false);
     expect(await user.canStart('placement')).toBe(false);
   });
 
-  it("charges Pip's minute nothing, and lets it start in a week with no minutes left", async () => {
+  it("charges Pip's minute nothing, and lets it start on a day with no minutes left", async () => {
     const { userId } = await newGuest();
     const user = userObject(env, userId);
-    await user.charge(3_000, 'learner', 'episode');
+    await user.charge(1_000, 'learner', 'episode');
     const before = await user.balance();
     expect(await user.charge(45, 'learner', 'daily')).toEqual({
       secondsLeft: before.leftSeconds,

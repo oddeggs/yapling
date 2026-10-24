@@ -1,5 +1,6 @@
 import type { Bindings } from '../env';
 import { registerDeletionStep } from '../account';
+import { runMomentJob } from '../director/jobs';
 import { JobMessage } from './messages';
 import { runPostCall } from './post-call';
 import { sendScheduledPush } from './push-sender';
@@ -11,6 +12,11 @@ export const jobsClock = { now: (): number => Date.now() };
 
 registerDeletionStep('push_sends', (db, userId) => [
   db.prepare('DELETE FROM push_sends WHERE user_id = ?').bind(userId),
+]);
+registerDeletionStep('director', (db, userId) => [
+  db.prepare('DELETE FROM paintings WHERE user_id = ?').bind(userId),
+  db.prepare('DELETE FROM moments WHERE user_id = ?').bind(userId),
+  db.prepare('DELETE FROM learners WHERE user_id = ?').bind(userId),
 ]);
 registerDeletionStep('progress_changes', (db, userId) => [
   db.prepare('DELETE FROM progress_changes WHERE user_id = ?').bind(userId),
@@ -31,6 +37,8 @@ export async function consumeJobs(batch: MessageBatch, env: Bindings): Promise<v
     try {
       const job = parsed.data;
       if (job.type === 'post_call') await runPostCall(env, job, jobsClock.now());
+      else if (job.type === 'moment_after' || job.type === 'moment_plan')
+        await runMomentJob(env, job, jobsClock.now());
       else await sendScheduledPush(env.DB, job, jobsClock.now());
       message.ack();
     } catch (error) {

@@ -16,6 +16,7 @@ import { userIdForToken } from '../auth';
 import { callTime, savedSceneState } from '../calls/store';
 import type { Bindings } from '../env';
 import { userObject } from '../user';
+import { finishMoment } from '../director/finish';
 import { newCallData, type CallData } from './finalize';
 import { FrameSender } from './frames';
 import { loadLearner } from './learner';
@@ -23,6 +24,8 @@ import { CONTINUOUS_GAP_MS } from './safety';
 import { anthropicClient } from './llm';
 import { pipsMinuteMeta, pipsMinuteScenes, type PipsMinuteMeta } from './daily';
 import { CallSession } from './session';
+import { MomentSession, type MomentData } from './moment-session';
+import { helloMoment } from './moment-hello';
 import { lineGloss, TRANSLATIONS_PER_CALL } from './translate';
 import type { TranslateOutcome } from './translate-route';
 
@@ -51,7 +54,7 @@ export function objectIdOfToken(token: string): string | null {
 }
 
 export class CallDO extends DurableObject<Bindings> {
-  private session: CallSession | null = null;
+  private session: CallSession | MomentSession | null = null;
   private socket: WebSocket | null = null;
   /** Lines translated on a tap in this call, and how many taps were answered. */
   private readonly glosses = new Map<string, string | null>();
@@ -95,8 +98,10 @@ export class CallDO extends DurableObject<Bindings> {
     this.translations += 1;
     try {
       const gloss = await lineGloss(text, {
-        stage: data.learner.stage,
-        firstLanguage: data.learner.firstLanguage,
+        stage: data.learner.stage as Parameters<typeof lineGloss>[1]['stage'],
+        firstLanguage: data.learner.firstLanguage as Parameters<
+          typeof lineGloss
+        >[1]['firstLanguage'],
         llm: anthropicClient(this.env.ANTHROPIC_API_KEY ?? ''),
         usage: data.usage,
         cache: this.glosses,
@@ -213,8 +218,28 @@ export class CallDO extends DurableObject<Bindings> {
       if (gone()) return;
       this.socket = socket;
       await this.ctx.storage.deleteAlarm();
-      await session.attach(socket, { newCall: false, freshScene: false }, frame.resumeToken);
+      if (session instanceof MomentSession)
+        await session.attach(socket, { newCall: false }, frame.resumeToken);
+      else await session.attach(socket, { newCall: false, freshScene: false }, frame.resumeToken);
       if (gone() && this.socket === socket) this.phoneLeft();
+      return;
+    }
+
+    if (frame.kind === 'moment') {
+      const made = await helloMoment(this.env, frame, userId, country);
+      if (made.error) return reject(made.error);
+      if (gone()) return;
+      const secret = made.data.meta.resumeSecret;
+      const session = this.makeMomentSession(made.data);
+      this.socket = socket;
+      await this.ctx.storage.put(STORAGE_KEY, made.data);
+      void this.claimLine(userId);
+      await session.attach(
+        socket,
+        { newCall: true },
+        resumeTokenOf(this.ctx.id.toString(), secret),
+      );
+      if (gone() && this.socket === socket) await session.end('hangup');
       return;
     }
 
@@ -286,21 +311,54 @@ export class CallDO extends DurableObject<Bindings> {
     }
   }
 
-  private resumable(data: CallData, token: string): boolean {
+  private resumable(data: CallData | MomentData, token: string): boolean {
     if (data.endReason !== null) return false;
     if (token !== resumeTokenOf(this.ctx.id.toString(), data.meta.resumeSecret)) return false;
     return data.detachedAt === null || Date.now() - data.detachedAt < RESUME_WINDOW_MS;
   }
 
-  private async load(): Promise<CallData | null> {
-    return (await this.ctx.storage.get<CallData>(STORAGE_KEY)) ?? null;
+  private async load(): Promise<CallData | MomentData | null> {
+    return (await this.ctx.storage.get<CallData | MomentData>(STORAGE_KEY)) ?? null;
   }
 
-  private revive(data: CallData): CallSession | null {
+  private revive(data: CallData | MomentData): CallSession | MomentSession | null {
+    if ('kind' in data && data.kind === 'moment') return this.makeMomentSession(data);
+    return this.reviveScene(data as CallData);
+  }
+
+  private reviveScene(data: CallData): CallSession | null {
     const scene = data.meta.pipsMinute
       ? pipsMinuteScenes.current.find(data.meta.sceneId)?.scene
       : findScene(data.meta.sceneId);
     return scene ? this.makeSession(data, scene) : null;
+  }
+
+  private makeMomentSession(data: MomentData): MomentSession {
+    const session = new MomentSession(
+      this.env,
+      data,
+      () => void this.ctx.storage.put(STORAGE_KEY, data),
+      (d) => finishMoment(this.env, d),
+      () => this.ended(data.meta.userId),
+    );
+    this.session = session;
+    return session;
+  }
+
+  /** A call ended: the line is free, the socket closes, and the object forgets it. */
+  private ended(userId: string): void {
+    const socket = this.socket;
+    this.socket = null;
+    this.session = null;
+    void userObject(this.env, userId)
+      .releaseCall(this.ctx.id.toString())
+      .catch(() => undefined);
+    try {
+      socket?.close(1000, 'ended');
+    } catch {
+      // already closed
+    }
+    void this.ctx.storage.deleteAlarm().then(() => this.ctx.storage.deleteAll());
   }
 
   private makeSession(data: CallData, scene: Scene): CallSession {

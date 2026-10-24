@@ -79,7 +79,7 @@ describe('the call socket', () => {
 
   it('refuses a call when no live minutes are left', async () => {
     const { token, userId } = await newGuest();
-    await userObject(env, userId).charge(3_600, 'learner');
+    await userObject(env, userId).charge(1_200, 'learner');
     const phone = await Phone.call(token);
     expect(await phone.next('error')).toMatchObject({ code: 'minutes_exhausted', fatal: true });
   });
@@ -318,7 +318,7 @@ describe('an Episode 1 call', () => {
   it('wraps up kindly when the minutes run low, then ends and keeps the scene’s place', async () => {
     script();
     const { token, userId } = await newGuest();
-    await userObject(env, userId).charge(3_530, 'learner');
+    await userObject(env, userId).charge(1_130, 'learner');
     const phone = await Phone.call(token);
     expect(await phone.next('ready')).toMatchObject({ secondsLeft: 70 });
     await beat(phone, 'ask-whats-wrong');

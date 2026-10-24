@@ -8,45 +8,34 @@ import type {
   TimeZone,
 } from '@yapling/contracts';
 
-import {
-  addDays,
-  daysBetween,
-  localDateOf,
-  startOfLocalDay,
-  startOfMonth,
-  startOfNextMonth,
-} from './time';
+import { addDays, daysBetween, localDateOf, startOfLocalDay } from './time';
 
 /*
- * The live-minute ledger. Only live calls cost minutes; stories, postcards, voicemails and voice
- * notes never do, and neither do Settling-in calls or Pip's minute. A call charges the seconds the
- * learner talked plus the seconds the character talked. Periods are in the learner's timezone:
+ * The live-minute ledger. Only live conversations cost minutes; the wall, replays and your words
+ * never do, and neither does Pip's minute. A call charges the seconds the learner talked plus the
+ * seconds the character talked. Periods are the learner's local days: nobody waits a week to see
+ * what happens next.
  *
- * - Free, days 1–7 of the story: a generous first week. The story starts on `storyStartedOn` (the
- *   letter under the café door): the install day for a Newcomer, after Settling in for a Visitor.
- * - Free, after that: `FREE_WEEKLY_MINUTES` a week, the week rolling from the story start's
- *   weekday (the same seven-day weeks as the ring).
- * - Plus: 150 minutes a calendar month, fair use.
+ * - Free, the first seven days from install: `FREE_FIRST_DAYS_MINUTES` a day, enough for several
+ *   whole conversations, to feel understood and learn something they can name.
+ * - Free, after that: `FREE_DAILY_MINUTES` a day.
+ * - Plus: `PLUS_DAILY_MINUTES` a day, fair use.
  *
- * A new period, or a change of plan, starts a fresh allowance. At 60 seconds left the character
- * wraps the scene up kindly and the scene saves its place.
+ * A new day, or a change of plan, starts a fresh allowance. At 60 seconds left the character
+ * wraps the conversation up kindly and the painting is still kept.
  */
 
-/**
- * The free first week's live allowance: an hour, enough for the week's three calls (about 4, 3
- * and 4 minutes) several times over, plus the placement chat. Founder-tunable.
- */
-export const FREE_FIRST_WEEK_SECONDS = 60 * 60;
-/**
- * The free plan's live minutes each week after the first. The one place to change it: 10 for now,
- * the founder choosing between 10 and 15 (three ring calls take about 12). Pip's minute never
- * counts against it.
- */
-export const FREE_WEEKLY_MINUTES = 10;
-/** Free plan, every week after the first. */
-export const FREE_WEEKLY_SECONDS = FREE_WEEKLY_MINUTES * 60;
-/** Plus, per calendar month (fair use). */
-export const PLUS_MONTHLY_SECONDS = 150 * 60;
+/** Free live minutes a day in the first week. Founder-tunable after the first learner test. */
+export const FREE_FIRST_DAYS_MINUTES = 20;
+/** Free live minutes a day after the first week. */
+export const FREE_DAILY_MINUTES = 10;
+/** Plus live minutes a day (fair use). */
+export const PLUS_DAILY_MINUTES = 120;
+/** How many days from install count as the generous first week. */
+export const FIRST_DAYS = 7;
+export const FREE_FIRST_DAYS_SECONDS = FREE_FIRST_DAYS_MINUTES * 60;
+export const FREE_DAILY_SECONDS = FREE_DAILY_MINUTES * 60;
+export const PLUS_DAILY_SECONDS = PLUS_DAILY_MINUTES * 60;
 /** From this many seconds left, the character wraps the scene up. */
 export const WRAP_UP_SECONDS = 60;
 
@@ -68,7 +57,7 @@ export interface LedgerContext {
   readonly now: EpochMs;
 }
 
-/** The day the free weeks count from: the story's start, or the install day until it is known. */
+/** The day the free days count from: the install day (or a story start kept from before). */
 export const freeWeeksStartOn = (ctx: LedgerContext): LocalDate =>
   ctx.storyStartedOn ?? ctx.installedOn;
 
@@ -80,27 +69,28 @@ export interface LedgerPeriod {
   readonly firstWeek: boolean;
 }
 
-/** The period `now` falls in for the plan. */
+/** The period `now` falls in for the plan: the learner's local day. */
 export const ledgerPeriod = (ctx: LedgerContext): LedgerPeriod => {
   const today = localDateOf(ctx.now, ctx.timezone);
+  const periodStart = startOfLocalDay(today, ctx.timezone);
+  const periodEnd = startOfLocalDay(addDays(today, 1), ctx.timezone);
   if (ctx.plan === 'plus') {
     return {
       plan: 'plus',
-      periodStart: startOfLocalDay(startOfMonth(today), ctx.timezone),
-      periodEnd: startOfLocalDay(startOfNextMonth(today), ctx.timezone),
-      allowanceSeconds: PLUS_MONTHLY_SECONDS,
+      periodStart,
+      periodEnd,
+      allowanceSeconds: PLUS_DAILY_SECONDS,
       firstWeek: false,
     };
   }
-  const from = freeWeeksStartOn(ctx);
-  const week = Math.max(0, Math.floor(daysBetween(from, today) / 7));
-  const start = addDays(from, week * 7);
+  const day = Math.max(0, daysBetween(freeWeeksStartOn(ctx), today));
+  const firstWeek = day < FIRST_DAYS;
   return {
     plan: 'free',
-    periodStart: startOfLocalDay(start, ctx.timezone),
-    periodEnd: startOfLocalDay(addDays(start, 7), ctx.timezone),
-    allowanceSeconds: week === 0 ? FREE_FIRST_WEEK_SECONDS : FREE_WEEKLY_SECONDS,
-    firstWeek: week === 0,
+    periodStart,
+    periodEnd,
+    allowanceSeconds: firstWeek ? FREE_FIRST_DAYS_SECONDS : FREE_DAILY_SECONDS,
+    firstWeek,
   };
 };
 

@@ -1,4 +1,3 @@
-import type { CallData } from './finalize';
 import type { FrameSender } from './frames';
 
 /*
@@ -22,14 +21,23 @@ export function crisisResourcesKey(country: string | null): string {
   return `crisis.${CRISIS_COUNTRIES.has(code) ? code : DEFAULT_COUNTRY}`;
 }
 
+/** What the guardrails keep on a call (a scene's or a planned moment's). */
+export interface SafetyClock {
+  readonly meta: { readonly startedAt: number };
+  readonly priorCallSeconds: number;
+  readonly continuousSince: number;
+  disclosedAtMs: number;
+  breakSent: boolean;
+}
+
 /** The AI disclosure, now: the `safety` frame, and when it was shown (cumulative call time). */
-export function discloseAi(data: CallData, frames: FrameSender): void {
+export function discloseAi(data: SafetyClock, frames: FrameSender): void {
   frames.send({ type: 'safety', kind: 'ai_disclosure', resourcesKey: null });
   data.disclosedAtMs = data.priorCallSeconds * 1_000 + (Date.now() - data.meta.startedAt);
 }
 
 /** The disclosure again after three hours of call time, and the break reminder once. */
-export function keepHouse(data: CallData, frames: FrameSender): void {
+export function keepHouse(data: SafetyClock, frames: FrameSender): void {
   const now = Date.now();
   const cumulative = data.priorCallSeconds * 1_000 + (now - data.meta.startedAt);
   if (cumulative - data.disclosedAtMs >= AI_DISCLOSURE_EVERY_MS) discloseAi(data, frames);

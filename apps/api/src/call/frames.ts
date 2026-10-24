@@ -7,6 +7,7 @@ import {
   type CorrectionResolvedFrame,
   type EndedFrame,
   type ErrorFrame,
+  type GlossFrame,
   type HeardFrame,
   type HintFrame,
   type MeaningFrame,
@@ -28,6 +29,7 @@ import {
  */
 
 type ServerFrame =
+  | GlossFrame
   | ReadyFrame
   | PartialFrame
   | HeardFrame

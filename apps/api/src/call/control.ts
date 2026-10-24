@@ -38,6 +38,8 @@ const ControlLine = z.object({
   phrasesUsed: z.array(z.string().max(64)).max(10).catch([]).default([]),
   canDo: z.string().max(64).nullish().catch(null),
   safety: z.enum(['crisis']).nullish().catch(null),
+  beat: z.enum(['stay', 'next', 'end']).nullish().catch(null),
+  gloss: z.string().max(1_000).nullish().catch(null),
 });
 
 export interface Control {
@@ -46,6 +48,10 @@ export interface Control {
   readonly phrasesUsed: readonly string[];
   readonly canDo: string | null;
   readonly crisis: boolean;
+  /** A planned moment's line: whether its beat stays, moves on, or the moment ends. */
+  readonly beat: 'stay' | 'next' | 'end' | null;
+  /** A planned moment's line in the learner's own language, for the caption under it. */
+  readonly gloss: string | null;
 }
 
 /** What a reply without a readable control line counts as. */
@@ -55,6 +61,8 @@ export const NO_CONTROL: Control = {
   phrasesUsed: [],
   canDo: null,
   crisis: false,
+  beat: null,
+  gloss: null,
 };
 
 /** Reads the control text after the marker. Never throws; unreadable text is `NO_CONTROL`. */
@@ -78,6 +86,8 @@ export function parseControl(text: string | null): Control {
     phrasesUsed: c.phrasesUsed,
     canDo: c.canDo ?? null,
     crisis: c.safety === 'crisis',
+    beat: c.beat ?? null,
+    gloss: c.gloss?.trim() || null,
   };
 }
 

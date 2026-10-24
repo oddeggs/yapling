@@ -158,6 +158,7 @@ const crisis = { type: 'safety', seq: 15, kind: 'crisis', resourcesKey: 'crisis.
 const breakReminder = { type: 'safety', seq: 16, kind: 'break_reminder', resourcesKey: null };
 const disclosure = { type: 'safety', seq: 17, kind: 'ai_disclosure', resourcesKey: null };
 const thinking = { type: 'thinking', seq: 18, state: 'start' };
+const gloss = { type: 'gloss', seq: 22, streamId: 3, text: 'Bạn có thích bánh mì không?' };
 const notHeard = { type: 'not_heard', seq: 21 };
 const error = { type: 'error', seq: 19, code: 'tts_failed', fatal: false };
 const ended = {
@@ -194,6 +195,7 @@ const serverFrames = [
   disclosure,
   thinking,
   { ...thinking, state: 'stop' },
+  gloss,
   ...server.CALL_ERROR_CODES.map((code, i) => ({ ...error, seq: 30 + i, code, fatal: i > 3 })),
   ...server.CALL_END_REASONS.map((reason, i) => ({ ...ended, seq: 40 + i, reason })),
 ];
@@ -385,6 +387,7 @@ describeSchemas('call server frames', server, {
     ],
   ],
   ThinkingFrame: [[thinking], [{ ...thinking, state: 'on' }]],
+  GlossFrame: [[gloss], [{ ...gloss, streamId: 'x' }]],
   NotHeardFrame: [[notHeard], [{ type: 'not_heard' }, { ...notHeard, seq: 0 }]],
   CallErrorCode: [[...server.CALL_ERROR_CODES], ['rate_limited']],
   ErrorFrame: [

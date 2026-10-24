@@ -1,6 +1,8 @@
 import { env } from 'cloudflare:workers';
 import { describe, expect, it } from 'vitest';
 
+import { FREE_FIRST_DAYS_SECONDS, PLUS_DAILY_SECONDS } from '@yapling/domain';
+
 import { deleteAccount } from '../account';
 import { createApp } from '../app';
 import { expectError, expectJson, newGuest } from '../auth/testing/client';
@@ -80,12 +82,14 @@ describe('the RevenueCat webhook', () => {
     const { userId } = await newGuest();
     const event = plusEvent(userId);
     expect(await outcomeOf(event)).toBe('applied');
-    // The learning model counts Plus minutes by calendar month in the learner's timezone.
-    expect(await balance(userId)).toMatchObject({
+    // The learning model counts Plus minutes by the learner's local day.
+    const summary = await balance(userId);
+    expect(summary).toMatchObject({
       plan: 'plus',
-      allowanceSeconds: 150 * 60,
+      allowanceSeconds: PLUS_DAILY_SECONDS,
       firstWeek: false,
     });
+    expect(summary.periodEnd - summary.periodStart).toBe(DAY);
     expect(await readEntitlement(env.DB, userId)).toMatchObject({
       state: 'active',
       product: 'yapling_plus_monthly',
@@ -137,7 +141,12 @@ describe('the RevenueCat webhook', () => {
       event_timestamp_ms: now + 1,
     });
     expect(await outcomeOf(expiry)).toBe('applied');
-    expect(await balance(userId)).toMatchObject({ plan: 'free', allowanceSeconds: 3_600 });
+    // Back to free, on the generous first days: the guest installed today.
+    expect(await balance(userId)).toMatchObject({
+      plan: 'free',
+      allowanceSeconds: FREE_FIRST_DAYS_SECONDS,
+      firstWeek: true,
+    });
     expect((await readEntitlement(env.DB, userId))?.state).toBe('expired');
   });
 

@@ -236,6 +236,18 @@ export const ThinkingFrame = z.object({
 export type ThinkingFrame = z.infer<typeof ThinkingFrame>;
 
 /**
+ * The learner's own language under a character line, once the line has been written (it comes
+ * after the line's text, so the voice never waits for it).
+ */
+export const GlossFrame = z.object({
+  type: z.literal('gloss'),
+  seq: Seq,
+  streamId: StreamId,
+  text: z.string().max(2_000),
+});
+export type GlossFrame = z.infer<typeof GlossFrame>;
+
+/**
  * Something failed. `no_connection` is raised by the phone itself when the socket is gone.
  * `update_required`: the app's protocol is too old. `unknown_scene`: the call asked for a scene
  * this server doesn't have (or can't call). `fatal`: the call ends (an `ended` follows
@@ -307,6 +319,7 @@ export const CALL_SERVER_FRAME_TYPES = [
   'minutes',
   'safety',
   'thinking',
+  'gloss',
   'error',
   'ended',
 ] as const;
@@ -329,6 +342,7 @@ const callServerFrames = z.discriminatedUnion('type', [
   MinutesFrame,
   SafetyFrame,
   ThinkingFrame,
+  GlossFrame,
   ErrorFrame,
   EndedFrame,
 ]);

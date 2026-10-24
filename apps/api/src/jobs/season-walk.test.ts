@@ -4,8 +4,6 @@ import {
   canStartCall,
   chargeTalk,
   duePhrases,
-  FREE_FIRST_WEEK_SECONDS,
-  FREE_WEEKLY_SECONDS,
   fromPhraseProgress,
   isMeteredCall,
   isRingFull,
@@ -314,25 +312,6 @@ describe.each([
       const after = result.days[m.day - 1];
       expect(after?.weeks).toEqual(before?.weeks);
       expect(after?.keepsakes).toEqual(before?.keepsakes);
-    }
-  });
-
-  it('gives the free weekly minutes from week 2, counted from the story’s start', () => {
-    const calls = ringCalls(result);
-    for (const call of calls) {
-      expect(call.allowance).toBe(
-        weekOf(call.day) === 1 ? FREE_FIRST_WEEK_SECONDS : FREE_WEEKLY_SECONDS,
-      );
-    }
-    // Week 2's period starts on story day 8, in the learner's timezone (after Settling in for a
-    // Visitor, not on the install day).
-    const period = ledgerPeriod(ledgerContext(learner, at(learner, 8, 12)));
-    expect(period.periodStart).toBe(startOfLocalDay(addDays(learner.startedOn, 7), ZONE));
-    expect(period.firstWeek).toBe(false);
-    // Each week's first call starts with the whole allowance: nothing carries over or is owed.
-    for (let week = 2; week <= 6; week += 1) {
-      const first = calls.find((c) => weekOf(c.day) === week);
-      expect(first?.secondsLeftBefore).toBe(FREE_WEEKLY_SECONDS);
     }
   });
 

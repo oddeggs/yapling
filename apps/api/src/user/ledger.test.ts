@@ -2,9 +2,9 @@ import { MinutesSummary } from '@yapling/contracts';
 import { describe, expect, it } from 'vitest';
 
 import {
-  FREE_FIRST_WEEK_SECONDS,
-  FREE_WEEKLY_SECONDS,
-  PLUS_MONTHLY_SECONDS,
+  FREE_DAILY_SECONDS,
+  FREE_FIRST_DAYS_SECONDS,
+  PLUS_DAILY_SECONDS,
   startOfLocalDay,
 } from '@yapling/domain';
 
@@ -30,48 +30,30 @@ describe('the ledger rules', () => {
     storyStartedOn: null,
   } as const;
 
-  it('runs the free first week and then weekly allowances from the install day', () => {
+  it('gives a daily allowance, generous for the first seven days from install', () => {
     expect(domainLedgerRules.period(learner, installed + DAY)).toEqual({
       plan: 'free',
-      start: midnight,
-      end: midnight + 7 * DAY,
-      allowanceSeconds: FREE_FIRST_WEEK_SECONDS,
+      start: midnight + DAY,
+      end: midnight + 2 * DAY,
+      allowanceSeconds: FREE_FIRST_DAYS_SECONDS,
       firstWeek: true,
     });
     expect(domainLedgerRules.period(learner, midnight + 9 * DAY)).toEqual({
       plan: 'free',
-      start: midnight + 7 * DAY,
-      end: midnight + 14 * DAY,
-      allowanceSeconds: FREE_WEEKLY_SECONDS,
+      start: midnight + 9 * DAY,
+      end: midnight + 10 * DAY,
+      allowanceSeconds: FREE_DAILY_SECONDS,
       firstWeek: false,
     });
   });
 
-  it('counts the free weeks from the day the story started', () => {
-    // A Visitor settled in for five days; the letter came on the 27th.
-    const visitor = { ...learner, storyStartedOn: '2026-10-27' } as const;
-    const storyDay = startOfLocalDay('2026-10-27', HCM);
-    expect(domainLedgerRules.period(visitor, midnight + 9 * DAY)).toEqual({
-      plan: 'free',
-      start: storyDay,
-      end: storyDay + 7 * DAY,
-      allowanceSeconds: FREE_FIRST_WEEK_SECONDS,
-      firstWeek: true,
-    });
-    expect(domainLedgerRules.period(visitor, storyDay + 7 * DAY)).toMatchObject({
-      start: storyDay + 7 * DAY,
-      allowanceSeconds: FREE_WEEKLY_SECONDS,
-      firstWeek: false,
-    });
-  });
-
-  it('gives Plus calendar months', () => {
+  it('gives Plus a daily allowance', () => {
     const plus = { ...learner, plan: 'plus' } as const;
     expect(domainLedgerRules.period(plus, installed)).toEqual({
       plan: 'plus',
-      start: startOfLocalDay('2026-10-01', HCM),
-      end: startOfLocalDay('2026-11-01', HCM),
-      allowanceSeconds: PLUS_MONTHLY_SECONDS,
+      start: midnight,
+      end: midnight + DAY,
+      allowanceSeconds: PLUS_DAILY_SECONDS,
       firstWeek: false,
     });
   });
@@ -86,15 +68,15 @@ describe('the ledger rules', () => {
   it('wraps up from a minute left and runs out at none', () => {
     const period = domainLedgerRules.period(learner, installed);
     expect(chargeResult(period, 0)).toEqual({
-      secondsLeft: 3_600,
+      secondsLeft: FREE_FIRST_DAYS_SECONDS,
       wrappingUp: false,
       exhausted: false,
     });
-    expect(chargeResult(period, FREE_FIRST_WEEK_SECONDS - 61)).toMatchObject({
+    expect(chargeResult(period, FREE_FIRST_DAYS_SECONDS - 61)).toMatchObject({
       secondsLeft: 61,
       wrappingUp: false,
     });
-    expect(chargeResult(period, FREE_FIRST_WEEK_SECONDS - 60)).toEqual({
+    expect(chargeResult(period, FREE_FIRST_DAYS_SECONDS - 60)).toEqual({
       secondsLeft: 60,
       wrappingUp: true,
       exhausted: false,
@@ -113,7 +95,9 @@ describe('the ledger rules', () => {
       wrappingUp: false,
       exhausted: false,
     });
-    expect(unmeteredResult(period, 100)).toMatchObject({ secondsLeft: 3_500 });
+    expect(unmeteredResult(period, 100)).toMatchObject({
+      secondsLeft: FREE_FIRST_DAYS_SECONDS - 100,
+    });
   });
 
   it('summarises a period by the contracts', () => {

@@ -14,9 +14,9 @@ describe('GET /api/me/minutes', () => {
     );
     expect(summary).toMatchObject({
       plan: 'free',
-      allowanceSeconds: 3_600,
+      allowanceSeconds: 1_200,
       usedSeconds: 240,
-      leftSeconds: 3_360,
+      leftSeconds: 960,
       firstWeek: true,
     });
   });

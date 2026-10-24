@@ -13,6 +13,7 @@
     "@anthropic-ai/sdk": "catalog:",
     "@yapling/contracts": "workspace:*",
     "@yapling/domain": "workspace:*",
+    "@yapling/scene": "workspace:*",
     "@yapling/story": "workspace:*",
     "better-auth": "catalog:",
     "hono": "catalog:",

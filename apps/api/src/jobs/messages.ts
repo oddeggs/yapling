@@ -1,6 +1,7 @@
 import { OpaqueId } from '@yapling/contracts';
 import { z } from 'zod';
 
+import { MomentJob } from '../director/jobs';
 import { ScheduledPushJob } from '../user';
 
 /** The `jobs` queue message a finished call sends: write its summary and update progress. */
@@ -12,5 +13,8 @@ export const PostCallJob = z.object({
 export type PostCallJob = z.infer<typeof PostCallJob>;
 
 /** Every message the `jobs` queue carries. */
-export const JobMessage = z.discriminatedUnion('type', [PostCallJob, ScheduledPushJob]);
+export const JobMessage = z.union([
+  z.discriminatedUnion('type', [PostCallJob, ScheduledPushJob]),
+  MomentJob,
+]);
 export type JobMessage = z.infer<typeof JobMessage>;

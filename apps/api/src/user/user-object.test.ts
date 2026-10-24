@@ -9,7 +9,8 @@ import { userObject } from './object';
 import { ScheduledPushJob } from './jobs';
 import { userClock } from './user-object';
 
-const DAY = 24 * 60 * 60_000;
+const HOUR = 60 * 60_000;
+const DAY = 24 * HOUR;
 const HCM = 'Asia/Ho_Chi_Minh';
 
 async function putProfile(token: string, timezone: string) {
@@ -54,28 +55,28 @@ afterEach(() => {
 });
 
 describe('the live-minute ledger', () => {
-  it("starts the first week at the install day's local midnight and charges both talkers", async () => {
+  it("starts the generous first day at the install day's local midnight and charges both talkers", async () => {
     const { userId } = await newGuest();
     const user = userObject(env, userId);
     const before = await user.balance();
     expect(before).toMatchObject({
       plan: 'free',
-      allowanceSeconds: 3_600,
+      allowanceSeconds: 1_200,
       usedSeconds: 0,
-      leftSeconds: 3_600,
+      leftSeconds: 1_200,
       firstWeek: true,
     });
     // No profile yet: the launch timezone stands in.
     const today = localDateOf(Date.now(), HCM);
     expect(before.periodStart).toBe(startOfLocalDay(today, HCM));
-    expect(before.periodEnd - before.periodStart).toBe(7 * DAY);
+    expect(before.periodEnd - before.periodStart).toBe(DAY);
 
-    expect(await user.charge(3_000, 'learner')).toEqual({
-      secondsLeft: 600,
+    expect(await user.charge(1_000, 'learner')).toEqual({
+      secondsLeft: 200,
       wrappingUp: false,
       exhausted: false,
     });
-    expect(await user.charge(560, 'character')).toEqual({
+    expect(await user.charge(160, 'character')).toEqual({
       secondsLeft: 40,
       wrappingUp: true,
       exhausted: false,
@@ -85,41 +86,54 @@ describe('the live-minute ledger', () => {
       wrappingUp: true,
       exhausted: true,
     });
-    expect(await user.balance()).toMatchObject({ usedSeconds: 3_660, leftSeconds: 0 });
+    expect(await user.balance()).toMatchObject({ usedSeconds: 1_260, leftSeconds: 0 });
   });
 
-  it('moves to the weekly allowance after the first week', async () => {
+  it('gives a fresh allowance each local day, then the daily allowance after the first seven days', async () => {
     const { userId } = await newGuest();
     const user = userObject(env, userId);
     const { periodStart } = await user.balance();
     await user.charge(1_000, 'learner');
-    setClock(periodStart + 8 * DAY);
+    setClock(periodStart + DAY + HOUR);
+    expect(await user.balance()).toMatchObject({
+      periodStart: periodStart + DAY,
+      periodEnd: periodStart + 2 * DAY,
+      allowanceSeconds: 1_200,
+      usedSeconds: 0,
+      firstWeek: true,
+    });
+    setClock(periodStart + 6 * DAY + HOUR);
+    expect(await user.balance()).toMatchObject({ allowanceSeconds: 1_200, firstWeek: true });
+    setClock(periodStart + 7 * DAY + HOUR);
     expect(await user.balance()).toMatchObject({
       periodStart: periodStart + 7 * DAY,
+      periodEnd: periodStart + 8 * DAY,
       allowanceSeconds: 600,
       usedSeconds: 0,
       firstWeek: false,
     });
   });
 
-  it('switches to Plus for the calendar month, and back', async () => {
+  it('switches to Plus for the local day, and back', async () => {
     const { userId } = await newGuest();
     const user = userObject(env, userId);
-    await user.charge(3_600, 'learner');
-    const paidAt = Date.UTC(2026, 9, 22, 9);
+    await user.charge(1_200, 'learner');
+    const { periodStart } = await user.balance();
+    const paidAt = periodStart + 9 * HOUR;
     setClock(paidAt);
     expect(await user.setPlan('plus', paidAt)).toMatchObject({
       plan: 'plus',
-      periodStart: startOfLocalDay('2026-10-01', HCM),
-      periodEnd: startOfLocalDay('2026-11-01', HCM),
-      allowanceSeconds: 9_000,
-      leftSeconds: 9_000,
+      periodStart,
+      periodEnd: periodStart + DAY,
+      allowanceSeconds: 7_200,
+      leftSeconds: 7_200,
       firstWeek: false,
     });
     await user.charge(600, 'character');
-    // The next calendar month is a fresh allowance.
-    setClock(startOfLocalDay('2026-11-01', HCM));
-    expect(await user.balance()).toMatchObject({ usedSeconds: 0, leftSeconds: 9_000 });
+    expect(await user.balance()).toMatchObject({ usedSeconds: 600, leftSeconds: 6_600 });
+    // The next local day is a fresh allowance.
+    setClock(periodStart + DAY);
+    expect(await user.balance()).toMatchObject({ usedSeconds: 0, leftSeconds: 7_200 });
     vi.restoreAllMocks();
     expect(await user.setPlan('free', paidAt)).toMatchObject({ plan: 'free', leftSeconds: 0 });
   });
