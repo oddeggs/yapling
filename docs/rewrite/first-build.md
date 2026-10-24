@@ -60,3 +60,14 @@ Still slow: about 2 s from the end of the learner's speech to the reply leaving 
 ## Testing without a phone
 
 `apps/api/scripts/play-moment.mts` plays a moment against `wrangler dev` (or `API_BASE=<dev>/api`), speaking the learner's lines with macOS `say`. That is how the loop above was checked end to end.
+
+## The second phone test (24 Oct)
+
+Two moments. The mic and playout were healthy throughout (no restarts, underruns or late audio in the diagnostics), so what was left was the story, the voice and the wait. Fixed since:
+
+- **Hold to talk.** The control is now a hold-to-talk button: a dim ember while the resident speaks, "Hold to talk" on the learner's turn, a larger ember that swells with their voice while held. Letting go ends the turn, so the reply no longer waits out a 2 s pause. Tapping the scene still opens say-again, pause and menu.
+- **The voice sounded distorted** at the Visitor stage's 0.7x speed. Every stage now speaks at normal speed (a line asked for slowly at 0.9), slowed by its phrase breaks.
+- **The name changed** to "John" from a misheard line. The after-moment judge now only fills an empty name.
+- **The same question three moments running** ("Milk or no milk?"). The planner sees the last two moments, must not reuse their object or question, and a check sends a plan that repeats one back for repair.
+- **A line said three times** when "And what?" was taken as "say it again". A line is said again once; a second ask gets it in simpler words.
+- **Replies built on misheard words** ("New place" taken literally), reacted to things the learner never said, or ended without a question. The actor's rules now cover all three.
