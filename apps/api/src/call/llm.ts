@@ -124,7 +124,10 @@ export function turnParams(
   return {
     model,
     max_tokens: TURN_MAX_TOKENS,
-    thinking: { type: 'disabled' },
+    // Sonnet 5.5 takes thinking off as "between tools" (it never thinks before a reply then).
+    thinking: (model === MOMENT_TURN_MODEL
+      ? { type: 'between_tools' }
+      : { type: 'disabled' }) as Anthropic.ThinkingConfigParam,
     output_config: { effort: 'low' },
     cache_control: { type: 'ephemeral' },
     system,
