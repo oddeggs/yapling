@@ -60,11 +60,10 @@
   // ---------- render loop ----------
   const weavePat = cv.getContext('2d').createPattern(weave, 'repeat');
   let last = performance.now(), lastSec = -1;
-  // a still camera draws at 30 fps (the critters breathe as well, and the phone keeps its CPU for
-  // the voice); a moving one at full rate
-  const camMoving = () => Math.abs(cam.zs.v) > 0.003 || Math.abs(cam.zs.x - cam.zs.t) > 0.003;
+  // the critters' springs are stiff (the eyes' look most): stepped in slices of 1/60 s, a slow or
+  // hitching frame can't make them blow up
+  const stepCrit = (cr, dt, now) => { const n = Math.max(1, Math.ceil(dt * 60 - 0.01)); for (let i = 0; i < n; i++) cr.step(dt / n, now); };
   function frame(now) {
-    if (!still && now - last < 31 && !camMoving()) { requestAnimationFrame(frame); return; }
     const dt = clamp((now - last) / 1000, 0, 1 / 20); last = now;
     const { w, h, dpr } = dims;
     if (w) {
@@ -84,7 +83,7 @@
       const res = pl.front(g, w, h, L, now, S.v) || {};
       anchor = null;
       for (const c of res.cast || []) {
-        const cr = critFor(c.who); cr.mode = modeFor(c); cr.step(dt, now);
+        const cr = critFor(c.who); cr.mode = modeFor(c); stepCrit(cr, dt, now);
         if (!anchor || c.who === S.who) anchor = c;
         const s = c.s * (cr.s.scale || 1); g.save(); if (c.clip) { g.beginPath(); g.rect(...c.clip); g.clip(); }
         g.translate(c.x, c.y); g.scale(s, s); LT = lightT(L, { x: c.x, y: c.y, s }, c.src, c.warm || 0); PX = s * dpr * z; cr.draw(g, LT); g.restore();
