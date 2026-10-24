@@ -44,6 +44,19 @@ The director knows the learner's country (from the phone's region) and first lan
 - The web view takes a moment to paint on a cold start, so the screen is dark for about a second.
 - ElevenLabs credits: about 13k are left until 30 Oct. A conversation uses roughly 300–600.
 
+## The first phone test (24 Oct)
+
+Fifteen moments on the founder's iPhone. Seven of them heard no speech at all, the words that did arrive were often garbled ("office puppy"), the voice broke up, and two moments stopped on the crisis screen over misheard lines. Fixed since:
+
+- **The mic died** when a call started while the scene's music still had its own graph on the app's one audio engine. The music now closes its graph before the call's audio comes up, and plays only through the call's graph during a conversation.
+- **Music in the learner's turn.** It played at full level while the learner spoke (it only dipped under the character). It now sits low under the whole conversation.
+- **The crisis screen.** The actor's own flag stopped a moment alone, and Jev's margin (p ≥ 0.1) catches short misheard lines. Now a clear danger (p ≥ 0.5, or a plan or method) stops it at once; a borderline turn makes the character ask "Are you okay?", and a second one in a row stops it.
+- **The voice broke up** on mobile data: the jitter buffer holds 280 ms instead of 120 ms.
+- **Load on the phone:** the stage draws at 2x (not 3x) and at 30 fps while the camera is still; captions reach it a dozen times a second.
+- **Diagnostics:** the phone reports its mic, engine and playout every 15 s, after each line and after each turn; the reports are kept in the moment's transcript (`diag`) in R2.
+
+Still slow: about 2 s from the end of the learner's speech to the reply leaving the server (the pause wait, the transcript, the model's first words). That is the next thing to cut once the diagnostics show the audio is healthy.
+
 ## Testing without a phone
 
 `apps/api/scripts/play-moment.mts` plays a moment against `wrangler dev` (or `API_BASE=<dev>/api`), speaking the learner's lines with macOS `say`. That is how the loop above was checked end to end.
