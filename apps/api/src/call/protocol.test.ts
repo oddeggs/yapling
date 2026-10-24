@@ -170,8 +170,8 @@ describe('an Episode 1 call', () => {
     for (const texts of providers.ttsTexts) {
       expect(texts.join('')).not.toMatch(/[§{}]|outcome/);
     }
-    // Newcomer pace: the stage's speed, and breaks between phrases.
-    expect(providers.ttsVoices.every((v) => v.speed === 0.8)).toBe(true);
+    // Newcomer pace: normal speed, slowed by breaks between phrases.
+    expect(providers.ttsVoices.every((v) => v.speed === 1)).toBe(true);
     expect(providers.ttsTexts.flat().join('')).toContain('<break time="0.35s" />');
     for (const a of phone.of('alignment')) expect(a.chars.join('')).not.toMatch(/[<>]/);
 

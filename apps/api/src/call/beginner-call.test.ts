@@ -240,7 +240,7 @@ describe('Settling in', () => {
     await phone.next('play_rec', (p) => p.lineId === 's1-set-pip-slowly', { from: turn.from });
     const slow = await phone.next('say_end', () => true, { from: turn.from });
     expect(slow).toMatchObject({ character: 'pip', text: findLine('s1-set3-04')?.caption });
-    expect(providers.ttsVoices.slice(voices).at(-1)?.speed).toBe(0.7);
+    expect(providers.ttsVoices.slice(voices).at(-1)?.speed).toBe(0.9);
     await beat(phone, 'pip-slow', turn.from);
 
     await beat(phone, 'thank-linh');

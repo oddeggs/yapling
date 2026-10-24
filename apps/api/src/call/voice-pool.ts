@@ -3,8 +3,13 @@ import { speechSettings, ttsSpeedFactor } from '@yapling/domain';
 
 import { openTts, voiceKey, type TtsVoice } from './tts';
 
-/** The TTS speed factors ElevenLabs takes. */
-const SPEED_RANGE = { min: 0.7, max: 1.2 } as const;
+/**
+ * The TTS speed factors used. ElevenLabs takes 0.7–1.2, but Flash warbles when slowed, so every
+ * stage speaks at normal speed or above (the slow stages are slowed by their phrase breaks), and a
+ * line asked for slowly goes one step under that.
+ */
+const SPEED_RANGE = { min: 0.9, max: 1.2 } as const;
+const STAGE_SPEED_MIN = 1;
 /** How much the learner's pace moves the stage's speed, and the pause between phrases. */
 const PACE_STEP = { speed: 0.1, breakSeconds: 0.15 } as const;
 
@@ -20,7 +25,7 @@ export const stageVoice = (
   stage: Stage,
   pace: Pace | null = null,
 ): TtsVoice => {
-  const speed = ttsSpeedFactor(stage);
+  const speed = clampSpeed(Math.max(STAGE_SPEED_MIN, ttsSpeedFactor(stage)));
   const breakSeconds = speechSettings(stage).phraseBreakSeconds;
   if (pace === 'slower')
     return {
