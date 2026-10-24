@@ -1,0 +1,88 @@
+<title>Natterwick Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap">
+<style>
+/* One committed dark look, like the app: near-black, bone, and ember only for "playing". */
+:root {
+  --bg: #09080b; --bone: #f0ebe2; --dim: rgba(240,235,226,.6); --faint: rgba(240,235,226,.36); --hair: rgba(240,235,226,.12); --ember: #ff5b45;
+  --sf: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif;
+  --ny: ui-serif, "New York", Newsreader, "Iowan Old Style", Georgia, serif;
+  --spring: cubic-bezier(.2,.9,.25,1.08); --spring-d: 560ms; --soft: cubic-bezier(.22,1,.36,1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box }
+body { margin: 0; background: var(--bg); color: var(--bone); font: 15px/1.55 var(--sf); -webkit-font-smoothing: antialiased }
+button { font: inherit; color: inherit; -webkit-tap-highlight-color: transparent }
+button:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px }
+.page { max-width: 1240px; margin: 0 auto; padding: 44px max(16px, env(safe-area-inset-right, 0px)) 80px max(16px, env(safe-area-inset-left, 0px)) }
+header { display: grid; gap: 18px; max-width: 760px; margin-bottom: 30px }
+.eyebrow { font: 600 10.5px/1 var(--sf); letter-spacing: .22em; text-transform: uppercase; color: var(--ember) }
+h1 { margin: 0; font: italic 400 clamp(36px, 5.4vw, 60px)/1.02 var(--ny); letter-spacing: -.015em; text-wrap: balance }
+.lede { margin: 0; color: var(--dim); font-size: 16px; max-width: 64ch; text-wrap: pretty }
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px 26px; margin: 8px 0 34px; padding: 22px 0; border-top: .5px solid var(--hair); border-bottom: .5px solid var(--hair) }
+.rules b { display: block; font-weight: 600; margin-bottom: 4px } .rules span { color: var(--dim); font-size: 14px }
+
+/* the glass bar: time and weather for the whole town */
+.bar { position: sticky; top: 12px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 10px 12px 10px 18px; margin: 0 0 30px; border-radius: 26px;
+  background: rgba(28,25,32,.58); -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6); box-shadow: inset 0 .5px 0 rgba(255,255,255,.4), inset 0 0 0 .5px rgba(255,255,255,.1), 0 16px 40px -16px rgba(0,0,0,.7) }
+.clock { font: 600 10.5px/1 var(--sf); letter-spacing: .2em; text-transform: uppercase; color: var(--dim); font-variant-numeric: tabular-nums; min-width: 150px }
+.clock b { color: var(--bone); font-weight: 600 }
+.segc { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 3px; border-radius: 999px; background: rgba(255,255,255,.07); box-shadow: inset 0 0 0 .5px rgba(255,255,255,.08) }
+.segc .thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / var(--n, 3)); border-radius: 999px; background: rgba(255,255,255,.17); box-shadow: inset 0 .5px 0 rgba(255,255,255,.45), 0 3px 10px rgba(0,0,0,.25); transform: translateX(calc(var(--i, 0) * 100%)); transition: transform var(--spring-d) var(--spring) }
+.segc button { position: relative; z-index: 1; border: 0; background: none; height: 32px; padding: 0 12px; border-radius: 999px; font: 600 13px/1 var(--sf); color: var(--dim); cursor: pointer; transition: color .35s var(--soft); white-space: nowrap }
+.segc button[aria-pressed="true"] { color: #fff }
+.pick { display: none; align-items: center; gap: 10px; flex: 1 1 220px; max-width: 320px } .pick.on { display: flex }
+.pick output { font: 500 14px/1 var(--sf); font-variant-numeric: tabular-nums; min-width: 64px; text-align: right }
+input[type=range] { -webkit-appearance: none; appearance: none; flex: 1; height: 28px; background: transparent; margin: 0 }
+input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--bone) var(--p, 50%), rgba(255,255,255,.18) var(--p, 50%)) }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; margin-top: -10px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.35) }
+input[type=range]::-moz-range-track { height: 4px; border-radius: 2px; background: rgba(255,255,255,.18) } input[type=range]::-moz-range-progress { height: 4px; background: var(--bone) } input[type=range]::-moz-range-thumb { width: 24px; height: 24px; border: 0; border-radius: 50%; background: #fff }
+.spacer { flex: 1 }
+
+/* the gallery */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 46px 30px }
+.card { display: flex; flex-direction: column; gap: 14px; min-width: 0 }
+.frame { position: relative; aspect-ratio: 10 / 16; background: #0b0a0d; padding: 6px; box-shadow: 0 26px 50px -24px rgba(0,0,0,.95), 0 0 0 .5px rgba(255,255,255,.07); cursor: pointer }
+.frame canvas { width: 100%; height: 100%; display: block }
+.frame::after { content: ""; position: absolute; inset: 6px; pointer-events: none; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.5), inset 0 10px 18px -10px rgba(0,0,0,.5) }
+.card h2 { margin: 4px 0 0; font: italic 400 24px/1.12 var(--ny); letter-spacing: -.01em; text-wrap: balance; min-height: 1.12em; transition: opacity .5s var(--soft), filter .5s var(--soft) }
+.card h2.swap { opacity: 0; filter: blur(6px) }
+.meta { font: 600 9.5px/1.6 var(--sf); letter-spacing: .18em; text-transform: uppercase; color: var(--dim) }
+.card p { margin: 0; color: var(--dim); font-size: 14px; text-wrap: pretty }
+.row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+.chip { border: 0; cursor: pointer; padding: 8px 12px; border-radius: 999px; font: 600 12.5px/1 var(--sf); background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 .5px rgba(255,255,255,.1); color: var(--dim); transition: background-color .3s, color .3s, transform .3s var(--spring) }
+.chip:active { transform: scale(.94) } .chip[aria-pressed="true"] { background: rgba(255,255,255,.16); color: #fff }
+.listen { margin-left: auto; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 8px 13px 8px 11px; border-radius: 999px; font: 600 12.5px/1 var(--sf); background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 .5px rgba(255,255,255,.1); transition: background-color .3s, transform .3s var(--spring) }
+.listen:active { transform: scale(.94) } .listen svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round } .listen svg .f { fill: currentColor; stroke: none }
+.listen .bars { display: none; gap: 2px; align-items: center; height: 12px } .listen .bars i { width: 2px; height: 100%; background: var(--ember); border-radius: 1px; animation: bar .8s ease-in-out infinite alternate } .listen .bars i:nth-child(2) { animation-delay: -.3s } .listen .bars i:nth-child(3) { animation-delay: -.55s }
+.listen[aria-pressed="true"] { background: rgba(255,91,69,.14) } .listen[aria-pressed="true"] .bars { display: flex } .listen[aria-pressed="true"] svg { display: none }
+@keyframes bar { from { transform: scaleY(.3) } to { transform: scaleY(1) } }
+footer { margin-top: 60px; padding-top: 22px; border-top: .5px solid var(--hair); color: var(--faint); font-size: 13px; max-width: 760px }
+@media (prefers-reduced-motion: reduce) { .listen .bars i { animation: none } }
+</style>
+
+<div class="page">
+  <header>
+    <span class="eyebrow">Natterwick · the places</span>
+    <h1>‘Twelve Small Paintings’</h1>
+    <p class="lede">Every place in town is its own painting, painted live from your clock and the weather, with a neighbour who keeps their own hours and a piece of music that belongs only there. Change the time or the weather above and the whole town changes with it. Each place has three small stories you can turn to.</p>
+  </header>
+  <div class="rules">
+    <div><b>One field, one red</b><span>Each place has its own colour field and exactly one small red thing: a neon 45, a lantern, a second hand, a sock.</span></div>
+    <div><b>Neighbours keep hours</b><span>Mei opens at 7. Hank eats at the stall after dark. Nell folds towels at the laundromat from 8 till 2. Out of hours, the place says so.</span></div>
+    <div><b>Weather is light</b><span>Rain greys the sky and turns lamps into long reflections; fog swallows the stars and widens the lighthouse beam; snow brightens the ground. Indoors, it's at the window.</span></div>
+    <div><b>Every place sounds like itself</b><span>A brushed jazz trio at the café, a cello and bell buoys at the harbour, a tumble-dryer beat at the laundromat. Made with ElevenLabs, mixed with the weather.</span></div>
+  </div>
+  <div class="bar" role="group" aria-label="Time and weather in Natterwick">
+    <span class="clock" id="clock"></span>
+    <div class="segc" id="segTime" style="--n:3"><span class="thumb"></span><button type="button" data-v="live" aria-pressed="true">Your clock</button><button type="button" data-v="fast" aria-pressed="false">Day in 2 min</button><button type="button" data-v="pick" aria-pressed="false">Pick</button></div>
+    <div class="pick" id="pickWrap"><input type="range" id="pick" min="0" max="23.9" step="0.05" value="19.3" aria-label="Pick a time of day"><output id="pickVal"></output></div>
+    <span class="spacer"></span>
+    <div class="segc" id="segWx" style="--n:5"><span class="thumb"></span><button type="button" data-v="clear" aria-pressed="true">Clear</button><button type="button" data-v="rain" aria-pressed="false">Rain</button><button type="button" data-v="fog" aria-pressed="false">Fog</button><button type="button" data-v="snow" aria-pressed="false">Snow</button><button type="button" data-v="wind" aria-pressed="false">Wind</button></div>
+  </div>
+  <main class="grid" id="grid"></main>
+  <footer>Painted in code from a light model with nine keyframes through the day; the neighbours are the same rigs as the cast sheet, lit by each place's own lamps. Tap a painting to nudge its resident.</footer>
+</div>
+
+<script>
+(() => {

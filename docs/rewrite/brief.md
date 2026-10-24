@@ -4,6 +4,7 @@ Decided with the founder on 24 Oct 2026. This brief replaces the v1 app's look, 
 
 References:
 - **The design:** `design/rewrite/index.html` (open it in a browser; also at https://claude.ai/artifact/CeLA1Wdb8kGbGQzMc3H24X). Every screen in §9 is designed and working there, and it is the visual and motion source of truth for the rewrite. Where it and this brief disagree, this brief wins for behaviour and the prototype wins for look and motion.
+- **The places:** `design/rewrite/atlas/` (also at https://claude.ai/artifact/5R5NFpy24JsBZpst8DCsYs): twelve places, each composed as its own painting, with a resident who keeps hours, three story variants, weather, and its own music and ambience. New places follow the same rules: one colour field, one small red thing, light from the town clock, a resident and a sound.
 - Cast sheet: https://claude.ai/artifact/7CMDjfjU4t8naPyo57JPfd
 - Proposal: https://claude.ai/artifact/Cj8Lyq534toJnVopovCCRf
 - Director test: `spikes/director/REPORT.md` on branch `spike/director`
