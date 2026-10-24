@@ -37,6 +37,13 @@ export interface CharacterLine {
 
 export type TranscriptLine = LearnerLine | CharacterLine;
 
+export interface PhoneDiag {
+  /** Ms since the call started. */
+  readonly at: number;
+  readonly event: string;
+  readonly data: Readonly<Record<string, number | string | boolean | null>>;
+}
+
 export const isLearnerLine = (line: TranscriptLine): line is LearnerLine =>
   line.speaker === 'learner';
 
@@ -53,6 +60,8 @@ export interface TranscriptFile {
   readonly lines: readonly TranscriptLine[];
   /** Pip's minute: how its turns went, which the end of the call writes as phrase uses. */
   readonly pipsMinute?: PipsMinuteOutcome;
+  /** The phone's audio health during the call (`diag` frames), to read a call that went wrong. */
+  readonly diag?: readonly PhoneDiag[];
 }
 
 export const transcriptKey = (prefix: string, callId: string): string =>

@@ -39,6 +39,8 @@ export const THRESHOLDS = {
   preparation: 0.5,
   /** ...or when the reply's own safety flag is up and p(crisis) reaches this. */
   crisisWithFlag: 0.05,
+  /** A moment stops at once from this p(crisis); under it, a first worry is only asked about. */
+  crisisSure: 0.5,
 } as const;
 
 // ---- the questions, verbatim from the spike ----
@@ -256,6 +258,23 @@ export function isCrisis(judgement: Pick<Judgement, 'crisis' | 'probabilities'>,
   return (
     judgement.crisis || (flagged && judgement.probabilities.crisis >= THRESHOLDS.crisisWithFlag)
   );
+}
+
+/** How worried a moment is about a turn: stop now, or first ask if they're okay. */
+export type Concern = 'crisis' | 'worry';
+
+/**
+ * A clear danger, or a plan or a method, stops a moment at once. A borderline turn (often a
+ * misheard line: "All right, I'm out") is a worry: the character asks if they're okay, and a
+ * second worry in a row stops the moment.
+ */
+export function concernOf(
+  judgement: Pick<Judgement, 'crisis' | 'probabilities'>,
+  flagged: boolean,
+): Concern | null {
+  const p = judgement.probabilities;
+  if (p.crisis >= THRESHOLDS.crisisSure || p.preparation >= THRESHOLDS.preparation) return 'crisis';
+  return isCrisis(judgement, flagged) ? 'worry' : null;
 }
 
 // ---- the request ----

@@ -21,7 +21,7 @@ import { userObject, type ChargeResult } from '../user';
 import type { Control } from './control';
 import { addSample, noSamples, type Samples } from './costs';
 import { FrameSender } from './frames';
-import { isCrisis, judgeTurn } from './judge';
+import { concernOf, judgeTurn, type Judgement } from './judge';
 import { LearnerTurn } from './learner-turn';
 import { SpokenLine, type LineHost, type LineResult, type LineSource } from './line';
 import { anthropicClient, HEDGE, messagesFor, noUsage, turnParams, type Usage } from './llm';
@@ -31,6 +31,7 @@ import {
   isLearnerLine,
   lastCharacterLine,
   type CharacterLine,
+  type PhoneDiag,
   type TranscriptLine,
 } from './transcript';
 import type { TtsVoice } from './tts';
@@ -52,6 +53,10 @@ const BEAT_TURNS_MAX = 3;
 /** Learner replies before the actor is told to land the ending, whatever beat it is on. */
 const LAND_AFTER_TURNS = 12;
 const REPLAY_MAX_WORDS = 60;
+/** Phone audio reports kept per moment. */
+const DIAG_KEPT = 60;
+/** What the character says when Jev is worried about a turn, in place of the reply. */
+const ARE_YOU_OKAY = 'Oh. Wait. Are you okay?';
 
 export interface MomentMeta {
   readonly callId: string;
@@ -98,6 +103,10 @@ export interface MomentData extends SafetyClock {
   /** The moment closed in story (its last line said "end"), not just stopped. */
   closed: boolean;
   crisis: boolean;
+  /** Jev was worried about the last turn: the character asked if they're okay. */
+  worried?: boolean;
+  /** The phone's audio health reports, oldest first (the first ones and the latest are kept). */
+  diag?: PhoneDiag[];
   detachedAt: number | null;
   endReason: CallEndReason | null;
 }
@@ -164,11 +173,17 @@ interface Reply {
   readonly said: string;
   readonly speechEndAt: number;
   committed: boolean;
-  replay: 'repeat' | 'slower' | null;
+  /** Said again as asked, or the character asking if they're okay, in place of a reply. */
+  replay: 'repeat' | 'slower' | 'check' | null;
   learnerIndex: number;
   readonly judge: AbortController;
   /** It was written to close the moment because time is nearly up. */
   readonly wrapUp: boolean;
+  /** The reply's own control line said crisis: it counts only if Jev agrees. */
+  flagged: boolean;
+  jev: Pick<Judgement, 'crisis' | 'probabilities'> | null;
+  /** This turn raised the worry (a second look at the same turn doesn't count twice). */
+  worry: boolean;
 }
 
 export type MomentFinisher = (data: MomentData) => Promise<boolean>;
@@ -330,6 +345,18 @@ export class MomentSession {
       case 'hangup':
         void this.end(frame.reason ?? 'hangup');
         return;
+      case 'diag': {
+        const diag = (this.data.diag ??= []);
+        if (diag.length >= DIAG_KEPT) diag.splice(DIAG_KEPT / 2, 1);
+        diag.push({
+          at: Date.now() - this.data.meta.startedAt,
+          event: frame.event,
+          data: frame.data,
+        });
+        if (frame.event !== 'line')
+          console.log('phone audio', { event: frame.event, ...frame.data });
+        return;
+      }
       case 'replay':
         // The control's "say it again": the last line, as asked, while the moment waits.
         if (this.accepting()) this.sayAgain(frame.slower ? 'slower' : 'repeat');
@@ -444,6 +471,9 @@ export class MomentSession {
       learnerIndex: -1,
       judge: new AbortController(),
       wrapUp: state.wrapUp,
+      flagged: false,
+      jev: null,
+      worry: false,
     };
     const onFirstAudio = () => this.committed(reply);
     if (reply.replay !== null && last !== null) {
@@ -522,26 +552,49 @@ export class MomentSession {
         if (j === null) return;
         this.data.jevInputTokens += j.inputTokens;
         addSample(this.data.samples, 'judge', Date.now() - started);
-        if (isCrisis(j, false)) {
-          this.crisis();
-          return;
-        }
-        if (this.reply !== reply || reply.committed || j.again === null || last === null) return;
+        reply.jev = j;
+        if (this.weigh(reply, j)) return;
+        if (j.again === null || last === null) return;
         // They asked to hear it again: the last line instead of a reply, not a try.
-        const next = this.textLine(last.text, j.again === 'slower', reply.line.isGated, () =>
-          this.committed(reply),
-        );
-        const previous = reply.line;
-        const released = !previous.isGated;
-        reply.line = next;
-        reply.replay = j.again;
-        this.learnerTurn?.swapReply(previous, next);
-        previous.abort();
-        this.watch(reply, next);
-        next.start();
-        if (released) next.release();
+        this.swapReply(reply, last.text, j.again);
       },
     );
+  }
+
+  /** Jev's worry about a turn: true when it changed what happens next. */
+  private weigh(reply: Reply, j: Pick<Judgement, 'crisis' | 'probabilities'>): boolean {
+    const concern = concernOf(j, reply.flagged);
+    if (concern === null) {
+      if (!reply.worry) this.data.worried = false;
+      return false;
+    }
+    if (reply.worry) return false;
+    if (concern === 'crisis' || this.data.worried) {
+      this.crisis();
+      return true;
+    }
+    this.data.worried = true;
+    reply.worry = true;
+    console.warn('moment worry', { callId: this.data.meta.callId, p: j.probabilities.crisis });
+    this.swapReply(reply, ARE_YOU_OKAY, 'check');
+    return true;
+  }
+
+  /** Says `text` in place of the reply not yet heard (once it's heard, the moment goes on). */
+  private swapReply(reply: Reply, text: string, kind: 'repeat' | 'slower' | 'check'): void {
+    if (this.reply !== reply || reply.committed) return;
+    const next = this.textLine(text, kind === 'slower', reply.line.isGated, () =>
+      this.committed(reply),
+    );
+    const previous = reply.line;
+    const released = !previous.isGated;
+    reply.line = next;
+    reply.replay = kind;
+    this.learnerTurn?.swapReply(previous, next);
+    previous.abort();
+    this.watch(reply, next);
+    next.start();
+    if (released) next.release();
   }
 
   private watch(reply: Reply, line: SpokenLine): void {
@@ -600,7 +653,12 @@ export class MomentSession {
     this.reply = null;
     if (result.text) this.pushCharacterLine(result.text);
     const active = this.active;
-    if (reply.replay === null) this.apply(result.control, active);
+    if (reply.replay === null) {
+      // The actor alone never stops a moment (it misreads "I'm out"): Jev has to see it too.
+      reply.flagged = result.control.crisis;
+      if (reply.flagged && reply.jev !== null) this.weigh(reply, reply.jev);
+      this.apply(result.control, active);
+    }
     if (this.data.crisis) {
       void this.end('safety');
       return;
@@ -622,10 +680,6 @@ export class MomentSession {
         streamId: active.streamId,
         text: control.gloss.slice(0, 2_000),
       });
-    }
-    if (control.crisis) {
-      this.crisis();
-      return;
     }
     const forced = d.beatTurns >= BEAT_TURNS_MAX;
     if (control.beat === 'end' || d.wrapStarted) {

@@ -12,6 +12,7 @@ import {
   type OutcomeCase,
 } from '../../test/call/jev';
 import {
+  concernOf,
   decide,
   isCrisis,
   JEV_MODEL,
@@ -181,6 +182,16 @@ describe('the rules', () => {
     expect(isCrisis(crisis(0.05), true)).toBe(true);
     expect(isCrisis(crisis(0.04), true)).toBe(false);
     expect(isCrisis(crisis(0.09), false)).toBe(false);
+  });
+
+  it('stops a moment only for a clear danger; a borderline turn is first asked about', () => {
+    const crisis = (p: number, preparation = 0.02) =>
+      decide(answers({ care: { ordinary: 1 - p, heavy: 0, crisis: p }, preparation }));
+    expect(concernOf(crisis(0.7), false)).toBe('crisis');
+    expect(concernOf(crisis(0, 0.5), false)).toBe('crisis');
+    expect(concernOf(crisis(0.15), false)).toBe('worry');
+    expect(concernOf(crisis(0.06), true)).toBe('worry');
+    expect(concernOf(crisis(0.06), false)).toBeNull();
   });
 });
 

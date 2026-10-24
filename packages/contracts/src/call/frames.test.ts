@@ -49,6 +49,12 @@ const replaySlower = { type: 'replay', seq: 53, slower: true };
 const paceSlower = { type: 'pace', seq: 54, pace: 'slower' };
 const paceOwn = { type: 'pace', seq: 55, pace: null };
 const skip = { type: 'skip', seq: 56 };
+const diag = {
+  type: 'diag',
+  seq: 57,
+  event: 'tick',
+  data: { micOn: true, micFrames: 750, floorDb: -58, category: 'PlayAndRecord', vp: null },
+};
 
 const clientFrames = [
   hello,
@@ -71,6 +77,7 @@ const clientFrames = [
   paceSlower,
   paceOwn,
   skip,
+  diag,
 ];
 
 const ready = {
@@ -281,6 +288,14 @@ describeSchemas('call client frames', client, {
     ],
   ],
   SkipFrame: [[skip], [{ type: 'skip' }, { ...skip, seq: 0 }, { type: 'skipped', seq: 1 }]],
+  DiagFrame: [
+    [diag, { ...diag, data: {} }],
+    [
+      { ...diag, event: undefined },
+      { ...diag, data: { nested: { a: 1 } } },
+      { ...diag, data: [] },
+    ],
+  ],
   CallClientFrame: [
     clientFrames,
     [{ ...hello, stage: 'b1' }, { ...hold, seconds: 99 }, { seq: 1 }, 'hello', null],

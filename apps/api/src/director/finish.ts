@@ -27,6 +27,7 @@ export async function finishMoment(env: Bindings, data: MomentData): Promise<boo
     startedAt: meta.startedAt,
     endedAt,
     lines: data.transcript,
+    ...(data.diag ? { diag: data.diag } : {}),
   };
   await env.BLOBS.put(key, JSON.stringify(file), {
     httpMetadata: { contentType: 'application/json' },

@@ -149,6 +149,21 @@ export type PaceFrame = z.infer<typeof PaceFrame>;
 export const SkipFrame = z.object({ type: z.literal('skip'), seq: Seq });
 export type SkipFrame = z.infer<typeof SkipFrame>;
 
+/**
+ * The phone's audio health now and then (mic frames heard, the engine, playback underruns), so a
+ * call that went wrong on a device can be read afterwards. A short flat record; an older call
+ * ignores it.
+ */
+export const DiagFrame = z.object({
+  type: z.literal('diag'),
+  seq: Seq,
+  event: z.string().max(40),
+  data: z
+    .record(z.string().max(40), z.union([z.number(), z.string().max(200), z.boolean(), z.null()]))
+    .refine((d) => Object.keys(d).length <= 40),
+});
+export type DiagFrame = z.infer<typeof DiagFrame>;
+
 export const CALL_CLIENT_FRAME_TYPES = [
   'hello',
   'end_turn',
@@ -161,6 +176,7 @@ export const CALL_CLIENT_FRAME_TYPES = [
   'replay',
   'pace',
   'skip',
+  'diag',
 ] as const;
 export type CallClientFrameType = (typeof CALL_CLIENT_FRAME_TYPES)[number];
 
@@ -176,6 +192,7 @@ const callClientFrames = z.discriminatedUnion('type', [
   ReplayFrame,
   PaceFrame,
   SkipFrame,
+  DiagFrame,
 ]);
 
 /** Any JSON frame the phone sends to the call; an unknown `type` parses as `unknown`. */
