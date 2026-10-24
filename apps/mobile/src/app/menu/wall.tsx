@@ -38,7 +38,9 @@ export default function Wall() {
                 width={size}
               />
               <Text style={styles.name} numberOfLines={2}>
-                {p.status === 'judging' ? t('world.wall.judging') : `‘${p.title}’`}
+                {p.status === 'judging' && Date.now() - p.keptAt < 60_000
+                  ? t('world.wall.judging')
+                  : `‘${p.title}’`}
               </Text>
             </Pressable>
           ))}
@@ -55,6 +57,7 @@ const styles = StyleSheet.create({
     color: C.bone,
     fontFamily: F.serif,
     fontStyle: 'italic',
+    paddingHorizontal: 4,
     fontSize: 14,
     lineHeight: 17,
     marginTop: 8,

@@ -1,5 +1,6 @@
 import type { Painting } from '@yapling/contracts';
 import { PLACES, clockLabel, isPlaceId } from '@yapling/scene';
+import { Canvas, RadialGradient, Rect, vec } from '@shopify/react-native-skia';
 import { BlurView } from 'expo-blur';
 import { useEffect } from 'react';
 import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
@@ -100,9 +101,15 @@ export function KeptCard(p: Props) {
       <Animated.View style={[StyleSheet.absoluteFill, bgStyle]}>
         <BlurView intensity={30} tint="dark" style={StyleSheet.absoluteFill} />
         <View style={[StyleSheet.absoluteFill, styles.dark]} />
-        <View
-          style={[styles.light, { width: width * 1.4, height: height * 0.7, left: -width * 0.2 }]}
-        />
+        <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
+          <Rect x={0} y={0} width={width} height={height}>
+            <RadialGradient
+              c={vec(width / 2, height * 0.3)}
+              r={height * 0.42}
+              colors={['rgba(255,226,190,0.14)', 'rgba(255,226,190,0)']}
+            />
+          </Rect>
+        </Canvas>
       </Animated.View>
       <Pressable style={styles.center} onPress={p.onTap}>
         <Animated.View style={[styles.frame, { width: frameW, height: frameH }, frameStyle]}>
@@ -153,12 +160,6 @@ export function KeptCard(p: Props) {
 
 const styles = StyleSheet.create({
   dark: { backgroundColor: 'rgba(7,6,9,0.78)' },
-  light: {
-    position: 'absolute',
-    top: -80,
-    borderRadius: 999,
-    backgroundColor: 'rgba(255,226,190,0.07)',
-  },
   center: {
     flex: 1,
     alignItems: 'center',
@@ -182,6 +183,7 @@ const styles = StyleSheet.create({
     color: C.bone,
     fontFamily: F.serif,
     fontStyle: 'italic',
+    paddingHorizontal: 4,
     fontSize: 26,
     lineHeight: 29,
     letterSpacing: -0.26,

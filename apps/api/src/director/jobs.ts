@@ -59,8 +59,17 @@ async function judgeAfter(
     readMoment(env.DB, userId, momentId),
     readLearner(env.DB, userId),
   ]);
-  if (painting === null || painting.status === 'done' || moment?.plan == null || learner === null)
+  if (painting === null || painting.status === 'done' || moment?.plan == null || learner === null) {
+    if (painting?.status !== 'done') {
+      console.warn('moment not judged', {
+        callId,
+        painting: painting?.status ?? null,
+        plan: moment?.plan != null,
+        learner: learner !== null,
+      });
+    }
     return;
+  }
   const row = await env.DB.prepare('SELECT transcript_key FROM calls WHERE id = ? AND user_id = ?')
     .bind(callId, userId)
     .first<{ transcript_key: string }>();

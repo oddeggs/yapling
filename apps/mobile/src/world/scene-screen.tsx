@@ -240,6 +240,10 @@ export function SceneScreen() {
       <Pressable
         style={StyleSheet.absoluteFill}
         onPress={onScene}
+        onLongPress={() => {
+          const latest = world.state.paintings[0];
+          if (__DEV__ && latest) talk.previewKept(latest);
+        }}
         accessibilityLabel={t('world.a11y.scene')}
       />
       {aiChip && (

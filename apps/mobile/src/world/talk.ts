@@ -181,6 +181,12 @@ export class Talk {
     this.patch({ stage: out ? 'out' : 'idle', painting: null });
   }
 
+  /** Dev builds: shows the kept card for a painting, to check its look without a conversation. */
+  previewKept(painting: Painting): void {
+    if (!__DEV__) return;
+    this.patch({ stage: 'kept', painting, outAfter: false });
+  }
+
   /** The microphone was granted from the note: the call can hear now. */
   async allowMic(): Promise<boolean> {
     const granted = (await requestMicPermission()) === 'granted';

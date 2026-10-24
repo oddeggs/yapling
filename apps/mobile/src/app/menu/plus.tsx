@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     color: C.bone,
     fontFamily: F.serif,
     fontStyle: 'italic',
+    paddingHorizontal: 4,
     fontSize: 26,
     textAlign: 'center',
   },

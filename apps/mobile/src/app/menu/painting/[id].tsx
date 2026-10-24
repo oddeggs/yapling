@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     color: C.bone,
     fontFamily: F.serif,
     fontStyle: 'italic',
+    paddingHorizontal: 4,
     fontSize: 24,
     lineHeight: 28,
     textAlign: 'center',

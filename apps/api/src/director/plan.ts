@@ -187,7 +187,7 @@ export async function planMoment(client: Anthropic, ctx: PlanContext): Promise<P
   const needsDoor = (ctx.learner.model?.interests.length ?? 0) < 3;
   let cost = 0;
   let repair: string | undefined;
-  for (let attempt = 0; attempt < 2; attempt++) {
+  for (let attempt = 0; attempt < 3; attempt++) {
     const r = await structured<unknown>(client, {
       model: OPUS,
       system: [DIRECTOR_SYSTEM],
@@ -203,11 +203,13 @@ export async function planMoment(client: Anthropic, ctx: PlanContext): Promise<P
     }
     const plan = parsed.data as MomentPlan;
     const problems = checkPlan(plan, t, needsDoor);
-    if (problems.length === 0 || attempt === 1) {
-      // A second try that still breaks a soft rule is played anyway, unless the place is closed.
-      if (!residentIn(plan.place, plan.variant, t.hour)) return null;
+    const open = residentIn(plan.place, plan.variant, t.hour);
+    // After one repair a plan that still breaks a soft rule (a long line) is played; a closed
+    // place never is.
+    if (open && (problems.length === 0 || attempt >= 1)) {
       return { plan, hour: t.hour, costUsd: cost, repaired: attempt > 0 };
     }
+    console.warn('moment plan repair', { problems: problems.map((p) => p.slice(0, 160)) });
     repair = problems.join('\n');
   }
   return null;

@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { encodeAudioFrame, PROTOCOL_VERSION } from '@yapling/contracts';
 
-const BASE = 'http://127.0.0.1:8787/api';
+const BASE = process.env['API_BASE'] ?? 'http://127.0.0.1:8787/api';
 const [token, momentId, stage, ...lines] = process.argv.slice(2);
 const tmp = mkdtempSync(join(tmpdir(), 'moment-'));
 const pcmOf = (text: string, i: number) => {
