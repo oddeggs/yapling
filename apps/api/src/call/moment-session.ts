@@ -24,7 +24,15 @@ import { FrameSender } from './frames';
 import { concernOf, judgeTurn, type Judgement } from './judge';
 import { LearnerTurn } from './learner-turn';
 import { SpokenLine, type LineHost, type LineResult, type LineSource } from './line';
-import { anthropicClient, HEDGE, messagesFor, noUsage, turnParams, type Usage } from './llm';
+import {
+  anthropicClient,
+  HEDGE,
+  messagesFor,
+  MOMENT_TURN_MODEL,
+  noUsage,
+  turnParams,
+  type Usage,
+} from './llm';
 import { Meter, type MeterState } from './meter';
 import { crisisResourcesKey, discloseAi, keepHouse, type SafetyClock } from './safety';
 import {
@@ -451,7 +459,11 @@ export class MomentSession {
     const transcript = pending ? [...this.data.transcript, pending] : this.data.transcript;
     return {
       kind: 'model',
-      params: turnParams(system, messagesFor(this.speaker, transcript, direction)),
+      params: turnParams(
+        system,
+        messagesFor(this.speaker, transcript, direction),
+        MOMENT_TURN_MODEL,
+      ),
       hedge: HEDGE,
     };
   }

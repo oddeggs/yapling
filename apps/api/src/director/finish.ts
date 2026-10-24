@@ -1,6 +1,6 @@
 import { userBlobPrefix } from '../account';
 import { insertCall } from '../calls/store';
-import { callCost, medians } from '../call/costs';
+import { callCost, medians, PRICES } from '../call/costs';
 import type { MomentData } from '../call/moment-session';
 import { isLearnerLine, transcriptKey, type TranscriptFile } from '../call/transcript';
 import type { Bindings } from '../env';
@@ -34,7 +34,13 @@ export async function finishMoment(env: Bindings, data: MomentData): Promise<boo
   });
   const spoke = data.transcript.some((l) => isLearnerLine(l) && l.text.trim() !== '');
   const reason = data.endReason ?? 'hangup';
-  const cost = callCost(data.sttSeconds, data.ttsChars, data.usage, data.jevInputTokens);
+  const cost = callCost(
+    data.sttSeconds,
+    data.ttsChars,
+    data.usage,
+    data.jevInputTokens,
+    PRICES.sonnet,
+  );
   await insertCall(env.DB, {
     id: meta.callId,
     userId: meta.userId,

@@ -14,6 +14,11 @@ import { upstream } from './upstream';
  */
 
 export const TURN_MODEL = 'claude-haiku-5-5';
+/**
+ * A moment's live turns: Sonnet 5.5. A moment is open play on a story, where Haiku lost the thread
+ * and built on misheard words; Sonnet costs about 0.3 s more to its first word.
+ */
+export const MOMENT_TURN_MODEL = 'claude-sonnet-5-5';
 /** Spoken reply (≤ 25 words) plus the control line. */
 const TURN_MAX_TOKENS = 220;
 /** Identical requests raced per turn; the first to stream text wins. */
@@ -114,9 +119,10 @@ export function messagesFor(
 export function turnParams(
   system: Anthropic.TextBlockParam[],
   messages: Anthropic.MessageParam[],
+  model: string = TURN_MODEL,
 ): Anthropic.MessageStreamParams {
   return {
-    model: TURN_MODEL,
+    model,
     max_tokens: TURN_MAX_TOKENS,
     thinking: { type: 'disabled' },
     output_config: { effort: 'low' },

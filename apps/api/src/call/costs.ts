@@ -41,11 +41,12 @@ export function callCost(
   ttsChars: number,
   llm: Usage,
   jevInputTokens = 0,
+  prices: typeof PRICES.haiku | typeof PRICES.sonnet = PRICES.haiku,
 ): CallCost {
   const usd =
     (sttSeconds / 3_600) * PRICES.sttPerHour +
     (ttsChars / 1_000) * PRICES.ttsPerThousandChars +
-    tokenUsd(llm, PRICES.haiku) +
+    tokenUsd(llm, prices) +
     perMillion(jevInputTokens, PRICES.jevInputPerMillion);
   return {
     sttSeconds: Math.round(sttSeconds * 10) / 10,
