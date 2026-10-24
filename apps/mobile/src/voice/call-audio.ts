@@ -77,6 +77,16 @@ export class CallAudio {
     return ok;
   }
 
+  /**
+   * Starts the mic from scratch: a recorder that failed to start, or one that runs but hears
+   * nothing (the engine was rebuilt under it).
+   */
+  async restartMic(): Promise<boolean> {
+    await this.mic?.stop().catch(() => undefined);
+    await this.restartIfStopped();
+    return this.startMic();
+  }
+
   /** Lets go of the graph, the mic and (when the call still holds it) the session. */
   async stop(): Promise<void> {
     const ctx = this.graph;

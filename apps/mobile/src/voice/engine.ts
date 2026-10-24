@@ -77,6 +77,11 @@ const ROUTE_SETTLE_MS = 300;
 /** How often the call hears how the phone's audio is doing. */
 const DIAG_EVERY_MS = 15_000;
 
+/** A mic that delivers nothing this long (with the permission granted) is started again. */
+const MIC_WATCH_MS = 3_000;
+/** Restarts tried in one call before the mic is left as it is. */
+const MIC_RESTARTS_MAX = 5;
+
 export class VoiceEngine {
   readonly state: Store<CallState>;
   readonly lipsync: Lipsync;
@@ -111,6 +116,9 @@ export class VoiceEngine {
   /** Device mic frames heard since the audio came up (a dead mic stays at 0). */
   private micFrames = 0;
   private diagTimer: ReturnType<typeof setInterval> | null = null;
+  private micWatch: ReturnType<typeof setInterval> | null = null;
+  private micFramesSeen = 0;
+  private micRestarts = 0;
 
   constructor(private readonly options: VoiceEngineOptions) {
     this.state = new Store(initialCallState(options.hello.turnMode));
@@ -230,6 +238,7 @@ export class VoiceEngine {
     this.log(`audio up: ${this.debugAudio()}`);
     this.diag('audio');
     this.diagTimer ??= setInterval(() => this.diag('tick'), DIAG_EVERY_MS);
+    this.micWatch ??= setInterval(() => void this.watchMic(), MIC_WATCH_MS);
     return status;
   }
 
@@ -429,6 +438,22 @@ export class VoiceEngine {
     this.diag('speech_end');
   }
 
+  /**
+   * The mic must keep delivering: a recorder that failed to start, or that runs but went silent
+   * when the engine was rebuilt under it, is started again (a call that can't hear is the worst).
+   */
+  private async watchMic(): Promise<void> {
+    const heard = this.micFrames !== this.micFramesSeen;
+    this.micFramesSeen = this.micFrames;
+    if (heard || this.disposed || this.simulated.running || this.state.get().interrupted) return;
+    if (this.micRestarts >= MIC_RESTARTS_MAX) return;
+    if ((await micPermissionStatus()) !== 'granted') return;
+    this.micRestarts += 1;
+    this.log(`mic heard nothing for ${MIC_WATCH_MS} ms: starting it again`);
+    const ok = await this.audio.restartMic();
+    this.diag(ok ? 'mic_restarted' : 'mic_restart_failed');
+  }
+
   /** Tells the call how the phone's audio is doing: the mic, the engine, the voice's playout. */
   private diag(event: string): void {
     try {
@@ -463,6 +488,7 @@ export class VoiceEngine {
         lines: stats?.lines ?? 0,
         underruns: stats?.underruns ?? 0,
         lateDrops: stats?.lateDrops ?? 0,
+        micRestarts: this.micRestarts,
       },
     });
   }
@@ -514,6 +540,7 @@ export class VoiceEngine {
       connected: true,
       reconnecting: false,
     });
+    this.diag('ready');
   }
 
   private onFrame(frame: CallServerFrame): void {
@@ -653,6 +680,8 @@ export class VoiceEngine {
     this.stopSimulatedMic();
     if (this.diagTimer) clearInterval(this.diagTimer);
     this.diagTimer = null;
+    if (this.micWatch) clearInterval(this.micWatch);
+    this.micWatch = null;
     if (this.interruptionHold) clearInterval(this.interruptionHold);
     this.interruptionHold = null;
     if (this.hangupTimer) clearTimeout(this.hangupTimer);

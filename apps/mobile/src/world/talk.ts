@@ -123,6 +123,7 @@ export class Talk {
         turnMode: 'hands_free',
         pace: null,
       },
+      ...(__DEV__ ? { onLog: (m: string) => console.log('voice', m) } : {}),
     });
     this.engine = engine;
     takeLine(engine);
