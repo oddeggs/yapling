@@ -84,8 +84,8 @@ describe('the live lanes', () => {
       wrapUp: false,
     });
     expect(first.maxWords).toBe(8);
-    expect(first.direction).toContain('Beat 1 of 4');
-    expect(first.direction).toContain('move on in this same reply to beat 2');
+    expect(first.direction).toContain('beat 1 of 4');
+    expect(first.direction).toContain('go on to the next beat');
     expect(first.direction).toContain('"gloss"');
     const pushed = turnDirection(plan, visitor, {
       beat: 1,
@@ -96,7 +96,7 @@ describe('the live lanes', () => {
       wrapUp: false,
     });
     expect(pushed.direction).toContain('LANE SWITCH');
-    expect(pushed.direction).toContain('move on now');
+    expect(pushed.direction).toContain('Set "beat":"next"');
     expect(pushed.maxWords).toBe(25);
     const last = turnDirection(plan, visitor, {
       beat: 4,

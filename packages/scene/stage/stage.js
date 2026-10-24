@@ -127,12 +127,27 @@
   }
   const fadeAway = (el, dy) => { const an = el.animate([{ opacity: getComputedStyle(el).opacity, filter: 'blur(0px)' }, { opacity: 0, filter: 'blur(8px)', transform: `translateY(${dy}px) scale(.97)` }], { duration: 460, easing: 'cubic-bezier(.4,0,.7,.2)', fill: 'forwards' }); return an; };
   function clearSay() { [...sayBox.children].forEach((el) => { fadeAway(el, -14).onfinish = () => el.remove(); }); cur = null; }
-  function newLine(text, gloss) {
+  // a word already on screen when its line grows: shown as it is, with no second arrival
+  const settle = (el) => { el.classList.add('in'); el.style.animation = 'none'; el.style.opacity = 1; el.style.filter = 'none'; el.style.transform = 'none'; el.style.webkitMaskImage = 'none'; el.style.maskImage = 'none'; el.style.color = 'var(--bone)'; };
+  // a live line arrives in pieces as the voice is written: the same line grows, it never restarts
+  function setLine(m) {
+    const text = m.text || '';
+    if (cur && cur.id === m.id) {
+      if (m.gloss) cur.gloss = m.gloss;
+      if (text === cur.text) return;
+      const shown = cur.shown, { spans, starts } = wordsInto(cur.el, text);
+      for (let i = 0; i < Math.min(shown, spans.length); i++) settle(spans[i]);
+      Object.assign(cur, { spans, starts, words: text.split(' '), text, shown: Math.min(shown, spans.length) });
+      return;
+    }
+    newLine(text, m.gloss, m.id);
+  }
+  function newLine(text, gloss, id) {
     clearSay();
     const wrap = document.createElement('div'), p = document.createElement('p'), v = document.createElement('p');
     p.className = 'line say'; v.className = 'line gloss'; wrap.append(p, v); sayBox.appendChild(wrap);
     const { spans, starts } = wordsInto(p, text);
-    cur = { el: p, glossEl: v, gloss: gloss || '', spans, starts, words: text.split(' '), shown: 0, done: false };
+    cur = { id, el: p, glossEl: v, gloss: gloss || '', spans, starts, words: text.split(' '), text, shown: 0, done: false };
   }
   // the voice reached this character of the line: show the words it has said, and let them move the body
   function reveal(chars) {
@@ -205,7 +220,7 @@
   const handlers = {
     scene: setScene,
     talk: setTalk,
-    line: (m) => newLine(m.text || '', m.gloss),
+    line: setLine,
     chars: (m) => reveal(m.n || 0),
     lineDone,
     gloss: (m) => { if (cur) { cur.gloss = m.text || ''; if (cur.done) showGloss(); } },

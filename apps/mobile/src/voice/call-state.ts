@@ -66,6 +66,8 @@ export interface CallState {
   /** A phone call or Siri took the audio. */
   readonly interrupted: boolean;
   readonly caption: CaptionLine | null;
+  /** The learner's own language under a line, once it was written (a planned moment's). */
+  readonly gloss: { readonly streamId: number; readonly text: string } | null;
   /** The learner's words: the partial while speaking, then the final. */
   readonly learnerText: string;
   readonly learnerFinal: boolean;
@@ -109,6 +111,7 @@ export const initialCallState = (turnMode: TurnMode): CallState => ({
   onHold: false,
   interrupted: false,
   caption: null,
+  gloss: null,
   learnerText: '',
   learnerFinal: false,
   beat: null,

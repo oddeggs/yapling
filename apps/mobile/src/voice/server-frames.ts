@@ -64,6 +64,9 @@ export function applyServerFrame(frame: CallServerFrame, host: FrameHost): void 
     case 'meaning':
       host.patch({ meaning: frame });
       break;
+    case 'gloss':
+      host.patch({ gloss: { streamId: frame.streamId, text: frame.text } });
+      break;
     case 'minutes':
       host.patch({ secondsLeft: frame.secondsLeft, wrappingUp: frame.wrappingUp });
       break;

@@ -371,6 +371,7 @@ export class MomentSession {
       source: { kind: 'text', text: plan.opening_line },
       gated: false,
       maxWords: 40,
+      maxSentences: 8,
       afterReaction: false,
     });
     this.opening = line;
@@ -478,6 +479,7 @@ export class MomentSession {
       source: { kind: 'text', text },
       gated,
       maxWords: REPLAY_MAX_WORDS,
+      maxSentences: 8,
       afterReaction: false,
       ...(onFirstAudio ? { onFirstAudio } : {}),
     });
@@ -496,6 +498,8 @@ export class MomentSession {
       gated,
       // The limit is the prompt's; the splitter allows a little over before it cuts.
       maxWords: maxWords + 6,
+      // A reaction, the move on, and the question it ends on.
+      maxSentences: 3,
       afterReaction: false,
       safeLine: SAFE_REPLY,
       ...(onFirstAudio ? { onFirstAudio } : {}),

@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import { ListenPlayer } from '../../src/features/story/listen-player';
 import { audioOwner, claimAudio, ownsAudio, releaseAudio } from '../../src/voice/audio-owner';
 import type { SocketLike } from '../../src/voice/call-socket';
 import { VoiceEngine } from '../../src/voice/engine';
@@ -257,19 +256,7 @@ describe('a call starting its audio', () => {
   });
 });
 
-describe('a story and a call sharing the session', () => {
-  it('leaves the session to a call that started before the story closed', async () => {
-    const story = new ListenPlayer({ ended: () => undefined, failed: () => undefined });
-    await story.start();
-    const call = engine();
-    await call.prepare();
-    mockLog.length = 0;
-    await story.dispose();
-    expect(mockLog).toEqual(['context close']);
-    await call.dispose();
-    expect(mockLog).toContain('deactivate');
-  });
-
+describe('two calls sharing the session', () => {
   it('leaves the session to the next call when the last call is torn down late', async () => {
     const first = engine();
     await first.prepare();
@@ -283,17 +270,6 @@ describe('a story and a call sharing the session', () => {
     expect(mockLog).toContain('deactivate');
   });
 
-  it('turns echo cancellation off for a story after a call', async () => {
-    const call = engine();
-    await call.prepare();
-    await call.dispose();
-    mockLog.length = 0;
-    const story = new ListenPlayer({ ended: () => undefined, failed: () => undefined });
-    await story.start();
-    expect(mockLog.slice(0, 3)).toEqual(['voice processing off', 'options playback', 'activate']);
-    await story.dispose();
-    expect(mockLog).toContain('deactivate');
-  });
 });
 
 /** A press held for `ms` on the turn clock, then let go. */

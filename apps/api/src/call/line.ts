@@ -87,6 +87,8 @@ export interface LineOptions {
   readonly source: LineSource;
   readonly gated: boolean;
   readonly maxWords: number;
+  /** Sentences kept (two by default: a reply is short); a planned opening says all of its own. */
+  readonly maxSentences?: number;
   /** A recorded reaction plays first: a leading reaction word is dropped. */
   readonly afterReaction: boolean;
   /** The first audio went to the phone: the line is committed. */
@@ -133,6 +135,7 @@ export class SpokenLine {
     this.gated = options.gated;
     this.splitter = new ReplySplitter({
       maxWords: options.maxWords,
+      ...(options.maxSentences !== undefined ? { maxSentences: options.maxSentences } : {}),
       afterReaction: options.afterReaction,
       speaker: CAST[options.speaker].name,
       guard: options.source.kind === 'model',

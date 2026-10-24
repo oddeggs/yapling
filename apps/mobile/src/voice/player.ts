@@ -360,7 +360,13 @@ export class CallPlayer {
     node.connect(this.ctx.destination);
     node.start((frame + 0.25) / rate);
     line.nodes.push(node);
-    line.segments.push(seg);
+    // Timing only: the audio itself never goes to the UI thread with the caption clock.
+    line.segments.push({
+      seq: seg.seq,
+      ctxStart: seg.ctxStart,
+      streamMs: seg.streamMs,
+      durationMs: seg.durationMs,
+    });
     const anchor = this.anchor();
     if (line.firstCtx === null) {
       line.firstCtx = ctxStart;

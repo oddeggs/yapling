@@ -10,6 +10,8 @@ import {
   type TurnMode,
 } from '@yapling/contracts';
 
+import type { AudioContext } from 'react-native-audio-api';
+
 import type { VoiceSessionStatus } from '../../modules/voice-session';
 import { micPermissionStatus, type SessionEvent } from './audio-session';
 import { CallAudio } from './call-audio';
@@ -146,6 +148,11 @@ export class VoiceEngine {
         invalid: (r) => this.log(`invalid frame: ${r}`),
       },
     });
+  }
+
+  /** The call's playback graph while its audio is up: the scene's music plays through it too. */
+  get audioContext(): AudioContext | null {
+    return this.audio.context;
   }
 
   /** The device mic is capturing. */

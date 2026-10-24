@@ -5,6 +5,9 @@ import type { EnCatalogue } from './catalogue-types';
  * character in the scene; `{place}` a place's name; `{date}` a short date.
  */
 export const worldEn = {
+  'world.ai': '{name} is an AI character',
+  'world.menu.visit': 'Go there',
+  'world.menu.closed': 'Nobody in right now',
   'world.hint.sound': 'Tap for sound',
   'world.hint.talk': 'Just talk',
   'world.hint.wait': 'One moment…',
@@ -61,4 +64,4 @@ export const worldEn = {
   'world.plus.fine':
     'Free stays free: {minutes} minutes of talk every day, and the wall, your words and replays always.',
   'world.plus.soon': 'Plus opens soon. Thank you for waiting.',
-} satisfies EnCatalogue;
+} as const satisfies EnCatalogue;

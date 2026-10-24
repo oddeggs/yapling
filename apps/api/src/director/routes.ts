@@ -5,15 +5,16 @@ import {
   Painting as PaintingWire,
   PaintingLines,
   PaintingList,
+  VisitRequest,
   type MomentCard,
 } from '@yapling/contracts';
-import { localTime, PLACES } from '@yapling/scene';
+import { isPlaceId, localTime, PLACES, residentIn } from '@yapling/scene';
 import { Hono, type Context } from 'hono';
 
 import { errorResponse, parseBody, respond, type SessionEnv } from '../auth';
 import type { TranscriptFile } from '../call/transcript';
 import { judgedLines } from '../call/moment-session';
-import { firstMoment, freeMoment } from './fixed';
+import { firstMoment, freeMoment, visitMoment } from './fixed';
 import { MomentJob } from './jobs';
 import type { MomentPlan } from './moment';
 import { playableAt, stageOfModel } from './plan';
@@ -104,6 +105,26 @@ export function momentRoutes(): Hono<SessionEnv> {
       learner,
       'free',
       freeMoment(t.hour, learner.name, learner.firstLanguage),
+      t.hour,
+      now,
+    );
+    return next(c, moment, learner);
+  });
+
+  routes.post('/me/moments/visit', async (c) => {
+    const body = await parseBody(c, VisitRequest);
+    if (!body.ok) return body.response;
+    const { place, variant } = body.value;
+    if (!isPlaceId(place)) return errorResponse(c, 404, 'not_found');
+    const now = Date.now();
+    const learner = await seededLearner(c, body.value, now);
+    const t = localTime(new Date(now), learner.timezone);
+    if (!residentIn(place, variant, t.hour)) return errorResponse(c, 409, 'not_found');
+    const moment = await newFixed(
+      c.env.DB,
+      learner,
+      'free',
+      visitMoment(place, variant, t.hour, learner.name),
       t.hour,
       now,
     );

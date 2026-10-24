@@ -1,4 +1,5 @@
-import { pipAsleep } from '@yapling/scene';
+import { PLACES, pipAsleep, type PlaceId } from '@yapling/scene';
+import { CAST } from '@yapling/story';
 
 import type { MomentPlan } from './moment';
 
@@ -145,5 +146,67 @@ export function freeMoment(hour: number, name: string | null, firstLanguage: str
     open_threads_after: [],
     director_notes:
       'A free moment: no big story. Keep it light, follow the learner, use their name if known, and find one word to learn from them.',
+  };
+}
+
+/**
+ * A visit the learner chose from the menu: the resident is in, doing what they do at this hour,
+ * and glad of the company. A short chat with a door, and one small thing they need a hand with.
+ */
+export function visitMoment(
+  place: PlaceId,
+  variant: number,
+  hour: number,
+  name: string | null,
+): MomentPlan {
+  const p = PLACES[place];
+  const v = p.variants[variant] ?? p.variants[0];
+  const resident = CAST[p.resident].name;
+  const hello = name ? `Oh, hi ${name}!` : 'Oh, hi!';
+  return {
+    title_open: v.title,
+    title_close: `Company At ${p.name.replace(/^The /, 'The ')}`.slice(0, 80),
+    place,
+    variant,
+    stage_aimed: 'newcomer',
+    while_you_were_away: `${resident} is at ${p.name} as usual at this hour. ${p.story}`,
+    hook: `The learner dropped by. In the painting: ${v.prop}. ${resident} could use a hand with something small about it.`,
+    opening_line: `${hello} You came by! ${hour >= 18 || hour < 5 ? 'Long day?' : 'Busy day?'}`,
+    opening_gloss: '',
+    beats: [
+      {
+        what_happens: `${resident} asks how the learner is and what brings them here, with two easy choices.`,
+        goal: 'say how they are and why they came',
+        is_door: false,
+        example_line: 'Just passing, or looking for me?',
+        if_struggling: 'Just passing? Yes or no?',
+        if_strong: 'What brings you here at this hour?',
+      },
+      {
+        what_happens: `${resident} mentions ${v.prop} and asks for the learner's idea or help with it.`,
+        goal: 'give a simple idea or opinion',
+        is_door: false,
+        example_line: 'Can I ask you something? What would you do?',
+        if_struggling: 'This or that? You choose.',
+        if_strong: 'What would you do, and why?',
+      },
+      {
+        what_happens: `${resident} asks one thing about the learner's own life that fits the place (what they eat, how they travel, what they do after work), with "or something else?".`,
+        goal: 'tell one thing about their own life',
+        is_door: true,
+        example_line: 'And you? What do you usually do after work?',
+        if_struggling: 'After work: rest or cook?',
+        if_strong: 'Tell me about your evenings. What do you like doing?',
+      },
+    ],
+    target_phrases: ['I came to …', 'I think you should …', 'Usually I …'],
+    target_errors: [],
+    personal_threads_used: [],
+    callbacks: [],
+    culture_touch: 'If the learner mentions something from home, the resident is curious about it.',
+    pip_learns: 'one thing about the learner’s everyday life',
+    cliffhanger: `${resident} thanks the learner and says to come by again, there is always something going on here.`,
+    open_threads_after: [],
+    director_notes: `A visit the learner chose. Keep it warm and light, play ${resident} true to the bible, and follow the learner.`,
   };
 }

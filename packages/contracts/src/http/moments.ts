@@ -19,6 +19,13 @@ export const MomentRequest = z.object({
 });
 export type MomentRequest = z.infer<typeof MomentRequest>;
 
+/** `POST /api/me/moments/visit`: the learner chose a place from the menu. */
+export const VisitRequest = MomentRequest.extend({
+  place: z.string().min(1).max(32),
+  variant: z.number().int().min(0).max(2),
+});
+export type VisitRequest = z.infer<typeof VisitRequest>;
+
 export const STAGE_NAMES = [
   'visitor',
   'newcomer',

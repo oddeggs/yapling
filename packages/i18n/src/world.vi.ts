@@ -2,6 +2,9 @@ import type { Translation } from './catalogue-types';
 import type { worldEn } from './world.en';
 
 export const worldVi = {
+  'world.ai': '{name} là nhân vật AI',
+  'world.menu.visit': 'Đến đó',
+  'world.menu.closed': 'Lúc này không có ai',
   'world.hint.sound': 'Chạm để bật tiếng',
   'world.hint.talk': 'Cứ nói thôi',
   'world.hint.wait': 'Chờ một chút…',
@@ -58,4 +61,4 @@ export const worldVi = {
   'world.plus.fine':
     'Miễn phí vẫn miễn phí: {minutes} phút nói mỗi ngày, cùng bức tường, từ của bạn và phát lại mãi mãi.',
   'world.plus.soon': 'Plus sắp mở. Cảm ơn bạn đã chờ.',
-} satisfies Translation<typeof worldEn>;
+} as const satisfies Translation<typeof worldEn>;

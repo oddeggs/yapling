@@ -14,7 +14,7 @@ export interface VariantConfig {
 const IOS_DEPLOYMENT_TARGET = '17.0';
 
 /** The app's background, shown behind the first frame and every screen until the theme takes over. */
-export const BACKGROUND = '#FBFAFD';
+export const BACKGROUND = '#09080b';
 
 /**
  * The fonts embedded natively, so the first frame already has them: `@yapling/theme`'s font faces,
@@ -35,9 +35,8 @@ export const FONT_FILES = [
  * learner's voice, and speech recognition turns it into the words the critter answers.
  */
 export const USAGE = {
-  microphone: 'Yapling uses the microphone so you can talk with your critter roommate.',
-  speechRecognition:
-    'Yapling uses speech recognition so your critter roommate can understand what you say.',
+  microphone: 'So Pip and the neighbours can hear you. You talk, and they talk back.',
+  speechRecognition: 'So Pip and the neighbours can understand what you say.',
 } as const;
 
 export const VARIANTS: Record<AppVariant, VariantConfig> = {
@@ -95,10 +94,10 @@ export function buildConfig(
     owner: 'yapling',
     slug: 'yapling',
     scheme: variant.scheme,
-    version: '0.1.0',
+    version: '0.2.0',
     platforms: ['ios'],
     orientation: 'portrait',
-    userInterfaceStyle: 'light',
+    userInterfaceStyle: 'dark',
     backgroundColor: BACKGROUND,
     ...(isSet(easProjectId)
       ? {

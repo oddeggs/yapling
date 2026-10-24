@@ -136,17 +136,27 @@ export function turnDirection(
       `The beats are done. React to what they said, then land the ending: ${plan.cliffhanger} Close warmly in this reply and set "beat":"end".`,
     );
   } else {
-    parts.push(`Beat ${s.beat + 1} of ${beats.length}: ${beatText(cur, s.lane)}`);
     const pushOn = s.beatTurns >= 2;
-    if (next) {
+    const then = next
+      ? `go on to the next beat: ${beatText(next, s.lane)}`
+      : `land the ending: ${plan.cliffhanger} Close warmly and set "beat":"end".`;
+    parts.push(
+      `You are on beat ${s.beat + 1} of ${beats.length}. Its goal for the learner: ${cur.goal}.`,
+    );
+    if (pushOn) {
       parts.push(
-        `${pushOn ? 'You have stayed on this beat long enough: react to what they said and move on now' : 'If their reply meets the goal, react to it and move on in this same reply'} to beat ${s.beat + 2}: ${beatText(next, s.lane)} ${pushOn ? '' : 'Otherwise react to what they said and follow up once on this beat.'}`,
+        `Write: one short, specific reaction to what they just said, then ${then}${next ? ' Set "beat":"next".' : ''}`,
       );
     } else {
       parts.push(
-        `This is the last beat. ${pushOn ? 'React, then' : 'If their reply meets the goal, react to it, then'} land the ending: ${plan.cliffhanger} Close warmly and set "beat":"end".${pushOn ? '' : ' Otherwise follow up once on this beat.'}`,
+        `First decide: did their reply do the goal, even simply or with mistakes? Their meaning counts, not their grammar.
+- If yes: one short, specific reaction to what they just said, then ${then}${next ? ' Set "beat":"next".' : ''}
+- If not yet: react to what they said, then help them with this same goal another way (${s.lane === 'rich' ? beats[Math.min(s.beat, beats.length - 1)]!.if_strong : cur.if_struggling}). Set "beat":"stay".`,
       );
     }
+    parts.push(
+      'Never ask something they already answered, and never repeat your last question word for word. Use what they told you.',
+    );
   }
   parts.push(`Word limit for this whole reply: ${limit} words.`);
   parts.push(controlRule(gloss, language));
