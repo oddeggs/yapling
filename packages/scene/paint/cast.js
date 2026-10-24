@@ -265,7 +265,8 @@
         this.nextIdle = now + 1300 + Math.random() * 2800;
       }
       // talking: each neighbour's own rhythm, phrases with pauses, and a question now and then
-      if (m === 'speak') {
+      // a voice in the app drives the beats itself (`driven`); here each neighbour keeps its own rhythm
+      if (m === 'speak' && !this.driven) {
         if (now > this.nextBeat) {
           const [a, b] = s.tempo.beat; this.phrase++;
           if (this.phrase % 9 === 0) { this.nextBeat = now + 900; const r = Math.random(); this.gesture(r < 0.45 ? 'question' : s.tempo.laugh && r < 0.7 ? 'laugh' : r < 0.8 ? 'exclaim' : 'beat'); }
