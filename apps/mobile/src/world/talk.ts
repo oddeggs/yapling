@@ -8,6 +8,7 @@ import {
   micPermissionStatus,
   requestMicPermission,
   VoiceEngine,
+  type CallNotice,
   type CallPhase,
   type CallState,
 } from '../voice';
@@ -19,7 +20,7 @@ import type { World } from './world';
 
 /*
  * One conversation at a time, from the scene's side: a moment begins (the call connects and the
- * resident opens), the learner talks hands-free, and when it ends the painting is kept and the
+ * resident opens), the learner holds the control while they talk, and when it ends the painting is kept and the
  * next moment is asked for. Everything the call says goes to the stage (words, who is speaking)
  * and to the sound (the music dips under a voice).
  */
@@ -47,6 +48,8 @@ export interface TalkView {
   readonly outAfter: boolean;
   readonly safety: SafetyKind | null;
   readonly failed: boolean;
+  /** The last turn's note: too short a press, or nothing heard. */
+  readonly notice: CallNotice | null;
 }
 
 const IDLE: TalkView = {
@@ -57,7 +60,14 @@ const IDLE: TalkView = {
   outAfter: false,
   safety: null,
   failed: false,
+  notice: null,
 };
+
+/**
+ * The shortest press that is a turn. "No." is half a second, so a press counts from a little under
+ * that; shorter ones are slips and show the tip to hold while talking.
+ */
+const MIN_HOLD_MS = 350;
 
 const socketUrl = () => `${apiBase().replace(/^http/, 'ws')}/calls/socket`;
 
@@ -120,9 +130,10 @@ export class Talk {
         stage: moment.stage,
         firstLanguage: deviceFirstLanguage(),
         clientVersion: clientVersion(),
-        turnMode: 'hands_free',
+        turnMode: 'hold_to_talk',
         pace: null,
       },
+      minHoldMs: MIN_HOLD_MS,
       ...(__DEV__ ? { onLog: (m: string) => console.log('voice', m) } : {}),
     });
     this.engine = engine;
@@ -141,11 +152,15 @@ export class Talk {
     if (this.engine === engine) this.sound.setCallContext(engine.audioContext);
   }
 
-  /** The scene was tapped: ends a turn in progress at once; otherwise the controls open. */
-  tap(): 'ended_turn' | 'controls' {
-    const engine = this.engine;
-    if (engine && this.current.phase === 'listening' && engine.endTurnNow()) return 'ended_turn';
-    return 'controls';
+  /** The control went down: the learner talks while they hold it. */
+  press(): void {
+    if (this.current.stage !== 'talking') return;
+    this.engine?.pressTalk();
+  }
+
+  /** The control came up: the turn goes to the resident once the learner's last word ends. */
+  release(): void {
+    this.engine?.releaseTalk();
   }
 
   /** The control's "say it again": the resident says their last line again. */
@@ -253,6 +268,7 @@ export class Talk {
       this.send({ t: 'you', text: s.learnerText, final: s.learnerFinal });
     }
     if (s.safety !== before?.safety) this.patch({ safety: s.safety });
+    if (s.notice !== before?.notice) this.patch({ notice: s.notice });
     if (s.error === 'minutes_exhausted' && before?.error !== 'minutes_exhausted') {
       this.patch({ outAfter: true });
     }

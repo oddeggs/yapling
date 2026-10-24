@@ -64,6 +64,8 @@ export interface VoiceEngineOptions {
   readonly onLog?: (message: string) => void;
   /** The clock mic presses are timed on (`performance.now` by default). */
   readonly now?: () => number;
+  /** The shortest hold-to-talk press that is a turn (`MIN_HOLD_MS` by default). */
+  readonly minHoldMs?: number;
 }
 
 export { storyRecordedLines } from './recorded-lines';
@@ -85,7 +87,7 @@ const MIC_RESTARTS_MAX = 5;
 export class VoiceEngine {
   readonly state: Store<CallState>;
   readonly lipsync: Lipsync;
-  /** How loud the learner is while hands-free hears them, for the mic's bars. */
+  /** How loud the learner is while the call hears them (held, or hands-free), for the mic's bars. */
   readonly level = new MicLevel();
   private readonly socket: CallSocket;
   private readonly audio: CallAudio;
@@ -146,6 +148,7 @@ export class VoiceEngine {
       {
         ...(options.micChunkMs === undefined ? {} : { chunkMs: options.micChunkMs }),
         ...(options.now ? { now: options.now } : {}),
+        ...(options.minHoldMs === undefined ? {} : { minHoldMs: options.minHoldMs }),
         handsFree: { log: (m) => this.log(m) },
       },
     );
@@ -418,7 +421,8 @@ export class VoiceEngine {
     }
     if (!this.socket.ready) return;
     this.turns.frame(frame, r.speaking, r.event, endMs);
-    this.level.push(r.db, this.vad.noiseFloorDb, handsFree && this.turns.gate.state === 'speech');
+    const heard = handsFree ? this.turns.gate.state === 'speech' : this.turns.isHeld;
+    this.level.push(r.db, this.vad.noiseFloorDb, heard);
     const open = handsFree && this.turns.gate.streaming;
     if (open !== this.state.get().turnOpen) this.patch({ turnOpen: open });
   }

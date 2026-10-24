@@ -16,7 +16,7 @@ import { useStore } from '../data/store';
 import { useLocale } from '../ui/locale';
 import { useLipsyncClock, type VoiceEngine } from '../voice';
 import { app } from './app';
-import { Dock, type DockMode } from './dock';
+import { Dock, type DockMode, type TalkLook } from './dock';
 import { KeptCard } from './kept';
 import { SafetySheet } from './safety/safety-sheet';
 import { Stage, type StageHandle } from './stage';
@@ -179,7 +179,6 @@ export function SceneScreen() {
       setLeaving(true);
       return;
     }
-    if (tv.stage === 'talking' && talk.tap() === 'ended_turn') return;
     if (!w.settings.sound && tv.stage === 'idle') {
       world.setSetting('sound', true);
       return;
@@ -219,11 +218,8 @@ export function SceneScreen() {
   else if (w.offline) {
     mode = 'hint';
     hint = t('world.retry');
-  } else if (tv.stage === 'talking' && tv.phase === 'listening') mode = 'ember';
-  else if (tv.stage === 'talking' && tv.phase === 'your_turn' && !tv.micDenied) {
-    mode = 'hint';
-    hint = t('world.hint.talk');
-  } else if (tv.stage === 'idle' && !w.settings.sound) {
+  } else if (tv.stage === 'talking' && !tv.micDenied) mode = 'talk';
+  else if (tv.stage === 'idle' && !w.settings.sound) {
     mode = 'hint';
     hint = t('world.hint.sound');
   } else if (tv.stage === 'idle' && w.planning && !w.moment) {
@@ -232,6 +228,14 @@ export function SceneScreen() {
   }
 
   const engine = talk.engine;
+  const talkLook: TalkLook =
+    tv.phase === 'listening' ? 'held' : tv.phase === 'your_turn' ? 'ready' : 'waiting';
+  const talkLabel =
+    tv.notice === 'hold_longer'
+      ? t('world.hint.holdLonger')
+      : tv.notice === 'not_heard' || tv.notice === 'didnt_catch'
+        ? t('world.hint.notHeard')
+        : t('world.hint.hold');
 
   return (
     <View style={styles.root}>
@@ -293,6 +297,11 @@ export function SceneScreen() {
         hint={hint}
         hintIcon={mode === 'hint' && tv.stage === 'idle' && !w.settings.sound ? 'speaker' : null}
         level={engine?.level.value ?? null}
+        talk={talkLook}
+        talkLabel={talkLabel}
+        talkA11y={t('world.a11y.hold', { name: speakerName })}
+        onTalkIn={() => talk.press()}
+        onTalkOut={() => talk.release()}
         bump={bump}
         onHint={() => {
           if (w.offline) void world.start();

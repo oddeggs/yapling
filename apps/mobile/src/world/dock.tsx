@@ -22,17 +22,22 @@ import { Icon, type IconName } from './icons';
 import { C, SNAP, SPRING } from './theme';
 
 /*
- * The one control: a single piece of glass at the bottom that morphs. A quiet hint when idle, an
- * ember that breathes with the learner's voice while they speak, three choices when the scene is
- * tapped (say it again, pause, menu), "go on" after a kept painting, and the kind out-of-time line.
+ * The one control: a single piece of glass at the bottom that morphs. A quiet hint when idle; in a
+ * conversation it is the talk button: a small dim ember while the resident speaks, "Hold to talk"
+ * when it's the learner's turn, and held, a larger ember that swells with their voice. Three
+ * choices when the scene is tapped (say it again, pause, menu), "go on" after a kept painting, and
+ * the kind out-of-time line.
  */
 
-export type DockMode = 'hidden' | 'hint' | 'ember' | 'controls' | 'paused' | 'go' | 'out';
+export type DockMode = 'hidden' | 'hint' | 'talk' | 'controls' | 'paused' | 'go' | 'out';
+
+/** The talk button's look: the resident's turn, the learner's, or held while they talk. */
+export type TalkLook = 'waiting' | 'ready' | 'held';
 
 const SIZE: Readonly<Record<DockMode, { w: number; h: number }>> = {
   hidden: { w: 44, h: 44 },
   hint: { w: 150, h: 40 },
-  ember: { w: 56, h: 56 },
+  talk: { w: 44, h: 44 },
   controls: { w: 184, h: 58 },
   paused: { w: 128, h: 58 },
   go: { w: 118, h: 44 },
@@ -43,8 +48,14 @@ interface Props {
   readonly mode: DockMode;
   readonly hint: string;
   readonly hintIcon?: IconName | null;
-  /** The learner's voice, 0–1, while hands-free hears them. */
+  /** The learner's voice, 0–1, while they hold the talk button. */
   readonly level: SharedValue<number> | null;
+  readonly talk: TalkLook;
+  /** The talk button's words when it's the learner's turn ("Hold to talk", or a tip). */
+  readonly talkLabel: string;
+  readonly talkA11y: string;
+  readonly onTalkIn: () => void;
+  readonly onTalkOut: () => void;
   readonly onHint: () => void;
   readonly onAgain: () => void;
   readonly onPause: () => void;
@@ -64,7 +75,9 @@ export function Dock(p: Props) {
       ? { w: Math.min(280, 40 + p.hint.length * 7.4 + (p.hintIcon ? 24 : 0)), h: 40 }
       : p.mode === 'out'
         ? { w: Math.min(320, 48 + t('world.out').length * 7.6), h: 44 }
-        : SIZE[p.mode];
+        : p.mode === 'talk'
+          ? talkSize(p.talk, p.talkLabel)
+          : SIZE[p.mode];
   const w = useSharedValue(size.w);
   const h = useSharedValue(size.h);
   const shown = useSharedValue(p.mode === 'hidden' ? 0 : 1);
@@ -115,9 +128,32 @@ export function Dock(p: Props) {
             </Pressable>
           </Content>
         )}
-        {p.mode === 'ember' && (
-          <Content key="ember">
-            <Ember level={p.level} />
+        {p.mode === 'talk' && (
+          <Content key="talk">
+            <Pressable
+              style={styles.talk}
+              disabled={p.talk === 'waiting'}
+              onPressIn={() => {
+                haptics.play('tap');
+                p.onTalkIn();
+              }}
+              onPressOut={() => {
+                if (p.talk !== 'held') return;
+                haptics.play('tap');
+                p.onTalkOut();
+              }}
+              // A thumb that drifts while talking keeps the turn; only lifting it ends it.
+              pressRetentionOffset={400}
+              accessibilityRole="button"
+              accessibilityLabel={p.talkA11y}
+            >
+              <Ember level={p.level} look={p.talk} />
+              {p.talk === 'ready' && (
+                <Text style={styles.talkText} numberOfLines={1}>
+                  {p.talkLabel}
+                </Text>
+              )}
+            </Pressable>
           </Content>
         )}
         {p.mode === 'controls' && (
@@ -200,19 +236,35 @@ function Btn({ icon, label, onPress }: { icon: IconName; label: string; onPress:
   );
 }
 
-/** The ember: it breathes slowly when quiet and swells with the learner's voice. */
-function Ember({ level }: { level: SharedValue<number> | null }) {
+function talkSize(look: TalkLook, label: string): { w: number; h: number } {
+  if (look === 'held') return { w: 84, h: 84 };
+  if (look === 'ready') return { w: Math.min(260, 74 + label.length * 7.6), h: 56 };
+  return SIZE.talk;
+}
+
+/**
+ * The ember: small and dim while the resident speaks, glowing on the learner's turn, and held, it
+ * grows and swells with their voice.
+ */
+function Ember({ level, look }: { level: SharedValue<number> | null; look: TalkLook }) {
   const breath = useSharedValue(0);
+  const held = useSharedValue(look === 'held' ? 1 : 0);
+  const lit = useSharedValue(look === 'waiting' ? 0 : 1);
   useEffect(() => {
     breath.value = withRepeat(withTiming(1, { duration: 1400 }), -1, true);
   }, [breath]);
+  useEffect(() => {
+    held.value = withSpring(look === 'held' ? 1 : 0, SNAP);
+    lit.value = withTiming(look === 'waiting' ? 0 : 1, { duration: 260 });
+  }, [look, held, lit]);
   const style = useAnimatedStyle(() => {
-    const lv = level ? level.value : 0;
-    const s = 0.62 + 0.1 * breath.value + 0.5 * lv;
+    const lv = level && held.value > 0.5 ? level.value : 0;
+    const base = interpolate(lit.value, [0, 1], [0.42, 0.6]) + 0.08 * breath.value * lit.value;
+    const s = base + held.value * (0.55 + 0.45 * lv);
     return {
       transform: [{ scale: s }],
-      opacity: interpolate(lv, [0, 1], [0.78, 1]),
-      shadowOpacity: 0.5 + 0.4 * lv,
+      opacity: interpolate(lit.value, [0, 1], [0.4, 0.82]) + 0.18 * held.value,
+      shadowOpacity: 0.3 + 0.3 * lit.value + 0.3 * lv,
     };
   });
   return <Animated.View style={[styles.ember, style]} />;
@@ -229,6 +281,14 @@ const styles = StyleSheet.create({
   btn: { width: 52, height: 52, borderRadius: 26, alignItems: 'center', justifyContent: 'center' },
   pressed: { backgroundColor: 'rgba(255,255,255,0.12)', transform: [{ scale: 0.92 }] },
   fill: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
+  talk: {
+    ...StyleSheet.absoluteFill,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  talkText: { color: C.bone, fontSize: 14, fontWeight: '600', letterSpacing: -0.1 },
   word: { color: C.bone, fontSize: 13.5, fontWeight: '600' },
   ember: {
     width: 30,

@@ -7,6 +7,7 @@ export { VoiceEngine, storyRecordedLines, type VoiceEngineOptions } from './engi
 export { micPermissionStatus, requestMicPermission, type MicPermission } from './audio-session';
 export {
   CALL_PHASES,
+  type CallNotice,
   type CallPhase,
   type CallState,
   type CaptionLine,
