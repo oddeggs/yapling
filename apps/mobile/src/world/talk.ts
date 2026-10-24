@@ -134,6 +134,9 @@ export class Talk {
         pace: null,
       },
       minHoldMs: MIN_HOLD_MS,
+      // The mic is heard only while the learner holds the button, and no one speaks over them then,
+      // so there is no echo to cancel: the voices play at full quality, not as a phone call.
+      voiceProcessing: false,
       ...(__DEV__ ? { onLog: (m: string) => console.log('voice', m) } : {}),
     });
     this.engine = engine;
@@ -154,12 +157,14 @@ export class Talk {
 
   /** The control went down: the learner talks while they hold it. */
   press(): void {
-    if (this.current.stage !== 'talking') return;
-    this.engine?.pressTalk();
+    if (this.current.stage !== 'talking' || !this.engine) return;
+    this.sound.setHushed(true);
+    this.engine.pressTalk();
   }
 
   /** The control came up: the turn goes to the resident once the learner's last word ends. */
   release(): void {
+    this.sound.setHushed(false);
     this.engine?.releaseTalk();
   }
 

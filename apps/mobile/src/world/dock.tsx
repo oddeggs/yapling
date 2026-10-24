@@ -137,8 +137,8 @@ export function Dock(p: Props) {
                 haptics.play('tap');
                 p.onTalkIn();
               }}
+              // Always passed on: a quick press can lift before the button has redrawn as held.
               onPressOut={() => {
-                if (p.talk !== 'held') return;
                 haptics.play('tap');
                 p.onTalkOut();
               }}

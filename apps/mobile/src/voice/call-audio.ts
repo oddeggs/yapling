@@ -29,7 +29,7 @@ export class CallAudio {
   private latencyS = 0.02;
 
   constructor(private readonly options: CallAudioOptions) {
-    this.session = new CallAudioSession(options.onSessionEvent);
+    this.session = new CallAudioSession(options.onSessionEvent, options.voiceProcessing);
   }
 
   /** The playback graph while the audio is up. */

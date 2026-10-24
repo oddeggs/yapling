@@ -44,7 +44,11 @@ export class CallAudioSession {
   private active = false;
   private claim: AudioClaim | null = null;
 
-  constructor(private readonly onEvent: (event: SessionEvent) => void) {}
+  constructor(
+    private readonly onEvent: (event: SessionEvent) => void,
+    /** Voice chat mode goes with echo cancellation; without it the session plays as media. */
+    private readonly voiceChat = true,
+  ) {}
 
   get isActive(): boolean {
     return this.active;
@@ -59,7 +63,7 @@ export class CallAudioSession {
     this.claim = claimAudio('call');
     AudioManager.setAudioSessionOptions({
       iosCategory: 'playAndRecord',
-      iosMode: 'voiceChat',
+      iosMode: this.voiceChat ? 'voiceChat' : 'default',
       // HFP carries a headset's mic; when a device supports both, iOS prefers HFP for a call.
       iosOptions: ['defaultToSpeaker', 'allowBluetoothHFP', 'allowBluetoothA2DP'],
       iosAllowHaptics: true,

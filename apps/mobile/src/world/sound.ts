@@ -66,6 +66,7 @@ export class Sound {
   private own: AudioContext | null = null;
   /** The call's graph, or 'starting' while a call's audio comes up (nothing plays then). */
   private call: AudioContext | 'starting' | null = null;
+  private hushed = false;
   private claim: AudioClaim | null = null;
   private readonly buffers = new Map<AudioContext, Map<string, Promise<AudioBuffer>>>();
   private playing: Partial<Record<Layer, Playing>> = {};
@@ -103,7 +104,27 @@ export class Sound {
   setCallContext(ctx: AudioContext | null): void {
     if (this.call === ctx) return;
     this.call = ctx;
+    if (ctx === null) this.hushed = false;
     this.queue();
+  }
+
+  /**
+   * The learner holds the talk button: the town goes almost silent so the mic (without echo
+   * cancellation) hears only them, and comes back when they let go.
+   */
+  setHushed(on: boolean): void {
+    if (this.hushed === on) return;
+    this.hushed = on;
+    const ctx = this.ctxInUse;
+    if (!ctx) return;
+    for (const layer of ['music', 'ambience', 'weather'] as const) {
+      const p = this.playing[layer];
+      try {
+        p?.gain.gain.setTargetAtTime(this.level(layer), ctx.currentTime, on ? 0.08 : 0.6);
+      } catch {
+        // the graph is gone
+      }
+    }
   }
 
   /** A short sound of the town (the bus arriving), when sound is on. */
@@ -129,6 +150,7 @@ export class Sound {
   }
 
   private level(layer: Layer): number {
+    if (this.hushed && this.call !== null) return 0;
     const levels = this.call === null ? LEVEL : IN_CALL;
     if (layer === 'weather' && PLACES[this.place].interior) return levels.weather / 2;
     return levels[layer];

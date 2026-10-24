@@ -279,6 +279,7 @@ export class VoiceEngine {
   pressTalk(): void {
     if (this.turns.mode !== 'hold_to_talk') return;
     this.turns.press();
+    this.diag('press');
     this.replies.on({ type: 'settled' });
     this.patch({ talkHeld: true, awaitingReply: false, onHold: false, notice: null });
   }
@@ -290,7 +291,9 @@ export class VoiceEngine {
   releaseTalk(): void {
     if (!this.turns.isHeld) return;
     const speaking = this.vad.speaking;
-    if (this.turns.release(speaking) === 'tap') {
+    const release = this.turns.release(speaking);
+    this.diag(release === 'tap' ? 'release_tap' : 'release');
+    if (release === 'tap') {
       this.log('a tap, not a turn: nothing sent');
       this.patch({ talkHeld: false, notice: 'hold_longer' });
       return;
@@ -493,6 +496,10 @@ export class VoiceEngine {
         underruns: stats?.underruns ?? 0,
         lateDrops: stats?.lateDrops ?? 0,
         micRestarts: this.micRestarts,
+        phase: this.state.get().phase,
+        held: this.turns.isHeld,
+        speaking: this.vad.speaking,
+        sentMs: Math.round(this.micSentMs),
       },
     });
   }
