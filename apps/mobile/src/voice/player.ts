@@ -98,6 +98,8 @@ const LEAD_S = 0.03;
 const STALLED_MS = 5_000;
 
 export class CallPlayer {
+  /** Lines finished, and how often streamed audio ran dry or came too late, for diagnostics. */
+  readonly stats = { lines: 0, underruns: 0, lateDrops: 0 };
   private lines: Line[] = [];
   private readonly decoded = new Map<string, Promise<AudioBuffer>>();
   private timer: ReturnType<typeof setInterval> | null = null;
@@ -421,6 +423,11 @@ export class CallPlayer {
     if (i === -1) return;
     this.lines.splice(i, 1);
     this.silence(line);
+    this.stats.lines += 1;
+    if (line.kind === 'live') {
+      this.stats.underruns += line.playout.underruns;
+      this.stats.lateDrops += line.playout.lateDrops;
+    }
     this.options.events.ended?.(line, interrupted);
     if (interrupted && this.lines.length === 0) {
       this.stopTimer();

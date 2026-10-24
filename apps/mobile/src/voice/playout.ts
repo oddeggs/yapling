@@ -18,7 +18,11 @@ export interface PlayoutConfig {
   readonly maxWaitMs: number;
 }
 
-export const DEFAULT_PLAYOUT: PlayoutConfig = { prebufferMs: 120, leadMs: 30, maxWaitMs: 150 };
+/**
+ * A phone on mobile data sees TTS chunks arrive in bursts; 120 ms ran dry mid-line. 280 ms costs
+ * a sixth of a second before a line starts and keeps the voice whole.
+ */
+export const DEFAULT_PLAYOUT: PlayoutConfig = { prebufferMs: 280, leadMs: 40, maxWaitMs: 360 };
 
 /** One chunk placed on the audio clock. */
 export interface Segment {

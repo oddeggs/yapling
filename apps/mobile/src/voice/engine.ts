@@ -74,6 +74,9 @@ const LOCAL_STREAM_BASE = 0xffff_0000;
 /** How long the engine takes to settle on a new route before the graph is checked. */
 const ROUTE_SETTLE_MS = 300;
 
+/** How often the call hears how the phone's audio is doing. */
+const DIAG_EVERY_MS = 15_000;
+
 export class VoiceEngine {
   readonly state: Store<CallState>;
   readonly lipsync: Lipsync;
@@ -105,6 +108,9 @@ export class VoiceEngine {
   private localStream = LOCAL_STREAM_BASE;
   /** Mic audio sent on the current socket, in ms (the clock `speech` frames are timed on). */
   private micSentMs = 0;
+  /** Device mic frames heard since the audio came up (a dead mic stays at 0). */
+  private micFrames = 0;
+  private diagTimer: ReturnType<typeof setInterval> | null = null;
 
   constructor(private readonly options: VoiceEngineOptions) {
     this.state = new Store(initialCallState(options.hello.turnMode));
@@ -222,6 +228,8 @@ export class VoiceEngine {
     if ((await micPermissionStatus()) === 'granted') await this.startMic();
     else this.log('mic permission not granted: listening only');
     this.log(`audio up: ${this.debugAudio()}`);
+    this.diag('audio');
+    this.diagTimer ??= setInterval(() => this.diag('tick'), DIAG_EVERY_MS);
     return status;
   }
 
@@ -380,6 +388,7 @@ export class VoiceEngine {
 
   private onMicFrame(frame: Int16Array, endMs: number, source: 'device' | 'simulated'): void {
     if (source === 'device' && this.simulated.running) return;
+    this.micFrames += 1;
     const s = this.state.get();
     if (s.interrupted || s.endReason) return;
     const r = this.vad.push(frame, endMs - MIC_FRAME_MS);
@@ -417,6 +426,45 @@ export class VoiceEngine {
     }
     this.meter.speechEnded(this.vad.lastVoicedMs ?? performance.now());
     this.patch({ learnerSpeaking: false });
+    this.diag('speech_end');
+  }
+
+  /** Tells the call how the phone's audio is doing: the mic, the engine, the voice's playout. */
+  private diag(event: string): void {
+    try {
+      this.sendDiag(event);
+    } catch (e) {
+      // Diagnostics never break a call.
+      this.log(`diag failed: ${String(e)}`);
+    }
+  }
+
+  private sendDiag(event: string): void {
+    const st = this.audio.status();
+    const gate = this.turns.gate;
+    const stats = this.player?.stats;
+    this.socket.send({
+      type: 'diag',
+      event,
+      data: {
+        micOn: this.audio.micRunning,
+        micFrames: this.micFrames,
+        micHz: this.audio.micRateHz,
+        floorDb: Math.round(this.vad.noiseFloorDb),
+        gateSentMs: gate.sentMs,
+        gateHeardMs: gate.heardMs,
+        gate: gate.state,
+        vp: st?.voiceProcessing ?? null,
+        engine: st?.engineRunning ?? null,
+        category: st?.category ?? null,
+        input: st?.inputs[0]?.type ?? null,
+        output: st?.outputs[0]?.type ?? null,
+        ctx: this.audio.context?.state ?? null,
+        lines: stats?.lines ?? 0,
+        underruns: stats?.underruns ?? 0,
+        lateDrops: stats?.lateDrops ?? 0,
+      },
+    });
   }
 
   private onSocketStatus(status: SocketStatus): void {
@@ -555,6 +603,7 @@ export class VoiceEngine {
     this.log(`line ${line.streamId} ${interrupted ? 'interrupted' : 'ended'}`);
     this.captions.delete(line.streamId);
     if (line.streamId > LOCAL_STREAM_BASE) return;
+    this.diag('line');
     const played: OutgoingFrame = {
       type: 'played',
       streamId: line.streamId,
@@ -602,6 +651,8 @@ export class VoiceEngine {
 
   private async teardown(): Promise<void> {
     this.stopSimulatedMic();
+    if (this.diagTimer) clearInterval(this.diagTimer);
+    this.diagTimer = null;
     if (this.interruptionHold) clearInterval(this.interruptionHold);
     this.interruptionHold = null;
     if (this.hangupTimer) clearTimeout(this.hangupTimer);

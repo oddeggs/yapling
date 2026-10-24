@@ -3,7 +3,12 @@ import { PLACES, clockLabel } from '@yapling/scene';
 import { usePathname, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeOut, useAnimatedReaction } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedReaction,
+  useSharedValue,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { scheduleOnRN } from 'react-native-worklets';
 
@@ -322,10 +327,17 @@ function CaptionBridge({ engine }: { engine: VoiceEngine }) {
   const stage = app();
   const send = useCallback((n: number) => stage.stage?.send({ t: 'chars', n }), [stage]);
   const { charIndex, streamId } = engine.lipsync;
+  // Words arrive a few a second: a dozen updates a second is plenty, and keeps the JS thread free
+  // for the mic and the voice.
+  const sentAt = useSharedValue(0);
   useAnimatedReaction(
     () => (streamId.value === 0 ? -1 : charIndex.value),
     (n, prev) => {
-      if (n >= 0 && n !== prev) scheduleOnRN(send, n);
+      if (n < 0 || n === prev) return;
+      const t = Date.now();
+      if (prev !== -1 && prev !== null && n > prev && t - sentAt.value < 80) return;
+      sentAt.value = t;
+      scheduleOnRN(send, n);
     },
   );
   return null;

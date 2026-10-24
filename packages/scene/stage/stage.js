@@ -20,7 +20,7 @@
   const hourOf = (d) => d.getHours() + d.getMinutes() / 60 + d.getSeconds() / 3600;
 
   function resize() {
-    const r = cv.getBoundingClientRect(), dpr = Math.min(3, devicePixelRatio || 1);
+    const r = cv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1); // 3x costs twice the fill for paint nobody can tell apart
     dims = { w: r.width, h: r.height, dpr };
     cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
     bg.width = Math.round(r.width * dpr * SUPER); bg.height = Math.round(r.height * dpr * SUPER); bgKey = '';
@@ -60,7 +60,11 @@
   // ---------- render loop ----------
   const weavePat = cv.getContext('2d').createPattern(weave, 'repeat');
   let last = performance.now(), lastSec = -1;
+  // a still camera draws at 30 fps (the critters breathe as well, and the phone keeps its CPU for
+  // the voice); a moving one at full rate
+  const camMoving = () => Math.abs(cam.zs.v) > 0.003 || Math.abs(cam.zs.x - cam.zs.t) > 0.003;
   function frame(now) {
+    if (!still && now - last < 31 && !camMoving()) { requestAnimationFrame(frame); return; }
     const dt = clamp((now - last) / 1000, 0, 1 / 20); last = now;
     const { w, h, dpr } = dims;
     if (w) {

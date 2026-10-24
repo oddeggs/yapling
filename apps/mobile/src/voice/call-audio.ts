@@ -41,6 +41,11 @@ export class CallAudio {
     return this.mic?.isRunning ?? false;
   }
 
+  /** The rate the mic delivers (0 before its first buffer). */
+  get micRateHz(): number {
+    return this.mic?.deliveredRateHz ?? 0;
+  }
+
   /** Seconds from a sample leaving the graph to it being heard. */
   get outputLatency(): number {
     return this.latencyS;

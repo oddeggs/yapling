@@ -14,8 +14,10 @@ import { claimAudio, ownsAudio, releaseAudio, type AudioClaim } from '../voice/a
 /*
  * Every place sounds like itself: its music and its ambience (made with ElevenLabs), and the rain
  * or the wind on top. Off until the learner taps once. Between conversations it plays in its own
- * playback graph; during one it plays through the call's graph, so echo cancellation hears it and
- * keeps it out of the microphone, and the music dips while a character speaks.
+ * playback graph. As a conversation starts, that graph is closed before the call's audio comes up
+ * (the app has one audio engine, and a graph left on it breaks the call's mic); during the
+ * conversation it plays low through the call's own graph, so echo cancellation hears it and keeps
+ * it out of the microphone.
  */
 
 const ASSETS: Readonly<Record<string, () => number>> = {
@@ -51,8 +53,8 @@ const ASSETS: Readonly<Record<string, () => number>> = {
 type Layer = 'music' | 'ambience' | 'weather';
 
 const LEVEL: Readonly<Record<Layer, number>> = { music: 0.42, ambience: 0.36, weather: 0.3 };
-/** The music under a character's voice. */
-const DUCKED = 0.16;
+/** During a conversation: a bed under the voices, low enough to stay out of the learner's turn. */
+const IN_CALL: Readonly<Record<Layer, number>> = { music: 0.1, ambience: 0.12, weather: 0.06 };
 
 interface Playing {
   readonly key: string;
@@ -62,7 +64,8 @@ interface Playing {
 
 export class Sound {
   private own: AudioContext | null = null;
-  private call: AudioContext | null = null;
+  /** The call's graph, or 'starting' while a call's audio comes up (nothing plays then). */
+  private call: AudioContext | 'starting' | null = null;
   private claim: AudioClaim | null = null;
   private readonly buffers = new Map<AudioContext, Map<string, Promise<AudioBuffer>>>();
   private playing: Partial<Record<Layer, Playing>> = {};
@@ -70,7 +73,6 @@ export class Sound {
   private on = false;
   private place: PlaceId = 'room';
   private weather: Weather = 'clear';
-  private ducked = false;
   private busy: Promise<void> = Promise.resolve();
 
   /** Turns music and ambience on or off. */
@@ -87,20 +89,21 @@ export class Sound {
     this.queue();
   }
 
-  /** A conversation's graph took the audio (or gave it back with null). */
+  /**
+   * A conversation is about to start its audio: everything stops and the playback graph is closed
+   * now, so the call brings the engine up on its own. Resolves once that is done.
+   */
+  handOff(): Promise<void> {
+    this.call = 'starting';
+    this.queue();
+    return this.busy;
+  }
+
+  /** The conversation's graph is up (it plays there now), or with null, it has let go. */
   setCallContext(ctx: AudioContext | null): void {
     if (this.call === ctx) return;
     this.call = ctx;
     this.queue();
-  }
-
-  /** A character is speaking: the music dips under the voice. */
-  setDucked(ducked: boolean): void {
-    if (this.ducked === ducked) return;
-    this.ducked = ducked;
-    const m = this.playing.music;
-    const ctx = this.ctxInUse;
-    if (m && ctx) m.gain.gain.setTargetAtTime(this.level('music'), ctx.currentTime, 0.35);
   }
 
   /** A short sound of the town (the bus arriving), when sound is on. */
@@ -126,9 +129,9 @@ export class Sound {
   }
 
   private level(layer: Layer): number {
-    if (layer === 'music' && this.ducked) return DUCKED;
-    if (layer === 'weather' && PLACES[this.place].interior) return 0.14;
-    return LEVEL[layer];
+    const levels = this.call === null ? LEVEL : IN_CALL;
+    if (layer === 'weather' && PLACES[this.place].interior) return levels.weather / 2;
+    return levels[layer];
   }
 
   private wanted(): Partial<Record<Layer, string>> {
@@ -150,14 +153,20 @@ export class Sound {
 
   private async apply(): Promise<void> {
     const want = this.wanted();
-    const anything = Object.keys(want).length > 0;
-    const ctx = !anything ? null : (this.call ?? (await this.ownContext()));
+    const call = this.call;
+    const starting = call === 'starting';
+    if (starting || Object.keys(want).length === 0) {
+      this.fadeAll(this.ctxInUse);
+      this.ctxInUse = null;
+      await this.closeOwn(starting);
+      return;
+    }
+    const ctx = call ?? (await this.ownContext());
     if (ctx !== this.ctxInUse) {
       this.fadeAll(this.ctxInUse);
       this.ctxInUse = ctx;
     }
-    if (this.call !== null || !anything) await this.closeOwn();
-    if (!ctx) return;
+    if (call !== null) await this.closeOwn(true);
     for (const layer of ['music', 'ambience', 'weather'] as const) {
       const key = want[layer];
       const cur = this.playing[layer];
@@ -238,12 +247,14 @@ export class Sound {
     return ctx;
   }
 
-  private async closeOwn(): Promise<void> {
+  /** Closes the playback graph: after its fade, or `now` (a call's audio is about to start). */
+  private async closeOwn(now = false): Promise<void> {
     const own = this.own;
     if (!own) return;
     this.own = null;
     this.buffers.delete(own);
-    setTimeout(() => void own.close().catch(() => undefined), 2_600);
+    if (now) await own.close().catch(() => undefined);
+    else setTimeout(() => void own.close().catch(() => undefined), 2_600);
     if (releaseAudio(this.claim))
       await AudioManager.setAudioSessionActivity(false).catch(() => false);
     this.claim = null;

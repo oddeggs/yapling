@@ -131,6 +131,8 @@ export class Talk {
     this.stop = engine.state.subscribe(() => this.onState(engine));
     engine.connect();
     try {
+      // The scene's own sound lets go of the audio engine first: the call brings it up clean.
+      await this.sound.handOff();
       await engine.prepare();
     } catch (error) {
       reportError(error, { where: 'talk.prepare' });
@@ -249,7 +251,6 @@ export class Talk {
     ) {
       this.send({ t: 'you', text: s.learnerText, final: s.learnerFinal });
     }
-    if (s.playing !== before?.playing) this.sound.setDucked(s.playing);
     if (s.safety !== before?.safety) this.patch({ safety: s.safety });
     if (s.error === 'minutes_exhausted' && before?.error !== 'minutes_exhausted') {
       this.patch({ outAfter: true });
@@ -269,10 +270,9 @@ export class Talk {
   private async ended(engine: VoiceEngine, s: CallState): Promise<void> {
     this.stop?.();
     this.stop = null;
-    this.sound.setCallContext(null);
-    this.sound.setDucked(false);
     releaseLine(engine);
-    void engine.dispose();
+    // The scene's sound comes back on its own graph once the call has let the engine go.
+    void engine.dispose().finally(() => this.sound.setCallContext(null));
     if (this.engine === engine) this.engine = null;
     if (this.moment) this.world.played(this.moment.id);
     this.send({ t: 'talk', phase: 'idle', sleepAgain: true });
@@ -302,7 +302,7 @@ export class Talk {
     this.engine = null;
     if (engine) {
       releaseLine(engine);
-      void engine.dispose();
+      void engine.dispose().finally(() => this.sound.setCallContext(null));
     }
   }
 }
