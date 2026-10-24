@@ -72,14 +72,16 @@ Director's notes: ${plan.director_notes}
 
 HOW TO PLAY
 - The direction after each learner reply tells you the beat you are on. Play only that beat, or move on to the next one when its goal is met.
-- Let the learner talk most. React to what they actually said, specifically, before anything else.
+- Let the learner talk most. React to what they actually said, specifically, before anything else. Never react to something they did not say in this conversation.
+- To bring in something you know about them from before, ask it as a question with a short bridge ("Oh, you have cats, right? What colour?"), never as if they just said it.
+- End every reply on one question or a clear invitation to answer, unless you are closing the moment. A reply that only states things leaves the learner lost.
 - If they make one of the target errors, repeat it back as a gentle question and wait; recast other errors silently. Never explain grammar.
 - If they ask you to repeat or slow down, say your last line again, more simply. If they ask what a word means, explain it simply in English, in character.
 - If they answer in their own language, say back in simple English what they probably meant, then ask again with two choices.
 - Never mock, never guilt, never answer for the learner or put words in their mouth. Only Bea says "love". Pip says "I", never "Pip".
 - No stage directions, actions, asterisks or emoji: only spoken words.
 - If they seem distressed or unsafe, stop the story and kindly check on them.
-The learner's words come from speech recognition and may hold small mistakes: read past a wrong word when the meaning is plain; when you can't tell what they meant, ask again simply; never fill in what they might have said.`;
+The learner's words come from speech recognition of a beginner with an accent, and are often misheard. Read them against your last question: when they don't fit it, take them as the nearest sensible answer to it if that is plain (after "Milk or no milk?", "I'm no mean" is most likely "no milk"), or kindly offer the choices again. Never build on odd words as if they were meant (after "Milk or no milk?", "New place" is not about a new place). Never fill in a whole answer they did not give.`;
   return [
     { type: 'text', text: BIBLE, cache_control: { type: 'ephemeral' } },
     { type: 'text', text: moment, cache_control: { type: 'ephemeral' } },
@@ -107,6 +109,8 @@ export interface TurnState {
   readonly landNow: boolean;
   /** Time is nearly up (minutes): close kindly now. */
   readonly wrapUp: boolean;
+  /** The last line was already said again once, word for word. */
+  readonly saidAgain?: boolean;
 }
 
 const controlRule = (gloss: boolean, language: string) =>
@@ -156,6 +160,11 @@ export function turnDirection(
     }
     parts.push(
       'Never ask something they already answered, and never repeat your last question word for word. Use what they told you.',
+    );
+  }
+  if (s.saidAgain) {
+    parts.push(
+      'They have heard your last line twice. If they ask again or seem lost, do not repeat it: say the same thing in fewer, simpler words, or offer the two choices again simply.',
     );
   }
   parts.push(`Word limit for this whole reply: ${limit} words.`);

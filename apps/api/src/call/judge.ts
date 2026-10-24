@@ -81,7 +81,7 @@ const AGAIN_CRITERIA = {
   slower:
     'They ask for it slower, or say it was too fast: slowly please, too fast, speak slower, or the same in Vietnamese (chậm thôi, nhanh quá).',
   neither:
-    "Anything else: an answer, a question about what a word means, 'I don't know', or a 'sorry' that is not asking to hear it again (sorry, I'm late).",
+    "Anything else: an answer, a question about what a word means, 'I don't know', a 'sorry' that is not asking to hear it again (sorry, I'm late), or a question about what comes next (and what?, what else?, and then?, what now?).",
 } as const;
 
 const CARE_CRITERIA = {

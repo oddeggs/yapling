@@ -467,7 +467,8 @@ export class MomentSession {
       said: text,
       speechEndAt,
       committed: false,
-      replay: ask !== null && last !== null ? ask : null,
+      // Said once again at most: a second ask gets the model, told to say it more simply.
+      replay: ask !== null && last !== null && !state.saidAgain ? ask : null,
       learnerIndex: -1,
       judge: new AbortController(),
       wrapUp: state.wrapUp,
@@ -554,7 +555,7 @@ export class MomentSession {
         addSample(this.data.samples, 'judge', Date.now() - started);
         reply.jev = j;
         if (this.weigh(reply, j)) return;
-        if (j.again === null || last === null) return;
+        if (j.again === null || last === null || saidTwice(this.data.transcript)) return;
         // They asked to hear it again: the last line instead of a reply, not a try.
         this.swapReply(reply, last.text, j.again);
       },
@@ -708,6 +709,7 @@ export class MomentSession {
       laneSwitched: switched,
       landNow: replies.length >= LAND_AFTER_TURNS,
       wrapUp: d.wrapping,
+      saidAgain: saidTwice(d.transcript),
     };
   }
 
@@ -921,3 +923,9 @@ export const judgedLines = (transcript: readonly TranscriptLine[]) =>
       who: isLearnerLine(l) ? ('learner' as const) : ('character' as const),
       text: l.text,
     }));
+
+/** The resident's last line was already said again: its last two lines are the same. */
+function saidTwice(transcript: readonly TranscriptLine[]): boolean {
+  const said = transcript.filter((l) => !isLearnerLine(l));
+  return said.length >= 2 && said.at(-1)?.text === said.at(-2)?.text;
+}

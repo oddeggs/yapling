@@ -46,6 +46,7 @@ WHAT MAKES A MOMENT GREAT
 - It walks into something already happening at this hour: Mei raising the shutters at 7, Hank at the noodle stall after dark, Pip half asleep at midnight. The time and weather are part of the scene.
 - Personal relevance: weave in what we have INFERRED about the learner (work, interests, life, home) lightly and specifically. Never ask for facts up front; let the moment give natural openings for them to tell us more.
 - Continuity: call back things the learner said or chose before; pay off open threads within three moments. A learner may play many moments in a row, or come back after weeks: no calendar, no "tomorrow", and every moment stands on its own for a learner who forgot the last one.
+- Variety: every moment is a new scene. Never build it around the same object, question or task as either of the last two moments (listed as THE LAST MOMENTS), and never open with their question or a near copy of it. A thread pays off in one moment, then rests for at least two before it comes back, and only if something new happens in it. Never ask again what the learner has already answered (WHAT THEY TOLD THE TOWN): build on the answer instead ("You like it with no sugar, right? Today I...").
 - Level fit: aim at the inferred stage, with one beat that stretches slightly. If the level is unknown or low-confidence, aim at Visitor/Newcomer: open with an easy question that offers two choices, write every if_struggling as a Visitor line (one sentence, at most 8 words, two short choices to repeat) and every if_strong as an open follow-up a B1–B2 speaker could talk about for a minute. The call listens to the first two answers and switches the actor to one of those lanes, so both must be playable on their own.
 - A door: until we know three of the learner's interests, one beat is a door, where the story needs something from the learner's own life (what they would order, what their job is like, what they do after work, what food they grew up with). Low levels get two concrete choices plus "or something else?"; high levels an open why/how question. Never a quiz.
 - At most two open threads (open_threads_after ≤ 2). Close an old thread before opening a new mystery; explain any mystery in the first two lines.
@@ -88,6 +89,8 @@ export interface PlanContext {
   readonly paintings: readonly Painting[];
   /** What the learner told the town (their memory page), newest first. */
   readonly memories: readonly string[];
+  /** The plans of the last moments played, newest first. */
+  readonly recent: readonly MomentPlan[];
   readonly played: number;
   readonly now: number;
 }
@@ -134,6 +137,16 @@ export function planInput(ctx: PlanContext, t: LocalTime, repair?: string): stri
     `THE LEARNER: ${learner.name ? `called ${learner.name}` : 'name not known yet'}; first language ${language}; lives in ${countryName(learner.country) ?? 'a country we do not know yet'}. They have played ${ctx.played} moment(s) before this one.`,
     `LEARNER MODEL (inferred from their conversations only):\n${learner.model ? str(learner.model) : '(none yet)'}`,
     `WHAT THEY TOLD THE TOWN:\n${ctx.memories.length ? ctx.memories.map((m) => `- ${m}`).join('\n') : '(nothing yet)'}`,
+    `THE LAST MOMENTS (newest first; the next one must be about something else):\n${
+      ctx.recent.length
+        ? ctx.recent
+            .slice(0, 2)
+            .map(
+              (p) => `- "${p.title_open}" at ${p.place}. Hook: ${p.hook} Opened: ${p.opening_line}`,
+            )
+            .join('\n')
+        : '(none yet)'
+    }`,
     `THE STORY SO FAR (oldest first):\n${story.length ? str(story) : '(nothing yet: this is their first planned moment)'}`,
     `OPEN THREADS: ${learner.openThreads.length ? learner.openThreads.join(' | ') : '(none)'}`,
     repair
@@ -142,9 +155,58 @@ export function planInput(ctx: PlanContext, t: LocalTime, repair?: string): stri
   ].join('\n\n');
 }
 
-/** Code checks a plan must pass: an open place, lines within the limit, the door, two threads. */
-export function checkPlan(plan: MomentPlan, t: LocalTime, needsDoor: boolean): string[] {
+const PLAIN = new Set(
+  "the and you your are for with what how was were this that have has one can will would like some any not but its it's there here today now".split(
+    ' ',
+  ),
+);
+
+/** The content words of a line's question (its last sentence ending in "?"). */
+function questionWords(line: string): Set<string> {
+  const q = line.match(/[^.!?]*\?/g)?.at(-1) ?? '';
+  return new Set(
+    q
+      .toLowerCase()
+      .replace(/[^a-z' ]/g, ' ')
+      .split(/\s+/)
+      .filter((w) => w.length >= 3 && !PLAIN.has(w)),
+  );
+}
+
+/** Whether two opening lines ask the same question ("Milk or no milk?" twice). */
+export function sameQuestion(a: string, b: string): boolean {
+  const x = questionWords(a);
+  const y = questionWords(b);
+  const small = Math.min(x.size, y.size);
+  if (small === 0) return false;
+  const shared = [...x].filter((w) => y.has(w)).length;
+  return shared / small >= 0.6;
+}
+
+/** What makes a plan a rerun of the last moments: the same opening question, a third visit in a row. */
+export function repeatsRecent(plan: MomentPlan, recent: readonly MomentPlan[]): string[] {
   const problems: string[] = [];
+  const last = recent.slice(0, 2);
+  const copied = last.find((r) => sameQuestion(plan.opening_line, r.opening_line));
+  if (copied) {
+    problems.push(
+      `The opening asks the same question as a recent moment ("${copied.opening_line}"). Build a new scene around something else.`,
+    );
+  }
+  if (last.length === 2 && last.every((r) => r.place === plan.place)) {
+    problems.push(`The last two moments were at ${plan.place} too; choose another open place.`);
+  }
+  return problems;
+}
+
+/** Code checks a plan must pass: an open place, lines within the limit, the door, two threads. */
+export function checkPlan(
+  plan: MomentPlan,
+  t: LocalTime,
+  needsDoor: boolean,
+  recent: readonly MomentPlan[] = [],
+): string[] {
+  const problems: string[] = [...repeatsRecent(plan, recent)];
   if (!residentIn(plan.place, plan.variant, t.hour)) {
     problems.push(
       `${plan.place} variant ${plan.variant} has nobody in at ${clockLabel(t.hour)}; choose a place open now.`,
@@ -202,7 +264,7 @@ export async function planMoment(client: Anthropic, ctx: PlanContext): Promise<P
       continue;
     }
     const plan = parsed.data as MomentPlan;
-    const problems = checkPlan(plan, t, needsDoor);
+    const problems = checkPlan(plan, t, needsDoor, ctx.recent);
     const open = residentIn(plan.place, plan.variant, t.hour);
     // After one repair a plan that still breaks a soft rule (a long line) is played; a closed
     // place never is.

@@ -18,6 +18,7 @@ import {
   paintingByCall,
   readLearner,
   readMoment,
+  recentPlans,
   saveLearnerModel,
 } from './store';
 
@@ -85,6 +86,7 @@ async function judgeAfter(
     lines: judgedLines(file.lines),
     firstLanguage: learner.firstLanguage,
     openThreads: learner.openThreads,
+    name: learner.name,
   });
   if (judged === null) throw new Error('judge returned nothing');
   await saveLearnerModel(
@@ -145,16 +147,18 @@ export async function planNext(
   }
   const learner = await readLearner(env.DB, userId);
   if (learner === null) return;
-  const [paintings, memories, played] = await Promise.all([
+  const [paintings, memories, played, recent] = await Promise.all([
     listPaintings(env.DB, userId, 12),
     listMemory(env.DB, userId),
     countMoments(env.DB, userId),
+    recentPlans(env.DB, userId, 2),
   ]);
   try {
     const planned = await planMoment(anthropicClient(env.ANTHROPIC_API_KEY ?? ''), {
       learner,
       paintings,
       memories: memories.map((m) => m.text),
+      recent,
       played,
       now,
     });

@@ -162,6 +162,10 @@ export interface Judged {
   readonly costUsd: number;
 }
 
+/** A fact about the learner's name ("You'd like to be called John"), kept only while none is known. */
+export const isNameFact = (text: string): boolean =>
+  /\b(called|call you|call me|your name|name is|named)\b/i.test(text);
+
 const OTHER_SCRIPT = /[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ฀-๿぀-ヿ一-鿿가-힯]/gi;
 
 /** Plain counts the judge can't miscount: how long the learner's turns are and how often they got lost. */
@@ -199,6 +203,8 @@ export async function judgeMoment(
     readonly lines: readonly JudgedLine[];
     readonly firstLanguage: string;
     readonly openThreads: readonly string[];
+    /** The name the town already calls them; null when not known yet. */
+    readonly name: string | null;
   },
 ): Promise<Judged | null> {
   const speaker = CAST[speakerOf(input.plan)].name;
@@ -219,6 +225,9 @@ export async function judgeMoment(
     schema: JUDGE_SCHEMA,
     user: [
       `THE LEARNER'S FIRST LANGUAGE: ${LANGUAGE_NAMES[input.firstLanguage] ?? input.firstLanguage}`,
+      input.name
+        ? `THE LEARNER'S NAME: ${input.name}. It is known: return name null, and no fact about their name or what to call them (speech recognition mishears names).`
+        : "THE LEARNER'S NAME: not known yet.",
       `PREVIOUS LEARNER MODEL:\n${input.previous ? JSON.stringify(input.previous, null, 1) : '(none: first conversation)'}`,
       `THE MOMENT: "${input.plan.title_open}" at ${input.plan.place} with ${speaker} (aimed at ${input.plan.stage_aimed}). Open threads before: ${input.openThreads.join(' | ') || 'none'}. It was meant to end on: ${input.plan.cliffhanger}`,
       `MEASURED (by code, trust these): ${JSON.stringify(talkStats(input.lines))}`,
@@ -228,14 +237,15 @@ export async function judgeMoment(
   });
   const j = r.json;
   if (j === null) return null;
+  const known = input.name !== null;
   return {
     model: j.learner_model,
     record: { ...j.session, threads_open: j.session.threads_open.slice(0, 2) },
     canDos: j.painting.can_dos.slice(0, 2),
     learned: j.painting.learned.trim() || null,
     words: j.painting.words.slice(0, 4),
-    name: j.name?.trim() ? j.name.trim().slice(0, 40) : null,
-    facts: j.facts.slice(0, 3),
+    name: !known && j.name?.trim() ? j.name.trim().slice(0, 40) : null,
+    facts: j.facts.filter((f) => !(known && isNameFact(f.text))).slice(0, 3),
     costUsd: r.costUsd,
   };
 }

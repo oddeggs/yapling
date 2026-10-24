@@ -102,6 +102,10 @@ export async function ensureLearner(
   return learnerOf(row);
 }
 
+/**
+ * After a moment: the learner model and threads. The judge's name only fills an empty one: a
+ * misheard line must not rename the learner.
+ */
 export async function saveLearnerModel(
   db: D1Database,
   userId: string,
@@ -110,7 +114,7 @@ export async function saveLearnerModel(
 ): Promise<void> {
   await db
     .prepare(
-      `UPDATE learners SET model = ?2, open_threads = ?3, name = COALESCE(?4, name), updated_at = ?5
+      `UPDATE learners SET model = ?2, open_threads = ?3, name = COALESCE(name, ?4), updated_at = ?5
        WHERE user_id = ?1`,
     )
     .bind(
@@ -257,6 +261,22 @@ export async function openMoments(db: D1Database, userId: string): Promise<Momen
     .bind(userId)
     .all<MomentRow>();
   return results.map(momentOf);
+}
+
+/** The plans of the last `limit` moments played, newest first: what the director just told. */
+export async function recentPlans(
+  db: D1Database,
+  userId: string,
+  limit: number,
+): Promise<MomentPlan[]> {
+  const { results } = await db
+    .prepare(
+      `SELECT * FROM moments WHERE user_id = ? AND status = 'played' AND plan IS NOT NULL
+       ORDER BY played_at DESC LIMIT ?`,
+    )
+    .bind(userId, limit)
+    .all<MomentRow>();
+  return results.map(momentOf).flatMap((m) => (m.plan ? [m.plan] : []));
 }
 
 export async function markPlayed(

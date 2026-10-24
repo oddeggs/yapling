@@ -4,7 +4,8 @@ import { parseControl } from '../call/control';
 import { pickLane, turnDirection, wantsGloss, type MomentLearner } from './actor';
 import { firstMoment, freeMoment } from './fixed';
 import { MomentPlan } from './moment';
-import { checkPlan } from './plan';
+import { isNameFact } from './judge';
+import { checkPlan, repeatsRecent, sameQuestion } from './plan';
 
 const at = (hour: number) => ({ year: 2026, month: 10, day: 24, hour });
 const visitor: MomentLearner = { name: null, firstLanguage: 'vi', stage: 'visitor', country: 'VN' };
@@ -48,6 +49,31 @@ describe('the plan checks', () => {
     const problems = checkPlan(plan, at(12), false);
     expect(problems.some((p) => p.includes('Bea'))).toBe(true);
     expect(problems.some((p) => p.includes('never its own name'))).toBe(true);
+  });
+});
+
+describe('the rerun check', () => {
+  it('refuses the last moments’ opening question and a third visit in a row', () => {
+    expect(
+      sameQuestion('Hi! I made iced coffee. Milk or no milk?', 'I wrote it. Milk, or no milk?'),
+    ).toBe(true);
+    expect(sameQuestion('Milk or no milk?', 'Is the bus late again?')).toBe(false);
+    expect(sameQuestion('The fog is thick today.', 'The fog is thick today.')).toBe(false);
+    const base = firstMoment(15, 'vi');
+    const coffee = { ...base, place: 'cafe' as const, opening_line: 'Hi! Milk or no milk?' };
+    const again = { ...coffee, opening_line: 'Hello again. Milk, or no milk?' };
+    expect(repeatsRecent(again, [coffee]).some((p) => p.includes('same question'))).toBe(true);
+    const fresh = { ...coffee, opening_line: 'The sign blew away! Can you help me?' };
+    expect(repeatsRecent(fresh, [coffee])).toEqual([]);
+    expect(repeatsRecent(fresh, [coffee, coffee]).some((p) => p.includes('last two'))).toBe(true);
+  });
+});
+
+describe('the judge’s name facts', () => {
+  it('knows a fact about what to call the learner', () => {
+    expect(isNameFact("You'd like to be called John")).toBe(true);
+    expect(isNameFact('You told us your name is Khanh.')).toBe(true);
+    expect(isNameFact('You have three cats.')).toBe(false);
   });
 });
 
@@ -116,6 +142,17 @@ describe('the live lanes', () => {
       wrapUp: true,
     });
     expect(wrap.direction).toContain('Time is nearly up');
+    expect(wrap.direction).not.toContain('heard your last line twice');
+    const lost = turnDirection(plan, visitor, {
+      beat: 1,
+      beatTurns: 0,
+      lane: 'planned',
+      laneSwitched: false,
+      landNow: false,
+      wrapUp: false,
+      saidAgain: true,
+    });
+    expect(lost.direction).toContain('heard your last line twice');
   });
 
   it('glosses only for beginners in their own language', () => {
