@@ -236,7 +236,17 @@ export function SceneScreen() {
         : t('world.hint.hold');
 
   return (
-    <View style={styles.root}>
+    <View
+      style={styles.root}
+      // The safety net under the talk button: when the last finger leaves the screen, a held
+      // turn ends, whatever the button itself heard.
+      onTouchEnd={(e) => {
+        if (e.nativeEvent.touches.length === 0) talk.release();
+      }}
+      onTouchCancel={(e) => {
+        if (e.nativeEvent.touches.length === 0) talk.release();
+      }}
+    >
       <Stage
         ref={setStage}
         onReady={() =>

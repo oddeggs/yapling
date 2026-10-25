@@ -290,6 +290,9 @@ export class VoiceEngine {
     this.patch({ ...quiet, turnMode: mode, notice: null });
   }
 
+  /** Hold-to-talk: the mic button is down. */
+  get talkHeld(): boolean { return this.turns.isHeld; }
+
   /** Hold-to-talk: the mic button went down. */
   pressTalk(): void {
     if (this.turns.mode !== 'hold_to_talk') return;

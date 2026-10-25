@@ -2,7 +2,6 @@ import { BlurView } from 'expo-blur';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { useCallback, useEffect, useRef, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -178,9 +177,9 @@ export function Dock(p: Props) {
 }
 
 /**
- * The talk button. A native gesture, not a Pressable: its end fires however the touch ends (lifted,
- * cancelled by the system, or the button redrawn under the finger), so a turn can never stay held.
- * A button that goes away while held lets go too.
+ * The talk button: held while the learner talks. It never turns disabled under a finger (that
+ * swallows the release); a press while the resident speaks is ignored instead. A button that goes
+ * away while held lets go, and the scene lets go too when the last finger leaves the screen.
  */
 function TalkButton({
   look,
@@ -207,30 +206,28 @@ function TalkButton({
     out.current();
   }, []);
   useEffect(() => release, [release]);
-  const gesture = Gesture.LongPress()
-    .minDuration(0)
-    .maxDistance(10_000)
-    .shouldCancelWhenOutside(false)
-    .enabled(look !== 'waiting')
-    .runOnJS(true)
-    .onBegin(() => {
-      if (held.current) return;
-      held.current = true;
-      haptics.play('tap');
-      onIn();
-    })
-    .onFinalize(release);
   return (
-    <GestureDetector gesture={gesture}>
-      <View style={styles.talk} accessible accessibilityRole="button" accessibilityLabel={a11y}>
-        <Ember level={level} look={look} />
-        {look === 'ready' && (
-          <Text style={styles.talkText} numberOfLines={1}>
-            {label}
-          </Text>
-        )}
-      </View>
-    </GestureDetector>
+    <Pressable
+      style={styles.talk}
+      onPressIn={() => {
+        if (look === 'waiting' || held.current) return;
+        held.current = true;
+        haptics.play('tap');
+        onIn();
+      }}
+      onPressOut={release}
+      // A thumb that drifts while talking keeps the turn; only lifting it ends it.
+      pressRetentionOffset={400}
+      accessibilityRole="button"
+      accessibilityLabel={a11y}
+    >
+      <Ember level={level} look={look} />
+      {look === 'ready' && (
+        <Text style={styles.talkText} numberOfLines={1}>
+          {label}
+        </Text>
+      )}
+    </Pressable>
   );
 }
 

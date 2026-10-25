@@ -167,8 +167,9 @@ export class Talk {
 
   /** The control came up: the turn goes to the resident once the learner's last word ends. */
   release(): void {
+    if (!this.engine?.talkHeld) return;
     this.sound.setHushed(false);
-    this.engine?.releaseTalk();
+    this.engine.releaseTalk();
   }
 
   /** The control's "say it again": the resident says their last line again. */
