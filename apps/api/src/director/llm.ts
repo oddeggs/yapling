@@ -43,13 +43,16 @@ export async function structured<T>(
     text,
     cache_control: { type: 'ephemeral' as const },
   }));
-  const message = await client.messages.create({
-    model: call.model,
-    max_tokens: call.maxTokens ?? 16_000,
-    system,
-    messages: [{ role: 'user', content: call.user }],
-    output_config: { effort: call.effort, format: { type: 'json_schema', schema: call.schema } },
-  });
+  // Streamed, so a long plan keeps bytes flowing: a quiet request is cut at 100 s.
+  const message = await client.messages
+    .stream({
+      model: call.model,
+      max_tokens: call.maxTokens ?? 16_000,
+      system,
+      messages: [{ role: 'user', content: call.user }],
+      output_config: { effort: call.effort, format: { type: 'json_schema', schema: call.schema } },
+    })
+    .finalMessage();
   const u = message.usage;
   const p = PRICE[call.model] ?? PRICE[SONNET]!;
   const costUsd =
