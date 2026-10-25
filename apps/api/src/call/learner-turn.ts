@@ -40,6 +40,8 @@ interface PhoneVad {
 /** Scribe's final text normally follows a commit within about 300 ms. */
 const FINAL_TIMEOUT_MS = 2_500;
 const TICK_MS = 250;
+/** The transcriber needs 0.3 s of audio to commit; less than that holds no word. */
+const MIN_TURN_BYTES = 300 * 32;
 /** A held turn whose mic chunks stopped this long ago is no longer streaming (a lost release). */
 const HELD_STALE_MS = 1_500;
 
@@ -81,6 +83,8 @@ export class LearnerTurn {
   private wordsFrom = 0;
   /** Mic audio arrived since the last commit. */
   private uncommitted = false;
+  /** Mic bytes since the last commit (16 kHz PCM16: 32 a millisecond). */
+  private turnBytes = 0;
   /** The learner said they're done: the text, when it's back, is answered at once. */
   private answerNow = false;
 
@@ -154,6 +158,7 @@ export class LearnerTurn {
     // Hold-to-talk sends audio only while the button is held: a press is streaming.
     if (this.mode === 'hold_to_talk') this.heldAt = Date.now();
     this.uncommitted = true;
+    this.turnBytes += chunk.byteLength;
     this.stt.audio(chunk);
     const events = this.endpointer.feed(chunk);
     // The phone's flags, when it sends them, decide; the energy gate is the fallback.
@@ -213,6 +218,14 @@ export class LearnerTurn {
     this.heldAt = 0;
     this.endpointer.reset();
     this.restartQuiet();
+    // Too little audio to hold a word (a dead mic, a slip): not a turn, said at once rather than
+    // after the transcriber refuses it and the wait for its text runs out.
+    if (this.turnBytes < MIN_TURN_BYTES && this.pending === '' && this.awaitingFinal === 0) {
+      this.turnBytes = 0;
+      this.forgetTurn();
+      this.host.notHeard();
+      return;
+    }
     this.commit();
   }
 
@@ -277,6 +290,7 @@ export class LearnerTurn {
   private commit(): void {
     this.awaitingFinal = Date.now();
     this.uncommitted = false;
+    this.turnBytes = 0;
     this.stt.commit();
   }
 
