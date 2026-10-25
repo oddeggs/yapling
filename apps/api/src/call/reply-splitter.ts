@@ -49,6 +49,12 @@ export interface SplitEnd {
   readonly control: string | null;
 }
 
+/**
+ * Where a reply hands over to the scene's guest (`[guest]` mid-reply, as when the companion plays
+ * a voice message): passed through in the words so the voice can switch, never spoken or shown.
+ */
+export const GUEST_MARK = '\u2063guest';
+
 export class ReplySplitter {
   private pending = '';
   private control: string | null = null;
@@ -110,7 +116,7 @@ export class ReplySplitter {
 
   /** The whole spoken line so far. */
   get text(): string {
-    return this.spoken.join(' ');
+    return this.spoken.filter((w) => w !== GUEST_MARK).join(' ');
   }
 
   /** True once the line is complete (trimmed); later text is dropped. */
@@ -148,7 +154,11 @@ export class ReplySplitter {
     this.pending = all ? '' : text.slice(cut + 1);
     const out: string[] = [];
     for (const piece of ready.split(' ')) {
-      const raw = this.tagChecked ? piece : this.takeTag(piece);
+      let raw = this.tagChecked ? piece : this.takeTag(piece);
+      if (/^\[guest\]/i.test(raw)) {
+        if (!this.done) out.push(GUEST_MARK);
+        raw = raw.slice('[guest]'.length);
+      }
       if (raw === '') continue;
       for (const word of this.guard ? this.guard.push(raw) : [raw]) this.emit(word, out);
     }

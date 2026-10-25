@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
+import { GUEST_MARK } from './reply-splitter';
 import { SentenceTts } from './sentence-tts';
 import { upstream } from './upstream';
 
@@ -73,5 +74,27 @@ describe('a line said a sentence at a time', () => {
     // The second sentence's captions start after the first sentence's audio.
     const second = audio.find((a) => a.text.includes('The'));
     expect(second?.firstStart).toBeGreaterThanOrEqual(130 - 1);
+  });
+
+  it('hands the rest of a reply to the guest’s voice at the mark', async () => {
+    const voices: string[] = [];
+    upstream.fetch = (async (url: string, init?: RequestInit) => {
+      voices.push(String(url).split('/text-to-speech/')[1]?.split('/')[0] ?? '');
+      const body = JSON.parse(String(init?.body)) as { text: string };
+      return answer(body.text, 1);
+    }) as typeof fetch;
+    await new Promise<void>((done, fail) => {
+      const tts = new SentenceTts(
+        'key',
+        { character: 'sol', speed: 1, breakSeconds: null },
+        { audio: () => undefined, done, failed: (d) => fail(new Error(d)) },
+        { character: 'dex', speed: 1, breakSeconds: null },
+      );
+      tts.push('Okay, pressing play now. ');
+      tts.push(`${GUEST_MARK} Hi Sol, it's Dex. `);
+      tts.end();
+    });
+    expect(voices).toHaveLength(2);
+    expect(voices[0]).not.toBe(voices[1]);
   });
 });

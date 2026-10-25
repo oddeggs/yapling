@@ -1,4 +1,5 @@
 import { AlignmentMapper } from './phrase-breaks';
+import { GUEST_MARK } from './reply-splitter';
 import type { TtsHandlers, TtsVoice } from './tts';
 import { fromBase64, TTS_SAMPLE_RATE, upstream } from './upstream';
 import { voiceFor } from './voices';
@@ -49,15 +50,29 @@ export class SentenceTts implements LiveTts {
   private chain: Promise<void> = Promise.resolve();
   chars = 0;
   audioMs = 0;
+  private voice: TtsVoice;
 
   constructor(
     private readonly key: string,
-    private readonly voice: TtsVoice,
+    voice: TtsVoice,
     private readonly handlers: TtsHandlers,
-  ) {}
+    /** The guest's voice, for the rest of a reply after it hands over to them. */
+    private readonly guestVoice: TtsVoice | null = null,
+  ) {
+    this.voice = voice;
+  }
 
   push(words: string): void {
     if (words === '' || this.finished || this.ended) return;
+    if (words.includes(GUEST_MARK)) {
+      const [before = '', ...rest] = words.split(GUEST_MARK);
+      this.push(before);
+      // What was said so far goes in the companion's voice; the rest in the guest's.
+      if (this.pending.trim()) this.take();
+      if (this.guestVoice) this.voice = this.guestVoice;
+      this.push(rest.join(' '));
+      return;
+    }
     this.pending += words;
     const text = this.pending.trim();
     const n = text.split(/\s+/).length;
@@ -91,7 +106,7 @@ export class SentenceTts implements LiveTts {
     const before = this.said;
     this.said = `${this.said} ${text}`.trim();
     this.chars += text.length;
-    const response = this.request(text, before);
+    const response = this.request(text, before, this.voice);
     this.chain = this.chain.then(async () => {
       if (this.finished) return;
       this.mapper.addText(`${before ? ' ' : ''}${text}`);
@@ -104,14 +119,11 @@ export class SentenceTts implements LiveTts {
     });
   }
 
-  private request(text: string, before: string): Promise<Response> {
-    const speed = Math.min(
-      SPEED.max,
-      Math.max(SPEED.min, this.voice.naturalSpeed ?? this.voice.speed),
-    );
+  private request(text: string, before: string, voice: TtsVoice): Promise<Response> {
+    const speed = Math.min(SPEED.max, Math.max(SPEED.min, voice.naturalSpeed ?? voice.speed));
     return upstream
       .fetch(
-        `https://api.elevenlabs.io/v1/text-to-speech/${voiceFor(this.voice.character)}/stream/with-timestamps?output_format=pcm_${TTS_SAMPLE_RATE}`,
+        `https://api.elevenlabs.io/v1/text-to-speech/${voiceFor(voice.character)}/stream/with-timestamps?output_format=pcm_${TTS_SAMPLE_RATE}`,
         {
           method: 'POST',
           headers: { 'xi-api-key': this.key, 'content-type': 'application/json' },
@@ -120,7 +132,7 @@ export class SentenceTts implements LiveTts {
             model_id: LIVE_TTS_MODEL,
             voice_settings: { speed },
             ...(before ? { previous_text: before.slice(-300) } : {}),
-            ...(this.voice.language ? { language_code: this.voice.language } : {}),
+            ...(voice.language ? { language_code: voice.language } : {}),
           }),
           signal: this.ctrl.signal,
         },

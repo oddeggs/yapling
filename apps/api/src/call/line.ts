@@ -8,7 +8,7 @@ import { hedged } from './hedge';
 import { noUsage, type Usage } from './llm';
 import type { GuardAction } from './narration-guard';
 import type { MappedAlignment } from './phrase-breaks';
-import { ReplySplitter } from './reply-splitter';
+import { GUEST_MARK, ReplySplitter } from './reply-splitter';
 import type { LiveTts } from './sentence-tts';
 import { TtsLine, type TtsHandlers, type TtsVoice } from './tts';
 import { TTS_SAMPLE_RATE } from './upstream';
@@ -81,7 +81,7 @@ export interface LineHost {
   /** A Flash socket for the voice (a spare one when ready). */
   takeTts(voice: TtsVoice): Promise<WebSocket>;
   /** Lines in whole sentences on the cast's own voice model, in place of a Flash socket. */
-  sentenceTts?: (voice: TtsVoice, handlers: TtsHandlers) => LiveTts;
+  sentenceTts?: (voice: TtsVoice, handlers: TtsHandlers, guestVoice: TtsVoice | null) => LiveTts;
 }
 
 export interface LineOptions {
@@ -109,10 +109,17 @@ export interface LineOptions {
   readonly learnerName?: string | null;
   /** What the learner just said: a reply that opens by quoting it is checked for notes. */
   readonly heard?: string;
+  /**
+   * A reply that may be said by someone else in the scene: its leading tag (`[dex]`) names the
+   * speaker, and this gives their voice. Null keeps the line's own speaker.
+   */
+  readonly voiceByTag?: (tag: string | null) => { speaker: CharacterId; voice: TtsVoice } | null;
 }
 
 export class SpokenLine {
   readonly streamId: number;
+  /** Who says the line: its own speaker, or the one its leading tag named. */
+  speaker: CharacterId;
   readonly timings: LineTimings = { start: Date.now() };
   readonly usage: Usage = noUsage();
   ttsChars = 0;
@@ -139,6 +146,7 @@ export class SpokenLine {
     private readonly options: LineOptions,
   ) {
     this.streamId = host.nextStreamId();
+    this.speaker = options.speaker;
     this.gated = options.gated;
     this.splitter = new ReplySplitter({
       maxWords: options.maxWords,
@@ -243,7 +251,10 @@ export class SpokenLine {
       if (this.tts) return true;
       if (sentenceTts) {
         this.timings.ttsReady = Date.now();
-        this.tts = sentenceTts(this.options.voice, handlers);
+        const other = this.options.voiceByTag?.(this.splitter.caseTag) ?? null;
+        if (other) this.speaker = other.speaker;
+        const guest = this.options.voiceByTag?.('guest')?.voice ?? null;
+        this.tts = sentenceTts(other?.voice ?? this.options.voice, handlers, guest);
         return true;
       }
       const ws = await ttsSocket;
@@ -262,7 +273,8 @@ export class SpokenLine {
     const say = (words: string) => {
       if (!words || !this.tts) return;
       this.timings.ttsFirstText ??= Date.now();
-      this.tts.push(words);
+      // Only the sentence voice can hand over to a guest mid-line; Flash never hears the mark.
+      this.tts.push(this.host.sentenceTts ? words : words.replaceAll(GUEST_MARK, ''));
     };
 
     try {
@@ -357,7 +369,7 @@ export class SpokenLine {
       frames.send({
         type: 'say_start',
         streamId: this.streamId,
-        character: this.options.speaker,
+        character: this.speaker,
         codec: 'pcm16',
         sampleRateHz: TTS_SAMPLE_RATE,
       });
@@ -383,7 +395,7 @@ export class SpokenLine {
       this.host.frames.send({
         type: 'say_end',
         streamId: this.streamId,
-        character: this.options.speaker,
+        character: this.speaker,
         text,
       });
     }
@@ -399,7 +411,7 @@ export class SpokenLine {
       this.host.frames.send({
         type: 'say_end',
         streamId: this.streamId,
-        character: this.options.speaker,
+        character: this.speaker,
         text: this.splitter.text,
       });
     }
