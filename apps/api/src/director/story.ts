@@ -2,17 +2,16 @@ import { isPlaceId, PLACES } from '@yapling/scene';
 import { z } from 'zod';
 
 import { clip } from './clip';
-
 import type { MomentPlan } from './moment';
+import type { Stage } from './world';
 
 /*
- * A story: five scenes (four for a Visitor) with a shape, a twist and a payoff, built on what the
- * learner told the town. The director writes the outline and the first scene in one go; each next
- * scene is written while the learner plays the one before, and rewritten lightly once that one is
- * played so it follows on from what really happened.
+ * A story: one curriculum unit told in five episodes (four at Visitor), with the learner's
+ * companion beside them throughout. The director writes the outline once; each episode is planned
+ * while the one before plays, then its way in is rewritten from what really happened.
  */
 
-/** The neighbours a story can be about (everyone in the bible). */
+/** The neighbours a story can bring in as guests. */
 export const NEIGHBOURS = [
   'pip',
   'linh',
@@ -24,86 +23,53 @@ export const NEIGHBOURS = [
   'dex',
   'mags',
 ] as const;
-const CastId = z.enum(NEIGHBOURS);
+
+/** The kinds of story, so the next one is never the same kind as the last few. */
+export const STORY_KINDS = [
+  'small_crisis',
+  'favour',
+  'big_day',
+  'mix_up',
+  'first_time',
+  'surprise',
+  'repair',
+  'celebration',
+  'new_arrival',
+  'competition',
+] as const;
 
 export const StoryScene = z.object({
+  episode: z.number().int(),
   place: z.string().refine(isPlaceId),
-  purpose: clip(400),
-  dramatic_question: clip(300),
-  situation: clip(600),
+  situation: clip(500),
   learner_does: clip(400),
+  guest: z.enum([...NEIGHBOURS, 'none']),
   the_turn: clip(400),
   ends_with: clip(400),
 });
 export type StoryScene = z.infer<typeof StoryScene>;
 
-/** The kinds of story, so the next one is never the same kind as the last few. */
-export const STORY_KINDS = [
-  'mystery',
-  'mix_up',
-  'rescue',
-  'competition',
-  'big_day',
-  'secret',
-  'journey',
-  'mentoring',
-  'rivals_to_friends',
-  'new_arrival',
-  'repair',
-  'discovery',
-  'celebration',
-] as const;
-
 export const StoryOutline = z.object({
   title: clip(80).pipe(z.string().min(1)),
+  unit_id: clip(4),
   kind: z.enum(STORY_KINDS),
-  grows: clip(500),
+  grows: clip(400),
   logline: clip(500),
   why_this_learner: clip(600),
-  emotional_core: clip(500),
-  pip_arc: clip(400),
-  learning_spine: clip(600),
-  central: CastId,
+  emotional_core: clip(400),
+  companion_arc: clip(400),
   scenes: z.array(StoryScene).min(3).max(6),
-  plants: z
-    .array(
-      z.object({
-        plant: clip(300),
-        planted_in: z.number().int(),
-        payoff: clip(300),
-      }),
-    )
-    .transform((a) => a.slice(0, 3)),
-  twist: clip(500),
-  finale_payoff: clip(500),
-  epilogue: clip(400),
-  town_now: z.array(z.object({ who: CastId, doing: clip(300) })).transform((a) => a.slice(0, 9)),
+  twist: clip(400),
+  finale_payoff: clip(400),
+  epilogue: clip(300),
 });
-export type StoryOutline = z.infer<typeof StoryOutline>;
+/** The outline as kept: the stage it was written for is stored with it. */
+export type StoryOutline = z.infer<typeof StoryOutline> & { readonly stage?: Stage };
 
 export const NewStory = z.object({ outline: StoryOutline });
 export type NewStory = { outline: StoryOutline; scene: MomentPlan };
 
-const STORY_SCENE_SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
-  required: [...Object.keys(StoryScene.shape)],
-  properties: {
-    place: { type: 'string', enum: [...Object.keys(PLACES)] },
-    purpose: { type: 'string', description: 'What this scene does for the story.' },
-    dramatic_question: { type: 'string' },
-    situation: { type: 'string', description: 'What is already happening when we arrive.' },
-    learner_does: {
-      type: 'string',
-      description: 'The main thing the learner does with English here, as a can-do.',
-    },
-    the_turn: { type: 'string', description: 'What changes in the middle.' },
-    ends_with: {
-      type: 'string',
-      description: 'How it ends and what pulls the learner into the next scene.',
-    },
-  },
-} as const;
+const s = (description: string) => ({ type: 'string', description }) as const;
 
 export const STORY_SCHEMA = {
   type: 'object',
@@ -115,69 +81,36 @@ export const STORY_SCHEMA = {
       additionalProperties: false,
       required: [...Object.keys(StoryOutline.shape)],
       properties: {
-        title: { type: 'string', description: 'The story’s name, 2–6 words, Title Case.' },
-        kind: {
-          type: 'string',
-          enum: [...STORY_KINDS],
-          description: 'What kind of story it is; never a kind used in the last three stories.',
-        },
-        grows: {
-          type: 'string',
-          description:
-            'How this story moves the learner’s journey on from the last ones: a bigger role, a deeper friendship, a harder kind of conversation, a new part of town.',
-        },
-        logline: { type: 'string', description: 'The whole story in two sentences.' },
-        why_this_learner: {
-          type: 'string',
-          description:
-            'How this story is built on what the learner told us: their reason for English, the hard situation it rehearses, the interests it uses.',
-        },
-        emotional_core: { type: 'string' },
-        pip_arc: { type: 'string', description: 'Pip’s own small arc through this story.' },
-        learning_spine: {
-          type: 'string',
-          description: 'How the speaking tasks climb across the scenes, ending on the hard one.',
-        },
-        central: { type: 'string', enum: [...NEIGHBOURS] },
-        scenes: { type: 'array', items: STORY_SCENE_SCHEMA },
-        plants: {
+        title: s('The story’s name, 2–6 words, Title Case.'),
+        unit_id: s('The unit id given.'),
+        kind: { type: 'string', enum: [...STORY_KINDS] },
+        grows: s('How this story moves the learner on from the last ones.'),
+        logline: s('The whole story in two plain sentences.'),
+        why_this_learner: s(
+          'How it is built on their goal, their hard situation, job and interests.',
+        ),
+        emotional_core: s('What the companion or guest feels, and how the learner helps.'),
+        companion_arc: s('The companion’s own small step in this story.'),
+        scenes: {
           type: 'array',
           items: {
             type: 'object',
             additionalProperties: false,
-            required: ['plant', 'planted_in', 'payoff'],
+            required: [...Object.keys(StoryScene.shape)],
             properties: {
-              plant: {
-                type: 'string',
-                description: 'Something the learner says or chooses early.',
-              },
-              planted_in: { type: 'integer' },
-              payoff: { type: 'string', description: 'How it matters in the finale.' },
+              episode: { type: 'integer' },
+              place: { type: 'string', enum: [...Object.keys(PLACES)] },
+              situation: s('What is happening, simple and concrete.'),
+              learner_does: s('The episode’s speaking task, using the unit’s language.'),
+              guest: { type: 'string', enum: [...NEIGHBOURS, 'none'] },
+              the_turn: s('What changes in the middle, or empty.'),
+              ends_with: s('The consequence and the step into the next episode.'),
             },
           },
         },
-        twist: { type: 'string', description: 'The kind twist, in which scene, set up where.' },
-        finale_payoff: { type: 'string' },
-        epilogue: {
-          type: 'string',
-          description: 'Pip’s last word after the finale, with one small thread for next time.',
-        },
-        town_now: {
-          type: 'array',
-          items: {
-            type: 'object',
-            additionalProperties: false,
-            required: ['who', 'doing'],
-            properties: {
-              who: { type: 'string', enum: [...NEIGHBOURS] },
-              doing: {
-                type: 'string',
-                description:
-                  'What this neighbour is up to while the story runs, for when the learner drops in on them.',
-              },
-            },
-          },
-        },
+        twist: s('The kind turn in episode 3, and where it is set up.'),
+        finale_payoff: s('How the payoff lands because of what the learner said.'),
+        epilogue: s('The companion’s last word, with one small thread for next time.'),
       },
     },
   },
@@ -185,12 +118,10 @@ export const STORY_SCHEMA = {
 
 /** What the learner's last scene changed, written into the next one before it plays. */
 export const FollowOn = z.object({
-  card: z.array(clip(200)).transform((a) => a.slice(0, 4)),
-  card_gloss: clip(800),
-  bridge_card: clip(80),
-  bridge_line: clip(300),
-  recap_line: clip(300),
-  situation: clip(600),
+  brief_recap: clip(220),
+  brief_happening: clip(260),
+  brief_gloss: clip(900),
+  situation: clip(500),
   opening_line: clip(400),
   opening_gloss: clip(600),
   callbacks: z.array(clip(300)).transform((a) => a.slice(0, 6)),
@@ -202,11 +133,9 @@ export const FOLLOW_SCHEMA = {
   additionalProperties: false,
   required: [...Object.keys(FollowOn.shape)],
   properties: {
-    card: { type: 'array', items: { type: 'string' } },
-    card_gloss: { type: 'string' },
-    bridge_card: { type: 'string' },
-    bridge_line: { type: 'string' },
-    recap_line: { type: 'string' },
+    brief_recap: { type: 'string' },
+    brief_happening: { type: 'string' },
+    brief_gloss: { type: 'string' },
     situation: { type: 'string' },
     opening_line: { type: 'string' },
     opening_gloss: { type: 'string' },
@@ -214,24 +143,20 @@ export const FOLLOW_SCHEMA = {
   },
 } as const;
 
-/** How many scenes a story has, from its outline. */
-export const sceneCount = (outline: StoryOutline): number => outline.scenes.length;
+/** The chapter line on the card: "Sixty Buns · How much is it? · 2 of 4". */
+export const chapterLine = (outline: StoryOutline, unitTitle: string | null, sceneNo: number) =>
+  [outline.title, unitTitle, `${sceneNo} of ${outline.scenes.length}`]
+    .filter(Boolean)
+    .join(' · ')
+    .slice(0, 80);
 
-/** The chapter line on the bridge: "The Crate With No Name · 2 of 5". */
-export const chapterLine = (outline: StoryOutline, sceneNo: number): string =>
-  `${outline.title} · ${sceneNo} of ${sceneCount(outline)}`.slice(0, 80);
-
-/** What makes a new story a rerun of recent ones: the same kind, the same central neighbour. */
+/** What makes a new story a rerun of recent ones: the same kind, an echoing title. */
 export function repeatsStories(outline: StoryOutline, past: readonly StoryOutline[]): string[] {
   const problems: string[] = [];
   const kinds = past.slice(0, 3).map((o) => o.kind);
   if (kinds.includes(outline.kind))
     problems.push(
       `The last stories were of kinds ${kinds.join(', ')}; choose another kind than "${outline.kind}".`,
-    );
-  if (past.slice(0, 2).some((o) => o.central === outline.central))
-    problems.push(
-      `${outline.central} was at the centre of one of the last two stories; centre this one on someone else.`,
     );
   const titleWords = (t: string) =>
     new Set(

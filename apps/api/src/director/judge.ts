@@ -99,8 +99,36 @@ const JUDGE_SCHEMA = {
     painting: {
       type: 'object',
       additionalProperties: false,
-      required: ['can_dos', 'learned', 'words'],
+      required: [
+        'can_dos',
+        'learned',
+        'words',
+        'strength',
+        'fix_said',
+        'fix_better',
+        'can_do_shown',
+      ],
       properties: {
+        strength: {
+          type: 'string',
+          description:
+            'One thing the learner did well, named specifically, to them ("You asked the price and checked it."). Empty when nothing.',
+        },
+        fix_said: {
+          type: 'string',
+          description:
+            'One short thing the learner said that is worth improving, exactly as heard, preferably in the scene’s target language. Empty when nothing.',
+        },
+        fix_better: {
+          type: 'string',
+          description:
+            'A better way to say that same thing, natural and short. Empty when nothing.',
+        },
+        can_do_shown: {
+          type: 'boolean',
+          description:
+            'True only when the transcript shows the learner doing the scene’s can-do in a free task without needing the rescue.',
+        },
         can_dos: {
           type: 'array',
           items: { type: 'string' },
@@ -159,6 +187,10 @@ export interface Judged {
   readonly words: { phrase: string; line: string }[];
   readonly name: string | null;
   readonly facts: { text: string; category: 'about_you' | 'coming_up' | 'about_us' }[];
+  /** The look-back's one thing to fix, or null. */
+  readonly fix: { said: string; better: string } | null;
+  /** The scene's can-do was done in a free task without rescue. */
+  readonly canDoShown: boolean;
   readonly costUsd: number;
 }
 
@@ -214,7 +246,15 @@ export async function judgeMoment(
   const r = await structured<{
     learner_model: LearnerModel;
     session: SessionRecord;
-    painting: { can_dos: string[]; learned: string; words: { phrase: string; line: string }[] };
+    painting: {
+      can_dos: string[];
+      learned: string;
+      words: { phrase: string; line: string }[];
+      strength: string;
+      fix_said: string;
+      fix_better: string;
+      can_do_shown: boolean;
+    };
     name: string | null;
     facts: Judged['facts'];
   }>(client, {
@@ -229,7 +269,7 @@ export async function judgeMoment(
         ? `THE LEARNER'S NAME: ${input.name}. It is known: return name null, and no fact about their name or what to call them (speech recognition mishears names).`
         : "THE LEARNER'S NAME: not known yet.",
       `PREVIOUS LEARNER MODEL:\n${input.previous ? JSON.stringify(input.previous, null, 1) : '(none: first conversation)'}`,
-      `THE MOMENT: "${input.plan.title_open}" at ${input.plan.place} with ${speaker} (aimed at ${input.plan.stage_aimed}). Open threads before: ${input.openThreads.join(' | ') || 'none'}. It was meant to end on: ${input.plan.ending}`,
+      `THE MOMENT: "${input.plan.title_open}" at ${input.plan.place} with ${speaker} (aimed at ${input.plan.stage_aimed}). Its target chunks: ${input.plan.target_chunks.join(' | ') || 'none'}. It was meant to end on: ${input.plan.ending}`,
       `MEASURED (by code, trust these): ${JSON.stringify(talkStats(input.lines))}`,
       `TRANSCRIPT:\n${transcript || '(nothing was said)'}`,
       'Return the full updated learner model, the session record, the painting notes, the name and new facts.',
@@ -241,7 +281,16 @@ export async function judgeMoment(
   return {
     model: j.learner_model,
     record: { ...j.session, threads_open: j.session.threads_open.slice(0, 2) },
-    canDos: j.painting.can_dos.slice(0, 2),
+    // The look-back's strength leads what the painting says they did.
+    canDos: [j.painting.strength, ...j.painting.can_dos].filter((x) => x.trim()).slice(0, 2),
+    fix:
+      j.painting.fix_said.trim() && j.painting.fix_better.trim()
+        ? {
+            said: j.painting.fix_said.trim().slice(0, 200),
+            better: j.painting.fix_better.trim().slice(0, 200),
+          }
+        : null,
+    canDoShown: j.painting.can_do_shown,
     learned: j.painting.learned.trim() || null,
     words: j.painting.words.slice(0, 4),
     name: !known && j.name?.trim() ? j.name.trim().slice(0, 40) : null,

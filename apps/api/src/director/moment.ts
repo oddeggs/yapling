@@ -2,24 +2,37 @@ import { isPlaceId, PLACES, type PlaceId } from '@yapling/scene';
 import { z } from 'zod';
 
 import { clip } from './clip';
-
 import { STAGES, type Stage } from './world';
 
 /*
- * A moment: one conversation in one place, planned for one learner. In a story it is one scene.
- * The director writes it; the live call plays it one beat at a time, after Pip's line on the way
- * there; the judge reads what happened.
+ * A moment: one conversation in one place, with the learner's companion (and at most one guest).
+ * In a story it is one episode of a curriculum unit: the unit fixes the can-do, the chunks and the
+ * strategy; the director writes the situation, the brief, what the learner knows, and the beats.
  */
 
+const NEIGHBOURS = ['pip', 'linh', 'mei', 'sol', 'hank', 'nell', 'bea', 'dex', 'mags'] as const;
+const short = <T extends z.ZodTypeAny>(item: T, n: number) =>
+  z.array(item).transform((a) => a.slice(0, n));
+
 export const Beat = z.object({
-  what_happens: clip(600),
+  kind: z.enum(['open', 'success_first', 'task', 'turn', 'close']),
+  speaker: z.enum(['companion', 'guest']),
+  what_happens: clip(500),
   goal: clip(300),
-  is_door: z.boolean(),
-  example_line: clip(400),
-  if_struggling: clip(400),
-  if_strong: clip(400),
+  example_line: clip(300),
+  rescue: clip(300),
 });
 export type Beat = z.infer<typeof Beat>;
+
+export const Brief = z.object({
+  recap: clip(220),
+  where: clip(120),
+  happening: clip(260),
+  your_role: clip(160),
+  tasks: short(clip(140), 3),
+  try_saying: short(clip(80), 2),
+});
+export type Brief = z.infer<typeof Brief>;
 
 export const MomentPlan = z.object({
   title_open: clip(80).pipe(z.string().min(1)),
@@ -30,65 +43,61 @@ export const MomentPlan = z.object({
     .int()
     .transform((v) => Math.min(2, Math.max(0, v))),
   stage_aimed: z.enum(STAGES),
-  bridge_card: clip(80),
-  bridge_line: clip(300),
-  recap_line: clip(300),
-  card: z.array(clip(200)).transform((a) => a.slice(0, 4)),
-  card_gloss: clip(800),
-  situation: clip(600),
-  character_wants: clip(400),
-  dramatic_question: clip(300),
-  hook: clip(600),
+  companion: z.enum(NEIGHBOURS),
+  unit_id: clip(4),
+  episode: z.number().int(),
+  brief: Brief,
+  brief_gloss: clip(900),
+  situation: clip(500),
+  why_the_learner: clip(300),
+  knowledge_ledger: short(z.object({ fact: clip(200), source: z.enum(['L', 'B', 'S', 'W']) }), 12),
+  guest: z.enum([...NEIGHBOURS, 'none']),
+  guest_intro: clip(200),
+  guest_how: z.enum(['here', 'phone', 'voicemail', 'none']),
+  gap: clip(300),
   opening_line: clip(400),
   opening_gloss: clip(600),
-  beats: z.array(Beat).min(1).max(6),
-  the_turn: clip(400),
-  target_phrases: z.array(clip(80)).transform((a) => a.slice(0, 6)),
-  target_errors: z.array(clip(160)).transform((a) => a.slice(0, 2)),
-  personal_threads_used: z.array(clip(300)).transform((a) => a.slice(0, 6)),
-  callbacks: z.array(clip(300)).transform((a) => a.slice(0, 6)),
-  culture_touch: clip(400),
-  pip_learns: clip(200),
+  beats: z.array(Beat).min(1).max(7),
+  target_chunks: short(clip(80), 5),
+  recycled_chunks: short(clip(80), 3),
+  prompt_forms: short(clip(120), 2),
+  listening_task: clip(300),
+  end_condition: clip(300),
   ending: clip(400),
-  open_threads_after: z.array(clip(300)).transform((a) => a.slice(0, 2)),
-  director_notes: clip(800),
+  companion_learns: clip(200),
+  culture_touch: clip(300),
+  callbacks: short(clip(300), 6),
+  director_notes: clip(600),
 });
 export type MomentPlan = z.infer<typeof MomentPlan> & { place: PlaceId };
 
 const BEAT_SCHEMA = {
   type: 'object',
   additionalProperties: false,
-  required: ['what_happens', 'goal', 'is_door', 'example_line', 'if_struggling', 'if_strong'],
+  required: [...Object.keys(Beat.shape)],
   properties: {
-    what_happens: {
-      type: 'string',
-      description: 'What happens in this beat of the story, and what the neighbour does.',
-    },
+    kind: { type: 'string', enum: ['open', 'success_first', 'task', 'turn', 'close'] },
+    speaker: { type: 'string', enum: ['companion', 'guest'] },
+    what_happens: { type: 'string', description: 'What happens in this beat.' },
     goal: {
       type: 'string',
-      description:
-        'What the learner does with English in this beat, as a can-do the story needs ("explain to Mei why the sign is upside down"). The beat is done when they have done it.',
-    },
-    is_door: {
-      type: 'boolean',
-      description: 'True for the beat that invites the learner’s own life in.',
+      description: 'What the learner does with English here, as a can-do. Done when they did it.',
     },
     example_line: {
       type: 'string',
-      description: 'One neighbour line for this beat at the aimed stage, within the word limit.',
+      description: 'One line for this beat at the learner’s stage, within the word limit.',
     },
-    if_struggling: {
+    rescue: {
       type: 'string',
       description:
-        'The same beat for a learner who is lost: one sentence, at most 8 words, with two short choices they can repeat.',
-    },
-    if_strong: {
-      type: 'string',
-      description:
-        'The same beat for a strong speaker: an open why/how question they could talk about for a minute.',
+        'If the learner is stuck: a model sentence they can copy, then two short choices. Never answers for them.',
     },
   },
 } as const;
+
+const s = (description: string) => ({ type: 'string', description }) as const;
+const list = (description: string) =>
+  ({ type: 'array', items: { type: 'string' }, description }) as const;
 
 /** The scene plan's JSON schema (structured output). */
 export const MOMENT_SCHEMA = {
@@ -96,111 +105,88 @@ export const MOMENT_SCHEMA = {
   additionalProperties: false,
   required: [...Object.keys(MomentPlan.shape)],
   properties: {
-    title_open: {
-      type: 'string',
-      description: 'The painting title the scene opens with, wry, 2–6 words, Title Case.',
-    },
-    title_close: {
-      type: 'string',
-      description:
-        'The painting title it closes with, the one the learner keeps: wry, 2–6 words, Title Case, true whatever the learner says.',
-    },
+    title_open: s('The painting title the scene opens with, wry, 2–6 words, Title Case.'),
+    title_close: s('The title it closes with, the one the learner keeps; true whatever they say.'),
     place: { type: 'string', enum: [...Object.keys(PLACES)] },
     variant: { type: 'integer', description: 'Which of the place’s three variants is painted.' },
     stage_aimed: { type: 'string', enum: [...STAGES] },
-    bridge_card: {
-      type: 'string',
-      description:
-        'The caption over the new place as the learner arrives: when and where, at most 8 words ("A little later, at the harbour").',
+    companion: { type: 'string', enum: [...NEIGHBOURS] },
+    unit_id: s('The curriculum unit id given.'),
+    episode: { type: 'integer', description: 'The episode number given.' },
+    brief: {
+      type: 'object',
+      additionalProperties: false,
+      required: [...Object.keys(Brief.shape)],
+      properties: {
+        recap: s(
+          'One sentence: what happened last time, in the second person. Empty for the first episode.',
+        ),
+        where: s('Where we are, in a few words.'),
+        happening: s('What is happening right now, one or two short sentences.'),
+        your_role: s(
+          'The learner’s role here, in the second person ("You are Mei’s first customer.").',
+        ),
+        tasks: list('1–3 short tasks the learner will do, in the second person, plain words.'),
+        try_saying: list('1–2 of the target chunks to try.'),
+      },
     },
-    bridge_line: {
-      type: 'string',
-      description:
-        'What Pip says on the way there, walking with the learner, so they know why they are going and what is at stake: one or two short sentences at the learner’s stage (Visitor at most 10 words). Empty when Pip is the scene’s own neighbour.',
-    },
-    recap_line: {
-      type: 'string',
-      description:
-        'What Pip says instead if the learner comes back after a long time away: what happened last time in one sentence, then why we are going here. Same length rule. Empty for a story’s first scene.',
-    },
-    card: {
+    brief_gloss: s(
+      'The whole brief in the learner’s first language, natural and short; empty when that is English.',
+    ),
+    situation: s('What is already happening when the scene opens; follows from the last scene.'),
+    why_the_learner: s(
+      'Why their voice is needed here: their job, their opinion, a promise from earlier.',
+    ),
+    knowledge_ledger: {
       type: 'array',
-      items: { type: 'string' },
       description:
-        'The chapter card shown on black before the scene, read by the learner at their own pace: two or three short sentences in very plain English (at most 12 words each, Visitor words when the learner is a beginner), in the second person. First what just happened ("Mei asked you to help with her coffee."), then where they are going and why, naming anyone new with who they are ("Hank, the loud raccoon who runs the shipping crew, wants to buy her café."). Clear, never cryptic.',
+        'Every fact the scene relies on, with where the learner got it: L their own life or arrival answers, B told in this brief or scene, S said in an earlier scene, W everyday world knowledge.',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['fact', 'source'],
+        properties: {
+          fact: { type: 'string' },
+          source: { type: 'string', enum: ['L', 'B', 'S', 'W'] },
+        },
+      },
     },
-    card_gloss: {
+    guest: {
       type: 'string',
-      description:
-        'The whole card in the learner’s first language, natural; empty when that is English or unknown.',
+      enum: [...NEIGHBOURS, 'none'],
+      description: 'The one guest, or none.',
     },
-    situation: {
-      type: 'string',
-      description: 'What is already happening at the place when the learner arrives.',
-    },
-    character_wants: {
-      type: 'string',
-      description: 'What the neighbour wants in this scene, and what they secretly feel.',
-    },
-    dramatic_question: {
-      type: 'string',
-      description: 'The question this scene answers ("Will Mei let someone help her?").',
-    },
-    hook: { type: 'string', description: 'Why the learner can’t help leaning in.' },
-    opening_line: {
-      type: 'string',
-      description:
-        'The neighbour’s whole first turn, spoken as written when the scene opens, without a speaker prefix: in the middle of the situation, turning to the learner for a reason, ending with something the learner must answer. Within the word limit plus six.',
-    },
-    opening_gloss: {
-      type: 'string',
-      description:
-        'The opening line in the learner’s first language, natural and short, for the caption under it; empty when that is English or unknown.',
-    },
+    guest_intro: s(
+      'How the guest is introduced: name, role and relation ("Dex, the manager who made the poster"). Empty for none.',
+    ),
+    guest_how: { type: 'string', enum: ['here', 'phone', 'voicemail', 'none'] },
+    gap: s(
+      'The information, opinion or reasoning gap: who holds what, and why the question is real.',
+    ),
+    opening_line: s(
+      'The companion’s first turn, spoken as written: arriving mid-situation, then a question the learner can surely answer. Within the word limit plus six.',
+    ),
+    opening_gloss: s('The opening line in the learner’s first language; empty when English.'),
     beats: { type: 'array', items: BEAT_SCHEMA },
-    the_turn: {
-      type: 'string',
-      description: 'What changes in the middle of the scene, and in which beat.',
-    },
-    target_phrases: {
-      type: 'array',
-      items: { type: 'string' },
-      description: '2–5 English chunks the learner gets real chances to use in this scene.',
-    },
-    target_errors: { type: 'array', items: { type: 'string' } },
-    personal_threads_used: {
-      type: 'array',
-      items: { type: 'string' },
-      description: 'What we know about the learner that this scene uses, and how.',
-    },
-    callbacks: {
-      type: 'array',
-      items: { type: 'string' },
-      description: 'Things the learner said or did before that this scene brings back.',
-    },
-    culture_touch: {
-      type: 'string',
-      description:
-        'How the learner’s own country or culture comes in this time (one small thing), or an empty string when it doesn’t.',
-    },
-    pip_learns: {
-      type: 'string',
-      description: 'What the neighbour hopes to learn from the learner in this scene.',
-    },
-    ending: {
-      type: 'string',
-      description:
-        'How the scene closes: what changed because of what the learner said, then the next step of the story, said by the neighbour.',
-    },
-    open_threads_after: { type: 'array', items: { type: 'string' } },
-    director_notes: {
-      type: 'string',
-      description: 'Notes for the actor: the feeling of the scene, what to listen for.',
-    },
+    target_chunks: list('The unit’s target chunks, as given.'),
+    recycled_chunks: list('The chunks due for review, as given.'),
+    prompt_forms: list(
+      'The 1–2 target forms the companion prompts on if the learner gets them wrong.',
+    ),
+    listening_task: s(
+      'What the learner must catch by ear in this scene, and how the story checks it.',
+    ),
+    end_condition: s('The outcome that ends the scene, caused by what the learner says.'),
+    ending: s('The consequence of what the learner said, then the pull into the next episode.'),
+    companion_learns: s('What the companion learns from the learner in this scene.'),
+    culture_touch: s('How the learner’s own country comes in (one small thing), or empty.'),
+    callbacks: list('Things the learner said or did before that this scene brings back.'),
+    director_notes: s('Notes for the actor: the feeling of the scene, what to listen for.'),
   },
 } as const;
 
-export const speakerOf = (plan: Pick<MomentPlan, 'place'>) => PLACES[plan.place].resident;
+/** Who speaks in a moment: the learner's companion. */
+export const speakerOf = (plan: Pick<MomentPlan, 'companion'>) => plan.companion;
 
 export const isStage = (x: unknown): x is Stage =>
   typeof x === 'string' && (STAGES as readonly string[]).includes(x);

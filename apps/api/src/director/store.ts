@@ -1,8 +1,9 @@
 import type { Arrival } from '@yapling/contracts';
 import type { PlaceId } from '@yapling/scene';
 
+import { isCompanion, type CompanionId } from '../curriculum/companion';
+import { START, type Progress } from '../curriculum/progress';
 import type { MomentPlan } from './moment';
-import type { StoryOutline } from './story';
 
 /** Reads and writes on `learners`, `moments` and `paintings`, always within one learner's rows. */
 
@@ -20,6 +21,10 @@ export interface Learner {
   /** What they told the town on arrival; null until they have arrived. */
   readonly arrival: Arrival | null;
   readonly arrivedAt: number | null;
+  /** The companion they chose; null until they have. */
+  readonly companion: CompanionId | null;
+  /** Where they are in the syllabus. */
+  readonly progress: Progress;
   readonly createdAt: number;
 }
 
@@ -46,6 +51,8 @@ interface LearnerRow {
   open_threads: string;
   arrival: string | null;
   arrived_at: number | null;
+  companion: string | null;
+  curriculum: string | null;
   created_at: number;
 }
 
@@ -68,6 +75,8 @@ const learnerOf = (row: LearnerRow): Learner => ({
   openThreads: parse<string[]>(row.open_threads, []),
   arrival: parse<Arrival | null>(row.arrival, null),
   arrivedAt: row.arrived_at,
+  companion: isCompanion(row.companion) ? row.companion : null,
+  progress: parse<Progress>(row.curriculum, START),
   createdAt: row.created_at,
 });
 
@@ -148,6 +157,31 @@ export async function saveArrival(
       'UPDATE learners SET arrival = ?2, name = ?3, arrived_at = ?4, updated_at = ?4 WHERE user_id = ?1',
     )
     .bind(userId, JSON.stringify(arrival), arrival.name, now)
+    .run();
+}
+
+/** The companion the learner chose at the end of arriving (or switched to later). */
+export async function saveCompanion(
+  db: D1Database,
+  userId: string,
+  companion: CompanionId,
+  now: number,
+): Promise<void> {
+  await db
+    .prepare('UPDATE learners SET companion = ?2, updated_at = ?3 WHERE user_id = ?1')
+    .bind(userId, companion, now)
+    .run();
+}
+
+export async function saveProgress(
+  db: D1Database,
+  userId: string,
+  progress: Progress,
+  now: number,
+): Promise<void> {
+  await db
+    .prepare('UPDATE learners SET curriculum = ?2, updated_at = ?3 WHERE user_id = ?1')
+    .bind(userId, JSON.stringify(progress), now)
     .run();
 }
 
@@ -403,77 +437,6 @@ export async function countMoments(db: D1Database, userId: string): Promise<numb
   return row?.n ?? 0;
 }
 
-// ---------- stories ----------
-
-export type StoryStatus = 'planning' | 'active' | 'done' | 'failed';
-
-export interface Story {
-  readonly id: string;
-  readonly userId: string;
-  readonly status: StoryStatus;
-  readonly outline: StoryOutline | null;
-  readonly createdAt: number;
-}
-
-interface StoryRow {
-  id: string;
-  user_id: string;
-  status: string;
-  outline: string | null;
-  created_at: number;
-}
-
-const storyOf = (row: StoryRow): Story => ({
-  id: row.id,
-  userId: row.user_id,
-  status: row.status as StoryStatus,
-  outline: parse<StoryOutline | null>(row.outline, null),
-  createdAt: row.created_at,
-});
-
-export async function insertStory(
-  db: D1Database,
-  s: { id: string; userId: string; outline: StoryOutline; costUsd: number },
-  now: number,
-): Promise<void> {
-  await db
-    .prepare(
-      `INSERT INTO stories (id, user_id, status, outline, created_at, updated_at, cost_usd)
-       VALUES (?1, ?2, 'active', ?3, ?4, ?4, ?5)`,
-    )
-    .bind(s.id, s.userId, JSON.stringify(s.outline), now, s.costUsd)
-    .run();
-}
-
-export async function readStory(db: D1Database, userId: string, id: string): Promise<Story | null> {
-  const row = await db
-    .prepare('SELECT * FROM stories WHERE id = ? AND user_id = ?')
-    .bind(id, userId)
-    .first<StoryRow>();
-  return row === null ? null : storyOf(row);
-}
-
-/** The learner's stories, newest first. */
-export async function listStories(db: D1Database, userId: string, limit = 6): Promise<Story[]> {
-  const { results } = await db
-    .prepare('SELECT * FROM stories WHERE user_id = ? ORDER BY created_at DESC LIMIT ?')
-    .bind(userId, limit)
-    .all<StoryRow>();
-  return results.map(storyOf);
-}
-
-export async function setStoryStatus(
-  db: D1Database,
-  id: string,
-  status: StoryStatus,
-  now: number,
-): Promise<void> {
-  await db
-    .prepare('UPDATE stories SET status = ?2, updated_at = ?3 WHERE id = ?1')
-    .bind(id, status, now)
-    .run();
-}
-
 // ---------- paintings ----------
 
 export interface Painting {
@@ -495,6 +458,8 @@ export interface Painting {
   readonly words: readonly PaintingWord[];
   readonly learned: string | null;
   readonly record: SessionRecord | null;
+  /** The look-back's one thing to fix: what they said, and a better way. */
+  readonly fix: { said: string; better: string } | null;
 }
 
 export interface PaintingWord {
@@ -530,6 +495,7 @@ interface PaintingRow {
   words: string;
   learned: string | null;
   record: string | null;
+  fix: string | null;
 }
 
 const paintingOf = (row: PaintingRow): Painting => ({
@@ -551,9 +517,13 @@ const paintingOf = (row: PaintingRow): Painting => ({
   words: parse<PaintingWord[]>(row.words, []),
   learned: row.learned,
   record: parse<SessionRecord | null>(row.record, null),
+  fix: parse<{ said: string; better: string } | null>(row.fix, null),
 });
 
-export type NewPainting = Omit<Painting, 'status' | 'canDos' | 'words' | 'learned' | 'record'>;
+export type NewPainting = Omit<
+  Painting,
+  'status' | 'canDos' | 'words' | 'learned' | 'record' | 'fix'
+>;
 
 /** Keeps a painting when its conversation ends; the judge fills in the rest. Idempotent per call. */
 export async function insertPainting(
@@ -596,6 +566,7 @@ export async function finishPainting(
         words: readonly PaintingWord[];
         learned: string | null;
         record: SessionRecord;
+        fix?: { said: string; better: string } | null;
       }
     | { failed: true },
 ): Promise<void> {
@@ -605,7 +576,7 @@ export async function finishPainting(
   }
   await db
     .prepare(
-      `UPDATE paintings SET status = 'done', can_dos = ?2, words = ?3, learned = ?4, record = ?5
+      `UPDATE paintings SET status = 'done', can_dos = ?2, words = ?3, learned = ?4, record = ?5, fix = ?6
        WHERE call_id = ?1`,
     )
     .bind(
@@ -614,6 +585,7 @@ export async function finishPainting(
       JSON.stringify(judged.words),
       judged.learned,
       JSON.stringify(judged.record),
+      judged.fix ? JSON.stringify(judged.fix) : null,
     )
     .run();
 }
@@ -654,3 +626,5 @@ export async function listPaintings(
     .all<PaintingRow>();
   return results.map(paintingOf);
 }
+
+export * from './stories-store';

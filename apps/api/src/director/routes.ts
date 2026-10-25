@@ -1,5 +1,8 @@
 import {
   Arrival,
+  ArrivalAnswer,
+  CompanionChoice,
+  type CompanionOption,
   MomentRequest,
   NextMoment,
   type MomentBridge,
@@ -16,24 +19,26 @@ import { Hono, type Context } from 'hono';
 import { errorResponse, parseBody, respond, type SessionEnv } from '../auth';
 import type { TranscriptFile } from '../call/transcript';
 import { judgedLines } from '../call/moment-session';
+import { COMPANION, isCompanion, matchCompanions, type CompanionId } from '../curriculum/companion';
+import { dueChunks } from '../curriculum/progress';
+import { unitById } from '../curriculum/units';
 import { firstMoment, freeMoment, visitMoment } from './fixed';
 import { ensureAhead } from './jobs';
 import type { MomentPlan } from './moment';
 import { playableAt, stageFor } from './plan';
 import { chapterLine } from './story';
 import {
-  countMoments,
   ensureLearner,
   firstSince,
   finishPlanning,
   insertMoment,
   listPaintings,
-  listStories,
   openMoments,
   readLearner,
   readPainting,
   readStory,
   saveArrival,
+  saveCompanion,
   paintingByCall,
   type Learner,
   type Moment,
@@ -57,8 +62,19 @@ export function momentRoutes(): Hono<SessionEnv> {
     const now = Date.now();
     const learner = await seededLearner(c, body.value, now);
     await saveArrival(c.env.DB, learner.userId, body.value, now);
-    // The first story is written while the learner plays the first conversation with Pip.
-    await ensureAhead(c.env, learner.userId, null, now);
+    return respond(c, ArrivalAnswer, {
+      companions: matchCompanions(body.value).map((id) => option(id, learner.firstLanguage)),
+    });
+  });
+
+  routes.put('/me/companion', async (c) => {
+    const body = await parseBody(c, CompanionChoice);
+    if (!body.ok) return body.response;
+    if (!isCompanion(body.value.companion)) return errorResponse(c, 404, 'not_found');
+    const now = Date.now();
+    await saveCompanion(c.env.DB, c.var.userId, body.value.companion, now);
+    // The first story is written while the learner plays the first conversation.
+    await ensureAhead(c.env, c.var.userId, null, now);
     return c.body(null, 204);
   });
 
@@ -67,26 +83,36 @@ export function momentRoutes(): Hono<SessionEnv> {
     if (!body.ok) return body.response;
     const now = Date.now();
     const learner = await seededLearner(c, body.value, now);
-    if (learner.arrival === null) {
-      return respond(c, NextMoment, { moment: null, planning: false, name: null, arrived: false });
+    if (learner.arrival === null || learner.companion === null) {
+      return respond(c, NextMoment, {
+        moment: null,
+        planning: false,
+        name: learner.name,
+        arrived: false,
+        companion: null,
+        companions: learner.arrival
+          ? matchCompanions(learner.arrival).map((id) => option(id, learner.firstLanguage))
+          : [],
+      });
     }
+    const companion = learner.companion;
     const t = localTime(new Date(now), learner.timezone);
     const open = await openMoments(c.env.DB, learner.userId);
 
-    // The very first conversation: Pip in the burrow.
+    // The very first conversation: the companion meets them off the 45.
     const first = open.find((m) => m.source === 'first' && m.status === 'ready');
-    if (first?.plan) return next(c, first, learner, now);
+    if (first?.plan) return next(c, first, learner);
     if (!(await firstSince(c.env.DB, learner.userId, learner.arrivedAt ?? 0))) {
       const moment = await newFixed(
         c.env.DB,
         learner,
         'first',
-        firstMoment(t.hour, learner.firstLanguage, learner.name, stageFor(learner)),
+        firstMoment(companion, learner.name, stageFor(learner), learner.firstLanguage, t.hour),
         t.hour,
         now,
       );
       await ensureAhead(c.env, learner.userId, null, now);
-      return next(c, moment, learner, now);
+      return next(c, moment, learner);
     }
 
     const ready = open.find((m) => m.status === 'ready' && m.source === 'director' && m.plan);
@@ -94,9 +120,9 @@ export function momentRoutes(): Hono<SessionEnv> {
       const playable = atThisHour(ready.plan, t.hour);
       if (playable) {
         if (playable !== ready.plan) await updatePlan(c.env.DB, ready.id, playable);
-        return next(c, { ...ready, plan: playable }, learner, now);
+        return next(c, { ...ready, plan: playable }, learner);
       }
-      // Its neighbour has gone home since: the director writes one for now instead.
+      // Its place has closed since: the director writes one for now instead.
       await finishPlanning(c.env.DB, ready.id, { failed: true });
       await c.env.DB.prepare(`UPDATE moments SET status = 'failed' WHERE id = ?`)
         .bind(ready.id)
@@ -108,6 +134,8 @@ export function momentRoutes(): Hono<SessionEnv> {
       planning: true,
       name: learner.name,
       arrived: true,
+      companion: learner.companion,
+      companions: [],
     });
   });
 
@@ -116,22 +144,24 @@ export function momentRoutes(): Hono<SessionEnv> {
     if (!body.ok) return body.response;
     const now = Date.now();
     const learner = await seededLearner(c, body.value, now);
+    if (learner.companion === null) return errorResponse(c, 409, 'not_found');
     const t = localTime(new Date(now), learner.timezone);
     const moment = await newFixed(
       c.env.DB,
       learner,
       'free',
       freeMoment(
-        t.hour,
+        learner.companion,
         learner.name,
-        learner.firstLanguage,
-        await countMoments(c.env.DB, learner.userId),
         stageFor(learner),
+        learner.firstLanguage,
+        t.hour,
+        dueChunks(learner.progress),
       ),
       t.hour,
       now,
     );
-    return next(c, moment, learner, now);
+    return next(c, moment, learner);
   });
 
   routes.post('/me/moments/visit', async (c) => {
@@ -143,23 +173,15 @@ export function momentRoutes(): Hono<SessionEnv> {
     const learner = await seededLearner(c, body.value, now);
     const t = localTime(new Date(now), learner.timezone);
     if (!residentIn(place, variant, t.hour)) return errorResponse(c, 409, 'not_found');
-    const [story] = await listStories(c.env.DB, learner.userId, 1);
     const moment = await newFixed(
       c.env.DB,
       learner,
       'free',
-      visitMoment(
-        place,
-        variant,
-        t.hour,
-        learner.name,
-        story?.status === 'active' ? story.outline : null,
-        stageFor(learner),
-      ),
+      visitMoment(place, variant, learner.name, stageFor(learner)),
       t.hour,
       now,
     );
-    return next(c, moment, learner, now);
+    return next(c, moment, learner);
   });
 
   routes.get('/me/paintings', async (c) =>
@@ -272,35 +294,58 @@ async function updatePlan(db: D1Database, id: string, plan: MomentPlan): Promise
     .run();
 }
 
-async function next(c: Ctx, m: Moment, learner: Learner, now: number) {
+/** One companion to choose, with their own words in the learner's language. */
+function option(id: CompanionId, firstLanguage: string): CompanionOption {
+  const c = COMPANION[id];
+  return {
+    id,
+    name: c.name,
+    who: c.short,
+    line: c.intro,
+    gloss: firstLanguage === 'vi' ? c.introVi : null,
+  };
+}
+
+async function next(c: Ctx, m: Moment, learner: Learner) {
   const plan = m.plan!;
-  let bridge: MomentBridge | null = null;
-  if (m.storyId && m.sceneNo && plan.bridge_card) {
+  const brief = plan.brief;
+  let chapter: string | null = null;
+  if (m.storyId && m.sceneNo) {
     const story = await readStory(c.env.DB, learner.userId, m.storyId);
-    bridge = {
-      card: plan.bridge_card.slice(0, 80),
-      chapter: story?.outline ? chapterLine(story.outline, m.sceneNo) : null,
-      // Plans written before chapter cards have none.
-      lines: (plan.card ?? []).map((l) => l.slice(0, 200)).slice(0, 4),
-      gloss: plan.card_gloss ? plan.card_gloss.slice(0, 800) : null,
-    };
+    const unit = plan.unit_id ? unitById(plan.unit_id) : undefined;
+    if (story?.outline) chapter = chapterLine(story.outline, unit?.title ?? null, m.sceneNo);
   }
+  // The brief, on black before the scene: what happened, what's happening, your role.
+  const bridge: MomentBridge | null = brief
+    ? {
+        card: brief.where.slice(0, 80) || PLACES[plan.place].name,
+        chapter,
+        lines: [brief.recap, brief.happening, brief.your_role]
+          .filter((l) => l?.trim())
+          .map((l) => l.slice(0, 200))
+          .slice(0, 4),
+        gloss: plan.brief_gloss ? plan.brief_gloss.slice(0, 800) : null,
+        tasks: brief.tasks.map((t) => t.slice(0, 160)).slice(0, 3),
+        phrases: brief.try_saying.map((t) => t.slice(0, 100)).slice(0, 2),
+      }
+    : null;
   const card: MomentCard = {
     id: m.id,
     source: m.source,
     place: plan.place,
     variant: plan.variant,
-    speaker: PLACES[plan.place].resident,
+    speaker: plan.companion ?? PLACES[plan.place].resident,
     titleOpen: plan.title_open,
     stage: m.source === 'director' ? plan.stage_aimed : stageFor(learner),
     bridge,
   };
-  void now;
   return respond(c, NextMoment, {
     moment: card,
     planning: false,
     name: learner.name,
     arrived: true,
+    companion: learner.companion,
+    companions: [],
   });
 }
 
@@ -321,6 +366,7 @@ const wire = (p: Painting): PaintingWire => ({
   canDos: [...p.canDos],
   words: [...p.words],
   learned: p.learned,
+  fix: p.fix,
 });
 
 export { readLearner };

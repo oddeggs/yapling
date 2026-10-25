@@ -8,7 +8,9 @@ import type { TranscriptFile } from '../call/transcript';
 import type { Bindings } from '../env';
 import { judgeMoment, type JudgedLine } from './judge';
 import type { MomentPlan } from './moment';
-import { followOn, metNeighbours, planScene, writeStory, type StoryContext } from './plan';
+import { afterStory, dueChunks, nextUnit, teachingStage } from '../curriculum/progress';
+import { unitById } from '../curriculum/units';
+import { followOn, planScene, stageFor, writeStory, type StoryContext } from './plan';
 import {
   countMoments,
   failStalePlans,
@@ -24,8 +26,8 @@ import {
   readLearner,
   readMoment,
   readStory,
-  recentPlans,
   saveLearnerModel,
+  saveProgress,
   setStoryStatus,
   storyScenes,
   type Moment,
@@ -92,6 +94,9 @@ export async function ensureAhead(
   now: number,
 ): Promise<void> {
   await failStalePlans(env.DB, userId, now - PLAN_STALE_MS);
+  // Nothing is written before the learner has chosen who walks with them.
+  const learner = await readLearner(env.DB, userId);
+  if (learner?.companion == null) return;
   const open = (await openMoments(env.DB, userId)).filter(
     (m) => m.source === 'director' && m.id !== playing?.id,
   );
@@ -133,20 +138,20 @@ export async function ensureAhead(
 
 async function storyContext(env: Bindings, userId: string, now: number) {
   const learner = await readLearner(env.DB, userId);
-  if (learner === null) return null;
-  const [paintings, memories, played, recent, stories] = await Promise.all([
+  if (learner === null || learner.companion === null) return null;
+  const [paintings, memories, played, stories] = await Promise.all([
     listPaintings(env.DB, userId, 12),
     listMemory(env.DB, userId),
     countMoments(env.DB, userId),
-    recentPlans(env.DB, userId, 2),
     listStories(env.DB, userId, 8),
   ]);
   const ctx: StoryContext = {
     learner,
+    companion: learner.companion,
+    stage: teachingStage(learner.progress, stageFor(learner)),
     paintings,
     memories: memories.map((m) => m.text),
     pastStories: stories.flatMap((s) => (s.outline && s.status !== 'failed' ? [s.outline] : [])),
-    recent,
     played,
     now,
   };
@@ -155,9 +160,25 @@ async function storyContext(env: Bindings, userId: string, now: number) {
 
 async function writeNewStory(env: Bindings, userId: string, momentId: string, now: number) {
   const ctx = await storyContext(env, userId, now);
-  if (ctx === null) return;
+  if (ctx === null) {
+    await finishPlanning(env.DB, momentId, { failed: true });
+    return;
+  }
+  const unit = nextUnit(
+    ctx.learner.progress,
+    stageFor(ctx.learner),
+    ctx.learner.arrival,
+    ctx.pastStories.slice(0, 2).map((o) => o.unit_id),
+  );
+  const due = dueChunks(ctx.learner.progress);
   try {
-    const written = await writeStory(anthropicClient(env.ANTHROPIC_API_KEY ?? ''), ctx, AHEAD_MIN);
+    const written = await writeStory(
+      anthropicClient(env.ANTHROPIC_API_KEY ?? ''),
+      ctx,
+      unit,
+      due,
+      AHEAD_MIN,
+    );
     if (written === null) {
       await finishPlanning(env.DB, momentId, { failed: true });
       console.warn('story failed the checks', { userId });
@@ -166,7 +187,13 @@ async function writeNewStory(env: Bindings, userId: string, momentId: string, no
     const storyId = newId('st');
     await insertStory(
       env.DB,
-      { id: storyId, userId, outline: written.value.outline, costUsd: written.costUsd },
+      {
+        id: storyId,
+        userId,
+        // The story keeps the stage it was written for, whatever one scene shows.
+        outline: { ...written.value.outline, stage: ctx.stage },
+        costUsd: written.costUsd,
+      },
       now,
     );
     await env.DB.prepare('UPDATE moments SET story_id = ?2, scene_no = 1 WHERE id = ?1')
@@ -180,6 +207,7 @@ async function writeNewStory(env: Bindings, userId: string, momentId: string, no
     console.log('story written', {
       storyId,
       title: written.value.outline.title,
+      unit: unit.id,
       kind: written.value.outline.kind,
       usd: written.costUsd,
       repaired: written.repaired,
@@ -203,18 +231,22 @@ async function writeScene(
     storyContext(env, userId, now),
     readStory(env.DB, userId, storyId),
   ]);
-  if (ctx === null || story?.outline == null) {
+  const unit = story?.outline ? unitById(story.outline.unit_id) : undefined;
+  if (ctx === null || story?.outline == null || unit === undefined) {
     await finishPlanning(env.DB, momentId, { failed: true });
     return;
   }
   const scenes = await storyScenes(env.DB, userId, storyId);
   const ids = new Set(scenes.map((m) => m.id));
   const played = ctx.paintings.filter((p) => ids.has(p.momentId)).reverse();
+  const storyCtx: StoryContext = { ...ctx, stage: story.outline.stage ?? ctx.stage };
   try {
     const written = await planScene(
       anthropicClient(env.ANTHROPIC_API_KEY ?? ''),
-      ctx,
+      storyCtx,
       story.outline,
+      unit,
+      dueChunks(ctx.learner.progress),
       sceneNo,
       played,
       AHEAD_MIN,
@@ -252,7 +284,7 @@ async function transcriptOf(
     .bind(callId, userId)
     .first<{ transcript_key: string }>();
   const object = row ? await env.BLOBS.get(row.transcript_key) : null;
-  const file = object ? ((await object.json()) as TranscriptFile) : null;
+  const file = object ? await object.json<TranscriptFile>() : null;
   return file ? judgedLines(file.lines) : null;
 }
 
@@ -296,10 +328,9 @@ async function follow(
   next: Moment,
 ) {
   if (!next.plan) return;
-  const [learner, story, paintings] = await Promise.all([
+  const [learner, story] = await Promise.all([
     readLearner(env.DB, userId),
     next.storyId ? readStory(env.DB, userId, next.storyId) : Promise.resolve(null),
-    listPaintings(env.DB, userId, 60),
   ]);
   if (!story?.outline) return;
   try {
@@ -309,7 +340,6 @@ async function follow(
       lines,
       next: next.plan,
       learnerName: learner?.name ?? null,
-      met: metNeighbours(paintings),
       firstLanguage: learner?.firstLanguage ?? 'other',
     });
     if (r === null) return;
@@ -364,9 +394,7 @@ async function judgeAfter(
     {
       model: judged.model,
       // The plan's threads stand unless the judge saw the story move on.
-      openThreads: judged.record.threads_open.length
-        ? judged.record.threads_open
-        : moment.plan.open_threads_after,
+      openThreads: judged.record.threads_open.length ? judged.record.threads_open : [],
       name: judged.name,
     },
     now,
@@ -376,7 +404,9 @@ async function judgeAfter(
     words: judged.words,
     learned: judged.learned,
     record: judged.record,
+    fix: judged.fix,
   });
+  await advanceCurriculum(env, userId, moment, judged.canDoShown, learner, now);
   await Promise.all(
     judged.facts.map((f, i) =>
       addMemory(
@@ -391,4 +421,40 @@ async function judgeAfter(
     ),
   );
   console.log('moment judged', { callId, cefr: judged.model.cefr, usd: judged.costUsd });
+}
+
+/**
+ * After a story's episode: the free task's can-do counts as shown when the judge saw it without
+ * rescue, and the story's last episode marks its unit told (which may move the learner up).
+ */
+async function advanceCurriculum(
+  env: Bindings,
+  userId: string,
+  moment: Moment,
+  canDoShown: boolean,
+  before: NonNullable<Awaited<ReturnType<typeof readLearner>>>,
+  now: number,
+): Promise<void> {
+  if (!moment.storyId || !moment.sceneNo || !moment.plan?.unit_id) return;
+  const story = await readStory(env.DB, userId, moment.storyId);
+  if (!story?.outline) return;
+  const last = moment.sceneNo >= story.outline.scenes.length;
+  const shown = canDoShown && moment.sceneNo >= story.outline.scenes.length - 1;
+  if (!last && !shown) return;
+  const learner = (await readLearner(env.DB, userId)) ?? before;
+  let progress = learner.progress;
+  if (shown && !progress.evidenced.includes(moment.plan.unit_id))
+    progress = { ...progress, evidenced: [...progress.evidenced, moment.plan.unit_id] };
+  if (last) {
+    progress = afterStory(progress, moment.plan.unit_id, shown, stageFor(learner));
+    await setStoryStatus(env.DB, story.id, 'done', now);
+  }
+  await saveProgress(env.DB, userId, progress, now);
+  console.log('curriculum', {
+    userId,
+    unit: moment.plan.unit_id,
+    last,
+    shown,
+    stage: progress.stage,
+  });
 }

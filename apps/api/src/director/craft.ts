@@ -10,46 +10,48 @@ import { countryName, LANGUAGE_NAMES, type Stage } from './world';
  * ending that changes something and leads on). Same for every learner, so it is cached.
  */
 
-export const STORY_CRAFT = `HOW A NATTERWICK STORY WORKS
-A story is five scenes (four for a Visitor) told one conversation at a time, across two to four places, with two or three neighbours. Pip is the learner's companion through all of it: Pip walks with them between scenes and says why they are going, so the learner always knows what is going on. The learner is not a student in a lesson; they are a new resident whose voice is what the story needs.
+export const STORY_CRAFT = `HOW A YAPLING STORY WORKS
+The curriculum writes every story. Each story is one unit of the syllabus: the unit fixes what the learner can do by the end (the can-do), the function, 3–5 target chunks and one conversation strategy. You invent only the situation, the twist and the feeling, so that using the unit's language is the natural way to get through the story.
 
-THE SHAPE
-1. The problem lands. A neighbour has a real, specific, low-stakes problem that matters to them (the café's espresso machine dies the morning of the food critic's visit; Sol has to give a talk in English on Friday and is terrified; Hank's crew is a person short for the harbour race). The learner gets drawn in because they can help by talking.
-2. The first try. The learner and the neighbour try something; it half works. We learn what the neighbour really feels.
-3. The turn. Something recontextualises the problem: a kind twist the learner did not see coming, set up earlier and fair in hindsight (Hank has been buying all the beans because he is secretly saving the café; the critic is Mei's old teacher; the "lost" letter was never lost, Mags kept it on purpose). Never a betrayal, never a villain.
-4. The hard conversation. The scene that stretches the learner most: they persuade, negotiate, explain, apologise for someone, or stand up for a friend. It is the one closest to the hard situation they told us about.
-5. The payoff. The learner's words resolve it. Something they said or chose in scene 1 or 2 comes back and matters (a plant paid off). An emotional beat lands: pride, relief, a laugh, a thank-you that means something. Then one small loose thread that makes them curious about the next story.
+ONE COMPANION
+The learner has one companion, who is with them in every scene: their friend and ally in Natterwick, matched to their reason for learning English. The companion never changes personality and is never the source of pressure. Pressure and difficulty come from a guest, used sparingly. The learner always knows who is speaking beside them.
 
-WHY IT IS THIS LEARNER'S STORY
-- Built on what they told us when they arrived. Their reason for English is the spine: someone learning for work gets a story where meetings, updates and proposals carry the plot; an interview gets "tell me about yourself" and a story with a point; travel gets directions, bookings and strangers; friends gets small talk that turns into a real friendship. The hard conversation and the payoff rehearse the exact situation they said is hard for them, inside the story.
-- Their interests are the material: a gamer gets the arcade's high-score board or a board-game night; a cook gets a recipe contest at the noodle stall; a film lover gets the one-showing-a-night cinema. Use one or two, specifically, never a list.
-- Their work or study can be the reason they are needed ("You work with numbers, right? Can you help me check this?").
-- Their country and culture, at most once in a story, as something they are the expert on.
+THE FIVE EPISODES (four at Visitor, where the first two merge)
+1. The problem lands: the situation, and the companion models the target chunks so the learner notices them. A first question the learner can surely answer, then the chunks in controlled use, framed honestly as rehearsal.
+2. The first try: the learner uses the chunks for a small goal; an information gap from their own life or job.
+3. The turn: news arrives as audio (a voice message, a phone call, the companion reading something aloud). The learner catches the gist, a detail, and one inference, reacts, and uses the unit's strategy.
+4. The hard conversation: the free task, in the situation the learner said is hard, with a clear outcome (an agreement, a booking, a refund). A moment to plan first. Nobody corrects them during it.
+5. The payoff: the outcome lands because of what they said; they retell it to someone who missed it, once, then once more and shorter; the companion looks back at two or three phrases.
 
-WHAT MAKES IT WORTH COMING BACK
-- An emotional core: what the central neighbour secretly feels (proud and too stubborn to ask for help, scared of looking foolish, homesick, lonely after a friend moved away) and how the learner helps without fixing it for them.
-- Pip has a small arc of its own in every story (learning to be brave on the phone, a first friend, missing home, a new word it finally uses right), told in the walks between scenes.
-- Every scene ends with a pull into the next: a promise, a discovery, a question that the next scene answers. Nobody ever says "come back soon".
-- Continuity: neighbours remember what the learner said and did, in this story and in earlier ones. Earlier stories' people and things come back.
+WHY IT IS THEIR STORY
+- Their reason for English decides where the story happens (an office for work, a hotel or flat for travel and moving, a café for friends). The hard conversation in episode 4 is the situation they said is hard.
+- Their job or study makes them needed ("You do accounts, can you check these figures?"). Their interests flavour the props and the payoff, one or two, never a list.
+- Their country comes in at most once a story, as something they are the expert on.
 
-THE LONG JOURNEY (every story is unique, and each one grows from the last)
-- Never retell a story. Each new story is a different kind (mystery, mix-up, rescue, competition, big day, secret, journey, mentoring, rivals to friends, new arrival, repair, discovery, celebration), centred on a different neighbour from the last two, with a new premise, a new twist and a new feeling. A neighbour from before can come back in a new light.
-- The learner's place in town grows. In the first stories they are the new resident who helps; later neighbours come to them for advice; later still they lead (they run the meeting, they speak for the café at the town hall, they welcome the next newcomer and teach them). Pip grows alongside them.
-- The language grows. Each story asks for one kind of conversation the learner has not done yet, a little harder than the last: from saying what they want, to explaining, to persuading, to handling disagreement, to leading a group. The hard situation they told us about comes back at a higher level, never as a rerun.
-- Relationships deepen. A neighbour who was gruff in one story can be a friend in the next; small running jokes and promises from earlier stories pay off later.
-- The town widens. Early stories stay near home (the burrow, the bus stop, the café); later ones reach the rest of town and further places.`;
+WHAT KEEPS IT CLEAR
+- One simple, concrete situation a newcomer would really meet, low stakes and warm. No mysteries the learner has to piece together, no secret plots, no in-world facts they would have to remember from nowhere.
+- The cast: the companion, plus at most one guest per scene (none at Visitor, only in episode 4 at Newcomer), and at most one new named character in the whole story, always introduced by name, role and relation.
+- Every scene ends on a consequence of what the learner said and a clear next step.
+- A kind turn in episode 3 (news that changes the plan, a hidden reason that makes someone more human), never a betrayal or a villain.`;
 
-export const SCENE_CRAFT = `HOW A SCENE WORKS
-A scene is one live voice conversation (about 5 minutes, 6–10 learner turns) with one neighbour in one place.
+export const SCENE_RULES = `THE RULES EVERY SCENE KEEPS (a checker reads your plan against them)
+1. Genuine questions. Every question the companion or guest asks passes three checks: the asker does not already know the answer; a real person in this situation would ask it; the answer changes what happens next. No quiz questions, no questions just to make the learner talk ("What colour is it?", "What do you think?" about nothing).
+2. An honest practice frame. Repeating or drilling a line is allowed only when the story says so truthfully ("Be my first customer. Ask me the price.").
+3. The knowledge ledger. The learner is only asked about: their own life (L), what was told aloud in this scene or its brief (B), what was said in an earlier scene (S), everyday world knowledge (W), or their opinion and feelings. Never anything else: no "Pip's note says you're our speaker", no shared past they never heard.
+4. Say it or it doesn't exist. The learner hears this; they may not see anything. Nothing they need is only visible: no "look at this", "which one?", "what does the board say?" unless it was said aloud first. The painting is mood, never information.
+5. The cast budget. The companion, plus at most one guest, introduced by name and role the first time.
+6. Talk to the learner. At Visitor and Newcomer nobody talks to anyone but the learner.
+7. The brief. Before the scene the learner reads and hears: where, what is happening, their role, 1–3 tasks, the facts they hold, and 1–2 phrases to try. The brief holds every fact the tasks need.
+8. Model before you ask. The companion uses each target chunk naturally at least twice before the learner needs it.
+9. Success first. The first thing the learner is asked is something they can surely answer (about themselves, or straight from the brief).
+10. Correct like a friend. Prompt in character only on the 1–2 target forms ("Two coin… or two coins?"); quietly say the rest back correctly; never correct during the episode-4 task; save explanations for the look-back.
+11. Earned praise only. Praise names what the learner just did ("You asked the price and checked it."), never empty praise.
+12. Wait, then rescue. Give time. If the learner is stuck: offer a model sentence they can copy, then two short choices. Never answer for them.
+13. End on a consequence: the scene ends when its outcome happens, because of what the learner said.
+14. Voice-friendly situations: phone calls, voice messages, walking and talking, the companion reading something aloud, ordering at a counter.`;
 
-- Arrive in the middle of something. When the scene opens, the neighbour is already doing something with a concrete problem, and turns to the learner for a reason that follows from the last scene ("There you are! The critic just called. She's coming at eleven, not three."). Never "Hi! How are you?", never small talk for its own sake.
-- The neighbour drives. They want something now, they have opinions and feelings, they share news, jokes and small confessions. It is two people talking, not an interview: in most turns the neighbour gives something of their own (a reaction, a feeling, a piece of news) before asking.
-- The learner acts. Every beat asks the learner to DO something with English that the story needs: explain, describe, suggest, persuade, ask the right question, give directions, retell what happened, apologise, plan, choose and say why, comfort, negotiate, refuse kindly. The answer changes what happens next.
-- Questions are real. Ask what a friend in that situation would really ask, because the story needs the answer. No quiz questions, no questions just to make the learner speak ("What colour is it?"), no "What do you think?" with nothing to think about. Offer two choices only at Visitor level or as a rescue when the learner is stuck; never as the default.
-- The turn. Around the middle, something changes: news arrives, a hidden reason comes out, a plan goes sideways, the neighbour admits something. The learner has to react to it.
-- The ending is a consequence. Close on what changed because of what the learner said, then the button: the next step of the story, said by the neighbour ("Go and find Mags before the boat leaves. Tell her I sent you."). Never "thanks for coming by", never "see you".
-- A feeling. Each scene has one: tension, laughter, tenderness, triumph, a quiet moment. Write it into what happens, not into adjectives.
-- Level shapes the language, not the story. A Visitor gets the same kind of story in short words, with things to repeat and choose; a Local gets fast talk, idioms and pushback.`;
+/** The old name, kept for the scene planner's prompt. */
+export const SCENE_CRAFT = SCENE_RULES;
 
 export const ARRIVAL_LABELS = {
   why: {

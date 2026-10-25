@@ -6,9 +6,9 @@ import { callTime } from '../calls/store';
 import { arrivalText } from '../director/craft';
 import type { MomentStory } from '../director/actor';
 import { ensureAhead } from '../director/jobs';
-import { metNeighbours, stageFor } from '../director/plan';
+import { stanceFor, type Stance } from '../curriculum/companion';
+import { stageFor } from '../director/plan';
 import {
-  lastPlayedAt,
   listPaintings,
   readLearner,
   readMoment,
@@ -54,13 +54,13 @@ export async function helloMoment(
   const t = localTime(new Date(now), learner.timezone);
   // A fixed moment (the first, a free one) is played at the learner's own stage.
   const stage = moment.source === 'director' ? plan.stage_aimed : stageFor(learner);
-  const [story, lastAt] = await Promise.all([
-    storyOf(env, userId, moment, arrivalText(learner)),
-    lastPlayedAt(env.DB, userId),
-  ]);
-  // Pip's line on the way: what happened last time when the learner has been away a while.
-  const away = lastAt === null || now - lastAt > AWAY_MS;
-  const way = (away && plan.recap_line ? plan.recap_line : plan.bridge_line).trim();
+  const story = await storyOf(
+    env,
+    userId,
+    moment,
+    arrivalText(learner),
+    stanceFor(learner.arrival, stage),
+  );
   // While this scene plays, the next one is written.
   await ensureAhead(env, userId, moment, now).catch((error: unknown) => {
     console.warn('next scene not started', { error: String(error).slice(0, 200) });
@@ -76,7 +76,7 @@ export async function helloMoment(
       turnMode: frame.turnMode,
       place: plan.place,
       variant: plan.variant,
-      speaker: PLACES[plan.place].resident,
+      speaker: plan.companion ?? PLACES[plan.place].resident,
       hour: t.hour,
       localDate: `${t.year}-${String(t.month).padStart(2, '0')}-${String(t.day).padStart(2, '0')}`,
       weather: weatherAt(t),
@@ -84,7 +84,8 @@ export async function helloMoment(
     },
     { ...plan, stage_aimed: stage },
     { name: learner.name, firstLanguage: learner.firstLanguage, stage, country: learner.country },
-    { story, way: PLACES[plan.place].resident === 'pip' ? '' : way },
+    // The brief is read on the card before the call: the companion opens the scene directly.
+    { story, way: '' },
     {
       secondsLeft: balance.leftSeconds,
       wrapping: balance.leftSeconds <= WRAP_UP_SECONDS,
@@ -95,15 +96,13 @@ export async function helloMoment(
   return { error: null, data };
 }
 
-/** After this long away, Pip recaps the story instead of just saying where they're going. */
-const AWAY_MS = 3 * 60 * 60_000;
-
 /** Where this moment sits in its story, for the actor: the outline and the scenes so far. */
 async function storyOf(
   env: Bindings,
   userId: string,
   moment: Moment,
   about: string,
+  stance: Stance,
 ): Promise<MomentStory | null> {
   if (!moment.storyId || !moment.sceneNo) return null;
   const [story, scenes, paintings] = await Promise.all([
@@ -124,6 +123,6 @@ async function storyOf(
     scenes: story.outline.scenes.length,
     before,
     about,
-    met: metNeighbours(paintings),
+    stance,
   };
 }

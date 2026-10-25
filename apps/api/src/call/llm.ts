@@ -95,6 +95,8 @@ export function messagesFor(
   speaker: CharacterId,
   transcript: readonly TranscriptLine[],
   direction: string,
+  /** A guest the same actor plays: their lines are its own, tagged `[guest]`. */
+  guest: CharacterId | null = null,
 ): Anthropic.MessageParam[] {
   const out: Anthropic.MessageParam[] = [];
   const add = (role: 'user' | 'assistant', text: string) => {
@@ -108,6 +110,7 @@ export function messagesFor(
   for (const line of transcript) {
     if (isLearnerLine(line)) add('user', line.text);
     else if (line.speaker === speaker) add('assistant', line.text);
+    else if (guest !== null && line.speaker === guest) add('assistant', `[guest] ${line.text}`);
     else add('user', `[${nameOf(line.speaker)}] ${line.text}`);
   }
   if (out[0]?.role !== 'user') out.unshift({ role: 'user', content: '(The call connects.)' });

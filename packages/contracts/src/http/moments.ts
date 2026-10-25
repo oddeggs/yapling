@@ -51,6 +51,10 @@ export const MomentBridge = z.object({
   lines: z.array(z.string().max(200)).max(4).default([]),
   /** The card in the learner's own language, or null. */
   gloss: z.string().max(800).nullable().default(null),
+  /** What the learner will do in the scene (1–3 short tasks). */
+  tasks: z.array(z.string().max(160)).max(3).default([]),
+  /** 1–2 phrases to try. */
+  phrases: z.array(z.string().max(100)).max(2).default([]),
 });
 export type MomentBridge = z.infer<typeof MomentBridge>;
 
@@ -73,9 +77,34 @@ export const NextMoment = z.object({
   planning: z.boolean(),
   /** What the learner told the town their name is, once they have. */
   name: z.string().max(40).nullable(),
-  /** The learner hasn't arrived yet (no `PUT /api/me/arrival`): show the arrival first. */
+  /** The learner hasn't arrived yet, or hasn't chosen a companion: show the arrival first. */
   arrived: z.boolean().default(true),
+  /** The learner's companion, painted wherever they go; null before they choose. */
+  companion: CharacterId.nullable().default(null),
+  /** Arrived but no companion chosen yet: the two to choose from. */
+  companions: z.array(z.lazy(() => CompanionOption)).max(2).default([]),
 });
+
+/** One companion the learner can choose to walk through Natterwick with. */
+export const CompanionOption = z.object({
+  id: CharacterId,
+  name: z.string().max(40),
+  /** "a tarsier who coordinates a team at the office". */
+  who: z.string().max(160),
+  /** What they say to introduce themselves (and their recorded voice says). */
+  line: z.string().max(300),
+  /** The line in the learner's language, or null. */
+  gloss: z.string().max(400).nullable(),
+});
+export type CompanionOption = z.infer<typeof CompanionOption>;
+
+/** `PUT /api/me/arrival` answers with the two companions that fit the learner best. */
+export const ArrivalAnswer = z.object({ companions: z.array(CompanionOption).min(1).max(2) });
+export type ArrivalAnswer = z.infer<typeof ArrivalAnswer>;
+
+/** `PUT /api/me/companion`: the one they chose. */
+export const CompanionChoice = z.object({ companion: CharacterId });
+export type CompanionChoice = z.infer<typeof CompanionChoice>;
 
 // --- Arriving: what the learner tells the town before the first conversation. ---
 
@@ -177,6 +206,11 @@ export const Painting = z.object({
   canDos: z.array(z.string().max(300)).max(4),
   words: z.array(PaintingWord).max(8),
   learned: z.string().max(300).nullable(),
+  /** The look-back's one thing to fix: what they said, and a better way to say it. */
+  fix: z
+    .object({ said: z.string().max(200), better: z.string().max(200) })
+    .nullable()
+    .default(null),
 });
 export type Painting = z.infer<typeof Painting>;
 

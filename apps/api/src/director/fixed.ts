@@ -1,438 +1,303 @@
-import { PLACES, pipAsleep, type PlaceId } from '@yapling/scene';
+import { PLACES, openVariants, type PlaceId } from '@yapling/scene';
 import { CAST } from '@yapling/story';
 
-import type { Beat, MomentPlan } from './moment';
-import type { StoryOutline } from './story';
+import { COMPANION, type CompanionId } from '../curriculum/companion';
+import type { Beat, Brief, MomentPlan } from './moment';
 import type { Stage } from './world';
 
 /*
- * The moments nobody plans live: the first one (Pip, nervous about meeting the town, asks the
- * learner to show it how to introduce itself; the story begins as they go out), Pip's own small
- * stories at home while the director is still writing, and a visit the learner chose from the menu
- * (the neighbour is busy with their part of the story). Each has a reason to talk and an ending.
+ * The moments nobody plans live, written to the same scene rules: the first one (the companion
+ * meets the learner off the 45 and they introduce themselves), a short honest rehearsal of recent
+ * phrases while the director is still writing, and a visit the learner chose from the menu.
  */
 
-const empty = () => ({
-  card: [] as string[],
-  card_gloss: '',
-  bridge_card: '',
-  bridge_line: '',
-  recap_line: '',
-  target_errors: [] as string[],
-  personal_threads_used: [] as string[],
-  callbacks: [] as string[],
-  culture_touch: '',
-  open_threads_after: [] as string[],
-});
-
 const beat = (
+  kind: Beat['kind'],
   what_happens: string,
   goal: string,
   example_line: string,
-  if_struggling: string,
-  if_strong: string,
-  is_door = false,
-): Beat => ({ what_happens, goal, is_door, example_line, if_struggling, if_strong });
+  rescue: string,
+): Beat => ({ kind, speaker: 'companion', what_happens, goal, example_line, rescue });
+
+type Fixed = Pick<
+  MomentPlan,
+  | 'place'
+  | 'variant'
+  | 'stage_aimed'
+  | 'companion'
+  | 'unit_id'
+  | 'episode'
+  | 'knowledge_ledger'
+  | 'guest'
+  | 'guest_intro'
+  | 'guest_how'
+  | 'gap'
+  | 'recycled_chunks'
+  | 'prompt_forms'
+  | 'culture_touch'
+  | 'callbacks'
+>;
+
+const base = (
+  companion: MomentPlan['companion'],
+  stage: Stage,
+  place: PlaceId,
+  variant: number,
+): Fixed => ({
+  place,
+  variant,
+  stage_aimed: stage,
+  companion,
+  unit_id: '',
+  episode: 0,
+  knowledge_ledger: [],
+  guest: 'none',
+  guest_intro: '',
+  guest_how: 'none',
+  gap: 'The companion does not know the learner yet: everything they ask is about the learner’s own life.',
+  recycled_chunks: [],
+  prompt_forms: [],
+  culture_touch: '',
+  callbacks: [],
+});
 
 const low = (stage: Stage) => stage === 'visitor' || stage === 'newcomer';
 
-/** The first conversation, right after arriving: the burrow at the real time, with Pip. */
+/** What each companion says about themselves when they first meet the learner. */
+const SELF: Readonly<Record<CompanionId, string>> = {
+  sol: 'I work at the office in Hollowbrook',
+  nell: 'I run the front desk at the Lantern Inn',
+  mei: 'I run the Lantern Café',
+  linh: 'I work at the library, next door to you',
+  pip: 'I live in the burrow with you',
+};
+
+const SELF_VI: Readonly<Record<CompanionId, string>> = {
+  sol: 'mình làm ở văn phòng Hollowbrook',
+  nell: 'mình làm lễ tân ở nhà trọ Lantern',
+  mei: 'mình mở quán Lantern Café',
+  linh: 'mình làm ở thư viện, ngay cạnh nhà bạn',
+  pip: 'mình ở chung nhà với bạn',
+};
+
+/** Where the first walk goes: two places, said aloud. */
+const FIRST_STOP: Readonly<Record<CompanionId, string>> = {
+  sol: 'the café for a coffee, or straight home',
+  nell: 'the inn for a cup of tea, or straight home',
+  mei: 'my café for a coffee, or straight home',
+  linh: 'the library on the way, or straight home',
+  pip: 'home, or the rooftop to see the town',
+};
+
+/** The first conversation: the companion meets the learner off the 45 at the bus stop. */
 export function firstMoment(
-  hour: number,
+  companion: CompanionId,
+  name: string | null,
+  stage: Stage,
   firstLanguage: string,
-  name: string | null = null,
-  stage: Stage = 'visitor',
+  hour: number,
 ): MomentPlan {
-  const asleep = pipAsleep('room', 0, hour);
+  const c = COMPANION[companion];
   const vi = firstLanguage === 'vi';
-  const you = name ? `${name}` : 'you';
-  const opening = asleep
-    ? stage === 'visitor'
-      ? `Oh! Hi ${you}! I'm Pip. Can you help me?`
-      : `Oh! You're here! Sorry, I fell asleep waiting. I'm Pip. ${name ? `${name}, right? ` : ''}Can you help me with something?`
-    : stage === 'visitor'
-      ? `Hi ${you}! I'm Pip. Can you help me?`
-      : `You're here! ${name ? `You must be ${name}. ` : ''}I'm Pip, your roommate. Can you help me with something scary?`;
+  const you = name ?? 'there';
+  const variant = openVariants('bus', hour)[0] ?? 0;
+  const brief: Brief = {
+    recap: '',
+    where: 'The bus stop',
+    happening: `You just got off the 45. ${c.name} came to meet you.`,
+    your_role: 'You are new in town.',
+    tasks: ['Say hello and your name.', 'Say what you do.', 'Choose where to go first.'],
+    try_saying: ['Nice to meet you.', 'I work at …'],
+  };
+  const opening = low(stage)
+    ? `Hi ${you}! I'm ${c.name}. ${SELF[companion]}. Welcome! Long trip?`
+    : `There you are! You must be ${you}. I'm ${c.name}, ${SELF[companion]}. Welcome to Natterwick! Was it a long trip?`;
   return {
-    ...empty(),
-    title_open: asleep ? 'Out Like A Light' : 'Moved In, More Or Less',
-    title_close: 'Somebody Finally Said Hello',
-    place: 'room',
-    variant: 0,
-    stage_aimed: stage,
-    situation: asleep
-      ? 'Pip fell asleep on the sofa waiting for the learner, its notebook open on its chest.'
-      : 'Pip has just moved into the burrow too and has been pacing by the door with its notebook.',
-    character_wants:
-      'Pip wants to go out and meet the neighbours, but is scared: it does not know how to introduce itself in English. It is too shy to say so at first.',
-    dramatic_question: 'Will Pip be brave enough to go out and meet the town?',
-    hook: 'Pip has a page in its notebook called "How to say hello to a whole town", and it is empty.',
+    ...base(companion, stage, 'bus', variant),
+    title_open: 'Off The 45, Finally',
+    title_close: 'Somebody Was Waiting',
+    brief,
+    brief_gloss: vi
+      ? `Trạm xe buýt. Bạn vừa xuống xe 45, ${c.name} ra đón bạn. Bạn mới đến thị trấn. Hãy chào và nói tên mình, nói bạn làm gì, rồi chọn đi đâu trước. Thử nói: "Nice to meet you." / "I work at …"`
+      : '',
+    situation: `The 45 has just left. ${c.name} is waiting at the stop to meet the learner, who has just moved to Natterwick.`,
+    why_the_learner: `${c.name} wants to get to know the learner and show them around.`,
     opening_line: opening,
     opening_gloss: vi
-      ? stage === 'visitor'
-        ? `Chào ${you}! Mình là Pip. Bạn giúp mình được không?`
-        : 'Bạn đến rồi! Mình là Pip, bạn cùng nhà. Bạn giúp mình một việc đáng sợ được không?'
+      ? `Chào ${you}! Mình là ${c.name}, ${SELF_VI[companion]}. Chào mừng bạn! Đi đường có xa không?`
       : '',
     beats: [
       beat(
-        'Pip admits the scary thing: it has to meet all the neighbours today and does not know what to say. It asks the learner how they would introduce themselves.',
-        'introduce themselves: their name and one thing about them',
-        'I meet the neighbours today. How do I say hello? Show me?',
-        'Say: "Hi, I’m…" Your name?',
-        'If you met a whole town today, what would you say first?',
+        'success_first',
+        `${c.name} asks about the trip; any answer is fine, and ${c.name} says something of their own about arriving in a new town.`,
+        'answer about the trip',
+        low(stage) ? 'Long trip? Tired?' : 'Was it a long trip?',
+        'Say: "Yes, long." or "No, OK."',
       ),
       beat(
-        'Pip copies the learner’s introduction proudly, then asks what else people say: what they do. Pip already knows a little from the learner’s arrival and asks about it with real curiosity.',
-        'say what they do (work or study) and one thing about it',
-        'And then? People ask "What do you do?" What do you say?',
-        'Work or study? Tell me.',
-        'What do you actually do all day? What’s the best part?',
-        true,
+        'open',
+        `${c.name} says "Nice to meet you" and what they do, then asks what the learner does: a real question, because they just met.`,
+        'say what they do (work or study)',
+        low(stage)
+          ? 'Nice to meet you! What do you do?'
+          : 'Nice to meet you. So what do you do back home?',
+        'Say: "I work at …" or "I study …". Work, or study?',
       ),
       beat(
-        'Pip tries its own introduction on the learner, with one small mistake ("I am live here"), and asks if it was okay.',
-        'help Pip fix its line, or tell Pip it was good',
-        'Okay. "Hi, I am Pip. I am live here." Good?',
-        '"I live here." Can you say it?',
-        'Be honest. What would you change?',
+        'task',
+        `${c.name} is curious about it and asks one real follow-up about the learner's work or study (what they like about it, or what a normal day is like).`,
+        'say one more thing about their work or study',
+        low(stage) ? 'Do you like it?' : 'What do you like most about it?',
+        'Say: "I like …" Yes, or no?',
       ),
       beat(
-        'Pip feels brave now and wants to go out right away, with the learner. It asks where they should go first.',
-        'agree to go out and say where to start',
-        'I feel brave! Let’s go out. Where first?',
-        'Go out now? Yes?',
-        'Where should we go first, and why?',
+        'close',
+        `${c.name} offers two places to go first (${FIRST_STOP[companion]}) and asks which; they go where the learner chose.`,
+        'choose where to go first',
+        `First: ${FIRST_STOP[companion]}?`,
+        'Say: "Coffee, please." or "Home, please."',
       ),
     ],
-    the_turn:
-      'When Pip tries its own introduction, it gets it a little wrong and is embarrassed; the learner’s kindness turns it brave.',
-    target_phrases: ['Hi, I’m …', 'I work …', 'I study …', 'Nice to meet you.', 'Let’s go.'],
-    pip_learns: 'how to introduce itself, from the learner',
-    ending:
-      'Pip writes the learner’s introduction in its notebook, says it once more, and pulls the learner out of the door to meet the town.',
-    open_threads_after: ['Pip is going out to meet the town for the first time.'],
-    director_notes: low(stage)
-      ? 'The learner’s very first conversation. Short warm lines, your own answer first, lots of praise for any try. Pip is the nervous one, not the learner.'
-      : 'The learner’s very first conversation. Pip is nervous and funny about it; let the learner be the confident one. Listen to how much English they use.',
+    target_chunks: ['Hi, I’m …', 'Nice to meet you.', 'I work at …', 'And you?'],
+    listening_task: `Catch ${c.name}'s name and what ${c.name} does.`,
+    end_condition: 'The learner has said who they are and chosen where to go first.',
+    ending: `${c.name} says they'll go where the learner chose, and that there's lots to show them.`,
+    companion_learns: 'the learner’s name and what they do',
+    director_notes: `The learner's very first conversation. ${c.name} is warm and a little excited; the learner should succeed at everything here.`,
   };
 }
 
-interface PipStory {
-  readonly title_open: string;
-  readonly title_close: string;
-  readonly situation: string;
-  readonly wants: string;
-  readonly question: string;
-  readonly opening: string;
-  readonly opening_vi: string;
-  readonly beats: readonly Beat[];
-  readonly turn: string;
-  readonly phrases: readonly string[];
-  readonly learns: string;
-  readonly ending: string;
-}
-
-/** Pip's own small stories at home: one is played while the director writes the next scene. */
-const PIP_STORIES: readonly PipStory[] = [
-  {
-    title_open: 'A Postcard With No Words',
-    title_close: 'Wish You Were Here, Probably',
-    situation:
-      'Pip is at the table with a postcard for its family far away. The front is a painting of the harbour. The back is empty.',
-    wants: 'Pip wants to send its first postcard home in English, and is a little homesick.',
-    question: 'What will Pip tell its family about its new life?',
-    opening: 'Help! My first postcard home. In English! What do I write?',
-    opening_vi: 'Cứu! Tấm bưu thiếp đầu tiên gửi về nhà. Bằng tiếng Anh! Mình viết gì đây?',
-    beats: [
-      beat(
-        'Pip asks how postcards start in English.',
-        'suggest how to start a postcard',
-        'How do people start a postcard?',
-        '"Dear Mum"? Or "Hi"?',
-        'How would you start it, to sound warm?',
-      ),
-      beat(
-        'Pip wants to say one good thing about Natterwick. It asks the learner what the best thing here is so far.',
-        'say one good thing and why',
-        'What is the best thing here, for you?',
-        'Café or harbour? Which is best?',
-        'What would you tell them about this town?',
-      ),
-      beat(
-        'Pip goes quiet and admits it misses home. It asks what the learner does when they miss someone.',
-        'comfort Pip or share what they do',
-        'I miss them. What do you do when you miss people?',
-        'Call them? Or write?',
-        'What helps you when you miss someone?',
-        true,
-      ),
-    ],
-    turn: 'Pip admits the postcard is hard because it misses its family.',
-    phrases: ['Dear …', 'I miss you.', 'The best thing is …'],
-    learns: 'how to end a postcard warmly',
-    ending:
-      'Pip signs the postcard, reads it out proudly, and says it will post it at the bus stop on the way out.',
-  },
-  {
-    title_open: 'Rehearsal For A Phone Call',
-    title_close: 'Hello, Is This The Bakery',
-    situation:
-      'Pip is holding the burrow phone and putting it down again. The bakery number is written on its paw.',
-    wants:
-      'Pip wants to order a cake by phone for Mei’s café party, and is terrified of phone calls.',
-    question: 'Will Pip make the call?',
-    opening: 'Phone calls scare me. Can we practise? You are the bakery.',
-    opening_vi: 'Mình sợ gọi điện lắm. Mình tập nhé? Bạn làm tiệm bánh nha.',
-    beats: [
-      beat(
-        'Pip asks the learner to answer like the bakery would.',
-        'answer the phone like a shop',
-        'Ring ring! You are the bakery. What do you say?',
-        '"Hello, bakery!" Say it?',
-        'How does a shop answer the phone where you live?',
-      ),
-      beat(
-        'Pip orders a cake, too fast and too quietly, then asks how it sounded.',
-        'tell Pip how to say it better',
-        'I want a cake for Friday. Was that okay?',
-        'Slower? Or louder?',
-        'What would make me sound more confident?',
-      ),
-      beat(
-        'Pip asks the learner what they say when they do not hear something on the phone.',
-        'say how to ask someone to repeat',
-        'What if I don’t hear them? What do I say?',
-        '"Sorry?" Or "Again, please?"',
-        'What do you say when a call gets confusing?',
-        true,
-      ),
-    ],
-    turn: 'Halfway through the practice, the real phone rings and Pip panics.',
-    phrases: ['Hello, this is …', 'Could you say that again?', 'I’d like to order …'],
-    learns: 'what to say when you don’t hear someone on the phone',
-    ending: 'Pip takes a breath, picks up the real phone, and says the learner’s line perfectly.',
-  },
-  {
-    title_open: 'A Recipe Nobody Can Read',
-    title_close: 'Close Enough To Soup',
-    situation:
-      'The burrow smells of onions. Pip found an old recipe card in the cupboard and has started cooking, but the card is half in pencil.',
-    wants: 'Pip wants to cook a real dinner for the two of them and not burn anything this time.',
-    question: 'Will dinner be edible?',
-    opening: 'I am cooking! But this recipe card is old. Can you help?',
-    opening_vi: 'Mình đang nấu ăn! Nhưng công thức này cũ quá. Bạn giúp mình nhé?',
-    beats: [
-      beat(
-        'Pip reads a step it does not understand ("simmer") and asks what it means.',
-        'explain a cooking word or guess it',
-        'It says "simmer". What does simmer mean?',
-        'Hot or cold? You guess!',
-        'How would you explain "simmer" to someone who never cooked?',
-      ),
-      beat(
-        'Pip asks what the learner would add to make it taste good.',
-        'suggest an ingredient and why',
-        'It needs something. What would you add?',
-        'Salt or chilli?',
-        'What would you add, and why?',
-      ),
-      beat(
-        'Pip asks what dish the learner grew up eating, so it can try making it one day.',
-        'describe a dish from home',
-        'What did you eat at home, growing up?',
-        'Rice or noodles at home?',
-        'Tell me about a dish from home. How is it made?',
-        true,
-      ),
-    ],
-    turn: 'Pip realises the card is not a recipe for soup at all, it is for a cake, and they have made something new.',
-    phrases: ['It means …', 'You should add …', 'At home we eat …'],
-    learns: 'a dish from the learner’s home',
-    ending: 'Pip tastes it, declares it a brand-new dish, and names it after the learner.',
-  },
-  {
-    title_open: 'The Dream With The Upside-Down Bus',
-    title_close: 'Dreams Are Mostly Buses',
-    situation:
-      'Pip is wrapped in a blanket on the sofa, eyes wide, holding its notebook with a drawing of a bus on its roof.',
-    wants:
-      'Pip had the strangest dream and needs to tell someone, but does not know the words for half of it.',
-    question: 'What did the dream mean?',
-    opening: 'I had the strangest dream. Can I tell you? I need words!',
-    opening_vi: 'Mình vừa mơ một giấc mơ kỳ lạ lắm. Kể bạn nghe nhé? Mình cần từ!',
-    beats: [
-      beat(
-        'Pip tells the dream in pieces: the bus 45 was upside down and flying. It asks how to say it properly.',
-        'help Pip tell what happened, in the past',
-        'The bus is... was... flying? How do I say it?',
-        '"The bus flew." Say it?',
-        'How would you tell this dream to a friend?',
-      ),
-      beat(
-        'Pip asks if the learner remembers their dreams.',
-        'tell a dream or say they don’t remember',
-        'Do you remember your dreams?',
-        'Yes or no? Dreams?',
-        'What is the strangest dream you remember?',
-        true,
-      ),
-      beat(
-        'Pip asks what the learner thinks the dream means.',
-        'give an opinion and a reason',
-        'What do you think it means?',
-        'Good dream or bad dream?',
-        'If you had to guess what it means, what would you say?',
-      ),
-    ],
-    turn: 'Pip remembers the end of the dream: the learner was the one driving the bus.',
-    phrases: ['It was …', 'I dreamed that …', 'I think it means …'],
-    learns: 'how to tell a story in the past',
-    ending:
-      'Pip writes the dream down with the learner’s words and decides it means they will have an adventure soon.',
-  },
-  {
-    title_open: 'The List Of Good Things',
-    title_close: 'Ten Good Things, Roughly',
-    situation:
-      'Pip is lying on the rug with a long piece of paper titled "Good Things About Living Here". It has two items.',
-    wants:
-      'Pip wants to fill its list to ten before bedtime, and wants the learner’s good things on it too.',
-    question: 'Can they fill the list together?',
-    opening: 'My list of good things only has two. Help me add more?',
-    opening_vi: 'Danh sách điều tốt của mình mới có hai thôi. Thêm giúp mình nhé?',
-    beats: [
-      beat(
-        'Pip reads its two items (the lamp, the bus driver waving). It asks for one good thing from the learner’s day.',
-        'say one good thing from their day',
-        'What was one good thing today?',
-        'Good food? Or good news?',
-        'What was the best moment of your day, and why?',
-        true,
-      ),
-      beat(
-        'Pip asks for a small good thing people forget about.',
-        'name a small pleasure and say why',
-        'What is a small good thing people forget?',
-        'Coffee? Or sleep?',
-        'What small thing makes you happy that nobody notices?',
-      ),
-      beat(
-        'Pip asks what the learner is looking forward to.',
-        'talk about something coming up',
-        'What are you looking forward to?',
-        'The weekend? Yes?',
-        'What are you looking forward to this week, and why?',
-      ),
-    ],
-    turn: 'Pip adds a secret item at the top of the list and won’t say what it is at first: it is the learner.',
-    phrases: ['One good thing was …', 'I’m looking forward to …', 'It makes me happy.'],
-    learns: 'one thing that makes the learner happy',
-    ending:
-      'Pip pins the list on the wall where both of them can see it, and adds one blank line for tomorrow’s good thing.',
-  },
-];
-
 /**
- * Pip's free moment in the burrow while the director writes: one of Pip's own small stories,
- * never the same as the last few.
+ * A short, honest rehearsal while the director is still writing: the companion says plainly they
+ * want to practise a couple of phrases, and uses each in a real question about the learner's life.
  */
 export function freeMoment(
-  hour: number,
+  companion: CompanionId,
   name: string | null,
+  stage: Stage,
   firstLanguage: string,
-  played: number,
-  stage: Stage = 'newcomer',
+  hour: number,
+  chunks: readonly string[],
 ): MomentPlan {
-  const asleep = pipAsleep('room', 0, hour);
-  const s = PIP_STORIES[played % PIP_STORIES.length]!;
-  const opening = asleep ? `Oh! I dozed off. ${s.opening}` : s.opening;
+  const c = COMPANION[companion];
+  const place = (c.places.find((p) => openVariants(p as PlaceId, hour).length > 0) ??
+    'room') as PlaceId;
+  const variant = openVariants(place, hour)[0] ?? 0;
+  const practise = chunks.length ? chunks.slice(0, 2) : ['I work at …', 'And you?'];
+  const vi = firstLanguage === 'vi';
+  const practiceBeats = practise.map((p, i) =>
+    beat(
+      i === 0 ? 'open' : 'task',
+      `${c.name} uses "${p}" about their own life first, then asks the learner a real question that needs it about theirs.`,
+      `use "${p}" about their own life`,
+      `I'll go first: ${p.replace('…', 'something true')}. And you?`,
+      `Say: "${p}" Then one word.`,
+    ),
+  );
   return {
-    ...empty(),
-    title_open: s.title_open,
-    title_close: s.title_close,
-    place: 'room',
-    variant: 0,
-    stage_aimed: stage,
-    situation: asleep ? `Pip had dozed off on the sofa. ${s.situation}` : s.situation,
-    character_wants: s.wants,
-    dramatic_question: s.question,
-    hook: s.wants,
-    opening_line: opening,
-    opening_gloss: firstLanguage === 'vi' ? s.opening_vi : '',
-    beats: [...s.beats],
-    the_turn: s.turn,
-    target_phrases: [...s.phrases],
-    pip_learns: s.learns,
-    ending: s.ending,
-    director_notes: `A small story of Pip's own, at home${name ? ` with ${name}` : ''}. Keep it warm and funny; Pip needs the learner's help for real.`,
+    ...base(companion, stage, place, variant),
+    title_open: 'A Minute, Between Things',
+    title_close: 'Said It Twice, Remembered It',
+    brief: {
+      recap: '',
+      where: PLACES[place].name,
+      happening: `A quiet minute with ${c.name}.`,
+      your_role: 'You are practising two phrases, out loud, for real.',
+      tasks: practise.map((p) => `Use "${p}" about your own life.`),
+      try_saying: [...practise],
+    },
+    brief_gloss: vi
+      ? `Một phút yên tĩnh với ${c.name}. Luyện hai câu: ${practise.join(' / ')}, nói về cuộc sống của chính bạn.`
+      : '',
+    situation: `A quiet minute. ${c.name} suggests practising two phrases together, honestly, as practice.`,
+    why_the_learner: 'They are practising for themselves.',
+    gap: 'The companion asks about the learner’s own life: answers it cannot know.',
+    opening_line: low(stage)
+      ? `${name ? `${name}, ` : ''}quick practice? Two phrases. Ready?`
+      : `${name ? `${name}, ` : ''}got a minute? Let's practise two phrases from last time, quickly. Ready?`,
+    opening_gloss: vi ? 'Luyện nhanh hai câu nhé? Sẵn sàng chưa?' : '',
+    beats: [
+      ...practiceBeats,
+      beat(
+        'close',
+        `${c.name} says back one thing the learner said, praises the phrase they used by name, and goes back to what they were doing.`,
+        'none',
+        'You used both. Nice.',
+        '',
+      ),
+    ],
+    target_chunks: [...practise],
+    listening_task: `Catch what ${c.name} says about their own life.`,
+    end_condition: 'The learner has used both phrases about their own life.',
+    ending: `${c.name} thanks them and goes back to what they were doing.`,
+    companion_learns: 'two small things about the learner’s life',
+    director_notes: 'An honest practice minute, never a fake story. Short and light.',
   };
 }
 
 /**
- * A visit the learner chose from the menu: the neighbour is in, busy with their part of the
- * learner's story (or their own evening), and needs a hand with one small thing.
+ * A visit the learner chose from the menu: the neighbour is in, busy with something they describe
+ * aloud, and asks the learner's honest opinion on it.
  */
 export function visitMoment(
   place: PlaceId,
   variant: number,
-  hour: number,
   name: string | null,
-  story: StoryOutline | null = null,
   stage: Stage = 'newcomer',
 ): MomentPlan {
   const p = PLACES[place];
   const v = p.variants[variant] ?? p.variants[0];
-  const resident = CAST[p.resident].name;
-  const doing =
-    story?.town_now.find((t) => t.who === p.resident)?.doing ??
-    `${resident} is busy with ${v.prop}.`;
+  const resident = p.resident;
+  const who = CAST[resident].name;
   const hello = name ? `Oh, ${name}! Good timing.` : 'Oh! Good timing.';
   return {
-    ...empty(),
+    ...base(resident as MomentPlan['companion'], stage, place, variant),
     title_open: v.title,
-    title_close: `Dropped In On ${resident}`.slice(0, 80),
-    place,
-    variant,
-    stage_aimed: stage,
-    situation: `${p.story} ${doing}`,
-    character_wants: `${resident} needs a second opinion or a hand with what they are doing right now.`,
-    dramatic_question: `Can the learner help ${resident} with it?`,
-    hook: `In the painting: ${v.prop}. ${doing}`,
-    opening_line:
-      stage === 'visitor'
-        ? `${hello} Can you help me?`
-        : `${hello} I need a second opinion. Got a minute?`,
+    title_close: `Dropped In On ${who}`.slice(0, 80),
+    brief: {
+      recap: '',
+      where: p.name,
+      happening: `${who} is busy here.`,
+      your_role: 'You dropped in.',
+      tasks: ['Ask what is going on.', 'Give your honest opinion and say why.'],
+      try_saying: ['What happened?', 'I think … because …'],
+    },
+    brief_gloss: '',
+    situation: `${p.story} ${who} is busy with ${v.prop}.`,
+    why_the_learner: `${who} wants an honest outside opinion.`,
+    gap: `${who} describes the problem aloud; only the learner can give their own opinion.`,
+    opening_line: low(stage)
+      ? `${hello} Can you help me?`
+      : `${hello} I need an honest opinion. Got a minute?`,
     opening_gloss: '',
     beats: [
       beat(
-        `${resident} explains what they are in the middle of (${doing}) and what has gone wrong.`,
-        'ask what happened or what they need',
-        'Look at this. What would you do?',
-        'This one, or that one?',
-        'What would you do in my place?',
+        'success_first',
+        `${who} says, in words, what they are busy with (${v.prop}) and what has gone wrong.`,
+        'ask what happened or say yes',
+        'Something went wrong here. Want to hear?',
+        'Say: "Yes. What happened?"',
       ),
       beat(
-        `${resident} asks for the learner’s idea, and pushes back on it once, kindly.`,
-        'suggest an idea and give a reason',
-        'Hm. Why that one?',
-        'Good idea? Yes?',
-        'Convince me. Why is that better?',
+        'task',
+        `${who} describes two options aloud and asks which the learner would choose and why.`,
+        'give an opinion with a reason',
+        'Which would you do, and why?',
+        'Say: "I think … because …" The first, or the second?',
       ),
       beat(
-        `${resident} asks how the learner would handle something like this in their own life or work.`,
-        'tell how they handle something similar',
-        'Do you have this problem at work?',
-        'At work too? Yes or no?',
-        'How do you deal with this kind of thing in your life?',
-        true,
+        'close',
+        `${who} takes the learner's advice and says what they'll do now.`,
+        'none',
+        'Good. I’ll do that.',
+        '',
       ),
     ],
-    the_turn: `${resident} admits why it matters to them more than it seems.`,
-    target_phrases: ['What happened?', 'I think you should …', 'Because …'],
-    pip_learns: 'how the learner would solve it',
-    ending: story
-      ? `${resident} takes the learner’s idea, then mentions what is going on in "${story.title}" and sends them back to it.`
-      : `${resident} takes the learner’s idea and gets back to work, pleased.`,
-    director_notes: `A visit the learner chose. ${resident} is busy, true to the bible, and the learner’s idea really helps.`,
+    target_chunks: ['What happened?', 'I think … because …'],
+    listening_task: `Catch the two options ${who} describes.`,
+    end_condition: 'The learner has given an opinion with a reason.',
+    ending: `${who} takes the learner's idea and gets back to work.`,
+    companion_learns: 'what the learner would do',
+    director_notes: `A visit the learner chose. ${who} is busy, true to the bible.`,
   };
 }

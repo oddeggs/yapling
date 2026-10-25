@@ -409,8 +409,8 @@ export class MomentSession {
       llm: this.llm,
       nextStreamId: () => ++this.data.streamSeq,
       takeTts: (voice) => this.voices.take(voice),
-      sentenceTts: (voice, handlers) =>
-        new SentenceTts(this.env.ELEVENLABS_API_KEY ?? '', voice, handlers),
+      sentenceTts: (voice, handlers, guestVoice) =>
+        new SentenceTts(this.env.ELEVENLABS_API_KEY ?? '', voice, handlers, guestVoice),
     };
   }
 
@@ -526,7 +526,12 @@ export class MomentSession {
       kind: 'model',
       params: turnParams(
         system,
-        messagesFor(this.speaker, transcript, direction),
+        messagesFor(
+          this.speaker,
+          transcript,
+          direction,
+          this.data.plan.guest && this.data.plan.guest !== 'none' ? this.data.plan.guest : null,
+        ),
         MOMENT_TURN_MODEL,
       ),
       hedge: HEDGE,
@@ -601,11 +606,21 @@ export class MomentSession {
     onFirstAudio?: () => void,
     heard?: string,
   ): SpokenLine {
+    const { guest } = this.data.plan;
     return new SpokenLine(this.lineHost(), {
       learnerName: this.data.learner.name,
       ...(heard ? { heard } : {}),
       speaker: this.speaker,
       voice: this.voice(),
+      // A reply the guest says starts with [guest]: it is said in the guest's own voice.
+      ...(guest && guest !== 'none'
+        ? {
+            voiceByTag: (tag: string | null) =>
+              tag === 'guest'
+                ? { speaker: guest, voice: stageVoice(guest, this.voiceStage(), null) }
+                : null,
+          }
+        : {}),
       source,
       gated,
       // The limit is the prompt's; the splitter allows a little over before it cuts.
@@ -733,7 +748,7 @@ export class MomentSession {
       this.committed(reply);
     }
     this.reply = null;
-    if (result.text) this.pushCharacterLine(result.text);
+    if (result.text) this.pushCharacterLine(result.text, reply.line.speaker);
     const active = this.active;
     if (reply.replay === null) {
       // The actor alone never stops a moment (it misreads "I'm out"): Jev has to see it too.
@@ -837,7 +852,7 @@ export class MomentSession {
     active.endAfter = 'minutes_exhausted';
     void line.done.then((result) => {
       this.addUsage(line);
-      if (result.text) this.pushCharacterLine(result.text);
+      if (result.text) this.pushCharacterLine(result.text, line.speaker);
       d.closed = true;
       if (result.control.gloss) {
         this.frames.send({
@@ -966,9 +981,9 @@ export class MomentSession {
     };
   }
 
-  private pushCharacterLine(text: string): void {
+  private pushCharacterLine(text: string, speaker: CharacterId = this.speaker): void {
     this.data.transcript.push({
-      speaker: this.speaker,
+      speaker,
       text,
       at: Date.now(),
       lineId: null,
