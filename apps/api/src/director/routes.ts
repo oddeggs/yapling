@@ -29,7 +29,6 @@ import { playableAt, stageFor } from './plan';
 import { chapterLine } from './story';
 import {
   ensureLearner,
-  firstSince,
   finishPlanning,
   insertMoment,
   listPaintings,
@@ -72,8 +71,24 @@ export function momentRoutes(): Hono<SessionEnv> {
     if (!body.ok) return body.response;
     if (!isCompanion(body.value.companion)) return errorResponse(c, 404, 'not_found');
     const now = Date.now();
+    const learner = await readLearner(c.env.DB, c.var.userId);
+    if (learner === null) return errorResponse(c, 404, 'not_found');
     await saveCompanion(c.env.DB, c.var.userId, body.value.companion, now);
-    // The first story is written while the learner plays the first conversation.
+    // The companion meets them off the 45 straight away; the first story is written meanwhile.
+    const t = localTime(new Date(now), learner.timezone);
+    await c.env.DB.prepare(
+      `UPDATE moments SET status = 'failed' WHERE user_id = ? AND status = 'ready' AND source IN ('first', 'free')`,
+    )
+      .bind(c.var.userId)
+      .run();
+    await newFixed(
+      c.env.DB,
+      learner,
+      'first',
+      firstMoment(body.value.companion, learner.name, stageFor(learner), learner.firstLanguage, t.hour),
+      t.hour,
+      now,
+    );
     await ensureAhead(c.env, c.var.userId, null, now);
     return c.body(null, 204);
   });
@@ -95,26 +110,12 @@ export function momentRoutes(): Hono<SessionEnv> {
           : [],
       });
     }
-    const companion = learner.companion;
     const t = localTime(new Date(now), learner.timezone);
     const open = await openMoments(c.env.DB, learner.userId);
 
     // The very first conversation: the companion meets them off the 45.
     const first = open.find((m) => m.source === 'first' && m.status === 'ready');
     if (first?.plan) return next(c, first, learner);
-    if (!(await firstSince(c.env.DB, learner.userId, learner.arrivedAt ?? 0))) {
-      const moment = await newFixed(
-        c.env.DB,
-        learner,
-        'first',
-        firstMoment(companion, learner.name, stageFor(learner), learner.firstLanguage, t.hour),
-        t.hour,
-        now,
-      );
-      await ensureAhead(c.env, learner.userId, null, now);
-      return next(c, moment, learner);
-    }
-
     const ready = open.find((m) => m.status === 'ready' && m.source === 'director' && m.plan);
     if (ready?.plan) {
       const playable = atThisHour(ready.plan, t.hour);

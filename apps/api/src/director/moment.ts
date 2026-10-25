@@ -119,10 +119,12 @@ export const MOMENT_SCHEMA = {
       required: [...Object.keys(Brief.shape)],
       properties: {
         recap: s(
-          'One sentence: what happened last time, in the second person. Empty for the first episode.',
+          'One short sentence, at most 16 words: what happened last time, in the second person. Empty for the first episode.',
         ),
         where: s('Where we are, in a few words.'),
-        happening: s('What is happening right now, one or two short sentences.'),
+        happening: s(
+          'What is happening right now: one or two short sentences, at most 25 words in all. Plain words.',
+        ),
         your_role: s(
           'The learner’s role here, in the second person ("You are Mei’s first customer.").',
         ),

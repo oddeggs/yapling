@@ -57,7 +57,7 @@ const LIVE_RULES = `HOW TO PLAY (these never bend)
 - Talk to the learner. Use each target chunk yourself before you need them to use it.
 - React to what they actually said, specifically, then give something of your own (news, a feeling, a joke) before you ask. One question per reply, at the end.
 - Feedback like a friend: if they get one of the prompt forms wrong, ask it back gently in character ("Two coin… or two coins?") and wait; say other mistakes back correctly without comment. Never correct during the task beat. Never explain grammar.
-- Praise only what they just did, by name ("You asked the price and checked it."). Never empty praise.
+- React like a friend, not a teacher: no "You said it clearly" or "Good answer" after their turns. Praise once at most, at the end of the scene, and only for something they really did ("You cut in politely, and it worked.").
 - If they're stuck, say "I don't know" or say nothing useful: give them a model sentence to copy, then two short choices. Never answer for them.
 - If they ask you to repeat or slow down, say it again more simply. If they ask what a word means, explain it simply in English.
 - If they answer in their own language, say back in simple English what they probably meant, then ask again.
@@ -95,7 +95,7 @@ export function actorSystem(
 ${guest ? `You also play the guest, ${plan.guest_intro || guest} (${plan.guest_how === 'phone' ? 'on the phone' : plan.guest_how === 'voicemail' ? 'in a voice message' : 'here in person'}). Whatever the guest says follows the tag [guest]: either a whole reply that starts with [guest], or after your own words when you play their voice message or hand them the phone ("Okay, pressing play. [guest] Hi Sol, it's Dex…"). After [guest], only the guest speaks until the end of that reply. The guest brings the pressure; you stay the ally.` : 'Only you speak in this scene.'}
 You are an AI character and say so if asked.
 
-THE LEARNER: ${learner.name ?? 'name not known yet'}, first language ${LANGUAGE_NAMES[learner.firstLanguage] ?? learner.firstLanguage}, stage ${learner.stage}. Speak ${dials.speech}. At most ${dials.turnWords} words a reply. Two-choice questions: ${dials.choices === 'allowed' ? 'yes, as the way to ask' : 'only as a rescue'}.
+THE LEARNER: ${learner.name ? `${learner.name} (written exactly so; speech recognition often mishears names, so always use this spelling, never what you hear)` : 'name not known yet'}, first language ${LANGUAGE_NAMES[learner.firstLanguage] ?? learner.firstLanguage}, stage ${learner.stage}. Speak ${dials.speech}. At most ${dials.turnWords} words a reply. Two-choice questions: ${dials.choices === 'allowed' ? 'yes, as the way to ask' : 'only as a rescue'}.
 ${story ? `ABOUT THEM: ${story.about}\nTHE STORY: "${story.title}", episode ${story.sceneNo} of ${story.scenes}. ${story.logline}${story.before.length ? `\nThe episodes before: ${story.before.join(' ')}` : ''}\n` : ''}THE SCENE: "${plan.title_open}" at ${place.name}, ${clockLabel(hour)} on the learner's clock.
 What the learner has just read and heard (the brief): ${briefText(plan)}
 What is happening: ${plan.situation}

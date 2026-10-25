@@ -392,8 +392,10 @@ export async function planScene(
   let repair: string | undefined;
   let best: MomentPlan | null = null;
   for (let attempt = 0; attempt < 3; attempt++) {
+    // Scenes are written by Sonnet: fast enough to be ready before the scene before ends; the
+    // critic and the code checks hold the quality line.
     const r = await structured<unknown>(client, {
-      model: OPUS,
+      model: SONNET,
       system: [SHARED, SCENE_ROLE],
       user: sceneInput(ctx, outline, unit, due, episode, played, t, repair),
       schema: MOMENT_SCHEMA,

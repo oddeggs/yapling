@@ -41,11 +41,11 @@ export const SCENE_RULES = `THE RULES EVERY SCENE KEEPS (a checker reads your pl
 4. Say it or it doesn't exist. The learner hears this; they may not see anything. Nothing they need is only visible: no "look at this", "which one?", "what does the board say?" unless it was said aloud first. The painting is mood, never information.
 5. The cast budget. The companion, plus at most one guest, introduced by name and role the first time.
 6. Talk to the learner. At Visitor and Newcomer nobody talks to anyone but the learner.
-7. The brief. Before the scene the learner reads and hears: where, what is happening, their role, 1–3 tasks, the facts they hold, and 1–2 phrases to try. The brief holds every fact the tasks need.
+7. The brief. Before the scene the learner reads: where, what is happening, their role, 1–3 tasks, and 1–2 phrases to try. Short and plain: the recap at most 16 words, what is happening at most 25. The brief holds every fact the tasks need (times, names, numbers).
 8. Model before you ask. The companion uses each target chunk naturally at least twice before the learner needs it.
 9. Success first. The first thing the learner is asked is something they can surely answer (about themselves, or straight from the brief).
 10. Correct like a friend. Prompt in character only on the 1–2 target forms ("Two coin… or two coins?"); quietly say the rest back correctly; never correct during the episode-4 task; save explanations for the look-back.
-11. Earned praise only. Praise names what the learner just did ("You asked the price and checked it."), never empty praise.
+11. Earned praise only, and rarely. React like a friend, not a teacher: no "You said it clearly" after a turn. At most one praise in the scene, at the end, naming what the learner really did.
 12. Wait, then rescue. Give time. If the learner is stuck: offer a model sentence they can copy, then two short choices. Never answer for them.
 13. End on a consequence: the scene ends when its outcome happens, because of what the learner said.
 14. Voice-friendly situations: phone calls, voice messages, walking and talking, the companion reading something aloud, ordering at a counter.`;
