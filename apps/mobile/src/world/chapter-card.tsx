@@ -46,6 +46,32 @@ export function ChapterCard({ bridge, gloss, onGo }: Props) {
             </Animated.Text>
           ))}
         </View>
+        {bridge.tasks.length > 0 ? (
+          <Animated.View
+            entering={FadeIn.duration(600).delay(350 + bridge.lines.length * 650)}
+            style={styles.part}
+          >
+            <Text style={label}>{t('world.card.tasks')}</Text>
+            {bridge.tasks.map((task, i) => (
+              <Text key={i} style={styles.task}>{`·  ${task}`}</Text>
+            ))}
+          </Animated.View>
+        ) : null}
+        {bridge.phrases.length > 0 ? (
+          <Animated.View
+            entering={FadeIn.duration(600).delay(500 + bridge.lines.length * 650)}
+            style={styles.part}
+          >
+            <Text style={label}>{t('world.card.try')}</Text>
+            <View style={styles.phrases}>
+              {bridge.phrases.map((p, i) => (
+                <Text key={i} style={styles.phrase}>
+                  {p}
+                </Text>
+              ))}
+            </View>
+          </Animated.View>
+        ) : null}
         {gloss && bridge.gloss ? (
           <Animated.Text
             entering={FadeIn.duration(600).delay(350 + bridge.lines.length * 650)}
@@ -88,9 +114,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   body: { flex: 1, justifyContent: 'center', gap: 22, alignSelf: 'stretch' },
-  lines: { gap: 14 },
-  line: { fontFamily: F.serif, fontSize: 25, lineHeight: 33, color: C.bone },
+  lines: { gap: 12 },
+  line: { fontFamily: F.serif, fontSize: 22, lineHeight: 29, color: C.bone },
   gloss: { fontSize: 15, lineHeight: 22, color: C.dim },
+  part: { gap: 8 },
+  task: { fontSize: 16, lineHeight: 22, color: C.bone },
+  phrases: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  phrase: {
+    fontFamily: F.serif,
+    fontSize: 17,
+    color: C.bone,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 14,
+    backgroundColor: C.panel,
+    overflow: 'hidden',
+  },
   where: { color: C.faint, marginTop: 6 },
   go: {
     height: 48,

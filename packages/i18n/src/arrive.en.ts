@@ -68,5 +68,8 @@ export const arriveEn = {
   'arrive.skip': 'Skip',
   'arrive.back': 'Back',
   'arrive.go': 'Let’s go',
+  'arrive.companion.q': 'Who will walk with you?',
+  'arrive.companion.hint': 'Tap to hear them. You can change later.',
+  'arrive.companion.go': 'Walk with {name}',
   'arrive.failed': 'That didn’t go through. Try again',
 } as const satisfies EnCatalogue;

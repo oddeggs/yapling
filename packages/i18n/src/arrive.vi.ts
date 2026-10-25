@@ -67,5 +67,8 @@ export const arriveVi = {
   'arrive.skip': 'Bỏ qua',
   'arrive.back': 'Quay lại',
   'arrive.go': 'Đi thôi',
+  'arrive.companion.q': 'Ai sẽ đi cùng bạn?',
+  'arrive.companion.hint': 'Chạm để nghe giọng. Bạn có thể đổi sau.',
+  'arrive.companion.go': 'Đi cùng {name}',
   'arrive.failed': 'Chưa gửi được. Thử lại nhé',
 } as const satisfies Translation<typeof arriveEn>;

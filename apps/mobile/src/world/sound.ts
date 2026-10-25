@@ -47,6 +47,11 @@ const ASSETS: Readonly<Record<string, () => number>> = {
   'w-rain': () => require('../../assets/sound/w-rain.mp3'),
   'w-wind': () => require('../../assets/sound/w-wind.mp3'),
   'bus-arrive': () => require('../../assets/sound/bus-arrive.mp3'),
+  'v-sol': () => require('../../assets/voice/companion-sol.mp3'),
+  'v-nell': () => require('../../assets/voice/companion-nell.mp3'),
+  'v-mei': () => require('../../assets/voice/companion-mei.mp3'),
+  'v-linh': () => require('../../assets/voice/companion-linh.mp3'),
+  'v-pip': () => require('../../assets/voice/companion-pip.mp3'),
   'bus-leave': () => require('../../assets/sound/bus-leave.mp3'),
 };
 
@@ -72,6 +77,7 @@ export class Sound {
   private playing: Partial<Record<Layer, Playing>> = {};
   private ctxInUse: AudioContext | null = null;
   private on = false;
+  private voiceNode: AudioBufferSourceNode | null = null;
   private place: PlaceId = 'room';
   private weather: Weather = 'clear';
   private busy: Promise<void> = Promise.resolve();
@@ -140,6 +146,23 @@ export class Sound {
       node.connect(gain);
       gain.connect(ctx.destination);
       node.start(ctx.currentTime + 0.02);
+    });
+  }
+
+  /** A companion introducing themselves (arriving): one at a time, over the place's sound. */
+  voice(companion: string): void {
+    const key = `v-${companion}`;
+    const ctx = this.ctxInUse;
+    if (!this.on || !ctx || !(key in ASSETS)) return;
+    this.voiceNode?.stop();
+    this.voiceNode = null;
+    void this.buffer(ctx, key).then((buffer) => {
+      if (!buffer || this.ctxInUse !== ctx) return;
+      const node = ctx.createBufferSource();
+      node.buffer = buffer;
+      node.connect(ctx.destination);
+      node.start(ctx.currentTime + 0.02);
+      this.voiceNode = node;
     });
   }
 

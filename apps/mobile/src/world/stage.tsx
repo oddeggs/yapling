@@ -28,6 +28,8 @@ export type StageMessage =
       hour?: number | null;
       offsetMs?: number;
       cut?: boolean;
+      /** Who stands where the place's resident is painted (the learner's companion). */
+      with?: string | null;
     }
   | {
       t: 'talk';
@@ -52,6 +54,8 @@ export interface PaintingSpec {
   readonly hour: number;
   readonly wx: string;
   readonly asleep?: boolean;
+  /** Who stands where the place's resident is painted. */
+  readonly with?: string;
 }
 
 export interface StageHandle {

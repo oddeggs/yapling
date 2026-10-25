@@ -5,7 +5,9 @@
   const cv = $('cv'), snap = $('snap'), SUPER = 1.4, ZOOM = 0.42;
   const post = (m) => { try { if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify(m)); } catch (e) { /* no host */ } };
   const byId = Object.fromEntries(PLACES.map((p) => [p.id, p]));
-  const S = { place: 'room', v: 0, wx: 'clear', hour: null, offsetMs: 0, phase: 'idle', who: null, awake: false };
+  const S = { place: 'room', v: 0, wx: 'clear', hour: null, offsetMs: 0, phase: 'idle', who: null, awake: false, with: null };
+  // the learner's companion stands where the place's own resident is painted
+  const cast = (res) => (res.cast || []).map((c, i) => (S.with && i === 0 ? { ...c, who: S.with, mode: c.mode === 'sleep' ? 'idle' : c.mode } : c));
   const crits = {};
   const critFor = (id) => crits[id] || (crits[id] = new Critter(CAST.find((c) => c.id === id)));
   const air = new Air(); let airKey = '';
@@ -82,7 +84,7 @@
       g.drawImage(bg, 0, 0, w, h);
       const res = pl.front(g, w, h, L, now, S.v) || {};
       anchor = null;
-      for (const c of res.cast || []) {
+      for (const c of cast(res)) {
         const cr = critFor(c.who); cr.mode = modeFor(c); stepCrit(cr, dt, now);
         if (!anchor || c.who === S.who) anchor = c;
         const s = c.s * (cr.s.scale || 1); g.save(); if (c.clip) { g.beginPath(); g.rect(...c.clip); g.clip(); }
@@ -113,6 +115,7 @@
     if (m.wx !== undefined) S.wx = m.wx;
     if (m.hour !== undefined) S.hour = m.hour;
     if (m.offsetMs !== undefined) S.offsetMs = m.offsetMs;
+    if (m.with !== undefined) S.with = m.with || null;
     if (changed) { anchor = null; S.awake = false; lastTitle = ''; }
     bgKey = '';
   }
@@ -207,7 +210,7 @@
     keepPlace(pl, () => {
       pl.paint(g, w, h, L, sp.v || 0);
       const res = pl.front(g, w, h, L, 20000, sp.v || 0) || {};
-      for (const cc of res.cast || []) {
+      for (const cc of (res.cast || []).map((c, i) => (sp.with && i === 0 ? { ...c, who: sp.with } : c))) {
         const cr = new Critter(CAST.find((x) => x.id === cc.who)); cr.mode = cc.mode === 'sleep' && !sp.asleep ? 'idle' : cc.mode || 'idle';
         cr.nextIdle = cr.nextBlink = 1e12; for (let i = 0; i < 90; i++) cr.step(1 / 60, 1000 + i * 16);
         const s = cc.s * (cr.s.scale || 1); g.save(); if (cc.clip) { g.beginPath(); g.rect(...cc.clip); g.clip(); }

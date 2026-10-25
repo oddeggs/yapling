@@ -84,10 +84,12 @@ export function SceneScreen() {
   }, [world, talk]);
 
   const { weather, t: local } = placeWeather(w.place, now);
+  // The companion stands in every place (a visit shows the place's own neighbour).
+  const standing = w.moment?.speaker ?? w.companion;
   useEffect(() => {
-    a.stage?.send({ t: 'scene', place: w.place, v: w.variant, wx: weather });
+    a.stage?.send({ t: 'scene', place: w.place, v: w.variant, wx: weather, with: standing });
     sound.setPlace(w.place, weather);
-  }, [a, sound, w.place, w.variant, weather]);
+  }, [a, sound, w.place, w.variant, weather, standing]);
   useEffect(() => sound.setOn(w.settings.sound && active), [sound, w.settings.sound, active]);
 
   // The 45 keeps its timetable: at :00, :20 and :40 it pulls in and leaves again.
@@ -154,7 +156,11 @@ export function SceneScreen() {
     if (!p) return;
     setKeptImage(null);
     void a.stage
-      ?.render({ place: p.place, v: p.variant, hour: p.hour, wx: p.weather }, 260, 325)
+      ?.render(
+        { place: p.place, v: p.variant, hour: p.hour, wx: p.weather, with: p.speaker },
+        260,
+        325,
+      )
       .then(setKeptImage);
   }, [tv.painting?.id, a]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -250,7 +256,14 @@ export function SceneScreen() {
       <Stage
         ref={setStage}
         onReady={() =>
-          a.stage?.send({ t: 'scene', place: w.place, v: w.variant, wx: weather, cut: true })
+          a.stage?.send({
+            t: 'scene',
+            place: w.place,
+            v: w.variant,
+            wx: weather,
+            with: standing,
+            cut: true,
+          })
         }
       />
       {engine && <CaptionBridge key={engine.state.get().sessionId ?? 'call'} engine={engine} />}
@@ -340,10 +353,13 @@ export function SceneScreen() {
       )}
       {!w.arrived && w.ready && (
         <ArriveScreen
+          companions={w.companions}
           onDone={async (answers) => {
             if (!w.settings.sound) world.setSetting('sound', true);
             return world.arrive(answers);
           }}
+          onHear={(id) => sound.voice(id)}
+          onChoose={(id) => world.chooseCompanion(id)}
         />
       )}
       {tv.safety === 'crisis' && !safetyClosed && (

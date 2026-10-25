@@ -124,7 +124,7 @@ export function KeptCard(p: Props) {
           <Text style={[label, styles.meta]}>
             {`${place} · ${clockLabel(pt.hour)} · ${t('world.kept', { date: shortDate(pt.keptAt, language) })}`}
           </Text>
-          {(did || pt.learned) && (
+          {(did || pt.learned || pt.fix) && (
             <View style={styles.notes}>
               {did ? (
                 <View style={styles.note}>
@@ -134,7 +134,15 @@ export function KeptCard(p: Props) {
                   </Text>
                 </View>
               ) : null}
-              {pt.learned ? (
+              {pt.fix ? (
+                <View style={styles.note}>
+                  <Text style={styles.noteK}>{t('world.kept.fix')}</Text>
+                  <Text style={styles.noteV}>
+                    <Text style={styles.said}>{pt.fix.said}</Text>
+                    {`  →  ${pt.fix.better}`}
+                  </Text>
+                </View>
+              ) : pt.learned ? (
                 <View style={styles.note}>
                   <Text style={styles.noteK}>
                     {t('world.kept.learned', { name: p.speakerName })}
@@ -159,6 +167,7 @@ export function KeptCard(p: Props) {
 }
 
 const styles = StyleSheet.create({
+  said: { textDecorationLine: 'line-through', opacity: 0.6 },
   dark: { backgroundColor: 'rgba(7,6,9,0.78)' },
   center: {
     flex: 1,

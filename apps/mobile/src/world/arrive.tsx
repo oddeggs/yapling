@@ -4,6 +4,7 @@ import {
   ARRIVAL_INTERESTS,
   ARRIVAL_WHY,
   type Arrival,
+  type CompanionOption,
 } from '@yapling/contracts';
 import { translator, type StringKey } from '@yapling/i18n';
 import { useState, type ReactNode } from 'react';
@@ -42,19 +43,37 @@ type Draft = {
   level: number | null;
 };
 
-const STEPS = ['welcome', 'name', 'why', 'doing', 'love', 'hard', 'level', 'last'] as const;
+const STEPS = [
+  'welcome',
+  'name',
+  'why',
+  'doing',
+  'love',
+  'hard',
+  'level',
+  'last',
+  'companion',
+] as const;
 type Step = (typeof STEPS)[number];
 
 const en = translator('en');
 
 interface Props {
-  readonly onDone: (answers: Answers) => Promise<boolean>;
+  /** Sends the answers; resolves with the two companions to choose from, or null on failure. */
+  readonly onDone: (answers: Answers) => Promise<readonly CompanionOption[] | null>;
+  readonly onChoose: (companion: CompanionOption['id']) => Promise<boolean>;
+  /** Plays a companion's recorded introduction. */
+  readonly onHear: (companion: CompanionOption['id']) => void;
+  /** Answers already sent (the app was closed before choosing): start at the choice. */
+  readonly companions: readonly CompanionOption[];
 }
 
-export function ArriveScreen({ onDone }: Props) {
+export function ArriveScreen({ onDone, onChoose, onHear, companions }: Props) {
   const { t, language } = useLocale();
   const insets = useSafeAreaInsets();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(companions.length ? STEPS.indexOf('companion') : 0);
+  const [options, setOptions] = useState<readonly CompanionOption[]>(companions);
+  const [picked, setPicked] = useState<CompanionOption['id'] | null>(companions[0]?.id ?? null);
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
   const [d, setD] = useState<Draft>({
@@ -80,6 +99,7 @@ export function ArriveScreen({ onDone }: Props) {
     hard: true,
     level: d.level !== null,
     last: true,
+    companion: picked !== null,
   };
 
   const go = (by: number) => {
@@ -102,7 +122,23 @@ export function ArriveScreen({ onDone }: Props) {
       level: d.level,
       adult: true,
     });
+    setSending(false);
     if (!ok) {
+      setFailed(true);
+      return;
+    }
+    setOptions(ok);
+    setPicked(ok[0]?.id ?? null);
+    setStep(STEPS.indexOf('companion'));
+    if (ok[0]) onHear(ok[0].id);
+  };
+
+  const choose = async () => {
+    if (sending || picked === null) return;
+    setSending(true);
+    setFailed(false);
+    haptics.play('success');
+    if (!(await onChoose(picked))) {
       setSending(false);
       setFailed(true);
     }
@@ -297,6 +333,47 @@ export function ArriveScreen({ onDone }: Props) {
         />
       );
       break;
+    case 'companion':
+      body = (
+        <>
+          <Question
+            step={null}
+            title={en('arrive.companion.q')}
+            own={own('arrive.companion.q')}
+            hint={t('arrive.companion.hint')}
+          />
+          <View style={styles.levels}>
+            {options.map((o) => (
+              <Pressable
+                key={o.id}
+                onPress={() => {
+                  haptics.play('selection');
+                  setPicked(o.id);
+                  onHear(o.id);
+                }}
+                accessibilityRole="radio"
+                accessibilityState={{ checked: picked === o.id }}
+                accessibilityLabel={`${o.name}, ${o.who}`}
+                style={[styles.mate, picked === o.id && styles.mateOn]}
+              >
+                <Text style={[styles.mateName, picked === o.id && styles.chipTextOn]}>
+                  {o.name}
+                </Text>
+                <Text style={[styles.mateWho, picked === o.id && styles.chipSubOn]}>{o.who}</Text>
+                <Text style={[styles.mateLine, picked === o.id && styles.chipTextOn]}>
+                  “{o.line}”
+                </Text>
+                {o.gloss ? (
+                  <Text style={[styles.chipSub, picked === o.id && styles.chipSubOn]}>
+                    {o.gloss}
+                  </Text>
+                ) : null}
+              </Pressable>
+            ))}
+          </View>
+        </>
+      );
+      break;
   }
 
   const nextLabel =
@@ -304,11 +381,15 @@ export function ArriveScreen({ onDone }: Props) {
       ? t('arrive.welcome.go')
       : at === 'last'
         ? t('arrive.last.adult')
-        : at === 'love' || at === 'hard'
-          ? (at === 'love' ? d.interests : d.hard).length
-            ? t('arrive.next')
-            : t('arrive.skip')
-          : t('arrive.next');
+        : at === 'companion'
+          ? t('arrive.companion.go', {
+              name: options.find((o) => o.id === picked)?.name ?? '',
+            })
+          : at === 'love' || at === 'hard'
+            ? (at === 'love' ? d.interests : d.hard).length
+              ? t('arrive.next')
+              : t('arrive.skip')
+            : t('arrive.next');
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
@@ -337,7 +418,7 @@ export function ArriveScreen({ onDone }: Props) {
           </Animated.View>
         </ScrollView>
         <View style={[styles.bar, { bottom: insets.bottom + 24 }]}>
-          {step > 0 && !sending ? (
+          {step > 0 && at !== 'companion' && !sending ? (
             <Pressable
               onPress={() => go(-1)}
               hitSlop={12}
@@ -351,7 +432,9 @@ export function ArriveScreen({ onDone }: Props) {
           )}
           <Pressable
             disabled={!ready[at] || sending}
-            onPress={() => (at === 'last' ? void finish() : go(1))}
+            onPress={() =>
+              at === 'last' ? void finish() : at === 'companion' ? void choose() : go(1)
+            }
             accessibilityRole="button"
             accessibilityLabel={nextLabel}
           >
@@ -475,6 +558,18 @@ const styles = StyleSheet.create({
     borderColor: C.hair,
   },
   chipWide: { borderRadius: 16, paddingVertical: 12 },
+  mate: {
+    padding: 16,
+    borderRadius: 20,
+    gap: 4,
+    backgroundColor: C.panel,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: C.hair,
+  },
+  mateOn: { backgroundColor: C.bone, borderColor: C.bone },
+  mateName: { fontFamily: F.serif, fontSize: 24, color: C.bone },
+  mateWho: { fontSize: 13, color: C.faint },
+  mateLine: { fontFamily: F.serif, fontSize: 16, lineHeight: 22, color: C.bone, marginTop: 6 },
   chipOn: { backgroundColor: C.bone, borderColor: C.bone },
   chipPressed: { opacity: 0.8 },
   chipText: { fontSize: 15, color: C.bone, fontWeight: '500' },

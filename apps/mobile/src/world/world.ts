@@ -1,4 +1,12 @@
-import type { Arrival, MemoryItem, MinutesSummary, MomentCard, Painting } from '@yapling/contracts';
+import type {
+  Arrival,
+  CharacterId,
+  CompanionOption,
+  MemoryItem,
+  MinutesSummary,
+  MomentCard,
+  Painting,
+} from '@yapling/contracts';
 import { isPlaceId, type PlaceId } from '@yapling/scene';
 import { randomUUID } from 'expo-crypto';
 
@@ -38,6 +46,10 @@ export interface WorldState {
   readonly name: string | null;
   /** The learner has told the town who they are; false shows the arrival first. */
   readonly arrived: boolean;
+  /** The learner's companion, painted wherever they go. */
+  readonly companion: CharacterId | null;
+  /** Arrived but no companion yet: the two to choose from. */
+  readonly companions: readonly CompanionOption[];
   /** The place painted now, and its variant. */
   readonly place: PlaceId;
   readonly variant: number;
@@ -55,6 +67,8 @@ const INITIAL: WorldState = {
   planning: false,
   name: null,
   arrived: true,
+  companion: null,
+  companions: [],
   place: 'room',
   variant: 0,
   minutes: null,
@@ -139,6 +153,8 @@ export class World {
         planning: r.planning,
         name: r.name,
         arrived: r.arrived,
+        companion: r.companion,
+        companions: r.companions,
         offline: false,
       });
       if (r.moment) this.paint(r.moment);
@@ -149,15 +165,29 @@ export class World {
     }
   }
 
-  /** The learner's arrival: who they are, then the first conversation with Pip. */
-  async arrive(arrival: Omit<Arrival, 'firstLanguage' | 'country' | 'timezone'>): Promise<boolean> {
+  /** The learner's arrival: who they are. Answers with the two companions that fit them. */
+  async arrive(
+    arrival: Omit<Arrival, 'firstLanguage' | 'country' | 'timezone'>,
+  ): Promise<readonly CompanionOption[] | null> {
     try {
-      await this.api.arrive({ ...arrival, ...momentRequest() });
+      const r = await this.api.arrive({ ...arrival, ...momentRequest() });
+      this.patch({ name: arrival.name, companions: r.companions });
+      return r.companions;
+    } catch (error) {
+      if (isDataError(error, 'network')) this.patch({ offline: true });
+      return null;
+    }
+  }
+
+  /** The companion they chose: then the first conversation, off the 45. */
+  async chooseCompanion(companion: CharacterId): Promise<boolean> {
+    try {
+      await this.api.chooseCompanion({ companion });
     } catch (error) {
       if (isDataError(error, 'network')) this.patch({ offline: true });
       return false;
     }
-    this.patch({ arrived: true, name: arrival.name });
+    this.patch({ arrived: true, companion, companions: [] });
     await this.next();
     return true;
   }
