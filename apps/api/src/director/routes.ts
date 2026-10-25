@@ -280,7 +280,8 @@ async function next(c: Ctx, m: Moment, learner: Learner, now: number) {
     bridge = {
       card: plan.bridge_card.slice(0, 80),
       chapter: story?.outline ? chapterLine(story.outline, m.sceneNo) : null,
-      lines: plan.card.map((l) => l.slice(0, 200)).slice(0, 4),
+      // Plans written before chapter cards have none.
+      lines: (plan.card ?? []).map((l) => l.slice(0, 200)).slice(0, 4),
       gloss: plan.card_gloss ? plan.card_gloss.slice(0, 800) : null,
     };
   }
