@@ -50,6 +50,8 @@ export interface TalkView {
   readonly failed: boolean;
   /** The last turn's note: too short a press, or nothing heard. */
   readonly notice: CallNotice | null;
+  /** The learner's finger is on the talk button right now. */
+  readonly held: boolean;
 }
 
 const IDLE: TalkView = {
@@ -61,6 +63,7 @@ const IDLE: TalkView = {
   safety: null,
   failed: false,
   notice: null,
+  held: false,
 };
 
 /**
@@ -287,6 +290,7 @@ export class Talk {
     ) {
       this.send({ t: 'you', text: s.learnerText, final: s.learnerFinal });
     }
+    if (s.talkHeld !== before?.talkHeld) this.patch({ held: s.talkHeld });
     if (s.safety !== before?.safety) this.patch({ safety: s.safety });
     if (s.notice !== before?.notice) this.patch({ notice: s.notice });
     if (s.error === 'minutes_exhausted' && before?.error !== 'minutes_exhausted') {

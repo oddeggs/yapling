@@ -226,8 +226,8 @@ export function SceneScreen() {
   }
 
   const engine = talk.engine;
-  const talkLook: TalkLook =
-    tv.phase === 'listening' ? 'held' : tv.phase === 'your_turn' ? 'ready' : 'waiting';
+  // Held only while the finger is down: once it lifts, the button waits for the reply.
+  const talkLook: TalkLook = tv.held ? 'held' : tv.phase === 'your_turn' ? 'ready' : 'waiting';
   const talkLabel =
     tv.notice === 'hold_longer'
       ? t('world.hint.holdLonger')
