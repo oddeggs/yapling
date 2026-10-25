@@ -14,6 +14,7 @@ import type { AudioContext } from 'react-native-audio-api';
 
 import type { VoiceSessionStatus } from '../../modules/voice-session';
 import { micPermissionStatus, type SessionEvent } from './audio-session';
+import { AudioReviver } from './audio-revive';
 import { CallAudio } from './call-audio';
 import {
   CallSocket,
@@ -81,8 +82,8 @@ const DIAG_EVERY_MS = 15_000;
 
 /** A mic that delivers nothing this long (with the permission granted) is started again. */
 const MIC_WATCH_MS = 3_000;
-/** Restarts tried in one call before the mic is left as it is. */
-const MIC_RESTARTS_MAX = 5;
+/** Mic restarts tried before the whole audio is rebuilt. */
+const MIC_RESTARTS_MAX = 3;
 
 export class VoiceEngine {
   readonly state: Store<CallState>;
@@ -121,6 +122,20 @@ export class VoiceEngine {
   private micWatch: ReturnType<typeof setInterval> | null = null;
   private micFramesSeen = 0;
   private micRestarts = 0;
+  /** Told when the audio was rebuilt, so anything playing through the old graph moves over. */
+  onAudioRebuilt: ((context: AudioContext | null) => void) | null = null;
+  private readonly reviver = new AudioReviver({
+    stop: () => this.stopAudio(),
+    start: () => this.startAudio(),
+    disposed: () => this.disposed,
+    done: (ok, detail) => {
+      if (ok) {
+        this.micRestarts = 0;
+        this.onAudioRebuilt?.(this.audio.context);
+      }
+      this.diag(ok ? 'audio_rebuilt' : `audio_rebuild_failed: ${detail}`);
+    },
+  });
 
   constructor(private readonly options: VoiceEngineOptions) {
     this.state = new Store(initialCallState(options.hello.turnMode));
@@ -278,6 +293,9 @@ export class VoiceEngine {
   /** Hold-to-talk: the mic button went down. */
   pressTalk(): void {
     if (this.turns.mode !== 'hold_to_talk') return;
+    // A press on a dead mic: the audio is rebuilt now, so this turn can still be heard.
+    if (!this.simulated.running && !this.audioAlive())
+      void this.rebuildAudio('press on a dead mic');
     this.turns.press();
     this.diag('press');
     this.replies.on({ type: 'settled' });
@@ -453,12 +471,28 @@ export class VoiceEngine {
     const heard = this.micFrames !== this.micFramesSeen;
     this.micFramesSeen = this.micFrames;
     if (heard || this.disposed || this.simulated.running || this.state.get().interrupted) return;
-    if (this.micRestarts >= MIC_RESTARTS_MAX) return;
     if ((await micPermissionStatus()) !== 'granted') return;
+    if (this.micRestarts >= MIC_RESTARTS_MAX || this.audio.context?.state === 'suspended') {
+      await this.rebuildAudio('the mic stayed silent');
+      return;
+    }
     this.micRestarts += 1;
     this.log(`mic heard nothing for ${MIC_WATCH_MS} ms: starting it again`);
     const ok = await this.audio.restartMic();
     this.diag(ok ? 'mic_restarted' : 'mic_restart_failed');
+  }
+
+  /** The graph runs and the mic delivered in the last watch window. */
+  private audioAlive(): boolean {
+    const ctx = this.audio.context;
+    return (
+      ctx?.state === 'running' && this.audio.micRunning && this.micFrames !== this.micFramesSeen
+    );
+  }
+
+  private rebuildAudio(why: string): Promise<void> {
+    this.log(`audio rebuilt: ${why}`);
+    return this.reviver.revive(why);
   }
 
   /** Tells the call how the phone's audio is doing: the mic, the engine, the voice's playout. */
@@ -496,6 +530,7 @@ export class VoiceEngine {
         underruns: stats?.underruns ?? 0,
         lateDrops: stats?.lateDrops ?? 0,
         micRestarts: this.micRestarts,
+        rebuilds: this.reviver.count,
         phase: this.state.get().phase,
         held: this.turns.isHeld,
         speaking: this.vad.speaking,

@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it, jest } from '@jest/globals';
 
 import { LatencyMeter, MIN_HOLD_MS, TurnTaker } from '../../src/voice/turns';
 
@@ -71,6 +71,23 @@ describe('turn-taking', () => {
     t.release(true);
     for (let i = 0; i < 10; i++) t.frame(frame(i), true, null);
     expect(endTurns()).toBe(1);
+  });
+
+  it('ends the turn on the clock when the mic stops delivering during the tail', () => {
+    jest.useFakeTimers();
+    try {
+      const { t, endTurns } = setup('hold_to_talk');
+      t.press();
+      t.frame(frame(1), true, null);
+      t.release(true);
+      expect(endTurns()).toBe(0);
+      jest.advanceTimersByTime(400);
+      expect(endTurns()).toBe(1);
+      jest.advanceTimersByTime(1_000);
+      expect(endTurns()).toBe(1);
+    } finally {
+      jest.useRealTimers();
+    }
   });
 
   it('drops held audio on reset', () => {

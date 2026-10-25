@@ -8,12 +8,16 @@ import type { VadEvent } from './vad';
  * Turn-taking on the phone. Hands-free streams speech only, through the gate in `hands-free.ts`,
  * and the call decides when the learner is done (a tap on the mic says so at once). Hold-to-talk streams only while the mic button is held, starting with a short
  * pre-roll (so the first syllable isn't lost to a late press) and, if the learner is still
- * speaking at release, a tail until they stop (never cut off mid-word); then `end_turn`.
+ * speaking at release, a tail until they stop (never cut off mid-word); then `end_turn`. The tail
+ * also ends on the clock, so a mic that stops delivering frames can never hold the turn open.
  *
  * A press shorter than `MIN_HOLD_MS` is a tap, not a turn: its audio is held back on the phone
  * until the press is long enough, and a tap's is dropped unsent (nothing reaches the call, no try
  * counts), so the learner can be shown how to hold.
  */
+
+/** How much later than the tail's own length the clock ends it, when frames stop coming. */
+const TAIL_GRACE_MS = 250;
 
 /** The shortest press that is a turn. */
 export const MIN_HOLD_MS = 2_000;
@@ -55,6 +59,9 @@ export class TurnTaker {
   private early: Int16Array[] | null = null;
   /** Frames left in the tail after a release; -1 when not in a tail. */
   private tailLeft = -1;
+  private readonly maxTailMs: number;
+  /** Ends the tail on the clock when frames stop coming. */
+  private tailTimer: ReturnType<typeof setTimeout> | null = null;
   /** Hands-free listening. */
   readonly gate: HandsFreeGate;
 
@@ -65,7 +72,8 @@ export class TurnTaker {
   ) {
     this.chunker = new MicChunker(options.chunkMs ?? DEFAULT_MIC_CHUNK_MS);
     this.prerollFrames = Math.round((options.prerollMs ?? 200) / MIC_FRAME_MS);
-    this.maxTailFrames = Math.round((options.maxTailMs ?? 600) / MIC_FRAME_MS);
+    this.maxTailMs = options.maxTailMs ?? 600;
+    this.maxTailFrames = Math.round(this.maxTailMs / MIC_FRAME_MS);
     this.minHoldMs = options.minHoldMs ?? MIN_HOLD_MS;
     this.now = options.now ?? (() => performance.now());
     this.gate = new HandsFreeGate(
@@ -143,6 +151,10 @@ export class TurnTaker {
     }
     if (speaking) {
       this.tailLeft = this.maxTailFrames;
+      this.tailTimer = setTimeout(() => {
+        this.tailTimer = null;
+        if (this.tailLeft >= 0) this.finishTurn();
+      }, this.maxTailMs + TAIL_GRACE_MS);
       return 'turn';
     }
     this.finishTurn();
@@ -167,6 +179,7 @@ export class TurnTaker {
     this.early = null;
     this.held = false;
     this.tailLeft = -1;
+    this.clearTailTimer();
   }
 
   setMode(mode: TurnMode): void {
@@ -187,7 +200,13 @@ export class TurnTaker {
     if (chunk) this.out.sendMic(chunk);
   }
 
+  private clearTailTimer(): void {
+    if (this.tailTimer) clearTimeout(this.tailTimer);
+    this.tailTimer = null;
+  }
+
   private finishTurn(): void {
+    this.clearTailTimer();
     this.tailLeft = -1;
     const rest = this.chunker.flush();
     if (rest) this.out.sendMic(rest);
