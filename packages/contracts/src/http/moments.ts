@@ -44,6 +44,13 @@ export const MomentBridge = z.object({
   card: z.string().min(1).max(80),
   /** The story and how far into it: "The Crate With No Name · 2 of 5". */
   chapter: z.string().max(80).nullable(),
+  /**
+   * The chapter card before the scene, shown on black: two or three short, plain sentences (what
+   * happened, where they are going, why). Empty for none.
+   */
+  lines: z.array(z.string().max(200)).max(4).default([]),
+  /** The card in the learner's own language, or null. */
+  gloss: z.string().max(800).nullable().default(null),
 });
 export type MomentBridge = z.infer<typeof MomentBridge>;
 

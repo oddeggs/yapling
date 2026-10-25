@@ -185,6 +185,8 @@ export const STORY_SCHEMA = {
 
 /** What the learner's last scene changed, written into the next one before it plays. */
 export const FollowOn = z.object({
+  card: z.array(clip(200)).transform((a) => a.slice(0, 4)),
+  card_gloss: clip(800),
   bridge_card: clip(80),
   bridge_line: clip(300),
   recap_line: clip(300),
@@ -200,6 +202,8 @@ export const FOLLOW_SCHEMA = {
   additionalProperties: false,
   required: [...Object.keys(FollowOn.shape)],
   properties: {
+    card: { type: 'array', items: { type: 'string' } },
+    card_gloss: { type: 'string' },
     bridge_card: { type: 'string' },
     bridge_line: { type: 'string' },
     recap_line: { type: 'string' },

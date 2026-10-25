@@ -18,7 +18,14 @@ import { firstMoment } from '../src/director/fixed';
 import { judgeMoment, type JudgedLine } from '../src/director/judge';
 import { SONNET } from '../src/director/llm';
 import type { MomentPlan } from '../src/director/moment';
-import { followOn, planScene, stageFor, writeStory, type StoryContext } from '../src/director/plan';
+import {
+  followOn,
+  metNeighbours,
+  planScene,
+  stageFor,
+  writeStory,
+  type StoryContext,
+} from '../src/director/plan';
 import type { StoryOutline } from '../src/director/story';
 import type { Learner, LearnerModel, Painting } from '../src/director/store';
 
@@ -167,6 +174,7 @@ async function playScene(
         scenes: story.scenes.length,
         before: paintings.slice(-4).flatMap((p) => (p.record ? [p.record.summary] : [])),
         about: arrivalText(learner()),
+        met: metNeighbours([...paintings].reverse()),
       }
     : null;
   const system = actorSystem(plan, ml, 15, actorStory);
@@ -178,6 +186,8 @@ async function playScene(
   out(
     `\n── "${plan.title_open}" · ${PLACES[plan.place].name} with ${CAST[speaker].name} · ${stage}`,
   );
+  if (plan.card.length) out(`  ▌CARD: ${plan.card.join(' ')}`);
+  if (plan.card_gloss) out(`  ▌GLOSS: ${plan.card_gloss}`);
   if (plan.bridge_card) out(`  [${plan.bridge_card}]`);
   if (way && speaker !== 'pip') say('pip', way);
   say(speaker, plan.opening_line);

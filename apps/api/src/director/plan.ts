@@ -10,6 +10,8 @@ import {
 } from '@yapling/scene';
 
 import { ARRIVAL_STAGE, arrivalText, SCENE_CRAFT, STORY_CRAFT } from './craft';
+import { CAST } from '@yapling/story';
+
 import { structured, words, OPUS, SONNET } from './llm';
 import { MOMENT_SCHEMA, MomentPlan, speakerOf } from './moment';
 import {
@@ -21,7 +23,7 @@ import {
   type StoryOutline,
 } from './story';
 import type { Learner, Painting } from './store';
-import { BIBLE, CULTURE_RULES, LEVEL_GUIDE, TURN_WORDS, type Stage } from './world';
+import { BIBLE, CULTURE_RULES, LANGUAGE_NAMES, LEVEL_GUIDE, TURN_WORDS, type Stage } from './world';
 
 /*
  * The director: writes the learner's next story (an outline and its first scene), then each next
@@ -60,7 +62,7 @@ ${PLAN_RULES}
 
 Follow the outline's scene, but what really happened wins: build on what the learner actually said and chose, and keep the plants and the twist on track. Return only JSON in the given schema.`;
 
-export const FOLLOW_SYSTEM = `You keep a story continuous in Yapling, an English speaking app. The learner just played a scene; the next scene was written before it happened. Rewrite only the next scene's way in, so it follows on from what REALLY happened: the bridge caption, Pip's line on the way, Pip's recap for a learner coming back later, the situation as we arrive, and the neighbour's opening line (plus its gloss). Keep the next scene's story, goals and first question; change only what what happened makes untrue or flat. Use one specific thing the learner said or did. Keep the same length limits as the originals. Pip and the neighbour speak TO the learner ("you said…"), never about them by name in the third person. Only Bea says "love"; Pip says "I", never "Pip"; no stage directions. Return only JSON in the given schema.
+export const FOLLOW_SYSTEM = `You keep a story continuous in Yapling, an English speaking app. The learner just played a scene; the next scene was written before it happened. Rewrite only the next scene's way in, so it follows on from what REALLY happened: the chapter card (two or three short, plain sentences shown on black: what just happened, where they are going and why, anyone new named with who they are), its gloss in the learner's language, the bridge caption, Pip's line on the way, Pip's recap for a learner coming back later, the situation as we arrive, and the neighbour's opening line (plus its gloss). Never drop a name the learner cannot know: they know only the neighbours listed as met. Keep the next scene's story, goals and first question; change only what what happened makes untrue or flat. Use one specific thing the learner said or did. Keep the same length limits as the originals. Pip and the neighbour speak TO the learner ("you said…"), never about them by name in the third person. Only Bea says "love"; Pip says "I", never "Pip"; no stage directions. Return only JSON in the given schema.
 
 ${BIBLE}`;
 
@@ -132,9 +134,19 @@ function townInput(t: LocalTime, seed: string): string[] {
   ];
 }
 
+/** The neighbours the learner has talked with (Pip always, from the first conversation). */
+export function metNeighbours(paintings: readonly Painting[]): string[] {
+  const met = new Set(['pip', ...paintings.map((p) => p.speaker)]);
+  return [...met].flatMap((id) => (id in CAST ? [CAST[id as keyof typeof CAST].name] : []));
+}
+
+const MET_RULE =
+  'Everyone else is a stranger to the learner. A stranger who speaks says who they are in their opening line (their name and what they do). A stranger who is only mentioned is explained in a few words the first time, on the card or in the line ("Hank, the raccoon who runs the shipping crew"). Never drop a name the learner cannot know.';
+
 function learnerInput(ctx: StoryContext, stage: Stage): string[] {
   const { learner } = ctx;
   return [
+    `NEIGHBOURS THE LEARNER HAS MET: ${metNeighbours(ctx.paintings).join(', ')}. ${MET_RULE}`,
     `THE LEARNER, AS THEY INTRODUCED THEMSELVES:\n${arrivalText(learner)}`,
     `AIM AT STAGE: ${stage}. They have played ${ctx.played} conversation(s).`,
     `WHAT THE CONVERSATIONS SHOWED (learner model):\n${learner.model ? str(learner.model) : '(no conversation judged yet)'}`,
@@ -219,9 +231,20 @@ export function sceneInput(
  * What a plan must not break: an open place, a playable count of beats. Soft problems (a long
  * line) are fixed only if a repair is asked for anyway.
  */
-export function checkPlan(plan: MomentPlan, t: LocalTime): { hard: string[]; soft: string[] } {
+export function checkPlan(
+  plan: MomentPlan,
+  t: LocalTime,
+  met: readonly string[] = [],
+): { hard: string[]; soft: string[] } {
   const hard: string[] = [];
   const soft: string[] = [];
+  const speakerName = CAST[speakerOf(plan)].name;
+  if (met.length > 0 && !met.includes(speakerName) && !plan.opening_line.includes(speakerName)) {
+    hard.push(
+      `The learner has never met ${speakerName}: the opening line must say who they are ("I'm ${speakerName}, I …").`,
+    );
+  }
+  if (plan.card.length === 0) soft.push('Write the chapter card: two or three plain sentences.');
   if (!residentIn(plan.place, plan.variant, t.hour)) {
     hard.push(
       `${plan.place} variant ${plan.variant} has nobody in at ${clockLabel(t.hour)}; choose a place open now.`,
@@ -262,6 +285,8 @@ async function writeChecked<T>(
     schema: Record<string, unknown>;
     input: (repair?: string) => string;
     planOf: (value: T) => MomentPlan;
+    /** The neighbours the learner has met, by name. */
+    met: readonly string[];
   },
   parse: (json: unknown) => { success: true; data: T } | { success: false; error: Error },
   t: LocalTime,
@@ -285,7 +310,7 @@ async function writeChecked<T>(
       continue;
     }
     const plan = call.planOf(parsed.data);
-    const checked = checkPlan(plan, t);
+    const checked = checkPlan(plan, t, call.met);
     const soft = checked.soft;
     // A rerun of a recent story is sent back once; after that it is played.
     const hard = [...checked.hard, ...(attempt === 0 ? extra(parsed.data) : [])];
@@ -361,6 +386,7 @@ export async function planScene(
       schema: MOMENT_SCHEMA,
       input: (repair) => sceneInput(ctx, outline, sceneNo, played, t, repair),
       planOf: (plan) => plan,
+      met: metNeighbours(ctx.paintings),
     },
     (json) => {
       const r = MomentPlan.safeParse(json);
@@ -386,6 +412,8 @@ export async function followOn(
     readonly lines: readonly SpokenLine[];
     readonly next: MomentPlan;
     readonly learnerName: string | null;
+    readonly met: readonly string[];
+    readonly firstLanguage: string;
   },
 ): Promise<{ plan: MomentPlan; costUsd: number } | null> {
   const speaker = PLACES[input.last.place].resident;
@@ -402,12 +430,14 @@ export async function followOn(
     schema: FOLLOW_SCHEMA,
     user: [
       `THE STORY: "${input.outline.title}": ${input.outline.logline}`,
-      `THE LEARNER: ${input.learnerName ?? 'name not known'}; stage ${next.stage_aimed}.`,
+      `THE LEARNER: ${input.learnerName ?? 'name not known'}; stage ${next.stage_aimed}; first language ${LANGUAGE_NAMES[input.firstLanguage] ?? input.firstLanguage}. Neighbours they have met: ${input.met.join(', ')}.`,
       `THE SCENE JUST PLAYED: "${input.last.title_open}" at ${input.last.place}. It was meant to end on: ${input.last.ending}`,
       `WHAT WAS REALLY SAID (speech recognition; the end of the scene):\n${transcript || '(nothing: the learner left at once)'}`,
       `THE NEXT SCENE'S WAY IN, TO REWRITE:\n${str({
         place: next.place,
         neighbour: speakerOf(next),
+        card: next.card,
+        card_gloss: next.card_gloss,
         bridge_card: next.bridge_card,
         bridge_line: next.bridge_line,
         recap_line: next.recap_line,

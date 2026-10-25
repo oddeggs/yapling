@@ -8,7 +8,7 @@ import type { TranscriptFile } from '../call/transcript';
 import type { Bindings } from '../env';
 import { judgeMoment, type JudgedLine } from './judge';
 import type { MomentPlan } from './moment';
-import { followOn, planScene, writeStory, type StoryContext } from './plan';
+import { followOn, metNeighbours, planScene, writeStory, type StoryContext } from './plan';
 import {
   countMoments,
   failStalePlans,
@@ -296,9 +296,10 @@ async function follow(
   next: Moment,
 ) {
   if (!next.plan) return;
-  const [learner, story] = await Promise.all([
+  const [learner, story, paintings] = await Promise.all([
     readLearner(env.DB, userId),
     next.storyId ? readStory(env.DB, userId, next.storyId) : Promise.resolve(null),
+    listPaintings(env.DB, userId, 60),
   ]);
   if (!story?.outline) return;
   try {
@@ -308,6 +309,8 @@ async function follow(
       lines,
       next: next.plan,
       learnerName: learner?.name ?? null,
+      met: metNeighbours(paintings),
+      firstLanguage: learner?.firstLanguage ?? 'other',
     });
     if (r === null) return;
     const kept = await followUp(env.DB, next.id, r.plan);

@@ -13,6 +13,8 @@ import type { Stage } from './world';
  */
 
 const empty = () => ({
+  card: [] as string[],
+  card_gloss: '',
   bridge_card: '',
   bridge_line: '',
   recap_line: '',

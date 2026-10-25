@@ -176,7 +176,10 @@ describe('the live lanes', () => {
         'newcomer',
       ),
     ).toBe('rich');
-    expect(pickLane(['My name is Lan', 'Coffee please'], 'newcomer')).toBe('simple');
+    // Short but fluent answers to closed questions stay on the plan.
+    expect(pickLane(['My name is Lan', 'Coffee please'], 'newcomer')).toBe('planned');
+    expect(pickLane(["It's good.", 'Yes.'], 'newcomer')).toBe('planned');
+    expect(pickLane(['Sorry, again?', 'I... coffee'], 'newcomer')).toBe('simple');
     expect(
       pickLane(
         ['I am Lan, nice to meet you', 'I like coffee with milk and a little sugar'],

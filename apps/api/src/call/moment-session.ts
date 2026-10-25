@@ -43,6 +43,7 @@ import {
   type PhoneDiag,
   type TranscriptLine,
 } from './transcript';
+import { SentenceTts } from './sentence-tts';
 import type { TtsVoice } from './tts';
 import { slowerVoice, stageVoice, VoicePool } from './voice-pool';
 import { againAsk } from './words';
@@ -271,7 +272,6 @@ export class MomentSession {
       console.error('stt connect failed', { error: String(error) });
       this.frames.send({ type: 'error', code: 'stt_failed', fatal: false });
     });
-    if (how.newCall) this.voices.warm(this.voice());
     await sttOpen;
     this.frames.send({
       type: 'ready',
@@ -409,6 +409,8 @@ export class MomentSession {
       llm: this.llm,
       nextStreamId: () => ++this.data.streamSeq,
       takeTts: (voice) => this.voices.take(voice),
+      sentenceTts: (voice, handlers) =>
+        new SentenceTts(this.env.ELEVENLABS_API_KEY ?? '', voice, handlers),
     };
   }
 
@@ -557,7 +559,7 @@ export class MomentSession {
     } else {
       const { direction, maxWords } = turnDirection(this.data.plan, this.data.learner, state);
       const source = this.modelSource(direction, this.learnerLine(text));
-      reply.line = this.modelLine(source, maxWords, gated, onFirstAudio);
+      reply.line = this.modelLine(source, maxWords, gated, onFirstAudio, text);
     }
     this.reply = reply;
     this.learnerTurn?.closeWindow();
@@ -597,9 +599,11 @@ export class MomentSession {
     maxWords: number,
     gated: boolean,
     onFirstAudio?: () => void,
+    heard?: string,
   ): SpokenLine {
     return new SpokenLine(this.lineHost(), {
       learnerName: this.data.learner.name,
+      ...(heard ? { heard } : {}),
       speaker: this.speaker,
       voice: this.voice(),
       source,

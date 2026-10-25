@@ -51,6 +51,8 @@ export interface MomentStory {
   readonly before: readonly string[];
   /** What the learner told the town on arrival, in plain words. */
   readonly about: string;
+  /** The neighbours the learner has met, by name. */
+  readonly met: readonly string[];
 }
 
 /** Whether lines carry a gloss in the learner's language: beginners read it under the line. */
@@ -76,6 +78,7 @@ THE LEARNER: ${learner.name ? `${learner.name}` : 'name not known yet'}, first l
 ${
   story
     ? `ABOUT THE LEARNER: ${story.about}
+THE LEARNER HAS MET: ${story.met.join(', ')}. If they have not met you, say who you are first. Anyone else you mention, say who they are in a few words the first time; never drop a name they cannot know.
 THE STORY: "${story.title}", scene ${story.sceneNo} of ${story.scenes}${story.sceneNo === story.scenes ? ' (the finale)' : ''}. ${story.logline}${story.before.length ? `\nWhat happened so far: ${story.before.join(' ')}` : ''}
 `
     : ''
@@ -204,19 +207,25 @@ export function turnDirection(
   return { direction: parts.join('\n'), maxWords: limit };
 }
 
+const CONFUSED =
+  /\b(sorry\??|again|slowly|slower|what\?|what do you mean|don'?t understand|không hiểu|hả)\b/i;
+
 const OWN_SCRIPT = /[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ฀-๿぀-ヿ一-鿿가-힯]/gi;
 
 /**
- * After two learner replies, code picks a lane from how they actually talk: very short or
- * own-language answers drop to Visitor lines; long answers lift to the open follow-ups.
+ * After two learner replies, code picks a lane from how they actually talk: own-language,
+ * one-word or lost answers drop to Visitor lines; long answers lift to the open follow-ups.
  */
 export function pickLane(replies: readonly string[], stage: Stage): Lane {
   const ws = replies.map((r) => words(r));
   const avg = ws.reduce((a, b) => a + b, 0) / Math.max(1, ws.length);
   const own = replies.join(' ').match(OWN_SCRIPT)?.length ?? 0;
   const low = stage === 'visitor' || stage === 'newcomer';
-  if (low && ((avg <= 6 && Math.max(...ws) <= 8) || own >= 4))
-    return stage === 'visitor' ? 'planned' : 'simple';
+  // Short is not lost: "It's good." is a fine answer to a closed question. Only real signs of
+  // struggle (their own language, asking again, one-word answers) drop to Visitor lines.
+  const confused = replies.filter((r) => CONFUSED.test(r)).length;
+  const struggling = own >= 4 || avg < 1.5 || (confused >= 1 && avg <= 5);
+  if (low && struggling) return stage === 'visitor' ? 'planned' : 'simple';
   if (stage !== 'local' && stage !== 'voice' && avg >= 12 && Math.max(...ws) >= 16) return 'rich';
   // A Visitor plan with a learner who answers in full sentences: lift to the open follow-ups.
   if (stage === 'visitor' && avg >= 7) return 'rich';

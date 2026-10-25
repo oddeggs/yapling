@@ -17,6 +17,7 @@ import { useLocale } from '../ui/locale';
 import { useLipsyncClock, type VoiceEngine } from '../voice';
 import { app } from './app';
 import { ArriveScreen } from './arrive';
+import { ChapterCard } from './chapter-card';
 import { Dock, type DockMode, type TalkLook } from './dock';
 import { KeptCard } from './kept';
 import { SafetySheet } from './safety/safety-sheet';
@@ -51,6 +52,12 @@ export function SceneScreen() {
   const [now, setNow] = useState(Date.now());
   const [safetyClosed, setSafetyClosed] = useState(false);
   const [aiChip, setAiChip] = useState(false);
+  // The moment whose chapter card was read; its scene begins only after.
+  const [cardRead, setCardRead] = useState<string | null>(null);
+  const card =
+    w.moment?.bridge && w.moment.bridge.lines.length > 0 && cardRead !== w.moment.id
+      ? w.moment.bridge
+      : null;
 
   const setStage = useCallback(
     (s: StageHandle | null) => {
@@ -106,13 +113,13 @@ export function SceneScreen() {
     };
   }, [w.place, w.variant, sound]);
 
-  // A moment begins by itself, a breath after the scene settles.
+  // A moment begins by itself, a breath after the scene settles (and its chapter card is read).
   useEffect(() => {
     const moment = w.moment;
-    if (!focused || !active || tv.stage !== 'idle' || moment === null) return;
+    if (!focused || !active || tv.stage !== 'idle' || moment === null || card !== null) return;
     const id = setTimeout(() => void talk.begin(moment), BEGIN_AFTER_MS);
     return () => clearTimeout(id);
-  }, [focused, active, tv.stage, w.moment, talk]);
+  }, [focused, active, tv.stage, w.moment, talk, card]);
 
   // The director is still writing: ask again, and after half a minute Pip fills the gap.
   useEffect(() => {
@@ -201,7 +208,7 @@ export function SceneScreen() {
 
   let mode: DockMode = 'hidden';
   let hint = '';
-  if (!w.arrived) mode = 'hidden';
+  if (!w.arrived || (card && tv.stage === 'idle')) mode = 'hidden';
   else if (tv.stage === 'kept') mode = 'go';
   else if (tv.stage === 'out') mode = 'out';
   else if (tv.stage === 'paused') mode = 'paused';
@@ -314,6 +321,13 @@ export function SceneScreen() {
         onGo={() => setLeaving(true)}
         onOut={() => router.push('/menu/plus')}
       />
+      {card && tv.stage === 'idle' && w.moment && (
+        <ChapterCard
+          bridge={card}
+          gloss={w.settings.gloss}
+          onGo={() => setCardRead(w.moment?.id ?? null)}
+        />
+      )}
       {!w.arrived && w.ready && (
         <ArriveScreen
           onDone={async (answers) => {

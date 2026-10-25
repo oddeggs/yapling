@@ -181,7 +181,13 @@ type Mode =
   /** Holding a suspicious start until it reads as speech or narration. */
   | 'hold'
   /** Narration: held to the sentence's end, then dropped (its quotes spoken). */
-  | 'narration';
+  | 'narration'
+  /** The reply opens by repeating the learner's words: held to see if it is a note about them. */
+  | 'echo';
+
+/** In a sentence that opens on the learner's own words, these make it a note about what they said. */
+const ECHO_NOTE =
+  /\b(doesn'?t fit|does not fit|misheard|mis-heard|probably|the goal|this beat|the beat|stay and|the direction|the learner|they mean|they meant)\b/i;
 
 /** Holding a sentence longer than this decides it as it stands. */
 const MAX_HELD = 40;
@@ -194,11 +200,15 @@ export class NarrationGuard {
   private readonly own: string;
   /** The learner's name, lower case ('' when not known). */
   private readonly learner: string;
+  /** The learner's last words, bare, when the reply may open by repeating them. */
+  private readonly heard: readonly string[];
+  private firstSentence = true;
   private readonly droppedText: string[] = [];
   private extractedAny = false;
 
-  constructor(speakerName: string, learnerName = '') {
+  constructor(speakerName: string, learnerName = '', heard = '') {
     this.own = speakerName.toLowerCase();
+    this.heard = heard.split(/\s+/).map(bare).filter(Boolean);
     this.learner = learnerName.trim().split(/\s+/)[0]?.toLowerCase() ?? '';
   }
 
@@ -251,6 +261,13 @@ export class NarrationGuard {
           this.drop(raw);
           return [];
         }
+        const opening = this.firstSentence;
+        this.firstSentence = false;
+        if (opening && this.heard.length >= 3 && bare(raw) === this.heard[0]) {
+          this.mode = 'echo';
+          this.held = [raw];
+          return [];
+        }
         if (this.suspicious(raw)) {
           this.mode = 'hold';
           this.held = [raw];
@@ -258,6 +275,26 @@ export class NarrationGuard {
         }
         this.mode = SENTENCE_END.test(raw) ? 'start' : 'pass';
         return speakable([raw]);
+      }
+      case 'echo': {
+        this.held.push(raw);
+        const i = this.held.length - 1;
+        // Only a reply that repeats their first three words is held; a recast goes on at once.
+        if (i < 3 && bare(raw) !== this.heard[i]) {
+          const out = this.held;
+          this.held = [];
+          this.mode = SENTENCE_END.test(raw) ? 'start' : 'pass';
+          return speakable(out);
+        }
+        if (!SENTENCE_END.test(raw) && this.held.length < MAX_HELD) return [];
+        const sentence = this.held;
+        this.held = [];
+        this.mode = 'start';
+        if (ECHO_NOTE.test(sentence.join(' '))) {
+          this.droppedText.push(sentence.join(' '));
+          return [];
+        }
+        return speakable(sentence);
       }
       case 'pass':
         if (SENTENCE_END.test(raw)) this.mode = 'start';

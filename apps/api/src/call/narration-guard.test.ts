@@ -44,6 +44,26 @@ describe('the narration guard', () => {
     expect(run('Ana! You came back.')).toMatch(/^Ana! You came back/);
   });
 
+  it('drops a note that opens by quoting what the learner said, and keeps a recast', () => {
+    const run = (text: string, heard: string) => {
+      const splitter = new ReplySplitter({ maxWords: 40, speaker: 'Mei', heard });
+      const pieces: string[] = [];
+      for (let i = 0; i < text.length; i += 4) pieces.push(splitter.push(text.slice(i, i + 4)));
+      pieces.push(splitter.end().tail);
+      return pieces.join('').trim();
+    };
+    expect(
+      run(
+        "Now give me a traffic doesn't fit the coffee at all, so it's probably misheard. Sorry, I didn't catch that.",
+        'Now give me a traffic.',
+      ),
+    ).toBe("Sorry, I didn't catch that.");
+    expect(run('Not too sweet, perfect! Why is that better?', 'Not too sweet.')).toBe(
+      'Not too sweet, perfect! Why is that better?',
+    );
+    expect(run('Balance! I love it.', 'A bit of both. It is balance.')).toBe('Balance! I love it.');
+  });
+
   it('drops the speaker described in the third person', () => {
     const box = speak('Ooh, this box says WORK! Pip opens it.', 'Pip');
     expect(box.spoken).toBe('Ooh, this box says WORK!');

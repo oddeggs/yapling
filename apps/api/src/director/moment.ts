@@ -33,6 +33,8 @@ export const MomentPlan = z.object({
   bridge_card: clip(80),
   bridge_line: clip(300),
   recap_line: clip(300),
+  card: z.array(clip(200)).transform((a) => a.slice(0, 4)),
+  card_gloss: clip(800),
   situation: clip(600),
   character_wants: clip(400),
   dramatic_question: clip(300),
@@ -120,6 +122,17 @@ export const MOMENT_SCHEMA = {
       type: 'string',
       description:
         'What Pip says instead if the learner comes back after a long time away: what happened last time in one sentence, then why we are going here. Same length rule. Empty for a story’s first scene.',
+    },
+    card: {
+      type: 'array',
+      items: { type: 'string' },
+      description:
+        'The chapter card shown on black before the scene, read by the learner at their own pace: two or three short sentences in very plain English (at most 12 words each, Visitor words when the learner is a beginner), in the second person. First what just happened ("Mei asked you to help with her coffee."), then where they are going and why, naming anyone new with who they are ("Hank, the loud raccoon who runs the shipping crew, wants to buy her café."). Clear, never cryptic.',
+    },
+    card_gloss: {
+      type: 'string',
+      description:
+        'The whole card in the learner’s first language, natural; empty when that is English or unknown.',
     },
     situation: {
       type: 'string',

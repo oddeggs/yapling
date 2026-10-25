@@ -36,6 +36,8 @@ export interface SplitterOptions {
   readonly speaker?: string;
   /** The learner's name, so the guard knows a sentence about them (not to them). */
   readonly learner?: string;
+  /** What the learner just said, so a reply that opens by quoting it is checked. */
+  readonly heard?: string;
   /** False for written text, which never holds narration. */
   readonly guard?: boolean;
 }
@@ -68,7 +70,7 @@ export class ReplySplitter {
     this.guard =
       options.guard === false
         ? null
-        : new NarrationGuard(options.speaker ?? '', options.learner ?? '');
+        : new NarrationGuard(options.speaker ?? '', options.learner ?? '', options.heard ?? '');
   }
 
   /** The case tag the line started with (`[question]` → `question`), or null. */

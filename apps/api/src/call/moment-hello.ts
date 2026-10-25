@@ -6,7 +6,7 @@ import { callTime } from '../calls/store';
 import { arrivalText } from '../director/craft';
 import type { MomentStory } from '../director/actor';
 import { ensureAhead } from '../director/jobs';
-import { stageFor } from '../director/plan';
+import { metNeighbours, stageFor } from '../director/plan';
 import {
   lastPlayedAt,
   listPaintings,
@@ -109,7 +109,7 @@ async function storyOf(
   const [story, scenes, paintings] = await Promise.all([
     readStory(env.DB, userId, moment.storyId),
     storyScenes(env.DB, userId, moment.storyId),
-    listPaintings(env.DB, userId, 12),
+    listPaintings(env.DB, userId, 60),
   ]);
   if (!story?.outline) return null;
   const ids = new Set(scenes.map((m) => m.id));
@@ -124,5 +124,6 @@ async function storyOf(
     scenes: story.outline.scenes.length,
     before,
     about,
+    met: metNeighbours(paintings),
   };
 }
