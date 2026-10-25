@@ -329,6 +329,8 @@ for (let s = 0; s < Number(storiesArg); s++) {
       lines: lastLines,
       next,
       learnerName: name,
+      met: metNeighbours(paintings),
+      firstLanguage: persona.arrival.firstLanguage,
     });
     if (followed) {
       usd += followed.costUsd;
