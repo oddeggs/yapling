@@ -1,0 +1,3872 @@
+{
+  "version": 1,
+  "note": "Natterwick's places as data. Shaped like packages/scene/src/places.ts plus district, art, present (hours the resident is painted there, [start, end) on a 24-hour clock, wrapping past midnight; existing places keep their residentIn rules), stage (the earliest learner stage the director may centre a scene here) and, for the 12 already-painted places, existing + keys (their current audio file keys). See docs/rewrite/world-expansion.md.",
+  "districts": [
+    {
+      "id": "burrow",
+      "name": "Burrow Row",
+      "feel": "Home street: front steps, lit windows, neighbours' doors. Where every story starts and ends.",
+      "field": "dusk mauve, bone, sage",
+      "musicDay": "Soft acoustic guitar and clarinet, a quiet friendly street in the morning, 76 bpm.",
+      "musicNight": "Slow felt piano and a warm upright bass, lamps on in a small street, 64 bpm."
+    },
+    {
+      "id": "square",
+      "name": "The Square",
+      "feel": "The town's front room: the café, the clock, the bank and post office, the town hall.",
+      "field": "mauve, ochre, slate blue",
+      "musicDay": "Bright brushed-jazz trio with a clarinet, a busy little square, 96 bpm.",
+      "musicNight": "Late-night café trio, brushed snare and soft Rhodes, a lit window on a rainy street, 68 bpm."
+    },
+    {
+      "id": "market",
+      "name": "Market Lane",
+      "feel": "Awnings, steam and bargaining: the stall, the noodle cart, the Copper Pot, the Repair Café.",
+      "field": "saffron, copper, night blue",
+      "musicDay": "A lively market tune of plucked strings and hand drums, 104 bpm.",
+      "musicNight": "A cosy night-stall tune of nylon guitar and music box, steam and lantern light, 74 bpm."
+    },
+    {
+      "id": "harbour",
+      "name": "Old Harbour",
+      "feel": "Pier, lighthouse, crates and the inn: work by day, a long quiet sea at night.",
+      "field": "grey-blue, rust, sea-grey",
+      "musicDay": "A good-humoured blues shuffle on harmonica and stand-up bass, a working quay, 104 bpm.",
+      "musicNight": "A slow misty harbour piece: cello drone, sparse harp, distant bell buoy, 56 bpm."
+    },
+    {
+      "id": "crossings",
+      "name": "The Crossings",
+      "feel": "The ferry terminal, Gull Island and the little airfield: arrivals, departures and announcements.",
+      "field": "pale aqua, sea teal, apricot dawn",
+      "musicDay": "A relaxed, warm groove with soft organ and bass, wide open water, 80 bpm.",
+      "musicNight": "Deep warm bass and soft organ with distant chimes, the night crossing, 64 bpm."
+    },
+    {
+      "id": "hollowbrook",
+      "name": "Hollowbrook",
+      "feel": "Offices, meetings, a startup in a bike shed, a glass lift and a roof terrace.",
+      "field": "slate, pale teal, glass blue",
+      "musicDay": "A light focused electronic pulse with soft marimba, a productive morning, 100 bpm.",
+      "musicNight": "Warm golden-hour chill groove with soft guitar and bass, after work, 84 bpm."
+    },
+    {
+      "id": "station",
+      "name": "The Station",
+      "feel": "Platforms, phone boxes, the tea cart, the depot where Bus 45 sleeps.",
+      "field": "dusk mauve, pewter, night indigo",
+      "musicDay": "Brisk travelling tune of strings and a soft whistle, a busy concourse, 100 bpm.",
+      "musicNight": "A wistful muted trumpet over a soft train-rhythm pulse, an empty station, 70 bpm."
+    },
+    {
+      "id": "hill",
+      "name": "University Hill",
+      "feel": "Natterwick College: lecture hall, exam room, study lamps, the radio tower and the observatory.",
+      "field": "chalk green, sepia, midnight blue",
+      "musicDay": "Thoughtful chamber strings and bright woodwinds, a college morning, 84 bpm.",
+      "musicNight": "Hushed lo-fi keys and starry pads, late study and a clear sky, 70 bpm."
+    },
+    {
+      "id": "riverside",
+      "name": "Riverside",
+      "feel": "The river, the park and the pond, the clinic, the pool, the sports ground and the Lamplight Theatre.",
+      "field": "sage, pearl mist, pool aqua",
+      "musicDay": "Gentle plucky folk with clarinet and soft percussion, a park by a river, 88 bpm.",
+      "musicNight": "A slow theatrical waltz on piano and strings, lights on the water, 3/4, 72 bpm."
+    },
+    {
+      "id": "edges",
+      "name": "Fields & Edges",
+      "feel": "Where town turns into meadow: the 45's stops, the phone booth, the garden, the fair meadow.",
+      "field": "grey snow, ochre gold, lavender dusk",
+      "musicDay": "Bright rolling piano and airy guitar, open fields and wind, 92 bpm.",
+      "musicNight": "A sparse winter field: glass harmonica and slow music box, long silences, very slow."
+    }
+  ],
+  "places": [
+    {
+      "id": "room",
+      "name": "The burrow",
+      "resident": "pip",
+      "hours": "Home. Pip sleeps from about 11 pm and wakes when you come in.",
+      "story": "Your burrow, shared with Pip: a lamp, a red sofa and one window onto the field.",
+      "district": "burrow",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Home",
+          "prop": "nothing new: the lamp, the sofa, the window",
+          "title": "Home, More Or Less"
+        },
+        {
+          "label": "A burnt loaf",
+          "prop": "a loaf of bread a shade too dark, still smoking, on a side table",
+          "title": "Pip Tried To Bake"
+        },
+        {
+          "label": "A postcard",
+          "prop": "a postcard on the floor that came in the post",
+          "title": "Wish You Were Here, Roughly"
+        }
+      ],
+      "music": "A slow, warm home piece: felt piano and a soft upright bass, a lamp-lit room at night, gentle and safe, 62 bpm.",
+      "ambience": "Small cosy room at night: a lamp's faint hum, a clock ticking, a sofa creak, light wind at the window.",
+      "art": "Dusk-mauve interior seen straight on; a low wide room, one square window onto the field, a lamp pooling light; Pip small on the sofa; red: the sofa.",
+      "present": [
+        [
+          0,
+          24
+        ]
+      ],
+      "stage": "visitor",
+      "existing": true,
+      "keys": {
+        "music": "room",
+        "ambience": "room"
+      }
+    },
+    {
+      "id": "roof",
+      "name": "The rooftop",
+      "resident": "pip",
+      "hours": "Up the back stairs, any time.",
+      "story": "Above the burrow: a water tower, a washing line and the whole town in lights. Pip comes up here to think.",
+      "district": "burrow",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Washing day",
+          "prop": "washing on the line moving in the wind",
+          "title": "Higher Than The 45"
+        },
+        {
+          "label": "A kite stuck",
+          "prop": "a red kite stuck on the water tower",
+          "title": "The Kite Isn’t Mine"
+        },
+        {
+          "label": "Shooting stars",
+          "prop": "shooting stars over the town",
+          "title": "Make One For Me"
+        }
+      ],
+      "music": "An airy, floating ambient piece: soft synth pads, faint wind chimes, open night sky over a small town, weightless and calm, slow.",
+      "ambience": "Gentle steady wind across a rooftop at night, soft fabric flapping on a line, distant town hum.",
+      "art": "Night-blue sky takes two-thirds of the frame over a low roofline; the water tower one tall shape at left, the washing line a diagonal; town lights as soft dots below; red: Pip's scarf.",
+      "present": [
+        [
+          0,
+          24
+        ]
+      ],
+      "stage": "visitor",
+      "existing": true,
+      "keys": {
+        "music": "roof",
+        "ambience": "wind"
+      }
+    },
+    {
+      "id": "laundry",
+      "name": "The laundromat",
+      "resident": "nell",
+      "hours": "Nell brings the inn’s towels at 8 pm and stays till 2 am.",
+      "story": "Open all night. The machines hum, and Nell folds towels for the inn and talks to whoever is waiting.",
+      "district": "burrow",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Spin cycle",
+          "prop": "one drum spinning, a stack of folded towels",
+          "title": "No Worries, It’s Only Towels"
+        },
+        {
+          "label": "One red sock",
+          "prop": "one red sock in a load of white towels",
+          "title": "Still Life With One Red Sock"
+        },
+        {
+          "label": "Out of order",
+          "prop": "an OUT OF ORDER sign on one machine",
+          "title": "Out Of Order, Like Me"
+        }
+      ],
+      "music": "A sleepy midnight lo-fi beat that feels like a tumble dryer: soft kick on a rolling rhythm, muted electric piano, warm tape hiss, 80 bpm.",
+      "ambience": "Laundromat at night: washing machines humming and tumbling, a fluorescent light buzz, soft room tone.",
+      "art": "Fluorescent grey-green field; a row of machine doors along one long horizontal, Nell tiny at the far end with her tea; red: the running light on one machine.",
+      "present": [
+        [
+          20,
+          2
+        ]
+      ],
+      "stage": "visitor",
+      "existing": true,
+      "keys": {
+        "music": "laundry",
+        "ambience": "laundry"
+      }
+    },
+    {
+      "id": "linhdoor",
+      "name": "Linh’s doorstep",
+      "resident": "linh",
+      "hours": "Linh sits out with tea 7–8:30 am and 9–11 pm.",
+      "story": "The step next to yours. Linh drinks her tea here before and after work, and it is the easiest place in town to try a sentence you're not sure of.",
+      "district": "burrow",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Morning tea",
+          "prop": "two cups on the step, one of them for you",
+          "title": "There’s A Cup For You"
+        },
+        {
+          "label": "A parcel for you",
+          "prop": "a parcel with your name on it that Linh took in",
+          "title": "Signed For, By Linh"
+        },
+        {
+          "label": "Locked out",
+          "prop": "Linh's keys on the wrong side of her window",
+          "title": "Locked Out, Calmly"
+        }
+      ],
+      "music": "Soft acoustic guitar and a quiet clarinet, slow and friendly, early light on a small street, 72 bpm.",
+      "ambience": "Quiet residential street: a kettle clicking off indoors, sparrows, a bicycle bell far away.",
+      "art": "Bone-grey wall fills the frame; two doors side by side, one lit window, a single step with two tiny figures; red: the one flower on Linh's pot plant.",
+      "present": [
+        [
+          7,
+          8.5
+        ],
+        [
+          21,
+          23
+        ]
+      ],
+      "stage": "visitor",
+      "existing": false
+    },
+    {
+      "id": "communityhall",
+      "name": "The community hall",
+      "resident": "nell",
+      "hours": "Town planning meetings 6–8 pm; Nell chairs with tea and a list.",
+      "story": "A plain hall with stacking chairs where the town plans things: the Long Table, the Kite Day route, who brings the urn. Nell chairs; anyone can speak.",
+      "district": "burrow",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Planning meeting",
+          "prop": "a circle of chairs and a flip chart with one item on it",
+          "title": "Any Other Business"
+        },
+        {
+          "label": "Nobody came",
+          "prop": "forty chairs, three neighbours and a plate of biscuits",
+          "title": "Still Life With Unpaid Biscuits"
+        },
+        {
+          "label": "Vote by teapot",
+          "prop": "folded paper slips in a teapot used as a ballot box",
+          "title": "The Teapot Has Decided"
+        }
+      ],
+      "music": "Gentle upright piano and soft brushed drums, unhurried and good-humoured, a hall in the evening, 76 bpm.",
+      "ambience": "Echoey hall: chairs scraping, a tea urn bubbling, the low murmur of a few voices.",
+      "art": "Cream hall walls over an oxblood floor; rows of tiny chairs receding to a small stage, one high window of blue hour; red: the tea urn's light.",
+      "present": [
+        [
+          18,
+          20
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "porch",
+      "name": "Marnie’s porch",
+      "resident": "marnie",
+      "hours": "Marnie is out with coffee 7–8:30 am, and with a blanket 8–9:30 pm.",
+      "story": "A wide porch with a swing seat at the end of Burrow Row. Marnie talks about her grandchildren, the bank, and anything you'll let her help with.",
+      "district": "burrow",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Swing seat",
+          "prop": "the porch swing and a spare blanket folded on it",
+          "title": "Room For One More"
+        },
+        {
+          "label": "Grandkids’ drawings",
+          "prop": "children's drawings taped inside the window",
+          "title": "Gallery Of Small Artists"
+        },
+        {
+          "label": "A box of ledgers",
+          "prop": "a box of old bank ledgers she brought home to sort",
+          "title": "Ninety Years In One Box"
+        }
+      ],
+      "music": "Warm slow banjo and soft pedal steel, a gentle porch evening, 70 bpm.",
+      "ambience": "Evening porch: a swing chain creaking, crickets, a screen door, wind chimes far off.",
+      "art": "Pale sage field; a long porch in perspective from the left edge, the swing small at its far end, one warm window; red: the blanket on the swing.",
+      "present": [
+        [
+          7,
+          8.5
+        ],
+        [
+          20,
+          21.5
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "elifstoop",
+      "name": "Elif’s window",
+      "resident": "elif",
+      "hours": "Elif is at her window 7:30–10 pm; she rings her grandchildren at eight.",
+      "story": "A ground-floor window full of seedlings, with a laptop propped on the sill. Elif video-calls her grandchildren far away, and practises what she'll say first.",
+      "district": "burrow",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Rehearsal",
+          "prop": "the laptop on the sill and a list of things to tell the grandchildren",
+          "title": "Notes For The Call"
+        },
+        {
+          "label": "The call drops",
+          "prop": "a frozen video call on the screen",
+          "title": "Can You Hear Me Now?"
+        },
+        {
+          "label": "A drawing came",
+          "prop": "a child's drawing in an opened envelope, propped against the seedlings",
+          "title": "Postmarked Far Away"
+        }
+      ],
+      "music": "Slow warm accordion and plucked strings, a little bittersweet, evening window light, 66 bpm.",
+      "ambience": "A quiet ground-floor flat at night: a clock, a laptop chime, wind in leaves outside.",
+      "art": "Deep teal night street; one lit window low in the frame, seedlings silhouetted on the sill, Elif tiny behind them; red: one geranium.",
+      "present": [
+        [
+          19.5,
+          22
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "swapshop",
+      "name": "The Swap Shop",
+      "resident": "elif",
+      "hours": "Open 6–7:30 pm; Elif runs the rules.",
+      "story": "An old shop front where nothing is for sale: you bring a thing, tell its story, and take a thing. Elif keeps it tidy and decides what counts as a fair swap.",
+      "district": "burrow",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Rails of coats",
+          "prop": "rails of coats and a long mirror",
+          "title": "Try It On, It’s Free"
+        },
+        {
+          "label": "A mystery object",
+          "prop": "an odd brass object nobody can name",
+          "title": "What Is This, Exactly?"
+        },
+        {
+          "label": "Full to the door",
+          "prop": "boxes stacked to the ceiling",
+          "title": "We Need A Bigger Shop"
+        }
+      ],
+      "music": "Playful pizzicato strings and a soft vibraphone, curious and light, 92 bpm.",
+      "ambience": "Small shop: hangers clicking on a rail, a door bell, a cardboard box sliding across a floor.",
+      "art": "Rose-grey field; a shop window seen straight on, rails of coats as tall vertical strokes, Elif small at the counter; red: one red coat on the rail.",
+      "present": [
+        [
+          18,
+          19.5
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "school",
+      "name": "The school gate at three",
+      "resident": "marnie",
+      "hours": "3–4 pm, when the bell goes; Marnie picks up her grandchildren.",
+      "story": "The gate of the little school on Burrow Row. Grown-ups wait in small groups, and the talk is the whole point.",
+      "district": "burrow",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Waiting for the bell",
+          "prop": "a loose crowd of grown-ups and a big clock over the gate",
+          "title": "Small Talk, Big Clock"
+        },
+        {
+          "label": "A forgotten lunchbox",
+          "prop": "a lunchbox left on the gatepost",
+          "title": "Whose Lunchbox?"
+        },
+        {
+          "label": "Sports day notice",
+          "prop": "a notice on the gate asking for volunteers",
+          "title": "Volunteers Needed, Urgently"
+        }
+      ],
+      "music": "Light xylophone and soft hand percussion, cheerful and steady, an afternoon, 100 bpm.",
+      "ambience": "Schoolyard after the bell: distant children's chatter and laughter, a bell once, footsteps on gravel.",
+      "art": "Butter-yellow afternoon haze; a long iron gate right across the frame, an empty yard behind, tiny grown-ups in a loose row; red: the lunchbox on the post.",
+      "present": [
+        [
+          15,
+          16
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "cafe",
+      "name": "The Lantern Café",
+      "resident": "mei",
+      "hours": "Open 7 am to 10 pm.",
+      "story": "Mei’s café, seen from across the street. The rent went up, and Mei hasn’t told anyone yet.",
+      "district": "square",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Open",
+          "prop": "a warm window, a cup steaming on the table outside",
+          "title": "Kaya Toast, Probably"
+        },
+        {
+          "label": "Help wanted",
+          "prop": "a HELP WANTED sign in the window",
+          "title": "Help Wanted, Ask Inside"
+        },
+        {
+          "label": "Closed early",
+          "prop": "a BACK SOON sign on the door in the middle of the day",
+          "title": "Closed For Thinking"
+        }
+      ],
+      "music": "A slow late-night café trio: brushed snare, warm upright bass, soft Rhodes chords, 68 bpm, intimate and a little wistful, like a lit window on a rainy street.",
+      "ambience": "Quiet town street at night ambience: distant traffic hush, soft footsteps far away, a café door bell once, faint murmur through glass.",
+      "art": "Mauve street at dusk; the café a warm rectangle seen from the far kerb, one table outside, wide empty road between; red: the café lantern.",
+      "present": [
+        [
+          7,
+          22
+        ]
+      ],
+      "stage": "visitor",
+      "existing": true,
+      "keys": {
+        "music": "cafe",
+        "ambience": "street"
+      }
+    },
+    {
+      "id": "cafecounter",
+      "name": "Inside the Lantern Café",
+      "resident": "mei",
+      "hours": "Open 7 am to 10 pm.",
+      "story": "The counter from the inside: the chalkboard, the toaster, Mei's regulars. Ordering, small talk and Mei's opinions, all before the toast pops.",
+      "district": "square",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Morning rush",
+          "prop": "a queue to the door and a chalkboard menu",
+          "title": "Next, Please"
+        },
+        {
+          "label": "New on the menu",
+          "prop": "a chalkboard with one new item nobody has tried yet",
+          "title": "Brave Enough To Order It"
+        },
+        {
+          "label": "A reserved table",
+          "prop": "a RESERVED card on the window table",
+          "title": "Reserved, Nervously"
+        }
+      ],
+      "music": "Bright brushed-jazz café trio, upright bass and soft piano, a morning bustle, 96 bpm.",
+      "ambience": "Busy small café: espresso machine hiss, cups on saucers, a toaster pop, low chatter.",
+      "art": "Warm ochre interior; a long counter across the lower third, the chalkboard a dark block above, Mei small behind steam; red: the toaster.",
+      "present": [
+        [
+          7,
+          22
+        ]
+      ],
+      "stage": "visitor",
+      "existing": false
+    },
+    {
+      "id": "meiflat",
+      "name": "Above the café",
+      "resident": "mei",
+      "hours": "Mei's flat, 10–11:30 pm after closing.",
+      "story": "Mei's small flat up the back stairs: a sofa, a sink of mugs, the café's accounts on the table. Up here she says what she won't say downstairs.",
+      "district": "square",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Counting up",
+          "prop": "a ledger and a jar of coins on the table",
+          "title": "The Day, Added Up"
+        },
+        {
+          "label": "Dinner for whoever",
+          "prop": "a pot on the stove and three bowls",
+          "title": "There’s Always Enough"
+        },
+        {
+          "label": "A letter, face down",
+          "prop": "an opened letter lying face down on the table",
+          "title": "Read It Later"
+        }
+      ],
+      "music": "Late-night soft Rhodes and brushed snare, tired and tender, 66 bpm.",
+      "ambience": "Small flat at night: a fridge hum, rain on a window, a spoon in a bowl, the street below.",
+      "art": "Night-blue field seen from the street; one small high window with Mei's silhouette, the café's dark sign below it; red: a bowl on the sill.",
+      "present": [
+        [
+          22,
+          23.5
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "library",
+      "name": "The library",
+      "resident": "linh",
+      "hours": "Linh stays after closing, most nights; she is at the desk any time you come.",
+      "story": "Tall shelves and one lamp. Linh learned English as an adult, and she remembers every word she was afraid of.",
+      "district": "square",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Closing time",
+          "prop": "one lamp on the desk, a red book",
+          "title": "I Used To Freeze Too"
+        },
+        {
+          "label": "A note in a book",
+          "prop": "a handwritten note found in a library book",
+          "title": "Somebody Wrote In The Margin"
+        },
+        {
+          "label": "Power cut",
+          "prop": "the power is out; Linh reads by a candle",
+          "title": "Reading By Candle, Quietly"
+        }
+      ],
+      "music": "Hushed celesta and soft felt piano with the gentle tick of a clock, slow and careful, a quiet library after closing, warm lamplight.",
+      "ambience": "Quiet library after hours: a slow clock ticking, a page turning, soft room tone, distant rain on a window.",
+      "art": "Dark olive field; tall shelves as vertical bands climbing out of frame, one lamp pool on a desk at the bottom, Linh tiny inside it; red: the red book.",
+      "present": [
+        [
+          0,
+          24
+        ]
+      ],
+      "stage": "visitor",
+      "existing": true,
+      "keys": {
+        "music": "library",
+        "ambience": "library"
+      }
+    },
+    {
+      "id": "cinema",
+      "name": "The empty cinema",
+      "resident": "pip",
+      "hours": "One showing a night. Nobody else ever comes.",
+      "story": "Rows of red seats and a film nobody else came to see. Pip likes to tell you the plot afterwards, wrongly.",
+      "district": "square",
+      "interior": true,
+      "variants": [
+        {
+          "label": "The film",
+          "prop": "a film on the screen, dust in the projector beam",
+          "title": "Front Row Was Taken"
+        },
+        {
+          "label": "A film about a bus",
+          "prop": "the film on screen is about a bus",
+          "title": "It’s About A Bus, Mostly"
+        },
+        {
+          "label": "Intermission",
+          "prop": "the screen says INTERMISSION",
+          "title": "Intermission, Alone"
+        }
+      ],
+      "music": "An old soft cinema organ waltz, slow 3/4, slightly warped and faded like an old film reel, nostalgic and gentle, empty theatre.",
+      "ambience": "Empty cinema ambience: a film projector whirring and clicking softly, faint room tone, an old seat creak.",
+      "art": "Near-black auditorium; the screen one pale rectangle high in the frame, the projector beam a diagonal of dust, seat rows as dark bands; Pip tiny in the front row; red: the seats catching the screen light.",
+      "present": [
+        [
+          0,
+          24
+        ]
+      ],
+      "stage": "visitor",
+      "existing": true,
+      "keys": {
+        "music": "cinema",
+        "ambience": "cinema"
+      }
+    },
+    {
+      "id": "gallery",
+      "name": "The little gallery",
+      "resident": "pip",
+      "hours": "Open noon to 8 pm; Pip visits and never buys anything.",
+      "story": "One white room with five paintings and a bench. Pip has opinions about all of them and wants yours. Sometimes one of the paintings is one you kept.",
+      "district": "square",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Five paintings",
+          "prop": "five paintings in a row and a bench",
+          "title": "Pip Has Opinions"
+        },
+        {
+          "label": "An empty frame",
+          "prop": "an empty frame with a card: YOUR WORK HERE",
+          "title": "Submissions Open"
+        },
+        {
+          "label": "Opening night",
+          "prop": "a table of lemonade glasses and nobody there yet",
+          "title": "Too Early For The Opening"
+        }
+      ],
+      "music": "Sparse airy piano and soft strings, contemplative, a white room, very slow.",
+      "ambience": "Quiet gallery: soft footsteps on wood, a bench creak, the street faint through a door.",
+      "art": "Bone-white field almost empty; five small dark rectangles in a row high on the wall, a long bench, Pip tiny; red: a sold-dot sticker by one frame.",
+      "present": [
+        [
+          12,
+          20
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "bank",
+      "name": "The Acorn Bank",
+      "resident": "marnie",
+      "hours": "Marnie's window is open 9 am–3 pm.",
+      "story": "A high counter with one window open, a big clock, and Marnie, who will get you sorted if you can spell it.",
+      "district": "square",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Window open",
+          "prop": "one lit teller window, a form and a pen on a chain",
+          "title": "Please Sign Here, And Here"
+        },
+        {
+          "label": "The machine kept a card",
+          "prop": "the machine outside with a card stuck in its slot",
+          "title": "The Machine Has Your Card"
+        },
+        {
+          "label": "Ledger day",
+          "prop": "a giant old ledger open on the counter",
+          "title": "Ninety Years Of Names"
+        }
+      ],
+      "music": "A neat, unhurried chamber piece: clarinet and pizzicato strings, tidy and kind, 84 bpm.",
+      "ambience": "Quiet bank hall: a big clock ticking, a rubber stamp thump, paper rustle, soft steps on stone.",
+      "art": "Cool slate-blue field; a tall arched window over a long counter, everything symmetrical, Marnie's antlers the only shape that breaks the line; red: the stamp pad.",
+      "present": [
+        [
+          9,
+          15
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "postoffice",
+      "name": "The post office",
+      "resident": "azlan",
+      "hours": "Open 8:30 am–5 pm.",
+      "story": "A counter, a brass scale, a wall of little drawers. Azlan weighs, stamps and asks the right questions, and every parcel has a story.",
+      "district": "square",
+      "interior": true,
+      "variants": [
+        {
+          "label": "At the counter",
+          "prop": "a parcel on the brass scale and a customs form",
+          "title": "What’s Inside, Roughly?"
+        },
+        {
+          "label": "Queue to the door",
+          "prop": "a queue and a ticket machine showing 47",
+          "title": "Now Serving 47"
+        },
+        {
+          "label": "Returned to sender",
+          "prop": "a parcel stamped RETURN TO SENDER",
+          "title": "It Came Back"
+        }
+      ],
+      "music": "A tidy, patient tune on marimba and soft bassoon, small and orderly, 88 bpm.",
+      "ambience": "Post office: a stamp thudding, a scale clicking, a ticket machine beep, paper sliding over a counter.",
+      "art": "Pewter-grey field; a wall of tiny drawers like a grid fills the back, the counter low across it, Azlan small; red: the stamp in his hand.",
+      "present": [
+        [
+          8.5,
+          17
+        ]
+      ],
+      "stage": "visitor",
+      "existing": false
+    },
+    {
+      "id": "postbox",
+      "name": "The post box on Hill Road",
+      "resident": "azlan",
+      "hours": "Last collection 5:45 pm; Azlan arrives at 5:30 with his sack.",
+      "story": "One post box on a corner under a streetlamp. If a letter has to go today, this is the last chance, and Azlan is never late.",
+      "district": "square",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Last collection",
+          "prop": "Azlan opening the box with a key, a sack of letters",
+          "title": "Last Post, 5:45"
+        },
+        {
+          "label": "A letter with no address",
+          "prop": "a letter on top of the box with no address",
+          "title": "To Somebody, Somewhere"
+        },
+        {
+          "label": "Full to the slot",
+          "prop": "letters sticking out of the slot",
+          "title": "Everyone Wrote Today"
+        }
+      ],
+      "music": "Light walking-pace strings and a soft glockenspiel, the end of a working day, 90 bpm.",
+      "ambience": "Street corner at dusk: a post box door clunking, letters sliding into a sack, a distant bus.",
+      "art": "Dusk-lilac field; a lone streetlamp and the post box small at the centre of a big empty corner; red: the post box itself.",
+      "present": [
+        [
+          17.5,
+          18
+        ]
+      ],
+      "stage": "visitor",
+      "existing": false
+    },
+    {
+      "id": "propertyoffice",
+      "name": "The property office",
+      "resident": "mags",
+      "hours": "Open 9 am–5 pm.",
+      "story": "A narrow office of pigeonholes and keys. Mags rents out the town's flats, shops and desks, and asks everyone the same three careful questions.",
+      "district": "square",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Keys on hooks",
+          "prop": "a board of brass keys with one hook empty",
+          "title": "Which Key Is Yours?"
+        },
+        {
+          "label": "Rent day",
+          "prop": "a pile of envelopes on the desk",
+          "title": "The First Of The Month"
+        },
+        {
+          "label": "A shop to let",
+          "prop": "a TO LET sign leaning against the desk",
+          "title": "To Let, To Someone Kind"
+        }
+      ],
+      "music": "Measured harpsichord and soft cello, formal but gentle, 72 bpm.",
+      "ambience": "Small office: a pen nib scratching, keys jingling on hooks, a clock, a kettle far off.",
+      "art": "Deep teal field; a tall narrow room, a wall of pigeonholes, Mags tall and thin at a high desk; red: one key tag.",
+      "present": [
+        [
+          9,
+          17
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "townhall",
+      "name": "The town hall chamber",
+      "resident": "mags",
+      "hours": "Town meetings 6–8 pm; Mags counts the hands.",
+      "story": "A round chamber with a big clock and a small podium. The town decides things here together: a new bus stop, the festival dates, whether the café stays.",
+      "district": "square",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Town meeting",
+          "prop": "rows of benches and a podium with a little bell",
+          "title": "Does Anyone Want To Speak?"
+        },
+        {
+          "label": "Empty chamber",
+          "prop": "an empty podium and one chair turned towards it",
+          "title": "Practising To An Empty Room"
+        },
+        {
+          "label": "The vote",
+          "prop": "raised paws counted in chalk on a board",
+          "title": "Carried, Narrowly"
+        }
+      ],
+      "music": "A stately slow brass chorale, soft and hopeful, civic and warm, 60 bpm.",
+      "ambience": "Large chamber: a small bell tapped once, the murmur of a crowd, benches creaking, echo.",
+      "art": "Grey-green field; a vast curved wall with a round clock face, tiny benches in arcs below; red: the podium bell.",
+      "present": [
+        [
+          18,
+          20
+        ]
+      ],
+      "stage": "local",
+      "existing": false
+    },
+    {
+      "id": "roadshow",
+      "name": "The Radio Natterwick van",
+      "resident": "ade",
+      "hours": "Parked on the Square 3–6 pm, broadcasting live.",
+      "story": "Ade's little outside-broadcast van with a microphone on a long cable. He stops whoever walks by and puts them on the radio, gently.",
+      "district": "square",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Vox pop",
+          "prop": "a microphone held out on a long cable",
+          "title": "Say Hello To The Town"
+        },
+        {
+          "label": "Question of the day",
+          "prop": "a chalkboard question on the side of the van",
+          "title": "Today’s Question: Why?"
+        },
+        {
+          "label": "Battery flat",
+          "prop": "the van's aerial drooping and a FLAT BATTERY note",
+          "title": "Off Air, On The Square"
+        }
+      ],
+      "music": "A bright, bouncy guitar groove with a light shaker and warm bass, sunny radio-jingle energy, 110 bpm.",
+      "ambience": "Town square in the afternoon: footsteps, a fountain, gulls, a radio jingle faint from a van speaker.",
+      "art": "Ochre afternoon field; the van small at bottom right of a huge empty square, a long cable snaking to Ade by the fountain; red: the ON AIR light.",
+      "present": [
+        [
+          15,
+          18
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "walkingtour",
+      "name": "Under the town clock",
+      "resident": "orla",
+      "hours": "The dusk walking tour starts here, 5–6:30 pm.",
+      "story": "The clock tower where Orla gathers visitors for the dusk tour. She tells the town's small stories and always needs someone to help with the directions.",
+      "district": "square",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Tour gathering",
+          "prop": "a little sign: DUSK TOUR, MEET HERE",
+          "title": "Meet Under The Clock"
+        },
+        {
+          "label": "Nobody booked",
+          "prop": "Orla alone with her sign",
+          "title": "A Tour For One"
+        },
+        {
+          "label": "The clock is stopped",
+          "prop": "the clock hands stuck at 4:12",
+          "title": "Twelve Minutes Past Something"
+        }
+      ],
+      "music": "A lilting slow folk tune on wooden flute and fingerpicked guitar, dusk light, 6/8, 84 bpm.",
+      "ambience": "Town square at dusk: a clock ticking high above, footsteps on cobbles, birds settling.",
+      "art": "Dusk-mauve sky over a tall thin clock tower at the left edge, an empty square sloping away; Orla tiny with her sign; red: the sign's flag.",
+      "present": [
+        [
+          17,
+          18.5
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "noodles",
+      "name": "The noodle stall",
+      "resident": "hank",
+      "hours": "Opens at dark. Hank eats here after his shift.",
+      "story": "A cart in an empty lot with one red lantern. Hank will haggle over anything, even soup.",
+      "district": "market",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Last bowl",
+          "prop": "one last bowl of noodles on the counter",
+          "title": "Ten Percent And We’re Friends"
+        },
+        {
+          "label": "Sixty buns",
+          "prop": "a tower of steamed buns, far too many",
+          "title": "Sixty Buns, Final Offer"
+        },
+        {
+          "label": "Saving you a seat",
+          "prop": "an empty stool next to Hank",
+          "title": "Saving You A Seat"
+        }
+      ],
+      "music": "A cosy late-night stall tune: plucked nylon guitar, soft brushed shaker, a gentle music-box melody, warm and unhurried, 74 bpm, steam and lantern light.",
+      "ambience": "Night food stall ambience: a pot simmering and bubbling, soft sizzle, a ladle tapping, distant city hum.",
+      "art": "Night-blue empty lot; the cart small and lit dead centre, steam rising into the dark; Hank on a stool; red: the one lantern.",
+      "present": [
+        [
+          18.75,
+          6.5
+        ]
+      ],
+      "stage": "visitor",
+      "existing": true,
+      "keys": {
+        "music": "noodles",
+        "ambience": "stall"
+      }
+    },
+    {
+      "id": "spicestall",
+      "name": "Arjun’s stall",
+      "resident": "arjun",
+      "hours": "Open 9 am–7 pm.",
+      "story": "A stall under a long awning: sacks of spice and everything else (string, kettles, a goldfish bowl). Arjun bargains for fun and will find you anything you can describe.",
+      "district": "market",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Market morning",
+          "prop": "open sacks of spices and a brass scale",
+          "title": "For You, Special Price"
+        },
+        {
+          "label": "Something nameless",
+          "prop": "a strange kitchen tool Arjun holds up for you",
+          "title": "What Do You Call This Thing?"
+        },
+        {
+          "label": "Sold out",
+          "prop": "a SOLD OUT card on the saffron sack",
+          "title": "Everyone Wanted Saffron Today"
+        }
+      ],
+      "music": "A lively market tune with plucked strings and hand drums, warm and bustling, 104 bpm.",
+      "ambience": "Busy market lane: stallholders calling with no clear words, scoops in dried beans, paper bags, footsteps.",
+      "art": "Saffron haze; the awning one long shape across the top of the frame, sacks as low soft lumps, Arjun's stripes the darkest marks; red: one sack of chillies.",
+      "present": [
+        [
+          9,
+          19
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "spiceloft",
+      "name": "The spice loft",
+      "resident": "arjun",
+      "hours": "Arjun grinds and packs 5–6 am, before the market.",
+      "story": "A loft above the lane, full of sacks and floating dust. Arjun grinds the day's spices and writes on the little paper twists, alone, until you come up the ladder.",
+      "district": "market",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Grinding",
+          "prop": "a stone grinder, a lamp and paper twists in rows",
+          "title": "Before The Market Wakes"
+        },
+        {
+          "label": "A poem on a twist",
+          "prop": "a spice twist with a short handwritten poem on it",
+          "title": "Cinnamon, With A Verse"
+        },
+        {
+          "label": "Swapped labels",
+          "prop": "two identical sacks with their labels swapped",
+          "title": "Is This Cumin Or Not?"
+        }
+      ],
+      "music": "A slow warm drone with a soft plucked melody, dust and early light, contemplative, 60 bpm.",
+      "ambience": "Attic before dawn: a stone grinder turning, paper rustling, a single bird outside.",
+      "art": "Dim rust-brown attic; one small dormer of pre-dawn blue, sacks in a low row, Arjun small under the lamp; red: a string of dried chillies.",
+      "present": [
+        [
+          5,
+          6
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "nightmarket",
+      "name": "The night market",
+      "resident": "arjun",
+      "hours": "Lights along the lane 7–11 pm.",
+      "story": "Market Lane at night under strings of lights: food carts, a ring toss, and Arjun's evening table of everything-for-a-coin.",
+      "district": "market",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Lights up",
+          "prop": "strings of lights and a crowd of tiny figures",
+          "title": "Everything Must Go, Eventually"
+        },
+        {
+          "label": "Ring toss",
+          "prop": "a ring toss with one prize left",
+          "title": "Last Prize Standing"
+        },
+        {
+          "label": "Rain on the awnings",
+          "prop": "awnings dripping, the crowd squeezed under them",
+          "title": "Business As Usual, Wetter"
+        }
+      ],
+      "music": "A cheerful night-market groove: plucked strings, hand claps, a soft accordion, 108 bpm.",
+      "ambience": "Night market: crowd murmur, sizzling pans, a ring toss clatter, distant laughter.",
+      "art": "Night-blue sky; a long lane running to a vanishing point under strings of tiny warm lights, a tiny crowd; red: the last prize ribbon.",
+      "present": [
+        [
+          19,
+          23
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "barber",
+      "name": "The barber’s chair",
+      "resident": "hank",
+      "hours": "Hank's weekly trim, 2–3 pm, haggled every time.",
+      "story": "A narrow barber's shop on the lane. Hank is in the chair, the barber has stepped out, and Hank wants a second opinion on everything, including the price.",
+      "district": "market",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Just a trim",
+          "prop": "Hank in the chair under a cape, a tall mirror",
+          "title": "Just A Little Off The Top"
+        },
+        {
+          "label": "Price list",
+          "prop": "a price list on the wall with one price crossed out",
+          "title": "Prices Subject To Hank"
+        },
+        {
+          "label": "Too short",
+          "prop": "Hank holding a hand mirror, looking worried",
+          "title": "It’ll Grow Back, Probably"
+        }
+      ],
+      "music": "Easy swing on muted trumpet and brushed snare, a laid-back afternoon, 92 bpm.",
+      "ambience": "Small barbershop: scissors snipping, a radio murmuring, a chair creaking, a clock.",
+      "art": "Pale mint field; one chair in profile before a tall mirror that doubles the empty shop, Hank small under the cape; red: the striped pole outside the window.",
+      "present": [
+        [
+          14,
+          15
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "bookshop",
+      "name": "The second-hand bookshop",
+      "resident": "linh",
+      "hours": "Linh's lunch hour among the shelves, noon–2 pm.",
+      "story": "A crooked shop of second-hand books where Linh spends her lunch hunting for books for learners, and leaves notes in them.",
+      "district": "market",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Lunch hour",
+          "prop": "towers of books and a sandwich on a stool",
+          "title": "Lunch, Lightly Read"
+        },
+        {
+          "label": "Two of the same",
+          "prop": "two books with the same cover and different stories",
+          "title": "Judging A Book By Its Cover"
+        },
+        {
+          "label": "Clear-out",
+          "prop": "boxes marked FREE outside the door",
+          "title": "Free To A Good Home"
+        }
+      ],
+      "music": "Soft nylon guitar and a muted flugelhorn, cosy and slow, 70 bpm.",
+      "ambience": "Quiet bookshop: pages turning, a creaking floorboard, rain on a skylight, a shop bell.",
+      "art": "Dusty plum field; leaning towers of books as uneven verticals framing a tiny Linh in the gap; red: a bookmark.",
+      "present": [
+        [
+          12,
+          14
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "kitchen",
+      "name": "The Copper Pot kitchen",
+      "resident": "joon",
+      "hours": "Prep from 2 pm, service 6–11 pm.",
+      "story": "A steamy kitchen behind Market Lane. Joon is quiet, exact and short of hands, and he talks to the onions when nobody's there.",
+      "district": "market",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Prep",
+          "prop": "rows of chopped vegetables and a big copper pot",
+          "title": "Everything In Its Place"
+        },
+        {
+          "label": "Short-handed",
+          "prop": "one apron hanging on an empty hook",
+          "title": "Help Wanted, Kitchen"
+        },
+        {
+          "label": "Taste this",
+          "prop": "a tiny spoon held out to you",
+          "title": "One Spoon, Honest Opinion"
+        }
+      ],
+      "music": "Rhythmic, focused lo-fi with soft clicking percussion and warm Rhodes, 86 bpm.",
+      "ambience": "Restaurant kitchen: pans sizzling, chopping on a board, an extractor fan, plates clinking.",
+      "art": "Copper-orange haze; a long steel counter low across the frame, steam blooming upward to fill it, Joon small; red: an order ticket on the rail.",
+      "present": [
+        [
+          14,
+          23
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "diningroom",
+      "name": "The Copper Pot",
+      "resident": "joon",
+      "hours": "Dinner 6–10 pm; Joon comes out to the tables.",
+      "story": "A small dining room of eight tables. Book, order, ask what's in it, send something back politely: Joon would rather hear it than guess.",
+      "district": "market",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Table for two",
+          "prop": "a lit table with a RESERVED card",
+          "title": "A Table By The Window"
+        },
+        {
+          "label": "Wrong order",
+          "prop": "a plate that isn't what was ordered",
+          "title": "I Asked For The Soup"
+        },
+        {
+          "label": "Full house",
+          "prop": "every table full, a waiting list on the door",
+          "title": "Fully Booked, Ask Anyway"
+        }
+      ],
+      "music": "Elegant slow jazz piano with soft brushes, a candlelit dinner, 72 bpm.",
+      "ambience": "Quiet restaurant: cutlery on plates, murmured conversations, glasses clinking, a kitchen door swinging.",
+      "art": "Deep aubergine field; eight small table lamps as warm dots receding, Joon small in the kitchen doorway's light; red: one folded napkin.",
+      "present": [
+        [
+          18,
+          22
+        ]
+      ],
+      "stage": "visitor",
+      "existing": false
+    },
+    {
+      "id": "cookclass",
+      "name": "The cooking class",
+      "resident": "joon",
+      "hours": "Saturday-style class 10 am–noon, six cooks in the community kitchen.",
+      "story": "Joon teaches six neighbours one dish at a time. He shows, says almost nothing, and needs someone to say the steps out loud.",
+      "district": "market",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Step one",
+          "prop": "six stations, six bowls, one recipe on a board",
+          "title": "First, Wash The Rice"
+        },
+        {
+          "label": "Missing ingredient",
+          "prop": "an empty jar on the shelf",
+          "title": "We Are Out Of Something"
+        },
+        {
+          "label": "Taste test",
+          "prop": "six plates lined up for judging",
+          "title": "Everyone’s Is Different"
+        }
+      ],
+      "music": "Cheerful light pizzicato and marimba, a kitchen in the morning, 100 bpm.",
+      "ambience": "Teaching kitchen: bowls clinking, water running, a timer ticking, soft laughter.",
+      "art": "Clean pale-blue morning field; six identical stations in a neat grid, Joon tiny at the front; red: the kitchen timer.",
+      "present": [
+        [
+          10,
+          12
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "repaircafe",
+      "name": "The Repair Café",
+      "resident": "elif",
+      "hours": "Bring it broken, noon–4 pm.",
+      "story": "Long tables of broken toasters, lamps and umbrellas. Elif fixes them, but only if you can explain what's wrong.",
+      "district": "market",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Bring it broken",
+          "prop": "a table of broken things with paper labels",
+          "title": "Explain The Problem"
+        },
+        {
+          "label": "No word for it",
+          "prop": "a small part with no name in Elif's palm",
+          "title": "The Little Thing That Clicks"
+        },
+        {
+          "label": "It works!",
+          "prop": "a lamp switched on for the first time in years",
+          "title": "Good As New, Nearly"
+        }
+      ],
+      "music": "Ticking, tinkering percussion with a warm clarinet, curious and satisfied, 94 bpm.",
+      "ambience": "Workshop: a small drill whirring briefly, metal parts clinking, a radio murmur, a lamp clicking on.",
+      "art": "Moss-green field; one long table running diagonally across the frame, covered in small dark objects, Elif small under a work lamp; red: a toolbox.",
+      "present": [
+        [
+          12,
+          16
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "pharmacy",
+      "name": "The pharmacy counter",
+      "resident": "amani",
+      "hours": "Amani covers the counter 4–8 pm, after her clinic shift.",
+      "story": "A tidy counter of small drawers. Amani explains how and when to take things, and checks you understood.",
+      "district": "market",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Prescription",
+          "prop": "a paper bag with a printed label",
+          "title": "Twice A Day, With Food"
+        },
+        {
+          "label": "Forgot the name",
+          "prop": "an empty box brought from home",
+          "title": "It Looks Like This One"
+        },
+        {
+          "label": "Closing up",
+          "prop": "the shutter half down and a bell for after hours",
+          "title": "Ring The Bell, Gently"
+        }
+      ],
+      "music": "Clean, calm marimba and a soft synth pad, reassuring and simple, 80 bpm.",
+      "ambience": "Small pharmacy: a drawer sliding, a paper bag rustling, a gentle shop bell, quiet room tone.",
+      "art": "Cool mint-white field; a wall of tiny drawers, Amani's big soft shape behind a small counter; red: the label on the bag.",
+      "present": [
+        [
+          16,
+          20
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "arcade",
+      "name": "The arcade",
+      "resident": "pip",
+      "hours": "Any time; Pip has a high score to defend.",
+      "story": "Three old cabinets and a high-score board. Pip is second, by eleven points, to someone called MAGS.",
+      "district": "market",
+      "interior": true,
+      "variants": [
+        {
+          "label": "High scores",
+          "prop": "the high-score board with Pip in second place",
+          "title": "Second Place, Again"
+        },
+        {
+          "label": "Out of tokens",
+          "prop": "an empty token cup",
+          "title": "One More Go"
+        },
+        {
+          "label": "Two-player",
+          "prop": "two stools in front of one machine",
+          "title": "Player Two, Press Start"
+        }
+      ],
+      "music": "Soft dreamy chiptune, slowed down and warm, nostalgic, 90 bpm.",
+      "ambience": "Quiet arcade: cabinets humming and blipping, buttons clicking, a token dropping.",
+      "art": "Night-indigo room; three tall cabinets as narrow lit rectangles in the dark, Pip tiny between them; red: the high-score digits.",
+      "present": [
+        [
+          0,
+          24
+        ]
+      ],
+      "stage": "visitor",
+      "existing": false
+    },
+    {
+      "id": "harbour",
+      "name": "The harbour",
+      "resident": "mags",
+      "hours": "Mags walks the pier from 5 am to 10 pm.",
+      "story": "A long thin pier, a lighthouse, and Mags, who counts the boats twice before she goes home.",
+      "district": "harbour",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Evening tide",
+          "prop": "the tide, the lighthouse beam, one small boat",
+          "title": "The Tide Keeps Its Own Hours"
+        },
+        {
+          "label": "A crate with no label",
+          "prop": "a wooden crate with no label at the end of the pier",
+          "title": "Still Life With Unlabelled Crate"
+        },
+        {
+          "label": "Lantern boats",
+          "prop": "little paper lantern boats on the water",
+          "title": "Somebody Has To Light Them"
+        }
+      ],
+      "music": "A slow, misty harbour piece: a low cello drone, a few sparse harp notes, distant bell buoy tones, wide and calm, grey-blue sea at dusk, 56 bpm.",
+      "ambience": "Calm harbour ambience: gentle waves lapping on wooden posts, rope creaks, distant gulls, soft wind over water.",
+      "art": "Grey-blue sea field; a long thin pier on a diagonal into haze, the lighthouse small at the far end, Mags tall and thin on the boards; red: the lighthouse lamp.",
+      "present": [
+        [
+          5,
+          22
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": true,
+      "keys": {
+        "music": "harbour",
+        "ambience": "sea"
+      }
+    },
+    {
+      "id": "lighthouse",
+      "name": "The lighthouse gallery",
+      "resident": "mags",
+      "hours": "Mags climbs up to check the lamp, 5–7 pm.",
+      "story": "A spiral stair and, at the top, a narrow gallery over the whole sea. Mags checks the lamp and is more talkative up here than anywhere.",
+      "district": "harbour",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Lamp check",
+          "prop": "the great lamp and a logbook",
+          "title": "Lit, On Time"
+        },
+        {
+          "label": "Fog coming",
+          "prop": "a soft wall of fog rolling in",
+          "title": "The Fog Has An Appointment"
+        },
+        {
+          "label": "A ship’s bell",
+          "prop": "an old ship's bell that nobody rings",
+          "title": "Ring It Once"
+        }
+      ],
+      "music": "Slow, wide strings and a distant low horn tone, spacious and calm, 54 bpm.",
+      "ambience": "Top of a lighthouse: wind around glass, the lamp's mechanism turning, waves far below.",
+      "art": "Sea-grey field that is almost all sky; the gallery rail a thin curve at the very bottom, Mags tiny against it; red: the lamp glow.",
+      "present": [
+        [
+          17,
+          19
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "yard",
+      "name": "The shipping yard",
+      "resident": "hank",
+      "hours": "Hank runs the crew 6 am–2 pm.",
+      "story": "Crates, a crane and Hank shouting numbers. Everything is late, everything is a deal, and he's one person short again.",
+      "district": "harbour",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Loading",
+          "prop": "stacked crates and a crane hook",
+          "title": "Fifty Crates By Noon"
+        },
+        {
+          "label": "Wrong delivery",
+          "prop": "a crate of three hundred rubber ducks",
+          "title": "Not What We Ordered"
+        },
+        {
+          "label": "Break time",
+          "prop": "the crew's flask on a crate",
+          "title": "Ten Minutes, Then Back To It"
+        }
+      ],
+      "music": "A driving, good-humoured blues shuffle on harmonica and stand-up bass, 112 bpm.",
+      "ambience": "Working dockyard: a crane winch, crates thudding, gulls, a distant ship horn.",
+      "art": "Rust-orange haze; crates stacked into a stepped skyline, a crane's long arm across the top, Hank tiny on one crate; red: one crate.",
+      "present": [
+        [
+          6,
+          14
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "crewhut",
+      "name": "The crew hut",
+      "resident": "hank",
+      "hours": "Paperwork and cards, 3–6 pm.",
+      "story": "A tin hut with a stove, a card table and a board of shifts. Hank does the paperwork badly and talks a lot when you help.",
+      "district": "harbour",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Rota day",
+          "prop": "a shift rota covered in crossings-out",
+          "title": "Who Is Working Sunday?"
+        },
+        {
+          "label": "Cards",
+          "prop": "a deck of cards mid-shuffle",
+          "title": "Deal Me In"
+        },
+        {
+          "label": "A thank-you note",
+          "prop": "a thank-you card pinned up, which Hank pretends not to have read",
+          "title": "Nobody Sent This"
+        }
+      ],
+      "music": "Warm country-blues guitar, unhurried and a little gruff, late afternoon, 80 bpm.",
+      "ambience": "Tin hut: a small stove ticking, cards shuffling, rain on a metal roof.",
+      "art": "Dull teal field; one tin hut small at the left of an empty quay, a lit window; red: the stove door's glow.",
+      "present": [
+        [
+          15,
+          18
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "boatclub",
+      "name": "The rowing club",
+      "resident": "hank",
+      "hours": "The crew rows 5–6 am, before work.",
+      "story": "A boathouse with long thin boats racked to the roof. Hank's crew trains for the Harbour Race and needs someone to call the stroke.",
+      "district": "harbour",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Dawn row",
+          "prop": "a long boat on the ramp, oars upright",
+          "title": "In, Out, In, Out"
+        },
+        {
+          "label": "Race poster",
+          "prop": "a HARBOUR RACE poster with a date",
+          "title": "Nineteen Years Of Second"
+        },
+        {
+          "label": "A boat to name",
+          "prop": "a new boat with a blank name plate",
+          "title": "Name Her Something Good"
+        }
+      ],
+      "music": "A steady rowing rhythm of low drums and soft strings, determined and bright, 96 bpm.",
+      "ambience": "Boathouse at dawn: water slapping, oars knocking, wooden boats creaking.",
+      "art": "Pale dawn-pink field; long thin boats as horizontal strokes stacked up the boathouse wall, Hank small in the open door; red: one oar blade.",
+      "present": [
+        [
+          5,
+          6
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "roastery",
+      "name": "The roastery shed",
+      "resident": "mei",
+      "hours": "Mei roasts the café's beans 6–7 am.",
+      "story": "A shed at the harbour's end where Mei roasts coffee before she opens. It's the only place she admits she's worried.",
+      "district": "harbour",
+      "interior": true,
+      "variants": [
+        {
+          "label": "First roast",
+          "prop": "the roaster drum turning, a sack of beans",
+          "title": "Smells Like Morning"
+        },
+        {
+          "label": "Hank’s order",
+          "prop": "fifty bags stacked and labelled HANK",
+          "title": "Fifty Kilos, Again"
+        },
+        {
+          "label": "Too dark",
+          "prop": "a tray of over-roasted beans still smoking",
+          "title": "A Shade Too Dark"
+        }
+      ],
+      "music": "A slow warm guitar loop with soft hand percussion, a gentle early morning, 78 bpm.",
+      "ambience": "A coffee roaster turning and crackling, a fan humming, gulls outside.",
+      "art": "Ash-brown field; a single shed small at the end of a long quay, smoke rising straight up; red: the roaster's dial.",
+      "present": [
+        [
+          6,
+          7
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "fishmarket",
+      "name": "The fish market",
+      "resident": "joon",
+      "hours": "Joon chooses the day's fish 5–7 am.",
+      "story": "Long wet tables under a roof at dawn. Joon chooses carefully, never haggles, and needs help asking for exactly what he wants.",
+      "district": "harbour",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Early pick",
+          "prop": "ice trays and a chalked price board",
+          "title": "The Freshest One"
+        },
+        {
+          "label": "Sold out",
+          "prop": "an empty tray and one sign",
+          "title": "You Should Have Come At Five"
+        },
+        {
+          "label": "A strange catch",
+          "prop": "an odd fish that nobody can name",
+          "title": "What Do We Call It?"
+        }
+      ],
+      "music": "Brisk morning folk with fiddle and soft drum, cold and bright, 106 bpm.",
+      "ambience": "Dawn fish market: ice shovelled, water hosed, gulls, distant calls.",
+      "art": "Silver-grey field; a long roof on thin posts, the tables beneath as pale bars, Joon small; red: a fish crate.",
+      "present": [
+        [
+          5,
+          7
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "inn",
+      "name": "The Lantern Inn",
+      "resident": "nell",
+      "hours": "Front desk 9:30 am–6 pm.",
+      "story": "A small old inn with a bell on the desk. Check-ins, complaints and lost keys, all sorted by Nell with tea and a list.",
+      "district": "harbour",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Check-in",
+          "prop": "the desk bell and a register",
+          "title": "Ring For Service"
+        },
+        {
+          "label": "Overbooked",
+          "prop": "a FULL sign and three guests' bags in the lobby",
+          "title": "One Room, Three Guests"
+        },
+        {
+          "label": "A complaint",
+          "prop": "a note on the desk: THE TAP DRIPS",
+          "title": "Drip, Drip, Sorted"
+        }
+      ],
+      "music": "Warm, relaxed acoustic guitar with soft slide, easy hospitality, 82 bpm.",
+      "ambience": "Small inn lobby: a desk bell, a clock, a kettle, footsteps on old floorboards.",
+      "art": "Warm plum field; a low wide lobby, one lamp, the desk a dark band, Nell's fan ears above it; red: the desk bell.",
+      "present": [
+        [
+          9.5,
+          18
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "breakfast",
+      "name": "The inn’s breakfast room",
+      "resident": "nell",
+      "hours": "Breakfast 6:30–9:30 am.",
+      "story": "Six tables with toast racks and a window on the harbour. Guests from everywhere, and Nell needs a hand with the one who just arrived.",
+      "district": "harbour",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Breakfast",
+          "prop": "toast racks and a teapot on every table",
+          "title": "Toast For Everyone"
+        },
+        {
+          "label": "A lost guest",
+          "prop": "a guest holding a map upside down",
+          "title": "Which Way Is The Ferry?"
+        },
+        {
+          "label": "No milk",
+          "prop": "an empty milk jug and a queue",
+          "title": "Black Tea Today, Then"
+        }
+      ],
+      "music": "Bright easy acoustic guitar and soft whistling, a sunny morning, 92 bpm.",
+      "ambience": "Breakfast room: cutlery, a toaster, a kettle boiling, gulls outside the window.",
+      "art": "Butter-cream morning field; one big window of harbour light dominates, tables as small silhouettes beneath it; red: a teapot.",
+      "present": [
+        [
+          6.5,
+          9.5
+        ]
+      ],
+      "stage": "visitor",
+      "existing": false
+    },
+    {
+      "id": "hotellobby",
+      "name": "The Pelican Hotel lobby",
+      "resident": "orla",
+      "hours": "Orla is at the concierge desk 2–5 pm and 7 pm–1 am.",
+      "story": "A grand, slightly faded lobby with a revolving door. Orla knows the answer to everything except the question she's most curious about: what is it like anywhere else?",
+      "district": "harbour",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Concierge desk",
+          "prop": "a desk with maps fanned out and a bell",
+          "title": "Ask Orla Anything"
+        },
+        {
+          "label": "Wrong luggage",
+          "prop": "a pile of luggage tagged for another town",
+          "title": "These Aren’t My Bags"
+        },
+        {
+          "label": "Late arrival",
+          "prop": "a guest with a dripping umbrella at midnight",
+          "title": "Midnight Check-In"
+        }
+      ],
+      "music": "Elegant slow lounge piano with a soft upright bass, polished and kind, 76 bpm.",
+      "ambience": "Hotel lobby: a revolving door, a desk bell, soft steps on marble, a lift chime.",
+      "art": "Deep green field; a tall lobby, a chandelier as one soft glow, the revolving door at left, Orla small at the desk; red: the carpet runner.",
+      "present": [
+        [
+          14,
+          17
+        ],
+        [
+          19,
+          1
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "lostfound",
+      "name": "The hotel’s lost and found",
+      "resident": "orla",
+      "hours": "11 pm–1 am, when the lobby is quiet.",
+      "story": "A back room of shelves of left-behind things. Orla returns them, and to do it she needs help describing, phoning and writing.",
+      "district": "harbour",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Shelves of things",
+          "prop": "shelves of umbrellas, hats and one trumpet",
+          "title": "Left Behind, Looked After"
+        },
+        {
+          "label": "A tagged suitcase",
+          "prop": "a suitcase with a luggage tag from far away",
+          "title": "Long Way From Home"
+        },
+        {
+          "label": "Call back",
+          "prop": "an old phone with a note: CALL BACK",
+          "title": "Return The Call"
+        }
+      ],
+      "music": "Quiet, curious celesta and pizzicato, cosy late night, 70 bpm.",
+      "ambience": "Small back room at night: a clock, a shelf creaking, a phone ringing once, the hotel's distant hum.",
+      "art": "Ink-blue field; floor-to-ceiling shelves of small soft shapes under one bulb, Orla small on a step ladder; red: a hat on the top shelf.",
+      "present": [
+        [
+          23,
+          1
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "apartment",
+      "name": "The flat on Gull Street",
+      "resident": "mags",
+      "hours": "Viewings 11 am–1 pm.",
+      "story": "An empty flat to let: two rooms and a view of the masts. Mags shows it carefully and expects good questions.",
+      "district": "harbour",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Viewing",
+          "prop": "an empty room, a window and a clipboard",
+          "title": "Two Rooms, One View"
+        },
+        {
+          "label": "Something doesn’t work",
+          "prop": "a radiator with a note: DOESN'T WORK",
+          "title": "It Gets Warm Eventually"
+        },
+        {
+          "label": "Signing day",
+          "prop": "a contract on the windowsill and a pen",
+          "title": "Read It Before You Sign"
+        }
+      ],
+      "music": "Hopeful, sparse piano with soft strings, a new beginning, 68 bpm.",
+      "ambience": "Empty flat: echoing footsteps, a window opened onto gulls and the harbour, a creaking floor.",
+      "art": "Bone-white empty room; one big window full of masts, two tiny figures in the bare space; red: the window latch.",
+      "present": [
+        [
+          11,
+          13
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "beach",
+      "name": "Shingle Beach",
+      "resident": "rafa",
+      "hours": "Rafa's dawn swim and a ball game, 5:30–7 am.",
+      "story": "A strip of pebbles past the harbour wall. Rafa swims at dawn whatever the weather and recruits anyone for a game.",
+      "district": "harbour",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Dawn swim",
+          "prop": "a towel on the stones and a calm sea",
+          "title": "The Water Is Fine, Honestly"
+        },
+        {
+          "label": "Ball game",
+          "prop": "a ball and two piles of stones for goals",
+          "title": "Two Goals, No Rules"
+        },
+        {
+          "label": "Cold today",
+          "prop": "a little sign: SEA 9°",
+          "title": "Nine Degrees Of Courage"
+        }
+      ],
+      "music": "Gentle bossa nova guitar and soft percussion, salty dawn light, 84 bpm.",
+      "ambience": "Pebble beach at dawn: small waves on shingle, stones clicking, gulls.",
+      "art": "Peach-grey dawn; the sea a flat band, the beach a lower band, nothing else, Rafa's stripes small in between; red: the towel.",
+      "present": [
+        [
+          5.5,
+          7
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "ferryterminal",
+      "name": "The ferry terminal",
+      "resident": "norma",
+      "hours": "Boarding at quarter to every hour, 7 am–7 pm.",
+      "story": "A glass hall with a departures board and announcements that echo. Norma walks through before every crossing to check nobody's lost.",
+      "district": "crossings",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Boarding",
+          "prop": "the board: GULL ISLAND 10:00 BOARDING",
+          "title": "Now Boarding, Mostly"
+        },
+        {
+          "label": "Fog delay",
+          "prop": "the board: DELAYED, FOG",
+          "title": "The Sea Is Thinking About It"
+        },
+        {
+          "label": "A ticket mix-up",
+          "prop": "two passengers holding the same seat number",
+          "title": "Seat 12, Twice"
+        }
+      ],
+      "music": "A relaxed, warm one-drop groove with soft organ and bass, gentle and spacious, 76 bpm.",
+      "ambience": "Ferry terminal hall: a chime, an echoing announcement with no clear words, rolling suitcases, a sliding door.",
+      "art": "Pale aqua field; a huge glass wall of grid panes with the ferry tiny beyond it, the board high up, tiny figures; red: the barrier light.",
+      "present": [
+        [
+          6.75,
+          19
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "ferry",
+      "name": "The ferry deck",
+      "resident": "norma",
+      "hours": "Crossings leave on the hour, 7 am–7 pm; twenty-five minutes each way.",
+      "story": "An open deck with benches, gulls and a long wake. Norma does the announcements herself and talks to whoever stands at the rail.",
+      "district": "crossings",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Crossing",
+          "prop": "benches, the rail and a life ring",
+          "title": "Twenty-Five Minutes To The Island"
+        },
+        {
+          "label": "Choppy",
+          "prop": "spray over the rail, passengers holding their hats",
+          "title": "Hold On To Your Hat"
+        },
+        {
+          "label": "Gulls on board",
+          "prop": "gulls lined up along the rail",
+          "title": "Paying Passengers Only"
+        }
+      ],
+      "music": "A gently swaying tune on soft marimba and nylon guitar, sea breeze, 88 bpm.",
+      "ambience": "Ferry deck: engine throb, wind, waves against the hull, gulls, a horn once.",
+      "art": "Sea-teal field; the deck rail a long diagonal from bottom left into open water and haze, Norma small at the rail; red: the life ring.",
+      "present": [
+        [
+          7,
+          19
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "wheelhouse",
+      "name": "The wheelhouse",
+      "resident": "norma",
+      "hours": "The night crossing, 7–10 pm.",
+      "story": "The ferry's small bridge at night: dials glowing, the logbook open. Norma lets one passenger up on the last crossing.",
+      "district": "crossings",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Night crossing",
+          "prop": "the wheel, glowing dials and the dark sea",
+          "title": "Last Crossing, Lights On"
+        },
+        {
+          "label": "The logbook",
+          "prop": "the logbook open at a page with your name",
+          "title": "Passenger, First Crossing"
+        },
+        {
+          "label": "Radio check",
+          "prop": "the ship's radio crackling with the harbour",
+          "title": "Ferry To Harbour, Over"
+        }
+      ],
+      "music": "Slow deep warm bass and soft organ with distant chimes, the night sea, 64 bpm.",
+      "ambience": "Ship's wheelhouse at night: engine hum, radio crackle, instruments ticking, waves outside.",
+      "art": "Night-blue field through wide wheelhouse windows; glowing dials as tiny warm points, Norma's big soft shape at the wheel; red: the port lamp.",
+      "present": [
+        [
+          19,
+          22
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "slipway",
+      "name": "The slipway",
+      "resident": "norma",
+      "hours": "Norma paints and patches 5–7 am, before the first crossing.",
+      "story": "Where the ferry's little tender is painted and patched. Norma works at dawn and plans the Harbour Race out loud.",
+      "district": "crossings",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Painting",
+          "prop": "a small boat on blocks and a pot of paint",
+          "title": "Two Coats, Then Coffee"
+        },
+        {
+          "label": "Race plans",
+          "prop": "a race plan chalked on the slipway wall",
+          "title": "This Year, First Place"
+        },
+        {
+          "label": "Tide’s in",
+          "prop": "water creeping up the ramp towards the paint pot",
+          "title": "The Tide Didn’t Ask"
+        }
+      ],
+      "music": "A slow, hopeful acoustic tune with soft organ, early morning work, 72 bpm.",
+      "ambience": "Slipway at dawn: a paintbrush on wood, small waves on a concrete ramp, gulls.",
+      "art": "Pale rose dawn; a concrete ramp on a diagonal into still water, one upturned boat, Norma tiny beside it; red: the paint pot.",
+      "present": [
+        [
+          5,
+          7
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "gulljetty",
+      "name": "The jetty at Gull Island",
+      "resident": "norma",
+      "hours": "The ferry ties up at twenty-five past each hour, 7 am–7 pm.",
+      "story": "The ferry's far stop: a wooden jetty, a tea kiosk and an island path. Day-trippers ask Norma everything in the ten minutes before she heads back.",
+      "district": "crossings",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Ten minutes",
+          "prop": "the jetty, the kiosk and the ferry tied up",
+          "title": "Back In Ten Minutes"
+        },
+        {
+          "label": "Missed the boat",
+          "prop": "the ferry pulling away and one figure left on the jetty",
+          "title": "The Next One Is In An Hour"
+        },
+        {
+          "label": "Island map",
+          "prop": "a weathered map board: YOU ARE HERE",
+          "title": "You Are Here, Roughly"
+        }
+      ],
+      "music": "A lazy, sunny island guitar with soft hand percussion, 82 bpm.",
+      "ambience": "Island jetty: wooden boards, gentle water, wind in long grass, gulls, a ferry engine idling.",
+      "art": "Wide pale-blue sky and sea; a thin jetty poking in from the right, a tiny kiosk, Norma small at the end; red: the kiosk awning.",
+      "present": [
+        [
+          7,
+          19
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "airgate",
+      "name": "The airfield gate",
+      "resident": "thandi",
+      "hours": "The dawn plane to the Far Shore leaves at 6:15; Thandi is often on it.",
+      "story": "One gate, one little propeller plane and a waiting room of five chairs. Thandi flies out to pitch, and she is practising in the corner.",
+      "district": "crossings",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Boarding soon",
+          "prop": "five chairs and a window onto a small plane",
+          "title": "Gate One Of One"
+        },
+        {
+          "label": "Delayed",
+          "prop": "a board: DELAYED 40 MIN",
+          "title": "Forty Minutes To Practise"
+        },
+        {
+          "label": "Bag too big",
+          "prop": "a suitcase that doesn't fit the size frame",
+          "title": "Hand Luggage, Allegedly"
+        }
+      ],
+      "music": "Bright, excited minimal piano arpeggios over a soft pulse, 112 bpm.",
+      "ambience": "Small airport waiting room: a propeller engine starting outside, a soft chime, an announcement with no clear words.",
+      "art": "Dawn-apricot field; a long window across the frame, a tiny plane outside on an endless flat runway, Thandi small on tiptoe; red: the plane's tail stripe.",
+      "present": [
+        [
+          5.5,
+          6.5
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "airarrivals",
+      "name": "Airfield arrivals",
+      "resident": "orla",
+      "hours": "The plane lands at 11; Orla meets guests 10:30–11:30.",
+      "story": "A hut, a windsock and Orla with a name sign. The plane brings strangers, and Orla needs help welcoming them.",
+      "district": "crossings",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Name signs",
+          "prop": "Orla holding a sign with a guest's name on it",
+          "title": "Welcome, Whoever You Are"
+        },
+        {
+          "label": "A bag on the wrong plane",
+          "prop": "an empty luggage belt going round",
+          "title": "The Bag Took Another Plane"
+        },
+        {
+          "label": "Wrong town",
+          "prop": "a guest with a ticket for somewhere else",
+          "title": "You’re In Natterwick, Actually"
+        }
+      ],
+      "music": "Warm, lilting fiddle and guitar, welcoming and bright, 96 bpm.",
+      "ambience": "Small arrivals hall: a luggage belt rumbling, a door hissing open, a propeller winding down outside.",
+      "art": "Wide windswept sage field; a single hut and a windsock at the end of a flat runway, Orla tiny with her sign; red: the windsock.",
+      "present": [
+        [
+          10.5,
+          11.5
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "bankbooth",
+      "name": "The bank booth at the terminal",
+      "resident": "marnie",
+      "hours": "Open 4:30–6 pm for travellers on the evening ferry.",
+      "story": "A booth the size of a cupboard. Marnie changes money for the island and answers more questions about the island than about money.",
+      "district": "crossings",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Exchange",
+          "prop": "a little window and a board of rates",
+          "title": "Today’s Rate, Roughly Fair"
+        },
+        {
+          "label": "Closing",
+          "prop": "a CLOSED sign half turned",
+          "title": "One More, Then Closed"
+        },
+        {
+          "label": "Coins",
+          "prop": "a jar of coins from everywhere",
+          "title": "Coins From Everywhere"
+        }
+      ],
+      "music": "Neat light jazz on vibraphone and bass, the end of the day, 90 bpm.",
+      "ambience": "Terminal corner: a coin tray, a booth window sliding, distant announcements, footsteps.",
+      "art": "Dim brass-gold field; one small lit booth in a vast dark hall, Marnie's antlers filling its window; red: the CLOSED sign.",
+      "present": [
+        [
+          16.5,
+          18
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "interview",
+      "name": "The interview room",
+      "resident": "dex",
+      "hours": "Dex sees people from 8 am to 8 pm.",
+      "story": "A plain room with blinds and two chairs. Dex is fair, direct and secretly rooting for you.",
+      "district": "hollowbrook",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Your turn",
+          "prop": "a red folder on the table, an empty chair for you",
+          "title": "Can You Give Me A Number?"
+        },
+        {
+          "label": "Coffee gone cold",
+          "prop": "a cup of coffee gone cold",
+          "title": "The Coffee Went Cold"
+        },
+        {
+          "label": "Tell me about a time",
+          "prop": "Dex leaning in, listening",
+          "title": "Tell Me About A Time"
+        }
+      ],
+      "music": "Minimal, patient felt piano, a few sustained notes and gentle pauses, focused and warm, encouraging, slow.",
+      "ambience": "Quiet office room tone: faint air conditioning, a clock ticking, the soft hum of a building.",
+      "art": "Slate-grey field; blinds throw horizontal stripes of light across the back wall, one table, two chairs, Dex large and still; red: the folder.",
+      "present": [
+        [
+          8,
+          20
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": true,
+      "keys": {
+        "music": "interview",
+        "ambience": "office"
+      }
+    },
+    {
+      "id": "office",
+      "name": "The Hollowbrook office",
+      "resident": "sol",
+      "hours": "9 am–noon and 1:30–5 pm; stand-up at 9:15.",
+      "story": "Rows of desks, a whiteboard and a plant everyone forgets to water. Sol runs the stand-up and notices everything.",
+      "district": "hollowbrook",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Stand-up",
+          "prop": "a circle of tiny figures by the whiteboard",
+          "title": "Yesterday, Today, Blockers"
+        },
+        {
+          "label": "Deadline",
+          "prop": "a whiteboard with FRIDAY circled",
+          "title": "Just To Confirm, Friday"
+        },
+        {
+          "label": "New starter",
+          "prop": "an empty desk with a welcome card",
+          "title": "Welcome, You"
+        }
+      ],
+      "music": "A light, focused electronic pulse with soft marimba, a productive morning, 100 bpm.",
+      "ambience": "Open-plan office: keyboards, a printer, a phone ringing far off, soft voices.",
+      "art": "Pale teal field; rows of identical desks in strict one-point perspective, Sol tiny by the whiteboard; red: the circle around FRIDAY.",
+      "present": [
+        [
+          9,
+          12
+        ],
+        [
+          13.5,
+          17
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "meetingroom",
+      "name": "Meeting room B",
+      "resident": "sol",
+      "hours": "Meetings at 10 am and 2–4 pm.",
+      "story": "A glass room with a long table, a screen and too many chairs. Everyone talks at once until someone says the useful thing.",
+      "district": "hollowbrook",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Status meeting",
+          "prop": "a long table and a chart on the screen",
+          "title": "Any Questions?"
+        },
+        {
+          "label": "Video call",
+          "prop": "a screen of tiny faces",
+          "title": "You’re On Mute"
+        },
+        {
+          "label": "Double-booked",
+          "prop": "a second team waiting at the glass door",
+          "title": "We Had It Booked"
+        }
+      ],
+      "music": "Minimal, steady piano and soft synth, focused and patient, 84 bpm.",
+      "ambience": "Meeting room: a projector fan, chairs rolling, a pen tapping, a door clicking shut.",
+      "art": "Glass-blue field; the meeting room a lit glass box floating in a dark floor, tiny figures round a long table; red: one bar of the chart.",
+      "present": [
+        [
+          10,
+          11
+        ],
+        [
+          14,
+          16
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "canteen",
+      "name": "The Hollowbrook canteen",
+      "resident": "sol",
+      "hours": "Lunch noon–1:30 pm.",
+      "story": "A long canteen where Sol eats quickly and catches up with everyone: the best place in the building for small talk with people you don't know.",
+      "district": "hollowbrook",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Lunch queue",
+          "prop": "trays and a menu board",
+          "title": "Soup Or Salad?"
+        },
+        {
+          "label": "Shared table",
+          "prop": "one free seat at a full table",
+          "title": "Is This Seat Taken?"
+        },
+        {
+          "label": "Birthday cake",
+          "prop": "a cake with candles for a colleague",
+          "title": "Happy Birthday, Whoever You Are"
+        }
+      ],
+      "music": "Bright, bouncy light funk with soft bass, lunchtime, 104 bpm.",
+      "ambience": "Office canteen: trays clattering, a coffee machine, chatter, chairs scraping.",
+      "art": "Mustard-cream field; long tables on parallel diagonals, tiny figures, Sol's big eyes catching the light; red: a tray.",
+      "present": [
+        [
+          12,
+          13.5
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "boardroom",
+      "name": "The boardroom",
+      "resident": "dex",
+      "hours": "Client meetings 9–11 am.",
+      "story": "A long dark table on the top floor. Dex plays the client, the boss or the board, then steps out of the role to name one strong thing.",
+      "district": "hollowbrook",
+      "interior": true,
+      "variants": [
+        {
+          "label": "The client",
+          "prop": "a long table, one chair for you, a jug of water",
+          "title": "The Client Has Questions"
+        },
+        {
+          "label": "Defend the number",
+          "prop": "a single number on the screen",
+          "title": "Defend This Number"
+        },
+        {
+          "label": "Running late",
+          "prop": "an empty boardroom and a clock",
+          "title": "They’re Ten Minutes Late"
+        }
+      ],
+      "music": "Serious but warm low strings and sparse piano, steady, 70 bpm.",
+      "ambience": "Quiet top-floor room: air conditioning hum, a pen clicking, wind against high windows.",
+      "art": "Charcoal field; a very long dark table in one-point perspective towards a window of sky, Dex small at the far end; red: a pen.",
+      "present": [
+        [
+          9,
+          11
+        ]
+      ],
+      "stage": "local",
+      "existing": false
+    },
+    {
+      "id": "cowork",
+      "name": "The Shed",
+      "resident": "thandi",
+      "hours": "8 am–noon and 1–6 pm.",
+      "story": "A converted bike shed of desks, plants and whiteboards. Thandi's two-person startup lives in one corner and needs help with everything.",
+      "district": "hollowbrook",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Sprint",
+          "prop": "a whiteboard covered in sticky notes",
+          "title": "Ship It By Friday"
+        },
+        {
+          "label": "Hiring",
+          "prop": "a HIRING sign taped to the bike rack",
+          "title": "We’re Hiring, Kind Of"
+        },
+        {
+          "label": "Demo crash",
+          "prop": "a laptop showing an error message",
+          "title": "It Worked Five Minutes Ago"
+        }
+      ],
+      "music": "Upbeat indie guitar and a light electronic beat, scrappy and hopeful, 116 bpm.",
+      "ambience": "Busy co-working space: keyboards, a bike bell, a kettle, a marker squeaking on a whiteboard.",
+      "art": "Sage-grey field; high corrugated roof lines, a bike hanging from the rafters, desks scattered, Thandi tiny standing on a chair; red: the bicycle.",
+      "present": [
+        [
+          8,
+          12
+        ],
+        [
+          13,
+          18
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "lift",
+      "name": "The glass lift",
+      "resident": "thandi",
+      "hours": "Up and down all day; Thandi rides it to practise.",
+      "story": "A glass lift up the outside of Hollowbrook. Thirty seconds from ground to top, which is exactly how long an elevator pitch should be.",
+      "district": "hollowbrook",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Going up",
+          "prop": "the lift buttons and the town dropping away",
+          "title": "Thirty Seconds, Go"
+        },
+        {
+          "label": "Every floor",
+          "prop": "the lift stopping at every single floor",
+          "title": "Every Floor, Every Time"
+        },
+        {
+          "label": "Someone important",
+          "prop": "a tiny figure in a suit stepping in",
+          "title": "Pitch Them Now"
+        }
+      ],
+      "music": "Light ascending pizzicato over a ticking pulse, playful time pressure, 120 bpm.",
+      "ambience": "Lift: a soft hum, a ding, doors sliding, the town muffled below.",
+      "art": "Twilight-violet field; the glass lift a small lit box halfway up a tall dark building edge, town lights below, Thandi tiny inside; red: the floor number.",
+      "present": [
+        [
+          8,
+          18
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "pods",
+      "name": "The phone pods",
+      "resident": "thandi",
+      "hours": "Noon–1 pm, calls with the Far Shore.",
+      "story": "Four soundproof pods for calls. Thandi rings partners on the Far Shore who talk very fast, and wants a second pair of ears.",
+      "district": "hollowbrook",
+      "interior": true,
+      "variants": [
+        {
+          "label": "On a call",
+          "prop": "a pod with a laptop and headphones",
+          "title": "Can Everyone Hear Me?"
+        },
+        {
+          "label": "Bad line",
+          "prop": "a call frozen on the screen",
+          "title": "Sorry, You Cut Out"
+        },
+        {
+          "label": "All pods busy",
+          "prop": "all four pods in use and a queue",
+          "title": "Pod Four, Any Minute"
+        }
+      ],
+      "music": "Tight, focused lo-fi with a ticking hi-hat and soft keys, 92 bpm.",
+      "ambience": "Phone pod: the office muffled outside, a laptop chime, the soft click of a door seal.",
+      "art": "Teal field; four tall pods in a row like phone boxes, one lit with Thandi's silhouette inside; red: the IN USE light.",
+      "present": [
+        [
+          12,
+          13
+        ]
+      ],
+      "stage": "local",
+      "existing": false
+    },
+    {
+      "id": "pitchroom",
+      "name": "The pitch room",
+      "resident": "thandi",
+      "hours": "Rehearsals 4–5 pm; Demo Day in Open Doors Week.",
+      "story": "A small stage and fifty folding chairs. Thandi rehearses her pitch; on Demo Day the room is full.",
+      "district": "hollowbrook",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Rehearsal",
+          "prop": "an empty room, a clicker and a screen",
+          "title": "To An Empty Room"
+        },
+        {
+          "label": "Demo Day",
+          "prop": "fifty chairs filled with tiny figures",
+          "title": "Five Minutes, Fifty Faces"
+        },
+        {
+          "label": "A hard question",
+          "prop": "a raised paw at the back of the room",
+          "title": "Good Question, Actually"
+        }
+      ],
+      "music": "Building, hopeful strings over a soft pulse, anticipation, 98 bpm.",
+      "ambience": "Small auditorium: chairs creaking, a microphone tap, a projector fan, a murmuring audience.",
+      "art": "Deep blue field; a small stage lit as a warm rectangle at the bottom, rows of tiny chairs in the dark; red: the pointer dot on the screen.",
+      "present": [
+        [
+          16,
+          17
+        ]
+      ],
+      "stage": "local",
+      "existing": false
+    },
+    {
+      "id": "terrace",
+      "name": "The roof terrace",
+      "resident": "thandi",
+      "hours": "Thandi watches the sunset and talks it out, 6–7:30 pm.",
+      "story": "The roof of Hollowbrook with deckchairs and pots of herbs. After work Thandi thinks out loud about the plan and wants honest feedback.",
+      "district": "hollowbrook",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Sunset",
+          "prop": "two deckchairs and the sunset",
+          "title": "Talk Me Out Of It"
+        },
+        {
+          "label": "The mixer",
+          "prop": "a table of lemonade and tiny figures in groups",
+          "title": "Networking, Lightly"
+        },
+        {
+          "label": "A big decision",
+          "prop": "two envelopes on one deckchair",
+          "title": "Yes Or Yes?"
+        }
+      ],
+      "music": "Warm golden-hour chill groove with soft guitar and bass, 88 bpm.",
+      "ambience": "Rooftop terrace at sunset: wind, distant traffic hum, a glass set on a table, birds.",
+      "art": "Golden-hour apricot field; a low roof edge with deckchairs in silhouette and the whole sky above, Thandi tiny on tiptoe; red: one deckchair.",
+      "present": [
+        [
+          18,
+          19.5
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "gym",
+      "name": "The Hollowbrook gym",
+      "resident": "rafa",
+      "hours": "Rafa coaches the lunchtime classes 11 am–3 pm.",
+      "story": "A basement gym of mirrors and mats. Rafa runs classes for office workers and never stops encouraging.",
+      "district": "hollowbrook",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Class",
+          "prop": "mats in rows and a stopwatch",
+          "title": "One More, You Can"
+        },
+        {
+          "label": "Empty gym",
+          "prop": "one mat, Rafa alone stretching",
+          "title": "Nobody Came, We Train Anyway"
+        },
+        {
+          "label": "New member",
+          "prop": "a NEW MEMBER form on a clipboard",
+          "title": "Sign Here, Then Stretch"
+        }
+      ],
+      "music": "An upbeat percussion groove with bright brass stabs, motivating, 124 bpm.",
+      "ambience": "Gym: a skipping rope, weights clinking, trainers squeaking, a stopwatch beep.",
+      "art": "Cool basement grey-blue; a long mirror wall doubling the room, tiny figures on mats, Rafa's stripes; red: the stopwatch.",
+      "present": [
+        [
+          11,
+          15
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "platform",
+      "name": "The train platform",
+      "resident": "sol",
+      "hours": "Sol takes the 6:40 home and arrives early, always; Sol is here any time you come.",
+      "story": "A long platform that runs into the distance. Sol checks the clock, then checks it again.",
+      "district": "station",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Waiting",
+          "prop": "the station clock with its red second hand",
+          "title": "Just To Confirm, The 6:40"
+        },
+        {
+          "label": "Delayed",
+          "prop": "the board says DELAYED",
+          "title": "Delayed, Politely"
+        },
+        {
+          "label": "A lost suitcase",
+          "prop": "a suitcase nobody has claimed",
+          "title": "Whose Suitcase Is This?"
+        }
+      ],
+      "music": "A wistful muted jazz trumpet over a soft, steady train-rhythm pulse of brushes and upright bass, dusk on an empty station, 70 bpm.",
+      "ambience": "Train station platform ambience: low rail hum, distant announcement chime with no words, wind under a canopy.",
+      "art": "Dusk-mauve sky over a long platform running to a vanishing point, the canopy one dark band, Sol tiny under the clock; red: the clock's second hand.",
+      "present": [
+        [
+          0,
+          24
+        ]
+      ],
+      "stage": "visitor",
+      "existing": true,
+      "keys": {
+        "music": "platform",
+        "ambience": "platform"
+      }
+    },
+    {
+      "id": "stationphones",
+      "name": "The station phone boxes",
+      "resident": "sol",
+      "hours": "Sol calls in to the late meeting from here, 5:30–6:40 pm.",
+      "story": "Three old phone boxes in the ticket hall. Sol calls in to the late meeting from here, and hands you the next call.",
+      "district": "station",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Calling in",
+          "prop": "Sol in a phone box with a notebook",
+          "title": "Can You Hear Me At The Back?"
+        },
+        {
+          "label": "Two out of order",
+          "prop": "two boxes OUT OF ORDER and one free",
+          "title": "Box Three Works"
+        },
+        {
+          "label": "It’s ringing",
+          "prop": "an empty box with its phone ringing",
+          "title": "Wrong Number, Right Person"
+        }
+      ],
+      "music": "Mellow trumpet over a soft ticking pulse, early evening, 76 bpm.",
+      "ambience": "Station hall: echoing footsteps, a phone ringing in a booth, coins dropping, a distant train.",
+      "art": "Ochre-dusk field; three tall dark phone boxes side by side, small in a huge tiled hall; red: one receiver.",
+      "present": [
+        [
+          17.5,
+          18.67
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "chaicart",
+      "name": "The tea cart",
+      "resident": "arjun",
+      "hours": "At the station entrance 6–8:30 am.",
+      "story": "A little cart of tea and buns before the market opens. Arjun knows every commuter's order and their train.",
+      "district": "station",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Morning rush",
+          "prop": "a queue and steaming cups",
+          "title": "The Usual, Please"
+        },
+        {
+          "label": "Exact change",
+          "prop": "a coin jar and a sign: EXACT CHANGE PLEASE",
+          "title": "Exact Change, Please"
+        },
+        {
+          "label": "Rain",
+          "prop": "an umbrella tied over the cart",
+          "title": "Tea Tastes Better Wet"
+        }
+      ],
+      "music": "Brisk morning tune of plucked strings and soft hand drums, steam and bustle, 100 bpm.",
+      "ambience": "Station entrance in the morning: a kettle whistling, cups, commuters' footsteps, a train arriving.",
+      "art": "Pale morning-blue field; the station's great arched entrance one dark arch, the cart small and steaming at its foot; red: the kettle.",
+      "present": [
+        [
+          6,
+          8.5
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "stationdesk",
+      "name": "The station travel desk",
+      "resident": "orla",
+      "hours": "Orla is at the desk noon–2 pm.",
+      "story": "A desk of timetables, maps and a bell. Orla helps travellers find trains, buses and the ferry, and swaps stories with Bea between buses.",
+      "district": "station",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Timetables",
+          "prop": "timetables fanned on the desk and a bell",
+          "title": "Which Platform, Please?"
+        },
+        {
+          "label": "Replacement bus",
+          "prop": "a sign: TRAINS REPLACED BY BUS 45",
+          "title": "Take The 45 Instead"
+        },
+        {
+          "label": "Two tickets",
+          "prop": "two tickets to somewhere, no names on them",
+          "title": "Where Shall We Go?"
+        }
+      ],
+      "music": "A lilting, cheerful folk guitar and soft whistle, travel and possibility, 96 bpm.",
+      "ambience": "Station concourse: a departure chime, rolling cases, a ticket printer, murmured voices.",
+      "art": "High airy pewter field; a huge departures board above, the small desk far below it, Orla tiny; red: the desk bell.",
+      "present": [
+        [
+          12,
+          14
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "on45",
+      "name": "Aboard the 45",
+      "resident": "bea",
+      "hours": "Bea drives 6 am–11 pm; the loop takes twenty minutes.",
+      "story": "Bea's bus from the inside: worn seats, the bell cord and Bea in the mirror. You have until the next stop to tell her the story.",
+      "district": "station",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Next stop",
+          "prop": "the bell cord and a STOPPING sign",
+          "title": "Till The Next Stop, Love"
+        },
+        {
+          "label": "Full bus",
+          "prop": "every seat taken, one standing space",
+          "title": "Standing Room Only"
+        },
+        {
+          "label": "Last bus",
+          "prop": "the bus empty at night, its lights warm",
+          "title": "Last 45 Home"
+        }
+      ],
+      "music": "Upbeat bouncy piano and brushed snare over a bus-engine groove, cheerful, 112 bpm.",
+      "ambience": "Inside a town bus: engine rumble, the stop bell's ding, doors hissing, an indicator ticking.",
+      "art": "Dusk-teal interior; two rows of soft seat shapes leading to the driver's window, street lights streaking past, Bea small in the mirror; red: the STOPPING sign.",
+      "present": [
+        [
+          6,
+          23
+        ]
+      ],
+      "stage": "visitor",
+      "existing": false
+    },
+    {
+      "id": "depot",
+      "name": "The bus depot",
+      "resident": "bea",
+      "hours": "Bea checks the 45 5–6 am and tucks it in 11 pm–midnight.",
+      "story": "A big shed of sleeping buses. Bea checks the 45 before the first run and tells it about her day after the last.",
+      "district": "station",
+      "interior": true,
+      "variants": [
+        {
+          "label": "First check",
+          "prop": "the 45 with its engine cover open and a torch",
+          "title": "Tyres, Lights, Bell"
+        },
+        {
+          "label": "A new bus",
+          "prop": "a shiny new bus parked beside the old 45",
+          "title": "The New One Has Cupholders"
+        },
+        {
+          "label": "Left on the 45",
+          "prop": "a box of things left on the bus",
+          "title": "Left On The 45"
+        }
+      ],
+      "music": "Warm, slow brass and soft piano, a gentle end of day, 66 bpm.",
+      "ambience": "Bus depot at night: an engine ticking as it cools, a hose dripping, echoing footsteps, a radio far off.",
+      "art": "Night-indigo field; rows of buses like long dark loaves in a huge shed, one lit, Bea tiny beside it; red: the neon 45.",
+      "present": [
+        [
+          5,
+          6
+        ],
+        [
+          23,
+          24
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "teahut",
+      "name": "The drivers’ tea hut",
+      "resident": "bea",
+      "hours": "Bea's breaks, 1–1:40 pm and 6–6:40 pm.",
+      "story": "A tiny hut behind the station where the drivers take their breaks. Bea, off the clock, tells the long version of everything.",
+      "district": "station",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Kettle’s on",
+          "prop": "a kettle, two mugs and Bea's cap on a hook",
+          "title": "Kettle’s On"
+        },
+        {
+          "label": "Pass it on",
+          "prop": "a stopwatch for the forty-five-second story",
+          "title": "Forty-Five Seconds, Go"
+        },
+        {
+          "label": "The rota",
+          "prop": "a drivers' rota with one gap",
+          "title": "Somebody Cover Sunday?"
+        }
+      ],
+      "music": "Cosy jaunty ukulele and soft clarinet, tea-break warmth, 96 bpm.",
+      "ambience": "Small hut: a kettle boiling, rain on a tin roof, a bus idling outside.",
+      "art": "Moss-grey field; a tiny hut with a warm window beside a vast empty bus lane; red: Bea's mug.",
+      "present": [
+        [
+          13,
+          13.67
+        ],
+        [
+          18,
+          18.67
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "sorting",
+      "name": "The sorting office",
+      "resident": "azlan",
+      "hours": "Azlan sorts the morning post 5–8 am.",
+      "story": "A long room of pigeonholes by the railway. Azlan sorts the morning post by hand and talks to every envelope.",
+      "district": "station",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Sorting",
+          "prop": "pigeonholes and a trolley of letters",
+          "title": "Every Letter Gets There"
+        },
+        {
+          "label": "No address",
+          "prop": "a shelf of letters with no address",
+          "title": "To Somebody, Eventually"
+        },
+        {
+          "label": "Big parcel",
+          "prop": "a parcel too big for the door",
+          "title": "It Won’t Fit Through"
+        }
+      ],
+      "music": "Steady, quiet, rhythmic plucked strings, a methodical early morning, 84 bpm.",
+      "ambience": "Sorting room: envelopes flicked into slots, a trolley wheel squeaking, a train passing outside.",
+      "art": "Blue-grey pre-dawn field; a wall of pigeonholes like a fine grid, one lamp, Azlan small; red: a mail bag.",
+      "present": [
+        [
+          5,
+          8
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "lecture",
+      "name": "The lecture hall",
+      "resident": "moss",
+      "hours": "Lectures 10 am–noon.",
+      "story": "Tiered benches, a long blackboard and Professor Moss, who speaks slowly and loves a question from the back.",
+      "district": "hill",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Lecture",
+          "prop": "a blackboard full of weather diagrams",
+          "title": "Any Questions? Please?"
+        },
+        {
+          "label": "Your turn",
+          "prop": "an empty lectern with notes waiting on it",
+          "title": "The Lectern Is Yours"
+        },
+        {
+          "label": "An audience of one",
+          "prop": "one student and Moss in the whole hall",
+          "title": "A Lecture For One"
+        }
+      ],
+      "music": "Thoughtful, unhurried chamber strings and soft piano, academic warmth, 66 bpm.",
+      "ambience": "Lecture hall: chalk on a board, a page turning, a cough, the echo of a big room.",
+      "art": "Chalk-green field; tiered benches as stepped curves rising out of frame, Moss tiny at the bottom by the board; red: an apple on the lectern.",
+      "present": [
+        [
+          10,
+          12
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "examroom",
+      "name": "The exam room",
+      "resident": "moss",
+      "hours": "Speaking exams 1–4 pm.",
+      "story": "A quiet room with two chairs, a timer and a card of topics. Moss examines kindly and exactly, and tells you afterwards what he heard.",
+      "district": "hill",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Part one",
+          "prop": "two chairs, a timer and a topic card",
+          "title": "Two Minutes On A Topic"
+        },
+        {
+          "label": "The timer",
+          "prop": "a sand timer running",
+          "title": "The Sand Doesn’t Hurry"
+        },
+        {
+          "label": "Results",
+          "prop": "an envelope on the desk",
+          "title": "Better Than You Think"
+        }
+      ],
+      "music": "Very sparse, calm piano with long silences, focused and kind, 60 bpm.",
+      "ambience": "Quiet exam room: a clock ticking, a chair creak, a pencil, distant birdsong.",
+      "art": "Bone-pale field; two chairs facing across a small table in the exact centre of a bare room, one tall window; red: the pencil.",
+      "present": [
+        [
+          13,
+          16
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "mossoffice",
+      "name": "Professor Moss’s office",
+      "resident": "moss",
+      "hours": "Office hours 4–6 pm.",
+      "story": "A room of papers stacked like weather systems. Moss's door is open for anyone with a question, and he answers questions with better questions.",
+      "district": "hill",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Office hours",
+          "prop": "a sign on the door: OPEN, KNOCK ANYWAY",
+          "title": "Knock Anyway"
+        },
+        {
+          "label": "The Weather Book",
+          "prop": "a manuscript a foot tall",
+          "title": "Forty Years Of Weather"
+        },
+        {
+          "label": "Lost notes",
+          "prop": "papers everywhere and Moss looking under them",
+          "title": "I Had It A Minute Ago"
+        }
+      ],
+      "music": "Warm, slow cello and celesta, a cosy study, 62 bpm.",
+      "ambience": "Old study: a clock, rain on a window, papers shuffling, a kettle.",
+      "art": "Ochre-brown field; leaning paper stacks like tiny towers, one round window, Moss small among them; red: a bound notebook.",
+      "present": [
+        [
+          16,
+          18
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "observatory",
+      "name": "The little observatory",
+      "resident": "moss",
+      "hours": "Clear nights, 9:30 pm–midnight.",
+      "story": "A domed hut at the top of the hill with one old telescope. Moss watches the weather come in and names the stars badly on purpose.",
+      "district": "hill",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Clear sky",
+          "prop": "the telescope pointing up through the open dome",
+          "title": "The Sky Is On Time"
+        },
+        {
+          "label": "Cloudy",
+          "prop": "a closed dome and two cups of tea",
+          "title": "Nothing To See, Lovely"
+        },
+        {
+          "label": "A comet",
+          "prop": "a faint comet low in the sky",
+          "title": "Once In A While"
+        }
+      ],
+      "music": "Slow starry ambient pads and soft harp, vast and gentle, very slow.",
+      "ambience": "Hilltop at night: a dome motor turning, soft wind, crickets, the town far below.",
+      "art": "Night-blue field that is nearly all star-dotted sky; a small dome silhouette at bottom right, Moss tiny; red: his torch.",
+      "present": [
+        [
+          21.5,
+          24
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "quad",
+      "name": "The college quad",
+      "resident": "moss",
+      "hours": "Moss's slow morning lap, 8–9:30 am.",
+      "story": "A square lawn with a sundial and arches. Moss walks one lap every morning, and new students ask him the way.",
+      "district": "hill",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Morning lap",
+          "prop": "the sundial and dew on the lawn",
+          "title": "One Lap, Slowly"
+        },
+        {
+          "label": "First day",
+          "prop": "students with maps and a welcome banner",
+          "title": "Which Way Is The Library?"
+        },
+        {
+          "label": "The sundial is wrong",
+          "prop": "a sundial an hour out",
+          "title": "It’s Never Been Right"
+        }
+      ],
+      "music": "Light, bright pastoral woodwinds, a fresh morning, 88 bpm.",
+      "ambience": "College quad: birdsong, footsteps on gravel, a distant bell, leaves.",
+      "art": "Soft green lawn square framed by a dark arcade on three sides, the sundial dead centre, Moss tiny on the path; red: a small pennant on the sundial.",
+      "present": [
+        [
+          8,
+          9.5
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "careers",
+      "name": "The careers office",
+      "resident": "dex",
+      "hours": "Dex's drop-in for students, noon–2 pm.",
+      "story": "A small office with a job board. Dex helps students turn 'I did a project' into a story with a point.",
+      "district": "hill",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Drop-in",
+          "prop": "a job board of notices and two chairs",
+          "title": "What Do You Want To Do?"
+        },
+        {
+          "label": "CV review",
+          "prop": "a CV covered in pencil notes",
+          "title": "Tell Me What You Did"
+        },
+        {
+          "label": "Job fair poster",
+          "prop": "an OPEN DOORS WEEK poster",
+          "title": "Ten Employers, One Afternoon"
+        }
+      ],
+      "music": "Encouraging warm piano and light strings, forward-moving, 92 bpm.",
+      "ambience": "Small office: a pinboard, a printer, a kettle, students outside.",
+      "art": "Ochre-grey field; a huge cork board filling the wall with tiny pale notices, Dex's hump small at the desk; red: one pin.",
+      "present": [
+        [
+          12,
+          14
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "studyhall",
+      "name": "The late study room",
+      "resident": "linh",
+      "hours": "Linh studies here 7–10 pm and helps whoever is stuck.",
+      "story": "A long room of desk lamps. Linh studies here for her own exam, and helps anyone who's stuck.",
+      "district": "hill",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Desk lamps",
+          "prop": "rows of desk lamps and one empty seat",
+          "title": "Quiet, Please (Mostly)"
+        },
+        {
+          "label": "Study buddy",
+          "prop": "two chairs and a stack of flashcards",
+          "title": "Test Me, Then I’ll Test You"
+        },
+        {
+          "label": "Exam tomorrow",
+          "prop": "a calendar with tomorrow circled",
+          "title": "Tomorrow, 9 AM"
+        }
+      ],
+      "music": "Hushed lo-fi with a soft rain texture and warm keys, late-night study, 74 bpm.",
+      "ambience": "Quiet study hall: lamps buzzing faintly, pages turning, a pen writing, rain outside.",
+      "art": "Midnight-blue field; two long rows of tiny lamp pools receding, Linh small in one; red: a highlighter.",
+      "present": [
+        [
+          19,
+          22
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "studio",
+      "name": "The radio studio",
+      "resident": "ade",
+      "hours": "On air 6–10 am (The Morning Yap) and 10 pm–2 am (The Night Desk).",
+      "story": "A small studio at the top of the radio tower. Ade takes calls, plays records and puts nervous callers at ease.",
+      "district": "hill",
+      "interior": true,
+      "variants": [
+        {
+          "label": "On air",
+          "prop": "the ON AIR light lit and a microphone",
+          "title": "You’re Live, Natterwick"
+        },
+        {
+          "label": "Caller waiting",
+          "prop": "a flashing line on the phone panel",
+          "title": "Line Two, Go Ahead"
+        },
+        {
+          "label": "Dead air",
+          "prop": "an empty chair and a record running out",
+          "title": "Say Something, Anything"
+        }
+      ],
+      "music": "Warm, smooth late-night radio groove with soft guitar and bass, intimate, 84 bpm.",
+      "ambience": "Radio studio: a fader clicking, a soft record crackle, a phone line beep, room hush.",
+      "art": "Deep plum field; a big studio window over the night town, the desk and microphone small against it, Ade's casqued bill in profile; red: the ON AIR light.",
+      "present": [
+        [
+          6,
+          10
+        ],
+        [
+          22,
+          2
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "records",
+      "name": "The record room",
+      "resident": "ade",
+      "hours": "Ade sorts the archive 11 am–2 pm.",
+      "story": "A basement of records and tapes going back years. Ade hunts for songs for requests and for old voices of the town.",
+      "district": "hill",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Crates",
+          "prop": "crates of records and a turntable",
+          "title": "Somewhere In Here"
+        },
+        {
+          "label": "An old tape",
+          "prop": "a tape labelled MOSS, FIRST SHOW",
+          "title": "First Guest, First Show"
+        },
+        {
+          "label": "An impossible request",
+          "prop": "a list of song requests with one nobody can find",
+          "title": "Hum It For Me?"
+        }
+      ],
+      "music": "Warm vinyl crackle with a mellow, nostalgic guitar and Rhodes, 78 bpm.",
+      "ambience": "Record archive: records sliding from sleeves, a needle dropping, dust and hum.",
+      "art": "Warm sepia field; long shelves of thin record spines like barcode stripes, Ade small at the turntable; red: one record sleeve.",
+      "present": [
+        [
+          11,
+          14
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "duckpond",
+      "name": "The duck pond",
+      "resident": "pip",
+      "hours": "Any time; Pip feeds the ducks peas, never bread.",
+      "story": "A small pond with a bench, an island and a lot of opinionated ducks. Pip comes here to think and to rehearse things it's afraid to say.",
+      "district": "riverside",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Feeding time",
+          "prop": "a paper bag of peas and ducks gathering",
+          "title": "Peas, Not Bread"
+        },
+        {
+          "label": "A paper boat",
+          "prop": "a paper boat drifting out of reach",
+          "title": "Somebody’s Boat"
+        },
+        {
+          "label": "Frozen",
+          "prop": "the pond frozen, ducks standing on the ice",
+          "title": "The Ducks Are Confused"
+        }
+      ],
+      "music": "Gentle plucky folk with soft clarinet, whimsical calm, 80 bpm.",
+      "ambience": "Park pond: ducks, water lapping, leaves rustling, a bench creak.",
+      "art": "Soft sage field; the pond a flat silver band with one tiny island, a bench, Pip small on it; red: Pip's scarf.",
+      "present": [
+        [
+          0,
+          24
+        ]
+      ],
+      "stage": "visitor",
+      "existing": false
+    },
+    {
+      "id": "towpath",
+      "name": "The towpath",
+      "resident": "amani",
+      "hours": "The dawn walking club, 6–7:30 am.",
+      "story": "A path along the river where Amani leads the walking club before her shift, and quietly trains for the Lantern Run.",
+      "district": "riverside",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Walking club",
+          "prop": "a line of tiny walkers along the river",
+          "title": "Brisk, Not Fast"
+        },
+        {
+          "label": "Mile marker",
+          "prop": "a mile post with a 3 on it",
+          "title": "Three Miles, Somehow"
+        },
+        {
+          "label": "Mist",
+          "prop": "mist on the water, the path fading into it",
+          "title": "Just Follow The River"
+        }
+      ],
+      "music": "Steady walking-pace acoustic guitar with a soft thumb piano, morning mist, 92 bpm.",
+      "ambience": "Riverside path at dawn: footsteps on gravel, the river flowing, birdsong, a rowing crew far off.",
+      "art": "Misty pearl field; the river a long silver ribbon from the front edge into far haze, the path beside it, Amani small; red: her water bottle.",
+      "present": [
+        [
+          6,
+          7.5
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "pool",
+      "name": "The swimming pool",
+      "resident": "rafa",
+      "hours": "Lessons 7–10 am.",
+      "story": "An indoor pool with a high window and lane ropes. Rafa teaches grown-ups who never learned, and explains every step twice.",
+      "district": "riverside",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Lesson",
+          "prop": "a float board and the lane ropes",
+          "title": "Kick, Kick, Breathe"
+        },
+        {
+          "label": "Lane closed",
+          "prop": "a LANE CLOSED sign",
+          "title": "Share A Lane?"
+        },
+        {
+          "label": "The deep end",
+          "prop": "a diving board with nobody on it",
+          "title": "Just Look From The Edge"
+        }
+      ],
+      "music": "Light splashy bossa groove with soft vibraphone, 100 bpm.",
+      "ambience": "Indoor pool: echoing splashes, a whistle once, water lapping on tiles.",
+      "art": "Pool-aqua field; lane ropes as thin parallel lines in perspective under a tall window of light, Rafa tiny on the side; red: a float.",
+      "present": [
+        [
+          7,
+          10
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "sportsground",
+      "name": "The sports ground",
+      "resident": "rafa",
+      "hours": "Training for anyone, 4–7 pm.",
+      "story": "A wide field with goals, a running track and a clubhouse. Rafa trains whoever turns up and needs a captain who can talk the team round.",
+      "district": "riverside",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Training",
+          "prop": "cones in a line and a ball",
+          "title": "Cones, Then Tea"
+        },
+        {
+          "label": "Team talk",
+          "prop": "a huddle of tiny figures",
+          "title": "Half-Time, Heads Up"
+        },
+        {
+          "label": "Rained off",
+          "prop": "puddles on the pitch and the clubhouse window lit",
+          "title": "Rained Off, Rained In"
+        }
+      ],
+      "music": "Bright, driving percussion and brass, team spirit, 120 bpm.",
+      "ambience": "Sports field: a whistle, a ball kicked, distant shouts of encouragement, wind.",
+      "art": "Wide grass-green field; the low line of a track curving across, goals as thin frames, tiny figures; red: one cone.",
+      "present": [
+        [
+          16,
+          19
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "dancehall",
+      "name": "The dance class",
+      "resident": "rafa",
+      "hours": "Rafa's beginners' class, 8–10 pm in the old hall by the river.",
+      "story": "A sprung wooden floor, strings of little lights and a stereo. Rafa teaches beginners to dance and says 'one more time' with joy.",
+      "district": "riverside",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Steps",
+          "prop": "footprints chalked on the floor",
+          "title": "Left, Right, Turn, Laugh"
+        },
+        {
+          "label": "Everybody swap",
+          "prop": "a circle of tiny dancers",
+          "title": "Everybody Swap"
+        },
+        {
+          "label": "Music stopped",
+          "prop": "a stereo with a tangled cable",
+          "title": "We Dance To Clapping, Then"
+        }
+      ],
+      "music": "Joyful light samba-bossa with hand claps and guitar, 112 bpm.",
+      "ambience": "Old dance hall: feet on a wooden floor, clapping in rhythm, laughter, a stereo.",
+      "art": "Warm rose field; a big empty floor with strings of tiny lights across the top, tiny figures mid-step; red: the stereo.",
+      "present": [
+        [
+          20,
+          22
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "clinic",
+      "name": "The Riverside Clinic",
+      "resident": "amani",
+      "hours": "Open 8 am–4 pm.",
+      "story": "A waiting room with a fish tank and a front desk. Amani explains, reassures and makes sure you know what happens next.",
+      "district": "riverside",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Waiting room",
+          "prop": "rows of chairs, a fish tank and a number board",
+          "title": "Number Twelve, Please"
+        },
+        {
+          "label": "Check-up",
+          "prop": "a scale and a chart on the wall",
+          "title": "Just A Check-Up"
+        },
+        {
+          "label": "Phone ringing",
+          "prop": "the desk phone ringing and nobody free",
+          "title": "Can You Get That?"
+        }
+      ],
+      "music": "Calm soft piano and warm pads, gentle reassurance, 70 bpm.",
+      "ambience": "Clinic waiting room: a fish tank bubbling, a soft chime, a phone, quiet voices.",
+      "art": "Pale sky-blue field; a row of chairs along one long wall, the fish tank the only glowing shape, Amani small at the desk; red: one goldfish.",
+      "present": [
+        [
+          8,
+          16
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "bowls",
+      "name": "The bowling green",
+      "resident": "elif",
+      "hours": "Elif plays 4–6 pm.",
+      "story": "A flat lawn by the river where Elif plays bowls with retired neighbours and wins every argument about the rules.",
+      "district": "riverside",
+      "interior": false,
+      "variants": [
+        {
+          "label": "A game",
+          "prop": "bowls on the green and the small white jack",
+          "title": "Closer, Closer, There"
+        },
+        {
+          "label": "Rule dispute",
+          "prop": "a measuring tape between two bowls",
+          "title": "It’s Clearly Mine"
+        },
+        {
+          "label": "Tournament",
+          "prop": "a scoreboard and a small trophy",
+          "title": "The Annual Trophy, Again"
+        }
+      ],
+      "music": "Easy sunny light swing on clarinet and guitar, 90 bpm.",
+      "ambience": "Bowling green: a bowl rolling on grass, a soft click of bowls, polite clapping, birds.",
+      "art": "Flat emerald field that is almost all lawn, a low horizon of river trees, bowls as dots, Elif small; red: the scoreboard.",
+      "present": [
+        [
+          16,
+          18
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "theatre",
+      "name": "The Lamplight Theatre",
+      "resident": "moss",
+      "hours": "Rehearsals of the Natterwick Players, 7–9 pm.",
+      "story": "A small velvet theatre by the river. Moss directs the Natterwick Players and needs actors who will say their lines loudly and clearly.",
+      "district": "riverside",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Rehearsal",
+          "prop": "scripts on chairs and one spotlight",
+          "title": "From The Top, Please"
+        },
+        {
+          "label": "Opening night",
+          "prop": "a full house of tiny silhouettes",
+          "title": "Curtain Up"
+        },
+        {
+          "label": "A forgotten line",
+          "prop": "an actor frozen mid-stage and an open prompt book",
+          "title": "Line?"
+        }
+      ],
+      "music": "A theatrical gentle waltz on piano and strings, anticipation, 3/4, 84 bpm.",
+      "ambience": "Small theatre: a curtain rustling, stage boards creaking, an audience hush, a cough.",
+      "art": "Dark plum field; the stage arch a big dark frame inside the frame, one spotlight circle on the boards, Moss tiny in the stalls; red: a script cover.",
+      "present": [
+        [
+          19,
+          21
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "openmic",
+      "name": "Open mic at the Lamplight",
+      "resident": "ade",
+      "hours": "Ade hosts in the foyer, 7:30–9:30 pm.",
+      "story": "A tiny stage in the theatre foyer, one microphone and, oddly, no stage lights. Ade hosts; anyone can sing, read or tell a story.",
+      "district": "riverside",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Sign-up",
+          "prop": "a sign-up sheet with one line left blank",
+          "title": "Your Name Here"
+        },
+        {
+          "label": "Full house",
+          "prop": "a crowd of tiny figures on cushions",
+          "title": "Standing Room, Sitting Down"
+        },
+        {
+          "label": "Feedback",
+          "prop": "a microphone stand and a tangled cable",
+          "title": "Is This Thing On?"
+        }
+      ],
+      "music": "Warm acoustic guitar and soft hand percussion, an intimate open mic, 88 bpm.",
+      "ambience": "Small foyer: a microphone tap, soft applause, cups clinking, laughter.",
+      "art": "Amber field; a tiny stage platform in the corner of a big dim room, one standing microphone, Ade small beside it; red: a cushion.",
+      "present": [
+        [
+          19.5,
+          21.5
+        ]
+      ],
+      "stage": "regular",
+      "existing": false
+    },
+    {
+      "id": "rink",
+      "name": "The pond rink",
+      "resident": "marnie",
+      "hours": "Skating 6:30–8 pm in the cold months; otherwise Marnie walks the shore.",
+      "story": "The big pond, frozen in the cold months and lit with strings of bulbs. Marnie skates holding the rail and teaches anyone who'll hold the other end.",
+      "district": "riverside",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Skating",
+          "prop": "the rink lit and skates for hire",
+          "title": "Hold The Rail"
+        },
+        {
+          "label": "Skates for hire",
+          "prop": "a rack of hired skates in mixed sizes",
+          "title": "Do You Have A Size Nine?"
+        },
+        {
+          "label": "Not frozen yet",
+          "prop": "the pond still water and skates hung on a post",
+          "title": "Not Cold Enough Yet"
+        }
+      ],
+      "music": "A light gliding waltz on celesta and strings, a winter evening, 3/4, 80 bpm.",
+      "ambience": "Outdoor rink: skate blades on ice, distant laughter, wind, a string of lights buzzing.",
+      "art": "Grey-snow field; the rink a pale flat shape inside a fence of bulbs, tiny skaters; red: a bobble hat on a fence post.",
+      "present": [
+        [
+          18.5,
+          20
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "bus",
+      "name": "The bus stop",
+      "resident": "pip",
+      "hours": "The 45 comes at :00, :20 and :40. Pip waits here any time.",
+      "story": "The stop at the edge of town. Pip has never been on a bus and keeps asking where it goes.",
+      "district": "edges",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Waiting",
+          "prop": "the shelter and the neon 45 sign; the bus comes every twenty minutes",
+          "title": "Waiting For The 45"
+        },
+        {
+          "label": "A red umbrella",
+          "prop": "a red umbrella someone left leaning on the shelter",
+          "title": "Someone Forgot Their Umbrella"
+        },
+        {
+          "label": "Late bus",
+          "prop": "a paper sign on the post: LATE, SORRY; the 45 sign flickers",
+          "title": "Nobody Told The Bus"
+        }
+      ],
+      "music": "A patient, gently swinging tune on soft piano and brushed snare, waiting at the edge of town at dusk, 78 bpm.",
+      "ambience": "Open field at the edge of town: wind through long grass, a distant bus engine, a skylark, a sign creaking.",
+      "art": "Dusk field over flat open land; the shelter small at the roadside on a low horizon; Pip tiny inside; red: the neon 45.",
+      "present": [
+        [
+          0,
+          24
+        ]
+      ],
+      "stage": "visitor",
+      "existing": true,
+      "keys": {
+        "music": "bus",
+        "ambience": "field"
+      }
+    },
+    {
+      "id": "field",
+      "name": "The far field",
+      "resident": "pip",
+      "hours": "Pip comes out here to call nobody in particular, any time.",
+      "story": "A phone booth in the middle of a field. Nobody knows who put it there, but it still works.",
+      "district": "edges",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Calling home",
+          "prop": "Pip inside the lit phone booth, holding the receiver",
+          "title": "Long Distance"
+        },
+        {
+          "label": "It’s ringing",
+          "prop": "the phone in the booth is ringing and Pip is listening outside",
+          "title": "Somebody Is Ringing The Field"
+        },
+        {
+          "label": "A red glove",
+          "prop": "one red glove in the grass, and nobody there",
+          "title": "One Glove, Waiting"
+        }
+      ],
+      "music": "A sparse winter field: glass harmonica and a slow music box, long silences, cold clear air, lonely but tender, very slow.",
+      "ambience": "Open field at night: soft wind across grass, a faint telephone hum, crickets.",
+      "art": "Grey-snow meadow, huge and empty; one lit phone booth dead centre on a low horizon, Pip tiny inside; red: Pip's scarf (or the glove).",
+      "present": [
+        [
+          0,
+          24
+        ]
+      ],
+      "stage": "visitor",
+      "existing": true,
+      "keys": {
+        "music": "field",
+        "ambience": "field"
+      }
+    },
+    {
+      "id": "terminus",
+      "name": "The 45’s last stop",
+      "resident": "bea",
+      "hours": "The 45 turns round here at :10, :30 and :50 and waits four minutes.",
+      "story": "A turning circle at the top of the hill where the town ends and the fields begin. Bea gets four minutes to stretch, and a good story fits in four minutes.",
+      "district": "edges",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Four minutes",
+          "prop": "the 45 parked with its door open, Bea on the step",
+          "title": "Four Minutes, Love"
+        },
+        {
+          "label": "Asleep on the back seat",
+          "prop": "one passenger asleep on the back seat",
+          "title": "Wake Up, Last Stop"
+        },
+        {
+          "label": "Snow on the roof",
+          "prop": "the 45 with snow on its roof",
+          "title": "Snow And Stories"
+        }
+      ],
+      "music": "Bright rolling piano with a gentle shuffle, open countryside, 98 bpm.",
+      "ambience": "Hilltop turning circle: a bus engine idling, wind over fields, a skylark, a door hiss.",
+      "art": "Wide ochre-gold fields; a tiny bus at a lonely turning circle at the top of a gentle slope, one tree; red: the neon 45.",
+      "present": [
+        [
+          6,
+          23
+        ]
+      ],
+      "stage": "visitor",
+      "existing": false
+    },
+    {
+      "id": "kiteshed",
+      "name": "Azlan’s kite shed",
+      "resident": "azlan",
+      "hours": "Azlan builds kites for Kite Day, 7–10 pm.",
+      "story": "A shed at the edge of the fields full of paper, string and half-built kites. Azlan builds, Elif engineers, and someone has to read the instructions out loud.",
+      "district": "edges",
+      "interior": true,
+      "variants": [
+        {
+          "label": "Building",
+          "prop": "a giant kite frame and brown paper",
+          "title": "Bigger Than Last Year"
+        },
+        {
+          "label": "Test flight",
+          "prop": "a kite in the evening sky over the field",
+          "title": "She Flies!"
+        },
+        {
+          "label": "Tangled",
+          "prop": "a ball of string in a hopeless knot",
+          "title": "Start From The End"
+        }
+      ],
+      "music": "Light airy guitar and glockenspiel with a breezy lift, 92 bpm.",
+      "ambience": "Wooden shed in the evening: paper rustling, string pulled taut, wind outside, a radio low.",
+      "art": "Lavender dusk field; a small shed with an open door of warm light on a long flat horizon, kite frames leaning on it; red: a kite tail.",
+      "present": [
+        [
+          19,
+          22
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    },
+    {
+      "id": "festival",
+      "name": "The fair meadow",
+      "resident": "ade",
+      "hours": "All day on fair days; otherwise Ade tests the sound system 2–3 pm.",
+      "story": "A big meadow where the town's festivals happen: Kite Day, the Long Table, Lantern Night's fair. Ade compères from a little stage.",
+      "district": "edges",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Fair day",
+          "prop": "bunting, stalls and a little stage",
+          "title": "Welcome To The Fair"
+        },
+        {
+          "label": "Setting up",
+          "prop": "a half-built stage and a tangle of bunting",
+          "title": "Tomorrow, If We Hurry"
+        },
+        {
+          "label": "Lantern Night",
+          "prop": "paper lanterns strung on poles across the meadow",
+          "title": "Lantern Night, All Of Us"
+        }
+      ],
+      "music": "Festive warm brass band and accordion, a joyful crowd, 116 bpm.",
+      "ambience": "Festival meadow: crowd murmur, distant brass, children laughing, bunting flapping.",
+      "art": "Wide lilac field; bunting strung in long arcs across the sky, tiny stalls below, Ade small on a stage; red: the stage flag.",
+      "present": [
+        [
+          14,
+          15
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "firsttent",
+      "name": "The first-aid tent",
+      "resident": "amani",
+      "hours": "At the fair and the Lantern Run; Amani sets it up 7:30–8 am.",
+      "story": "A white tent with a camp bed, plasters and a kettle. Amani patches blisters, hands out water and listens to everyone's opinion of their feet.",
+      "district": "edges",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Run day",
+          "prop": "a table of water cups and plasters",
+          "title": "Water, Then Back Out"
+        },
+        {
+          "label": "Quiet day",
+          "prop": "Amani alone with a crossword",
+          "title": "Nobody Needs Me, Lovely"
+        },
+        {
+          "label": "Found hats",
+          "prop": "a table of found hats and a sign",
+          "title": "Is This Your Hat?"
+        }
+      ],
+      "music": "Gentle steady acoustic guitar and soft pads, calm in the middle of a festival, 84 bpm.",
+      "ambience": "Tent at a fair: canvas flapping, distant crowd and music, a kettle, cups.",
+      "art": "Bright overcast white field; the tent a pale triangle in a huge spread of grass, people as specks; red: the first-aid box.",
+      "present": [
+        [
+          7.5,
+          8
+        ]
+      ],
+      "stage": "neighbour",
+      "existing": false
+    },
+    {
+      "id": "garden",
+      "name": "The community garden",
+      "resident": "elif",
+      "hours": "Elif runs it 7–11 am.",
+      "story": "Rows of vegetable beds and an old water wheel at the edge of town. Elif runs it like a building site, kindly.",
+      "district": "edges",
+      "interior": false,
+      "variants": [
+        {
+          "label": "Planting",
+          "prop": "seed trays and a watering can",
+          "title": "Everything In Rows"
+        },
+        {
+          "label": "A giant marrow",
+          "prop": "a vegetable far too big for anyone",
+          "title": "Prize Marrow, Allegedly"
+        },
+        {
+          "label": "The water wheel",
+          "prop": "the old water wheel, not turning",
+          "title": "It Used To Turn"
+        }
+      ],
+      "music": "Warm bright folk with soft accordion and plucked strings, a sunny morning, 90 bpm.",
+      "ambience": "Garden: a watering can, bees, birdsong, a trowel in soil, a stream trickling.",
+      "art": "Fresh sap-green field in neat diagonal rows to a low horizon, the water wheel one big shape at the left, Elif small; red: the watering can.",
+      "present": [
+        [
+          7,
+          11
+        ]
+      ],
+      "stage": "newcomer",
+      "existing": false
+    }
+  ]
+}

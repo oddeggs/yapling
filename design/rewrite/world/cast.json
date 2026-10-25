@@ -1,0 +1,1276 @@
+{
+  "version": 1,
+  "note": "Natterwick's cast as data. goals and hard use the arrival ids from apps/api/src/director/craft.ts; stage is when the director may first make them central (see the goal pull rule); arc is three or four story-sized beats; marker is the one light regional word the character may use once a scene. See docs/rewrite/world-expansion.md.",
+  "cast": [
+    {
+      "id": "pip",
+      "name": "Pip",
+      "species": "red panda",
+      "role": "Your roommate in the burrow; a yapling from the Far Meadow learning English from you.",
+      "accent": "Learner English, one stage below the learner's (copies the learner at Visitor).",
+      "personality": "Curious, brave, a little clumsy, easily delighted, honest about not knowing.",
+      "want": "To ride the 45 all the way to the end of the line, and to understand where everything goes.",
+      "secret": "A little homesick for the Far Meadow; the phone booth in the far field is where it 'calls home'.",
+      "teaches": [
+        "new words",
+        "being the expert for someone",
+        "retelling what happened",
+        "explaining Natterwick to someone newer"
+      ],
+      "goals": [
+        "friends",
+        "me"
+      ],
+      "hard": [],
+      "accessory": "the red scarf, the only red thing in town",
+      "habit": "writes new words in its notebook ('Wait, let me write that')",
+      "hours": "Everywhere you are: the burrow (asleep 11 pm–6:30 am), the rooftop, the bus stop, the far field, the cinema, the arcade, the duck pond, the gallery.",
+      "places": [
+        "room",
+        "roof",
+        "cinema",
+        "gallery",
+        "arcade",
+        "duckpond",
+        "bus",
+        "field"
+      ],
+      "sample": "Ooh, new word! Wait, wait. Say that again slowly?",
+      "voice": "Bright, young-adult (not childlike), gender-neutral, mid pitch, smiles audibly; slight hesitations when thinking; tracks the learner's stage speed.",
+      "stage": "visitor",
+      "age": "young adult",
+      "pronoun": "it",
+      "silhouette": "small round-eared body, ringed tail, tear marks",
+      "arc": [
+        "Gets a job to help save Mei's café",
+        "Makes a friend from the boat",
+        "Opens a stall",
+        "Speaks on the radio (Ade's Night Desk)"
+      ],
+      "ties": [
+        {
+          "with": "linh",
+          "note": "Linh is its first friend after you"
+        },
+        {
+          "with": "ade",
+          "note": "dreams of being on the radio"
+        },
+        {
+          "with": "mags",
+          "note": "MAGS holds the arcade high score, eleven points ahead"
+        }
+      ],
+      "existing": true
+    },
+    {
+      "id": "linh",
+      "name": "Linh",
+      "species": "pangolin",
+      "role": "Lives next door; works the desk at the library and stays after closing.",
+      "accent": "Fluent English with the learner's own first-language accent (Vietnamese-accented for Vietnamese learners; per market she becomes that market's neighbour).",
+      "personality": "Calm, encouraging, been-there; learned English as an adult and remembers freezing in meetings.",
+      "want": "To pass her own interpreting exam this year, studying in the late study room.",
+      "secret": "She still freezes on the phone sometimes, and practises calls in the empty library before she makes them.",
+      "teaches": [
+        "confidence strategies",
+        "asking for time",
+        "describing a word you can't find",
+        "study habits",
+        "exam nerves"
+      ],
+      "goals": [
+        "study",
+        "exam",
+        "work",
+        "me"
+      ],
+      "hard": [
+        "nerves",
+        "words",
+        "pronunciation",
+        "phone"
+      ],
+      "accessory": "a library book held to her chest",
+      "habit": "curls a little into her scales when she's shy, then uncurls",
+      "hours": "Doorstep 7–8:30 am and 9–11 pm; bookshop at lunch; late study room 7–10 pm; the library desk any time.",
+      "places": [
+        "linhdoor",
+        "library",
+        "bookshop",
+        "studyhall"
+      ],
+      "sample": "I used to freeze too. Now I just say, 'Give me a second.'",
+      "voice": "Warm, unhurried, late 20s to 30s, steady; the learner's own first-language accent.",
+      "stage": "visitor",
+      "age": "30s",
+      "pronoun": "she",
+      "silhouette": "long scaled body that curls, small head, long tail",
+      "arc": [
+        "Helps the learner through their first week",
+        "Admits she still freezes on calls; the learner helps her make one",
+        "Passes her exam with the learner as her study buddy"
+      ],
+      "ties": [
+        {
+          "with": "moss",
+          "note": "took his evening class years ago"
+        },
+        {
+          "with": "pip",
+          "note": "first friend after you"
+        }
+      ],
+      "existing": true
+    },
+    {
+      "id": "mei",
+      "name": "Mei",
+      "species": "otter",
+      "role": "Owns the Lantern Café.",
+      "accent": "Singaporean English: light, natural touches in casual moments, standard English when it matters.",
+      "personality": "Funny, generous, proud, stubborn about her café, hates asking for help.",
+      "want": "To keep the Lantern Café open, on her own terms.",
+      "secret": "The rent went up and she hasn't told anyone; she does the sums every night in the flat upstairs.",
+      "teaches": [
+        "small talk",
+        "opinions",
+        "ordering and changing an order",
+        "everyday listening",
+        "regional words from context"
+      ],
+      "goals": [
+        "friends",
+        "travel",
+        "work"
+      ],
+      "hard": [
+        "small_talk",
+        "fast_speech"
+      ],
+      "accessory": "her mustard apron",
+      "habit": "wipes the counter while she thinks",
+      "hours": "Roastery 6–7 am; café 7 am–10 pm; the flat upstairs 10–11:30 pm.",
+      "places": [
+        "cafe",
+        "cafecounter",
+        "meiflat",
+        "roastery"
+      ],
+      "sample": "Kaya toast lah. Ok, so what's the plan?",
+      "voice": "Energetic, quick, 30s–40s, laughs easily; Singaporean English, one light 'lah' per scene at most.",
+      "stage": "visitor",
+      "age": "30s-40s",
+      "pronoun": "she",
+      "silhouette": "long sleek body, small ears, thick tapering tail",
+      "marker": "lah",
+      "arc": [
+        "Asks the learner for help without admitting why",
+        "Tells the learner about the rent, upstairs",
+        "Lets the town help; the café stays"
+      ],
+      "ties": [
+        {
+          "with": "hank",
+          "note": "her biggest customer; secretly saving the café"
+        },
+        {
+          "with": "joon",
+          "note": "café and restaurant, mutual respect; they share the dawn bread order"
+        }
+      ],
+      "existing": true
+    },
+    {
+      "id": "sol",
+      "name": "Sol",
+      "species": "tarsier",
+      "role": "Team coordinator at the Hollowbrook office; takes the 6:40 home.",
+      "accent": "Filipino English: clear, polite, professional, friendly.",
+      "personality": "Organised, kind, very good at meetings, quietly funny; notices everything.",
+      "want": "To run one meeting that ends early with everything agreed.",
+      "secret": "Rehearses every big meeting in the station phone box the night before.",
+      "teaches": [
+        "stand-ups and updates",
+        "clarifying questions",
+        "meetings",
+        "calling in",
+        "interview basics"
+      ],
+      "goals": [
+        "work",
+        "interview"
+      ],
+      "hard": [
+        "meetings",
+        "phone",
+        "small_talk"
+      ],
+      "accessory": "a clipboard",
+      "habit": "a head-swivel when something catches their eye, then a small quick nod",
+      "hours": "Office 9 am–5 pm (stand-up 9:15, meetings 10 and 2–4, canteen at noon); station phones 5:30 pm; the 6:40 home.",
+      "places": [
+        "office",
+        "meetingroom",
+        "canteen",
+        "platform",
+        "stationphones"
+      ],
+      "sample": "Quick round: yesterday, today, blockers. Just to confirm: you'll send it by Friday?",
+      "voice": "Bright, precise, 20s–30s, upbeat; Filipino English.",
+      "stage": "visitor",
+      "age": "20s-30s",
+      "pronoun": "they",
+      "silhouette": "tiny body, enormous eyes, long thin fingers",
+      "arc": [
+        "Needs the learner for a stand-up",
+        "Confesses a talk on Friday is terrifying",
+        "Gives the talk; asks the learner to chair the next one"
+      ],
+      "ties": [
+        {
+          "with": "dex",
+          "note": "colleagues at Hollowbrook"
+        },
+        {
+          "with": "thandi",
+          "note": "lends her meeting room B when the Shed is full"
+        }
+      ],
+      "existing": true
+    },
+    {
+      "id": "hank",
+      "name": "Hank",
+      "species": "raccoon",
+      "role": "Fast-talking regular who buys beans for his shipping crew; eats at the noodle stall after dark.",
+      "accent": "Fast General American.",
+      "personality": "Loud, deal-loving, impatient, secretly soft; respects people who push back politely.",
+      "want": "To win the Harbour Race with his crew, once.",
+      "secret": "Buys all of Mei's beans because he is quietly keeping the café afloat.",
+      "teaches": [
+        "negotiation",
+        "polite pushback",
+        "keeping up with fast speech",
+        "handling interruptions"
+      ],
+      "goals": [
+        "work",
+        "travel"
+      ],
+      "hard": [
+        "fast_speech",
+        "meetings",
+        "nerves"
+      ],
+      "accessory": "a flat cap",
+      "habit": "shuffles a deck of cards",
+      "hours": "Rowing club 5–6 am; shipping yard 6 am–2 pm; barber 2–3 pm; crew hut 3–6 pm; noodle stall after dark.",
+      "places": [
+        "noodles",
+        "barber",
+        "yard",
+        "crewhut",
+        "boatclub"
+      ],
+      "sample": "Look, I buy fifty kilos a month. Ten percent off and we're friends. Deal?",
+      "voice": "Big, fast, gravelly-friendly, 40s–50s; speed scales with the learner's stage.",
+      "stage": "visitor",
+      "age": "40s-50s",
+      "pronoun": "he",
+      "silhouette": "masked face, ringed tail, quick hands",
+      "arc": [
+        "Haggles the learner into a corner and folds when they hold their ground",
+        "The learner finds out about the beans",
+        "Shares a boat with Norma for the Harbour Race"
+      ],
+      "ties": [
+        {
+          "with": "mei",
+          "note": "secretly saving her café"
+        },
+        {
+          "with": "norma",
+          "note": "Harbour Race rivals, both always second"
+        }
+      ],
+      "existing": true
+    },
+    {
+      "id": "nell",
+      "name": "Nell",
+      "species": "koala",
+      "role": "Runs the Lantern Inn front desk; folds the inn's towels at the laundromat at night.",
+      "accent": "Australian: relaxed, warm, practical.",
+      "personality": "Unflappable, wry, solves problems with a cup of tea and a list.",
+      "want": "A full inn on Lantern Night without a single complaint.",
+      "secret": "Has never taken a holiday; keeps a postcard of a beach she means to visit one day.",
+      "teaches": [
+        "hospitality",
+        "handling complaints",
+        "chairing a conversation",
+        "agreeing and disagreeing politely"
+      ],
+      "goals": [
+        "work",
+        "travel",
+        "move"
+      ],
+      "hard": [
+        "meetings",
+        "small_talk"
+      ],
+      "accessory": "a cup of tea that never spills",
+      "habit": "a slow sip when she thinks",
+      "hours": "Breakfast room 6:30–9:30 am; front desk 9:30 am–6 pm; community hall meetings 6–8 pm; laundromat 8 pm–2 am.",
+      "places": [
+        "laundry",
+        "communityhall",
+        "inn",
+        "breakfast"
+      ],
+      "sample": "No worries, we'll sort it. Right, who's got an idea?",
+      "voice": "Easy-going, mid-low, 30s–40s; Australian.",
+      "stage": "visitor",
+      "age": "30s-40s",
+      "pronoun": "she",
+      "silhouette": "round grey body, fluffy fan ears, big nose",
+      "arc": [
+        "Hands the learner a meeting to run",
+        "The inn overflows; the learner helps her say no kindly",
+        "Takes her first day off; the learner covers the desk"
+      ],
+      "ties": [
+        {
+          "with": "orla",
+          "note": "two front desks: friendly rivals who send each other guests"
+        }
+      ],
+      "existing": true
+    },
+    {
+      "id": "bea",
+      "name": "Bea",
+      "species": "bulldog",
+      "role": "Drives Bus 45 around town on a tight schedule.",
+      "accent": "British: cheerful, brisk, affectionate.",
+      "personality": "Punctual, chatty, loves a good story, but the bus leaves on time.",
+      "want": "To hear every passenger's story before their stop.",
+      "secret": "Has driven the 45 for twenty years and has never once ridden it as a passenger.",
+      "teaches": [
+        "fluency under time (4/3/2)",
+        "storytelling",
+        "retelling",
+        "concise pitching",
+        "understanding British English"
+      ],
+      "goals": [
+        "travel",
+        "me",
+        "friends"
+      ],
+      "hard": [
+        "fast_speech",
+        "words",
+        "nerves"
+      ],
+      "accessory": "her driver's cap with its little badge",
+      "habit": "jowls wobble a beat late when she laughs; checks the time",
+      "hours": "Depot 5–6 am; driving the 45 6 am–11 pm (four minutes at the last stop at :10, :30, :50); tea hut 1 pm and 6 pm; depot 11 pm–midnight.",
+      "places": [
+        "on45",
+        "depot",
+        "teahut",
+        "terminus"
+      ],
+      "sample": "Go on then, love. You've got till the next stop.",
+      "voice": "Cheerful, mid pitch, 40s–50s, a smile in every line; British. Only Bea says 'love', once a scene.",
+      "stage": "visitor",
+      "age": "40s-50s",
+      "pronoun": "she",
+      "silhouette": "low, broad, square body, short legs, jowls",
+      "marker": "love",
+      "arc": [
+        "Gives the learner forty-five seconds for a story",
+        "The learner learns she has never ridden the 45",
+        "Rides the whole loop as a passenger while someone else drives"
+      ],
+      "ties": [
+        {
+          "with": "orla",
+          "note": "swaps stories with Orla at the station desk"
+        },
+        {
+          "with": "pip",
+          "note": "Pip has never been on her bus"
+        }
+      ],
+      "existing": true
+    },
+    {
+      "id": "dex",
+      "name": "Dex",
+      "species": "bison",
+      "role": "Runs the interview room at Hollowbrook; the careers drop-in on the Hill.",
+      "accent": "General American, measured, professional.",
+      "personality": "Fair, direct, encouraging after a tough question; asks good follow-ups.",
+      "want": "To see everyone who comes through his door get the yes.",
+      "secret": "Keeps a list of everyone who got the job after practising with him, and reads it on bad days.",
+      "teaches": [
+        "interviews",
+        "formal register",
+        "structured answers (situation, action, result)",
+        "presenting",
+        "playing the manager, client or board"
+      ],
+      "goals": [
+        "interview",
+        "work",
+        "study"
+      ],
+      "hard": [
+        "interviews",
+        "nerves",
+        "meetings"
+      ],
+      "accessory": "a mustard tie",
+      "habit": "deep slow nods; still while you answer",
+      "hours": "Boardroom 9–11 am; careers drop-in noon–2 pm; interview room 8 am–8 pm otherwise.",
+      "places": [
+        "interview",
+        "boardroom",
+        "careers"
+      ],
+      "sample": "Tell me about a time data changed a decision. Good. Can you give me a number?",
+      "voice": "Calm, deep, 40s, reassuring; General American.",
+      "stage": "visitor",
+      "age": "40s",
+      "pronoun": "he",
+      "silhouette": "big hump, small pale horns, heavy shoulders",
+      "arc": [
+        "Plays the learner's interviewer",
+        "Steps out of role: tells the learner about his list",
+        "Asks the learner to sit on the other side of the table for Thandi's first hire"
+      ],
+      "ties": [
+        {
+          "with": "thandi",
+          "note": "coaches her through her first hire"
+        },
+        {
+          "with": "sol",
+          "note": "colleagues at Hollowbrook"
+        }
+      ],
+      "existing": true
+    },
+    {
+      "id": "mags",
+      "name": "Mags",
+      "species": "heron",
+      "role": "The property office and harbour keeper; walks the pier and counts the boats twice; the town council's voice.",
+      "accent": "Formal, polite British English; never cold, never a villain.",
+      "personality": "Formal, fair and careful; asks the town and counts the vote fairly.",
+      "want": "To keep the town's buildings and harbour as loved as they are.",
+      "secret": "Keeps undelivered letters safe on purpose until the right moment, and holds the arcade high score.",
+      "teaches": [
+        "formal requests",
+        "renting and contracts",
+        "speaking at a town meeting",
+        "voting and agreeing"
+      ],
+      "goals": [
+        "move",
+        "work"
+      ],
+      "hard": [
+        "meetings",
+        "phone"
+      ],
+      "accessory": "her spectacles",
+      "habit": "a stately slow tilt of the head, one small nod per point",
+      "hours": "Harbour 5 am–10 pm; property office 9 am–5 pm; flat viewings 11 am–1 pm; lighthouse 5–7 pm; town hall 6–8 pm.",
+      "places": [
+        "propertyoffice",
+        "townhall",
+        "harbour",
+        "lighthouse",
+        "apartment"
+      ],
+      "sample": "Does anyone want to speak? Then the town says yes.",
+      "voice": "Premade for now; formal British, measured, 50s–60s.",
+      "stage": "visitor",
+      "age": "50s-60s",
+      "pronoun": "she",
+      "silhouette": "tall thin body, long legs, black crest",
+      "arc": [
+        "Asks the learner careful questions about a flat",
+        "Turns out to have kept a letter on purpose",
+        "Hands the learner the podium at a town meeting"
+      ],
+      "ties": [
+        {
+          "with": "thandi",
+          "note": "rents her the Shed"
+        },
+        {
+          "with": "pip",
+          "note": "MAGS on the arcade board"
+        }
+      ],
+      "existing": true
+    },
+    {
+      "id": "arjun",
+      "name": "Arjun",
+      "species": "Bengal tiger",
+      "role": "Runs the spice-and-everything stall on Market Lane, a tea cart at the station at dawn and a table at the night market.",
+      "accent": "Indian English: articulate, quick, musical.",
+      "personality": "Charming and quick; treats bargaining as a game both sides should win.",
+      "want": "To turn his stall into a real shop, with a door and a bell, before the First Frost Market.",
+      "secret": "Writes tiny poems on the paper spice twists and hopes nobody notices; he signs none of them.",
+      "teaches": [
+        "bargaining",
+        "prices and numbers",
+        "describing a thing when you don't know its name",
+        "asking for alternatives",
+        "recommending",
+        "shopping abroad",
+        "speaking for the stallholders at a town meeting"
+      ],
+      "goals": [
+        "travel",
+        "friends",
+        "move",
+        "family"
+      ],
+      "hard": [
+        "words",
+        "fast_speech",
+        "small_talk",
+        "meetings"
+      ],
+      "accessory": "a striped cloth bag of paper spice twists across his chest",
+      "habit": "lifts a pinch of something to his nose and closes his eyes before he names a price",
+      "hours": "Spice loft 5–6 am; tea cart at the station 6–8:30 am; the stall 9 am–7 pm; night market 7–11 pm.",
+      "places": [
+        "spicestall",
+        "spiceloft",
+        "nightmarket",
+        "chaicart"
+      ],
+      "sample": "For you, special price. But first, tell me what you are cooking, and for whom.",
+      "voice": "Male, early 30s; warm light baritone; quick, musical rhythm, a smile in every bargain; natural pace ~150 wpm. Indian English, native-speaker review.",
+      "stage": "neighbour",
+      "age": "34",
+      "pronoun": "he",
+      "silhouette": "big low striped cat, heavy paws, long tail; reads as a broad soft wedge, not a red panda (no rings, much bigger)",
+      "arc": [
+        "Bargains with the learner for fun, and loses gracefully",
+        "The learner finds a poem on a spice twist and works out who wrote it",
+        "Opens the shop door on the First Frost Market; the poems go up on the wall"
+      ],
+      "ties": [
+        {
+          "with": "joon",
+          "note": "Joon is the only customer who never haggles, which drives Arjun mad"
+        },
+        {
+          "with": "mags",
+          "note": "needs a shop from the property office"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "ade",
+      "name": "Ade",
+      "species": "hornbill",
+      "role": "Host of Radio Natterwick: The Morning Yap at dawn and The Night Desk late; compères the fair.",
+      "accent": "Nigerian English: rich, clear, warm.",
+      "personality": "Big-hearted and booming on air; makes every caller sound like the most interesting person in town.",
+      "want": "To get every single neighbour on the radio once, for the Radio Marathon.",
+      "secret": "Gets stage fright when he can see an audience; behind a microphone he's fine, in front of a crowd his feathers go flat. That's why the open mic has no stage lights.",
+      "teaches": [
+        "phone-ins",
+        "speaking clearly",
+        "giving an opinion quickly",
+        "a one-minute talk on a topic (his 'Sixty Seconds On...' segment, the shape of a speaking exam's long turn)",
+        "understanding fast talk",
+        "a short story with a point",
+        "talking about music and films"
+      ],
+      "goals": [
+        "media",
+        "me",
+        "friends",
+        "work",
+        "exam"
+      ],
+      "hard": [
+        "phone",
+        "fast_speech",
+        "pronunciation",
+        "nerves"
+      ],
+      "accessory": "big headphones round his neck",
+      "habit": "drums his wingtips on the desk before he goes live",
+      "hours": "Studio 6–10 am (The Morning Yap); record room 11 am–2 pm; fair meadow sound check 2–3 pm; the van on the Square 3–6 pm; open mic 7:30–9:30 pm; studio 10 pm–2 am (The Night Desk).",
+      "places": [
+        "roadshow",
+        "studio",
+        "records",
+        "openmic",
+        "festival"
+      ],
+      "sample": "Good evening, Natterwick! You're on The Night Desk. Tell me, what kept you up tonight?",
+      "voice": "Male, mid 40s; rich resonant baritone, a broadcaster's warmth and a rolling laugh; measured on air (~140 wpm), quicker off air. Nigerian English, native-speaker review.",
+      "stage": "neighbour",
+      "age": "46",
+      "pronoun": "he",
+      "silhouette": "upright bird with a huge curved casqued bill; heavy head, short legs; nothing like the heron's long legs",
+      "arc": [
+        "Puts the learner on air for ten seconds",
+        "The learner sees him freeze at the fair and helps him through",
+        "Hands the learner the microphone: co-host for one Night Desk"
+      ],
+      "ties": [
+        {
+          "with": "moss",
+          "note": "Moss was the first guest on Ade's first show"
+        },
+        {
+          "with": "pip",
+          "note": "Pip's dream is to be on his show"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "moss",
+      "name": "Professor Moss",
+      "species": "tortoise",
+      "role": "Lecturer at Natterwick College on University Hill; runs the speaking exams; directs the Natterwick Players.",
+      "accent": "Scottish English: soft, slow and dry.",
+      "personality": "Slow, dry and kind; takes three seconds before he answers and means every word.",
+      "want": "To finish his forty-year Weather Book of Natterwick and read one chapter aloud on Lantern Night.",
+      "secret": "Froze in his first lecture forty years ago, and still writes 'breathe' at the top of every page of notes.",
+      "teaches": [
+        "lectures and asking a question in class",
+        "office hours",
+        "presenting",
+        "the speaking exam (a long turn, a discussion)",
+        "stress and clarity through the theatre",
+        "structured answers"
+      ],
+      "goals": [
+        "study",
+        "exam",
+        "me",
+        "media"
+      ],
+      "hard": [
+        "nerves",
+        "pronunciation",
+        "words",
+        "interviews"
+      ],
+      "accessory": "a worn leather satchel across his shell",
+      "habit": "draws his head slowly in and out when he's thinking",
+      "hours": "Quad 8–9:30 am; lecture hall 10 am–noon; exam room 1–4 pm; office 4–6 pm; theatre 7–9 pm; observatory 9:30 pm–midnight on clear nights.",
+      "places": [
+        "lecture",
+        "examroom",
+        "mossoffice",
+        "observatory",
+        "quad",
+        "theatre"
+      ],
+      "sample": "Take your time. A good answer is never in a hurry. Now: what would you change, and why?",
+      "voice": "Male, 70s; soft low grainy voice, very unhurried (~110 wpm natural), dry warmth, small chuckles. Scottish English, native-speaker review.",
+      "stage": "regular",
+      "age": "72",
+      "pronoun": "he",
+      "silhouette": "high domed shell on four short legs, a long neck that slides in and out",
+      "arc": [
+        "Examines the learner, kindly",
+        "The learner finds 'breathe' on his notes",
+        "Reads his chapter on Lantern Night; the learner introduces him"
+      ],
+      "ties": [
+        {
+          "with": "ade",
+          "note": "first guest on Ade's first show"
+        },
+        {
+          "with": "linh",
+          "note": "taught Linh's evening class years ago"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "amani",
+      "name": "Amani",
+      "species": "elephant",
+      "role": "Senior nurse at the Riverside Clinic; covers the pharmacy counter in the evenings; leads the dawn walking club.",
+      "accent": "Kenyan English: clear, calm and warm.",
+      "personality": "Calm, practical and gently firm; makes everyone feel looked after without fuss.",
+      "want": "To build benches in the clinic garden so people can wait in the sun.",
+      "secret": "Has entered the Lantern Run and hasn't told anyone she's never run further than the bus stop.",
+      "teaches": [
+        "saying how you feel (mild, everyday)",
+        "making and changing appointments",
+        "following instructions at the pharmacy",
+        "asking someone to repeat numbers and times",
+        "registering somewhere new",
+        "student nurses on placement: asking a supervisor, explaining what you did"
+      ],
+      "goals": [
+        "move",
+        "travel",
+        "family",
+        "work",
+        "study"
+      ],
+      "hard": [
+        "phone",
+        "words",
+        "fast_speech"
+      ],
+      "accessory": "a small watch pinned to her chest on a ribbon",
+      "habit": "fans one ear slowly while she listens",
+      "hours": "Towpath walking club 6–7:30 am; first-aid tent set-up 7:30–8 am on event days; clinic 8 am–4 pm; pharmacy 4–8 pm.",
+      "places": [
+        "pharmacy",
+        "towpath",
+        "clinic",
+        "firsttent"
+      ],
+      "sample": "Okay. Tell me slowly: when did it start, and is it worse in the morning or at night?",
+      "voice": "Female, mid 40s; warm mid-low, very clear, steady and unhurried (~125 wpm), reassuring. Kenyan English, native-speaker review.",
+      "stage": "neighbour",
+      "age": "45",
+      "pronoun": "she",
+      "silhouette": "big soft rounded body, large fanned ears, long trunk; the largest critter in town",
+      "arc": [
+        "The learner helps a confused visitor at the clinic",
+        "The learner finds out about the Lantern Run",
+        "Runs it with Rafa and the learner beside her; the benches get built from the sponsorship"
+      ],
+      "ties": [
+        {
+          "with": "rafa",
+          "note": "he is secretly training her for the Lantern Run"
+        },
+        {
+          "with": "marnie",
+          "note": "walk together at dawn"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "marnie",
+      "name": "Marnie",
+      "species": "moose",
+      "role": "Teller at the Acorn Bank on the Square; runs the bank booth at the ferry terminal in the evening.",
+      "accent": "Canadian English: bright, friendly, precise.",
+      "personality": "Cheerful, precise and patient; loves a form filled in properly and says so.",
+      "want": "To retire the bank's ninety-year-old paper ledger without losing a single name in it.",
+      "secret": "Took up skating at fifty and still holds the rail when she thinks nobody's looking.",
+      "teaches": [
+        "opening an account",
+        "exchanging money for a trip",
+        "spelling names and numbers",
+        "forms",
+        "polite formal requests",
+        "school-gate small talk"
+      ],
+      "goals": [
+        "move",
+        "travel",
+        "family",
+        "work"
+      ],
+      "hard": [
+        "small_talk",
+        "words",
+        "phone"
+      ],
+      "accessory": "a green eyeshade visor",
+      "habit": "stamps a form with a firm, happy thump",
+      "hours": "Porch 7–8:30 am; bank 9 am–3 pm; school gate 3–4 pm; terminal booth 4:30–6 pm; rink 6:30–8 pm in the cold months; porch 8–9:30 pm.",
+      "places": [
+        "porch",
+        "school",
+        "bank",
+        "bankbooth",
+        "rink"
+      ],
+      "sample": "Okay, let's get you sorted. Can you spell your family name for me, one letter at a time?",
+      "voice": "Female, mid 50s; bright friendly mid voice, crisp consonants, even pace (~135 wpm), an audible smile. Canadian English, native-speaker review.",
+      "stage": "newcomer",
+      "age": "56",
+      "pronoun": "she",
+      "silhouette": "tall heavy body on long legs, broad flat antlers, long face",
+      "arc": [
+        "Helps the learner open an account and spell everything",
+        "Lets go of the rail with the learner",
+        "Reads the old ledger's names aloud at the Long Table before it goes to the library"
+      ],
+      "ties": [
+        {
+          "with": "amani",
+          "note": "dawn walks"
+        },
+        {
+          "with": "linh",
+          "note": "the old ledger goes to Linh's library"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "norma",
+      "name": "Captain Norma",
+      "species": "walrus",
+      "role": "Captain of the Natterwick ferry to Gull Island.",
+      "accent": "Jamaican English: deep, warm, unhurried.",
+      "personality": "Steady as a harbour wall, laughs from the belly, never in a hurry and never late.",
+      "want": "To win the Harbour Race once, after nineteen years of second place.",
+      "secret": "Keeps a logbook of every passenger's first crossing, one line each, and reads it on the night crossing.",
+      "teaches": [
+        "tickets and boarding",
+        "understanding announcements",
+        "asking about times and delays",
+        "directions",
+        "small talk with strangers"
+      ],
+      "goals": [
+        "travel",
+        "move",
+        "friends",
+        "me"
+      ],
+      "hard": [
+        "fast_speech",
+        "small_talk",
+        "phone"
+      ],
+      "accessory": "a brass telescope tucked under one flipper",
+      "habit": "smooths her whiskers and squints at the sky before she answers",
+      "hours": "Slipway 5–7 am; crossings on the hour 7 am–7 pm (boarding at :45, the island at :25); night crossing 7–10 pm.",
+      "places": [
+        "ferryterminal",
+        "ferry",
+        "wheelhouse",
+        "slipway",
+        "gulljetty"
+      ],
+      "sample": "Morning! Ticket in your hand, bags under the seat. Where you heading after the island?",
+      "voice": "Female, late 50s; deep warm rounded voice with a belly laugh, relaxed rhythm (~130 wpm); announcements crisp and loud. Jamaican English, native-speaker review.",
+      "stage": "neighbour",
+      "age": "57",
+      "pronoun": "she",
+      "silhouette": "huge low rounded body, two long tusks, a big whiskered moustache, flippers",
+      "arc": [
+        "The learner reads an announcement for her when her voice goes",
+        "The learner finds their own first crossing in her logbook",
+        "She and Hank race in the same boat, and the learner calls the stroke"
+      ],
+      "ties": [
+        {
+          "with": "hank",
+          "note": "Harbour Race rivals"
+        },
+        {
+          "with": "orla",
+          "note": "sends Orla's guests to the island"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "thandi",
+      "name": "Thandi",
+      "species": "meerkat",
+      "role": "Founder of Hopscotch, a two-person startup in the Shed at Hollowbrook that delivers anything across Natterwick by bicycle.",
+      "accent": "South African English: quick and bright.",
+      "personality": "Quick, optimistic and restless; full of plans, and genuinely wants your opinion on each one.",
+      "want": "To win Demo Day in Open Doors Week and hire her first real employee.",
+      "secret": "Her first company closed after six weeks; she carries one of its business cards to remember she got through it.",
+      "teaches": [
+        "pitching",
+        "presenting",
+        "meetings with partners",
+        "calls with fast talkers",
+        "networking small talk",
+        "hiring interviews from the other side",
+        "giving and taking feedback"
+      ],
+      "goals": [
+        "work",
+        "interview",
+        "me"
+      ],
+      "hard": [
+        "meetings",
+        "fast_speech",
+        "interviews",
+        "nerves"
+      ],
+      "accessory": "a bright yellow cycling helmet she forgets to take off",
+      "habit": "stands up tall on her toes and scans the room when she's thinking",
+      "hours": "Airfield 5:30–6:30 am some days; roof terrace 6–7:30 pm; the Shed 8 am–6 pm (phone pods at noon, pitch room 4–5 pm); the glass lift all day.",
+      "places": [
+        "airgate",
+        "cowork",
+        "lift",
+        "pods",
+        "pitchroom",
+        "terrace"
+      ],
+      "sample": "Okay, thirty seconds in the lift. I'm the investor. Go, and only one 'um'.",
+      "voice": "Female, late 20s; bright crisp mid-high voice, fast and energetic (~160 wpm), quick laugh. South African English, native-speaker review. One light 'just now' (meaning 'soon') at most.",
+      "stage": "regular",
+      "age": "28",
+      "pronoun": "she",
+      "silhouette": "small slim upright body, long tail for balance, dark eye patches; stands tall",
+      "marker": "just now",
+      "arc": [
+        "The learner gives her honest feedback on her pitch",
+        "The learner sees the old business card",
+        "She wins nothing at Demo Day but hires the right person, with Dex and the learner on the panel"
+      ],
+      "ties": [
+        {
+          "with": "dex",
+          "note": "Dex helps with her first hire"
+        },
+        {
+          "with": "azlan",
+          "note": "her couriers and his post: rivals, then partners"
+        },
+        {
+          "with": "mags",
+          "note": "rents the Shed from the property office"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "orla",
+      "name": "Orla",
+      "species": "owl",
+      "role": "Head concierge at the Pelican Hotel; also staffs the town's welcome desks (station, airfield) and leads the dusk walking tour.",
+      "accent": "Irish English: lilting, bright, chatty.",
+      "personality": "Chatty, curious and a born storyteller; knows everyone's name and the best seat in every room.",
+      "want": "To write the town's first proper guidebook, with every neighbour's favourite spot in it.",
+      "secret": "Has never left Natterwick: she knows every road on the map and has travelled none of them.",
+      "teaches": [
+        "directions and maps",
+        "bookings and changes",
+        "recommendations",
+        "travel problems (lost luggage, a wrong booking)",
+        "welcoming strangers",
+        "small talk with guests"
+      ],
+      "goals": [
+        "travel",
+        "move",
+        "friends",
+        "work"
+      ],
+      "hard": [
+        "small_talk",
+        "phone",
+        "fast_speech"
+      ],
+      "accessory": "a ring of brass room keys on a ribbon",
+      "habit": "jingles her keys while she remembers a name",
+      "hours": "Airfield arrivals 10:30–11:30 am; station desk noon–2 pm; hotel desk 2–5 pm; dusk tour 5–6:30 pm; hotel desk 7 pm–1 am (lost and found from 11 pm).",
+      "places": [
+        "walkingtour",
+        "hotellobby",
+        "lostfound",
+        "airarrivals",
+        "stationdesk"
+      ],
+      "sample": "Ah, you're grand. Now, tell me where you're going and I'll tell you the nicer way.",
+      "voice": "Female, mid 30s; lilting bright mid voice, quick and chatty (~150 wpm), warm, rises at the end of a story. Irish English, native-speaker review. One light 'grand' at most.",
+      "stage": "newcomer",
+      "age": "36",
+      "pronoun": "she",
+      "silhouette": "round upright body, no neck, ear tufts, big forward-facing eyes; folds into a soft egg shape",
+      "marker": "grand",
+      "arc": [
+        "The learner helps her welcome a lost guest",
+        "The learner discovers she has never left town",
+        "She takes the ferry to Gull Island for the first time, with the learner as her guide"
+      ],
+      "ties": [
+        {
+          "with": "nell",
+          "note": "two front desks: friendly rivals"
+        },
+        {
+          "with": "bea",
+          "note": "tells Bea's stories on the walking tour"
+        },
+        {
+          "with": "norma",
+          "note": "her first trip off the mainland"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "azlan",
+      "name": "Azlan",
+      "species": "Malayan tapir",
+      "role": "Postmaster of the Natterwick Post Office; sorts the dawn post by the railway; builds kites.",
+      "accent": "Malaysian English: soft, precise, gently funny.",
+      "personality": "Patient, meticulous and quietly funny; believes every letter deserves to arrive.",
+      "want": "To fly the biggest kite ever seen on Kite Day, made from the post office's old brown paper.",
+      "secret": "Keeps a shelf of letters with no address and slowly, patiently finds each one a home.",
+      "teaches": [
+        "forms and addresses",
+        "spelling and dates",
+        "sending a parcel abroad",
+        "phoning about a missing parcel",
+        "describing an object",
+        "handling a complaint kindly"
+      ],
+      "goals": [
+        "move",
+        "family",
+        "travel",
+        "me"
+      ],
+      "hard": [
+        "phone",
+        "words",
+        "small_talk"
+      ],
+      "accessory": "a long yellow pencil tucked behind one ear",
+      "habit": "taps each parcel twice before he lets it go",
+      "hours": "Sorting office 5–8 am; post office 8:30 am–5 pm; the post box on Hill Road 5:30 pm; kite shed 7–10 pm.",
+      "places": [
+        "postoffice",
+        "postbox",
+        "sorting",
+        "kiteshed"
+      ],
+      "sample": "No problem. Write the address here, big letters. Is it a gift? Then I need to know what's inside.",
+      "voice": "Male, mid 50s; soft mellow mid-low voice, unhurried and precise (~125 wpm), gentle humour. Malaysian English, native-speaker review.",
+      "stage": "visitor",
+      "age": "55",
+      "pronoun": "he",
+      "silhouette": "heavy rounded pig-like body, short flexible snout, black front and a pale saddle; no tusks, no big ears",
+      "arc": [
+        "The learner helps him find the owner of an addressless letter",
+        "The learner reads the kite instructions aloud",
+        "The kite flies; the last addressless letter turns out to be for the learner"
+      ],
+      "ties": [
+        {
+          "with": "elif",
+          "note": "she engineers his kites"
+        },
+        {
+          "with": "thandi",
+          "note": "her couriers and his post"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "rafa",
+      "name": "Rafa",
+      "species": "zebra",
+      "role": "Coach at the Riverside sports ground and pool; runs the Hollowbrook lunchtime class and a beginners' dance class.",
+      "accent": "A Brazilian Portuguese speaker who learned English in his twenties: fluent, accented, comfortable.",
+      "personality": "Warm, energetic and endlessly encouraging; believes in 'one more try', for legs and for English.",
+      "want": "To get the whole town over the Lantern Run finish line together, even Professor Moss.",
+      "secret": "Learned English from song lyrics and still sings the wrong words to some of them; proud of it and a little embarrassed.",
+      "teaches": [
+        "following and giving instructions",
+        "encouragement",
+        "team talk",
+        "joining a club",
+        "small talk at sport",
+        "saying how your body feels",
+        "speaking with an accent and liking it"
+      ],
+      "goals": [
+        "friends",
+        "me",
+        "move"
+      ],
+      "hard": [
+        "nerves",
+        "pronunciation",
+        "small_talk"
+      ],
+      "accessory": "a stopwatch on a cord round his neck",
+      "habit": "bounces on his hooves when he's excited",
+      "hours": "Shingle Beach 5:30–7 am; pool 7–10 am; Hollowbrook gym 11 am–3 pm; sports ground 4–7 pm; dance class 8–10 pm.",
+      "places": [
+        "beach",
+        "gym",
+        "pool",
+        "sportsground",
+        "dancehall"
+      ],
+      "sample": "Good! Again, but this time say it like you mean it. One more. You're almost there!",
+      "voice": "Male, early 30s; warm bright tenor, energetic, lively pace (~150 wpm), laughs easily. Brazilian Portuguese accent of a fluent adult learner; native-speaker review.",
+      "stage": "newcomer",
+      "age": "33",
+      "pronoun": "he",
+      "silhouette": "horse-shaped body with soft painted stripes, upright mane, long legs",
+      "arc": [
+        "Gets the learner to join a class",
+        "The learner catches him singing the wrong words",
+        "Coaches the whole town over the Lantern Run line; asks the learner to give the team talk"
+      ],
+      "ties": [
+        {
+          "with": "amani",
+          "note": "training her secretly for the Lantern Run"
+        },
+        {
+          "with": "moss",
+          "note": "his hardest recruit"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "joon",
+      "name": "Joon",
+      "species": "Asiatic black bear",
+      "role": "Chef-owner of the Copper Pot on Market Lane; teaches a morning cooking class.",
+      "accent": "A Korean speaker who learned English as an adult, working in kitchens abroad: careful and clear.",
+      "personality": "Quiet perfectionist with a dry sense of humour; shows care through food, not speeches.",
+      "want": "To hire a second cook who will stay.",
+      "secret": "Practises his English by talking to the onions while he chops, and he's better at it than he thinks.",
+      "teaches": [
+        "ordering and booking a table",
+        "asking what's in a dish",
+        "complaining politely in a restaurant",
+        "recipes and instructions",
+        "kitchen job interviews",
+        "describing taste"
+      ],
+      "goals": [
+        "travel",
+        "friends",
+        "work",
+        "interview"
+      ],
+      "hard": [
+        "words",
+        "pronunciation",
+        "nerves",
+        "interviews"
+      ],
+      "accessory": "a folded white kitchen towel over one shoulder",
+      "habit": "tastes from a tiny spoon and nods once",
+      "hours": "Fish market 5–7 am; cooking class 10 am–noon; kitchen 2–11 pm (out in the dining room 6–10 pm).",
+      "places": [
+        "kitchen",
+        "diningroom",
+        "cookclass",
+        "fishmarket"
+      ],
+      "sample": "Table for two? Okay. Tonight the soup is good. The fish is better. You choose.",
+      "voice": "Male, mid 40s; low soft voice, careful and a little slow (~115 wpm), dry warmth, short sentences. Korean accent of a fluent adult learner; native-speaker review.",
+      "stage": "visitor",
+      "age": "44",
+      "pronoun": "he",
+      "silhouette": "big soft dark body, round ears, a pale crescent on the chest",
+      "arc": [
+        "The learner orders for a table that can't decide",
+        "The learner hears him talking to the onions",
+        "He hires a cook; the learner runs the interview with him"
+      ],
+      "ties": [
+        {
+          "with": "arjun",
+          "note": "buys his spices and never haggles"
+        },
+        {
+          "with": "mei",
+          "note": "they share the dawn bread order"
+        },
+        {
+          "with": "norma",
+          "note": "buys fish off her island run"
+        }
+      ],
+      "existing": false
+    },
+    {
+      "id": "elif",
+      "name": "Elif",
+      "species": "hedgehog",
+      "role": "Retired engineer who runs the community garden, the Repair Café and the Swap Shop.",
+      "accent": "A Turkish speaker who learned English in her forties for work: firm, clear, direct.",
+      "personality": "Blunt, practical and generous; will fix your kettle, then your plans.",
+      "want": "To get the old water wheel by the garden turning again.",
+      "secret": "Rehearses her weekly video call with her grandchildren out loud while she weeds, because she wants her English to be good for them.",
+      "teaches": [
+        "describing objects and problems when you don't know the word",
+        "explaining how something works",
+        "giving and taking advice",
+        "family video calls",
+        "swapping and asking for things",
+        "neighbour small talk"
+      ],
+      "goals": [
+        "family",
+        "me",
+        "friends",
+        "move"
+      ],
+      "hard": [
+        "words",
+        "small_talk",
+        "phone"
+      ],
+      "accessory": "a wide straw sun hat",
+      "habit": "curls into a ball for a beat when she laughs",
+      "hours": "Garden 7–11 am; Repair Café noon–4 pm; bowling green 4–6 pm; Swap Shop 6–7:30 pm; her window 7:30–10 pm.",
+      "places": [
+        "elifstoop",
+        "swapshop",
+        "repaircafe",
+        "bowls",
+        "garden"
+      ],
+      "sample": "Don't know the word? Describe it. Big or small? What does it do? We will find it together.",
+      "voice": "Female, mid 60s; firm warm alto, measured and direct (~125 wpm), a sudden warm laugh. Turkish accent of a fluent adult learner; native-speaker review.",
+      "stage": "newcomer",
+      "age": "66",
+      "pronoun": "she",
+      "silhouette": "small low body under a soft halo of spines with pale tips, tiny pointed face; spines read as a fringe, not scales",
+      "arc": [
+        "The learner explains a broken thing to her",
+        "The learner overhears her rehearsing for the grandchildren",
+        "The water wheel turns; she shows it to the grandchildren on the call and the learner says hello"
+      ],
+      "ties": [
+        {
+          "with": "azlan",
+          "note": "engineers his kites"
+        },
+        {
+          "with": "moss",
+          "note": "they argue about the weather"
+        }
+      ],
+      "existing": false
+    }
+  ]
+}
