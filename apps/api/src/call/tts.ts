@@ -19,6 +19,11 @@ export interface TtsVoice {
   readonly breakSeconds: number | null;
   /** A line not in English (Linh's Vietnamese): the language Flash must speak it in. */
   readonly language?: 'vi';
+  /**
+   * The stage's own speed, for a model that stays clean when slowed (v4 sentences): Flash speaks
+   * at `speed` and is slowed by phrase breaks instead.
+   */
+  readonly naturalSpeed?: number;
 }
 
 export const voiceKey = (v: TtsVoice): string =>

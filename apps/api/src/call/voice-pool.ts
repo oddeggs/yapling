@@ -26,12 +26,14 @@ export const stageVoice = (
   pace: Pace | null = null,
 ): TtsVoice => {
   const speed = clampSpeed(Math.max(STAGE_SPEED_MIN, ttsSpeedFactor(stage)));
+  const natural = ttsSpeedFactor(stage);
   const breakSeconds = speechSettings(stage).phraseBreakSeconds;
   if (pace === 'slower')
     return {
       character,
       speed: clampSpeed(speed - PACE_STEP.speed),
       breakSeconds: (breakSeconds ?? 0) + PACE_STEP.breakSeconds,
+      naturalSpeed: natural - PACE_STEP.speed,
     };
   if (pace === 'faster') {
     const shorter = breakSeconds === null ? null : breakSeconds - PACE_STEP.breakSeconds;
@@ -39,14 +41,18 @@ export const stageVoice = (
       character,
       speed: clampSpeed(speed + PACE_STEP.speed),
       breakSeconds: shorter !== null && shorter > 0.05 ? shorter : null,
+      naturalSpeed: natural + PACE_STEP.speed,
     };
   }
-  return { character, speed, breakSeconds };
+  return { character, speed, breakSeconds, naturalSpeed: natural };
 };
 
 /** A voice one step slower than `voice`, with longer phrase breaks: a line asked for slowly. */
 export const slowerVoice = (voice: TtsVoice): TtsVoice => ({
   ...voice,
+  ...(voice.naturalSpeed !== undefined
+    ? { naturalSpeed: voice.naturalSpeed - PACE_STEP.speed }
+    : {}),
   speed: clampSpeed(voice.speed - PACE_STEP.speed),
   breakSeconds: (voice.breakSeconds ?? 0) + PACE_STEP.breakSeconds,
 });

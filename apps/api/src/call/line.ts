@@ -9,7 +9,8 @@ import { noUsage, type Usage } from './llm';
 import type { GuardAction } from './narration-guard';
 import type { MappedAlignment } from './phrase-breaks';
 import { ReplySplitter } from './reply-splitter';
-import { TtsLine, type TtsVoice } from './tts';
+import type { LiveTts } from './sentence-tts';
+import { TtsLine, type TtsHandlers, type TtsVoice } from './tts';
 import { TTS_SAMPLE_RATE } from './upstream';
 
 /*
@@ -79,6 +80,8 @@ export interface LineHost {
   nextStreamId(): number;
   /** A Flash socket for the voice (a spare one when ready). */
   takeTts(voice: TtsVoice): Promise<WebSocket>;
+  /** Lines in whole sentences on the cast's own voice model, in place of a Flash socket. */
+  sentenceTts?: (voice: TtsVoice, handlers: TtsHandlers) => LiveTts;
 }
 
 export interface LineOptions {
@@ -104,6 +107,8 @@ export interface LineOptions {
   readonly safeLine?: string;
   /** The learner's name: a sentence about them in the third person is narration. */
   readonly learnerName?: string | null;
+  /** What the learner just said: a reply that opens by quoting it is checked for notes. */
+  readonly heard?: string;
 }
 
 export class SpokenLine {
@@ -112,7 +117,7 @@ export class SpokenLine {
   readonly usage: Usage = noUsage();
   ttsChars = 0;
   private readonly ctrl = new AbortController();
-  private tts: TtsLine | null = null;
+  private tts: LiveTts | null = null;
   private held: { pcm: Uint8Array; alignment: MappedAlignment | null }[] = [];
   private gated: boolean;
   private audioSent = false;
@@ -141,6 +146,7 @@ export class SpokenLine {
       afterReaction: options.afterReaction,
       speaker: CAST[options.speaker].name,
       ...(options.learnerName ? { learner: options.learnerName } : {}),
+      ...(options.heard ? { heard: options.heard } : {}),
       guard: options.source.kind === 'model',
     });
     this.done = new Promise((resolve) => (this.settle = resolve));
@@ -224,9 +230,22 @@ export class SpokenLine {
       if (!this.gated) this.finish();
       return;
     }
-    const ttsSocket = this.host.takeTts(this.options.voice).catch(() => null);
+    const handlers: TtsHandlers = {
+      audio: (pcm, alignment) => this.onAudio(pcm, alignment),
+      done: () => this.onTtsDone(),
+      failed: () => this.fail('tts'),
+    };
+    const { sentenceTts } = this.host;
+    const ttsSocket = sentenceTts
+      ? Promise.resolve(null)
+      : this.host.takeTts(this.options.voice).catch(() => null);
     const openTts = async (): Promise<boolean> => {
       if (this.tts) return true;
+      if (sentenceTts) {
+        this.timings.ttsReady = Date.now();
+        this.tts = sentenceTts(this.options.voice, handlers);
+        return true;
+      }
       const ws = await ttsSocket;
       if (this.aborted) {
         ws?.close(1000, 'aborted');
@@ -237,11 +256,7 @@ export class SpokenLine {
         return false;
       }
       this.timings.ttsReady = Date.now();
-      this.tts = new TtsLine(ws, this.options.voice, {
-        audio: (pcm, alignment) => this.onAudio(pcm, alignment),
-        done: () => this.onTtsDone(),
-        failed: () => this.fail('tts'),
-      });
+      this.tts = new TtsLine(ws, this.options.voice, handlers);
       return true;
     };
     const say = (words: string) => {
