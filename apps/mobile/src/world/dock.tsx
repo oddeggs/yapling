@@ -1,7 +1,8 @@
 import { BlurView } from 'expo-blur';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
-import { useEffect, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -130,30 +131,14 @@ export function Dock(p: Props) {
         )}
         {p.mode === 'talk' && (
           <Content key="talk">
-            <Pressable
-              style={styles.talk}
-              disabled={p.talk === 'waiting'}
-              onPressIn={() => {
-                haptics.play('tap');
-                p.onTalkIn();
-              }}
-              // Always passed on: a quick press can lift before the button has redrawn as held.
-              onPressOut={() => {
-                haptics.play('tap');
-                p.onTalkOut();
-              }}
-              // A thumb that drifts while talking keeps the turn; only lifting it ends it.
-              pressRetentionOffset={400}
-              accessibilityRole="button"
-              accessibilityLabel={p.talkA11y}
-            >
-              <Ember level={p.level} look={p.talk} />
-              {p.talk === 'ready' && (
-                <Text style={styles.talkText} numberOfLines={1}>
-                  {p.talkLabel}
-                </Text>
-              )}
-            </Pressable>
+            <TalkButton
+              look={p.talk}
+              level={p.level}
+              label={p.talkLabel}
+              a11y={p.talkA11y}
+              onIn={p.onTalkIn}
+              onOut={p.onTalkOut}
+            />
           </Content>
         )}
         {p.mode === 'controls' && (
@@ -189,6 +174,63 @@ export function Dock(p: Props) {
         )}
       </Animated.View>
     </View>
+  );
+}
+
+/**
+ * The talk button. A native gesture, not a Pressable: its end fires however the touch ends (lifted,
+ * cancelled by the system, or the button redrawn under the finger), so a turn can never stay held.
+ * A button that goes away while held lets go too.
+ */
+function TalkButton({
+  look,
+  level,
+  label,
+  a11y,
+  onIn,
+  onOut,
+}: {
+  look: TalkLook;
+  level: SharedValue<number> | null;
+  label: string;
+  a11y: string;
+  onIn: () => void;
+  onOut: () => void;
+}) {
+  const held = useRef(false);
+  const out = useRef(onOut);
+  out.current = onOut;
+  const release = useCallback(() => {
+    if (!held.current) return;
+    held.current = false;
+    haptics.play('tap');
+    out.current();
+  }, []);
+  useEffect(() => release, [release]);
+  const gesture = Gesture.LongPress()
+    .minDuration(0)
+    .maxDistance(10_000)
+    .shouldCancelWhenOutside(false)
+    .enabled(look !== 'waiting')
+    .runOnJS(true)
+    .onBegin(() => {
+      if (held.current) return;
+      held.current = true;
+      haptics.play('tap');
+      onIn();
+    })
+    .onFinalize(release);
+  return (
+    <GestureDetector gesture={gesture}>
+      <View style={styles.talk} accessible accessibilityRole="button" accessibilityLabel={a11y}>
+        <Ember level={level} look={look} />
+        {look === 'ready' && (
+          <Text style={styles.talkText} numberOfLines={1}>
+            {label}
+          </Text>
+        )}
+      </View>
+    </GestureDetector>
   );
 }
 
