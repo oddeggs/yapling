@@ -37,10 +37,11 @@ export async function structured<T>(
   call: StructuredCall,
 ): Promise<StructuredResult<T>> {
   const started = Date.now();
-  const system: Anthropic.TextBlockParam[] = call.system.map((text, i) => ({
+  // Each block is cached on its own, so prompts that share a first block share its cache.
+  const system: Anthropic.TextBlockParam[] = call.system.map((text) => ({
     type: 'text',
     text,
-    ...(i === call.system.length - 1 ? { cache_control: { type: 'ephemeral' as const } } : {}),
+    cache_control: { type: 'ephemeral' as const },
   }));
   const message = await client.messages.create({
     model: call.model,

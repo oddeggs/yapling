@@ -37,7 +37,7 @@ export async function consumeJobs(batch: MessageBatch, env: Bindings): Promise<v
     try {
       const job = parsed.data;
       if (job.type === 'post_call') await runPostCall(env, job, jobsClock.now());
-      else if (job.type === 'moment_after' || job.type === 'moment_plan')
+      else if (job.type === 'moment_after' || job.type === 'moment_plan' || job.type === 'scene_plan')
         await runMomentJob(env, job, jobsClock.now());
       else await sendScheduledPush(env.DB, job, jobsClock.now());
       message.ack();

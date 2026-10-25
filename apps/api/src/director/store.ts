@@ -1,6 +1,8 @@
+import type { Arrival } from '@yapling/contracts';
 import type { PlaceId } from '@yapling/scene';
 
 import type { MomentPlan } from './moment';
+import type { StoryOutline } from './story';
 
 /** Reads and writes on `learners`, `moments` and `paintings`, always within one learner's rows. */
 
@@ -15,6 +17,9 @@ export interface Learner {
   /** The judge's learner model, or null before the first conversation. */
   readonly model: LearnerModel | null;
   readonly openThreads: readonly string[];
+  /** What they told the town on arrival; null until they have arrived. */
+  readonly arrival: Arrival | null;
+  readonly arrivedAt: number | null;
   readonly createdAt: number;
 }
 
@@ -39,6 +44,8 @@ interface LearnerRow {
   timezone: string;
   model: string | null;
   open_threads: string;
+  arrival: string | null;
+  arrived_at: number | null;
   created_at: number;
 }
 
@@ -59,6 +66,8 @@ const learnerOf = (row: LearnerRow): Learner => ({
   timezone: row.timezone,
   model: parse<LearnerModel | null>(row.model, null),
   openThreads: parse<string[]>(row.open_threads, []),
+  arrival: parse<Arrival | null>(row.arrival, null),
+  arrivedAt: row.arrived_at,
   createdAt: row.created_at,
 });
 
@@ -127,6 +136,21 @@ export async function saveLearnerModel(
     .run();
 }
 
+/** The learner arrived: what they told the town, and the name they typed (never misheard). */
+export async function saveArrival(
+  db: D1Database,
+  userId: string,
+  arrival: Arrival,
+  now: number,
+): Promise<void> {
+  await db
+    .prepare(
+      'UPDATE learners SET arrival = ?2, name = ?3, arrived_at = ?4, updated_at = ?4 WHERE user_id = ?1',
+    )
+    .bind(userId, JSON.stringify(arrival), arrival.name, now)
+    .run();
+}
+
 /** The learner's own edit: "call me…" from settings. */
 export async function setLearnerName(
   db: D1Database,
@@ -154,6 +178,11 @@ export interface Moment {
   readonly plannedHour: number | null;
   readonly createdAt: number;
   readonly playedAt: number | null;
+  /** The story and scene (1-based) a director moment tells; null for fixed moments. */
+  readonly storyId: string | null;
+  readonly sceneNo: number | null;
+  /** Rewritten after the scene before it was played, so it follows on from what happened. */
+  readonly followed: boolean;
 }
 
 interface MomentRow {
@@ -165,6 +194,9 @@ interface MomentRow {
   planned_hour: number | null;
   created_at: number;
   played_at: number | null;
+  story_id: string | null;
+  scene_no: number | null;
+  followed: number;
 }
 
 const momentOf = (row: MomentRow): Moment => ({
@@ -176,6 +208,9 @@ const momentOf = (row: MomentRow): Moment => ({
   plannedHour: row.planned_hour,
   createdAt: row.created_at,
   playedAt: row.played_at,
+  storyId: row.story_id,
+  sceneNo: row.scene_no,
+  followed: row.followed === 1,
 });
 
 export async function insertMoment(
@@ -188,13 +223,17 @@ export async function insertMoment(
     plan: MomentPlan | null;
     plannedHour: number | null;
     costUsd?: number;
+    storyId?: string | null;
+    sceneNo?: number | null;
   },
   now: number,
-): Promise<void> {
-  await db
+): Promise<boolean> {
+  // A second plan for the same learner while one is being written is dropped (a unique index).
+  const r = await db
     .prepare(
-      `INSERT INTO moments (id, user_id, status, source, place, variant, plan, planned_hour, created_at, cost_usd)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO moments (id, user_id, status, source, place, variant, plan, planned_hour, created_at, cost_usd, story_id, scene_no)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT DO NOTHING`,
     )
     .bind(
       m.id,
@@ -207,8 +246,62 @@ export async function insertMoment(
       m.plannedHour,
       now,
       m.costUsd ?? 0,
+      m.storyId ?? null,
+      m.sceneNo ?? null,
     )
     .run();
+  return (r.meta.changes ?? 0) > 0;
+}
+
+/** Plans still "planning" long after they should have finished: their job died. */
+export async function failStalePlans(
+  db: D1Database,
+  userId: string,
+  olderThan: number,
+): Promise<void> {
+  await db
+    .prepare(
+      `UPDATE moments SET status = 'failed'
+       WHERE user_id = ? AND status = 'planning' AND created_at < ?`,
+    )
+    .bind(userId, olderThan)
+    .run();
+}
+
+/** A ready scene rewritten to follow on from the one just played (only while still unplayed). */
+export async function followUp(db: D1Database, id: string, plan: MomentPlan): Promise<boolean> {
+  const r = await db
+    .prepare(
+      `UPDATE moments SET plan = ?2, followed = 1 WHERE id = ?1 AND status = 'ready' AND followed = 0`,
+    )
+    .bind(id, JSON.stringify(plan))
+    .run();
+  return (r.meta.changes ?? 0) > 0;
+}
+
+/** When the learner last finished a moment (epoch ms), or null. */
+export async function lastPlayedAt(db: D1Database, userId: string): Promise<number | null> {
+  const row = await db
+    .prepare(`SELECT MAX(played_at) AS t FROM moments WHERE user_id = ? AND status = 'played'`)
+    .bind(userId)
+    .first<{ t: number | null }>();
+  return row?.t ?? null;
+}
+
+/** The scenes of a story played so far, in order. */
+export async function storyScenes(
+  db: D1Database,
+  userId: string,
+  storyId: string,
+): Promise<Moment[]> {
+  const { results } = await db
+    .prepare(
+      `SELECT * FROM moments WHERE user_id = ? AND story_id = ? AND status = 'played'
+       ORDER BY scene_no ASC, played_at ASC`,
+    )
+    .bind(userId, storyId)
+    .all<MomentRow>();
+  return results.map(momentOf);
 }
 
 export async function finishPlanning(
@@ -291,12 +384,94 @@ export async function markPlayed(
     .run();
 }
 
+/** Whether the first conversation with Pip was made since the learner arrived. */
+export async function firstSince(db: D1Database, userId: string, since: number): Promise<boolean> {
+  const row = await db
+    .prepare(
+      `SELECT 1 AS x FROM moments WHERE user_id = ? AND source = 'first' AND created_at >= ?`,
+    )
+    .bind(userId, since)
+    .first<{ x: number }>();
+  return row !== null;
+}
+
 export async function countMoments(db: D1Database, userId: string): Promise<number> {
   const row = await db
     .prepare(`SELECT COUNT(*) AS n FROM moments WHERE user_id = ? AND status = 'played'`)
     .bind(userId)
     .first<{ n: number }>();
   return row?.n ?? 0;
+}
+
+// ---------- stories ----------
+
+export type StoryStatus = 'planning' | 'active' | 'done' | 'failed';
+
+export interface Story {
+  readonly id: string;
+  readonly userId: string;
+  readonly status: StoryStatus;
+  readonly outline: StoryOutline | null;
+  readonly createdAt: number;
+}
+
+interface StoryRow {
+  id: string;
+  user_id: string;
+  status: string;
+  outline: string | null;
+  created_at: number;
+}
+
+const storyOf = (row: StoryRow): Story => ({
+  id: row.id,
+  userId: row.user_id,
+  status: row.status as StoryStatus,
+  outline: parse<StoryOutline | null>(row.outline, null),
+  createdAt: row.created_at,
+});
+
+export async function insertStory(
+  db: D1Database,
+  s: { id: string; userId: string; outline: StoryOutline; costUsd: number },
+  now: number,
+): Promise<void> {
+  await db
+    .prepare(
+      `INSERT INTO stories (id, user_id, status, outline, created_at, updated_at, cost_usd)
+       VALUES (?1, ?2, 'active', ?3, ?4, ?4, ?5)`,
+    )
+    .bind(s.id, s.userId, JSON.stringify(s.outline), now, s.costUsd)
+    .run();
+}
+
+export async function readStory(db: D1Database, userId: string, id: string): Promise<Story | null> {
+  const row = await db
+    .prepare('SELECT * FROM stories WHERE id = ? AND user_id = ?')
+    .bind(id, userId)
+    .first<StoryRow>();
+  return row === null ? null : storyOf(row);
+}
+
+/** The learner's stories, newest first. */
+export async function listStories(db: D1Database, userId: string, limit = 6): Promise<Story[]> {
+  const { results } = await db
+    .prepare('SELECT * FROM stories WHERE user_id = ? ORDER BY created_at DESC LIMIT ?')
+    .bind(userId, limit)
+    .all<StoryRow>();
+  return results.map(storyOf);
+}
+
+export async function setStoryStatus(
+  db: D1Database,
+  id: string,
+  status: StoryStatus,
+  now: number,
+): Promise<void> {
+  await db
+    .prepare('UPDATE stories SET status = ?2, updated_at = ?3 WHERE id = ?1')
+    .bind(id, status, now)
+    .run();
 }
 
 // ---------- paintings ----------

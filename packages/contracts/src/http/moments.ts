@@ -35,6 +35,18 @@ export const STAGE_NAMES = [
   'voice',
 ] as const;
 
+/**
+ * The way into a moment: a caption over the new place while Pip, walking with the learner, says
+ * why they are going there (or, after a long gap, what happened last time).
+ */
+export const MomentBridge = z.object({
+  /** "Later that morning · the harbour". */
+  card: z.string().min(1).max(80),
+  /** The story and how far into it: "The Crate With No Name · 2 of 5". */
+  chapter: z.string().max(80).nullable(),
+});
+export type MomentBridge = z.infer<typeof MomentBridge>;
+
 /** A moment ready to play: its id goes in the call's `hello` as `sceneId`, kind `moment`. */
 export const MomentCard = z.object({
   id: OpaqueId,
@@ -44,6 +56,7 @@ export const MomentCard = z.object({
   speaker: CharacterId,
   titleOpen: z.string().min(1).max(80),
   stage: z.enum(STAGE_NAMES),
+  bridge: MomentBridge.nullable().default(null),
 });
 export type MomentCard = z.infer<typeof MomentCard>;
 
@@ -53,7 +66,86 @@ export const NextMoment = z.object({
   planning: z.boolean(),
   /** What the learner told the town their name is, once they have. */
   name: z.string().max(40).nullable(),
+  /** The learner hasn't arrived yet (no `PUT /api/me/arrival`): show the arrival first. */
+  arrived: z.boolean().default(true),
 });
+
+// --- Arriving: what the learner tells the town before the first conversation. ---
+
+/** Why English, right now (one to three). */
+export const ARRIVAL_WHY = [
+  'work',
+  'interview',
+  'travel',
+  'study',
+  'exam',
+  'move',
+  'friends',
+  'media',
+  'family',
+  'me',
+] as const;
+/** What they love (up to six): the stories are made of these. */
+export const ARRIVAL_INTERESTS = [
+  'food',
+  'music',
+  'films',
+  'games',
+  'sport',
+  'travel',
+  'tech',
+  'books',
+  'fitness',
+  'pets',
+  'fashion',
+  'nature',
+  'art',
+  'business',
+  'photos',
+  'cars',
+] as const;
+/** Where English gets hard (up to three): the stories rehearse these. */
+export const ARRIVAL_HARD = [
+  'meetings',
+  'small_talk',
+  'phone',
+  'fast_speech',
+  'words',
+  'pronunciation',
+  'interviews',
+  'nerves',
+] as const;
+export const ARRIVAL_DOING = ['work', 'study', 'both', 'neither'] as const;
+
+/**
+ * `PUT /api/me/arrival`: the learner's arrival in Natterwick. `level` is their own feel for their
+ * spoken English, 1 ("a few words") to 5 ("fluent, I want to sound natural"); the conversations
+ * correct it from how they really talk.
+ */
+export const Arrival = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1)
+    .max(40)
+    .regex(/^[^\p{Cc}]+$/u),
+  why: z.array(z.enum(ARRIVAL_WHY)).min(1).max(3),
+  doing: z.enum(ARRIVAL_DOING),
+  /** Their work or study in their own words ("nurse", "marketing at a bank"), or null. */
+  field: z.string().trim().max(80).nullable(),
+  interests: z.array(z.enum(ARRIVAL_INTERESTS)).max(6),
+  hard: z.array(z.enum(ARRIVAL_HARD)).max(3),
+  level: z.number().int().min(1).max(5),
+  /** They confirmed they are 18 or over. */
+  adult: z.literal(true),
+  firstLanguage: FirstLanguage,
+  country: z
+    .string()
+    .regex(/^[A-Z]{2}$/)
+    .nullable(),
+  timezone: TimeZone,
+});
+export type Arrival = z.infer<typeof Arrival>;
 export type NextMoment = z.infer<typeof NextMoment>;
 
 export const PaintingWord = z.object({ phrase: z.string().max(200), line: z.string().max(1000) });

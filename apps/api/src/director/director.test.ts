@@ -5,7 +5,9 @@ import { pickLane, turnDirection, wantsGloss, type MomentLearner } from './actor
 import { firstMoment, freeMoment } from './fixed';
 import { MomentPlan } from './moment';
 import { isNameFact } from './judge';
-import { checkPlan, repeatsRecent, sameQuestion } from './plan';
+import { checkPlan, stageFor } from './plan';
+import { repeatsStories, type StoryOutline } from './story';
+import type { Learner } from './store';
 
 const at = (hour: number) => ({ year: 2026, month: 10, day: 24, hour });
 const visitor: MomentLearner = { name: null, firstLanguage: 'vi', stage: 'visitor', country: 'VN' };
@@ -13,59 +15,143 @@ const visitor: MomentLearner = { name: null, firstLanguage: 'vi', stage: 'visito
 describe('the fixed moments', () => {
   it('pass the director’s own checks at every hour', () => {
     for (let h = 0; h < 24; h += 1) {
-      for (const plan of [firstMoment(h, 'vi'), freeMoment(h, 'Lan', 'vi')]) {
-        expect(MomentPlan.safeParse(plan).success).toBe(true);
-        expect(checkPlan(plan, at(h), true)).toEqual([]);
+      for (let n = 0; n < 6; n += 1) {
+        for (const plan of [firstMoment(h, 'vi', 'Lan'), freeMoment(h, 'Lan', 'vi', n)]) {
+          expect(MomentPlan.safeParse(plan).success).toBe(true);
+          expect(checkPlan(plan, at(h)).hard).toEqual([]);
+        }
       }
     }
   });
 
-  it('wake Pip up at night and gloss the opening for a Vietnamese learner', () => {
-    expect(firstMoment(23.5, 'vi').opening_line).toContain('sleeping');
+  it('greets the learner by the name they typed and glosses for a Vietnamese learner', () => {
+    expect(firstMoment(15, 'vi', 'Khanh', 'neighbour').opening_line).toContain('Khanh');
     expect(firstMoment(15, 'vi').opening_gloss).not.toBe('');
     expect(firstMoment(15, 'pt').opening_gloss).toBe('');
+  });
+
+  it('gives Pip a different small story each time, never "How was your day?"', () => {
+    const openings = new Set(
+      [0, 1, 2, 3, 4].map((n) => freeMoment(15, null, 'en', n).opening_line),
+    );
+    expect(openings.size).toBe(5);
+    for (const o of openings) expect(o).not.toMatch(/how was your day/i);
   });
 });
 
 describe('the plan checks', () => {
-  it('refuse a place whose resident is out, lines over the limit, and a missing door', () => {
+  it('refuse a place whose resident is out; flag long lines', () => {
     const plan = {
       ...firstMoment(12, 'vi'),
       place: 'noodles' as const,
       beats: firstMoment(12, 'vi').beats.map((b) => ({
         ...b,
-        is_door: false,
         example_line: 'This line is far too long for a visitor to follow at all',
       })),
     };
-    const problems = checkPlan(plan, at(12), true);
-    expect(problems.some((p) => p.includes('nobody in'))).toBe(true);
-    expect(problems.some((p) => p.includes('over the 8-word limit'))).toBe(true);
-    expect(problems.some((p) => p.includes('door'))).toBe(true);
+    const { hard, soft } = checkPlan(plan, at(12));
+    expect(hard.some((p) => p.includes('nobody in'))).toBe(true);
+    expect(soft.some((p) => p.includes('over the 8-word limit'))).toBe(true);
   });
 
-  it('keep "love" for Bea and "I" for Pip', () => {
-    const plan = { ...firstMoment(12, 'vi'), opening_line: 'Hello love! Pip is here.' };
-    const problems = checkPlan(plan, at(12), false);
-    expect(problems.some((p) => p.includes('Bea'))).toBe(true);
-    expect(problems.some((p) => p.includes('never its own name'))).toBe(true);
+  it('keep "love" for Bea and "I" for Pip on the way in', () => {
+    const plan = {
+      ...firstMoment(12, 'vi'),
+      opening_line: 'Hello love!',
+      bridge_line: 'Pip is here.',
+    };
+    const { soft } = checkPlan(plan, at(12));
+    expect(soft.some((p) => p.includes('Bea'))).toBe(true);
+    expect(soft.some((p) => p.includes('never its own name'))).toBe(true);
   });
 });
 
-describe('the rerun check', () => {
-  it('refuses the last moments’ opening question and a third visit in a row', () => {
+const outline = (o: Partial<StoryOutline>): StoryOutline => ({
+  title: 'The Espresso Emergency',
+  kind: 'rescue',
+  grows: '',
+  logline: '',
+  why_this_learner: '',
+  emotional_core: '',
+  pip_arc: '',
+  learning_spine: '',
+  central: 'mei',
+  scenes: [],
+  plants: [],
+  twist: '',
+  finale_payoff: '',
+  epilogue: '',
+  town_now: [],
+  ...o,
+});
+
+describe('a new story', () => {
+  it('is not the same kind, centre or title as the last ones', () => {
+    const past = [
+      outline({}),
+      outline({ title: 'Hank Wants A Discount', kind: 'mix_up', central: 'hank' }),
+    ];
     expect(
-      sameQuestion('Hi! I made iced coffee. Milk or no milk?', 'I wrote it. Milk, or no milk?'),
-    ).toBe(true);
-    expect(sameQuestion('Milk or no milk?', 'Is the bus late again?')).toBe(false);
-    expect(sameQuestion('The fog is thick today.', 'The fog is thick today.')).toBe(false);
-    const base = firstMoment(15, 'vi');
-    const coffee = { ...base, place: 'cafe' as const, opening_line: 'Hi! Milk or no milk?' };
-    const again = { ...coffee, opening_line: 'Hello again. Milk, or no milk?' };
-    expect(repeatsRecent(again, [coffee]).some((p) => p.includes('same question'))).toBe(true);
-    const fresh = { ...coffee, opening_line: 'The sign blew away! Can you help me?' };
-    expect(repeatsRecent(fresh, [coffee])).toEqual([]);
-    expect(repeatsRecent(fresh, [coffee, coffee]).some((p) => p.includes('last two'))).toBe(true);
+      repeatsStories(outline({ kind: 'rescue', central: 'sol', title: 'Sol Speaks' }), past),
+    ).toHaveLength(1);
+    expect(
+      repeatsStories(outline({ kind: 'mystery', central: 'hank', title: 'Fog' }), past),
+    ).toHaveLength(1);
+    expect(
+      repeatsStories(
+        outline({ kind: 'mystery', central: 'sol', title: 'Another Espresso Emergency' }),
+        past,
+      ),
+    ).toHaveLength(1);
+    expect(
+      repeatsStories(outline({ kind: 'mystery', central: 'sol', title: 'Sol Speaks' }), past),
+    ).toEqual([]);
+  });
+
+  it('aims at the learner’s own level until the conversations are sure', () => {
+    const base = {
+      userId: 'u',
+      name: 'Lan',
+      firstLanguage: 'vi',
+      country: 'VN',
+      timezone: 'Asia/Ho_Chi_Minh',
+      openThreads: [],
+      createdAt: 0,
+      model: null,
+      arrival: null,
+      arrivedAt: null,
+    } satisfies Learner;
+    const arrival = {
+      name: 'Lan',
+      why: ['work' as const],
+      doing: 'work' as const,
+      field: null,
+      interests: [],
+      hard: [],
+      level: 4,
+      adult: true as const,
+      firstLanguage: 'vi' as const,
+      country: 'VN',
+      timezone: 'Asia/Ho_Chi_Minh',
+    };
+    expect(stageFor(base)).toBe('visitor');
+    expect(stageFor({ ...base, arrival })).toBe('regular');
+    const model = {
+      cefr: 'A2',
+      stage: 'newcomer',
+      confidence: 'low',
+      level_evidence: [],
+      errors: [],
+      interests: [],
+      life_context: '',
+      culture: '',
+      personality: '',
+      what_engages: '',
+    };
+    expect(stageFor({ ...base, arrival, model })).toBe('regular');
+    expect(stageFor({ ...base, arrival, model: { ...model, confidence: 'high' } })).toBe(
+      'newcomer',
+    );
   });
 });
 

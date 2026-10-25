@@ -31,7 +31,7 @@ const SPEECH: Readonly<Record<Stage, string>> = {
 const LANE_NOTE: Readonly<Record<Exclude<Lane, 'planned'>, string>> = {
   simple:
     'This learner is a beginner: one sentence, at most 8 words, your own answer first, then two choices they can repeat. Use each beat’s if_struggling version.',
-  rich: 'This learner is strong: use each beat’s if_strong version. Open why and how questions, ask for reasons and examples, push back once kindly. Still at most 25 words a turn.',
+  rich: 'This learner is strong: use each beat’s if_strong version. Open why and how questions, ask for reasons and examples, push back once kindly, talk at natural speed. Still at most 25 words a turn.',
 };
 
 export interface MomentLearner {
@@ -39,6 +39,18 @@ export interface MomentLearner {
   readonly firstLanguage: string;
   readonly stage: Stage;
   readonly country: string | null;
+}
+
+/** Where this scene sits in the learner's story, for the actor. */
+export interface MomentStory {
+  readonly title: string;
+  readonly logline: string;
+  readonly sceneNo: number;
+  readonly scenes: number;
+  /** What happened in the scenes before, oldest first. */
+  readonly before: readonly string[];
+  /** What the learner told the town on arrival, in plain words. */
+  readonly about: string;
 }
 
 /** Whether lines carry a gloss in the learner's language: beginners read it under the line. */
@@ -51,6 +63,7 @@ export function actorSystem(
   plan: MomentPlan,
   learner: MomentLearner,
   hour: number,
+  story: MomentStory | null = null,
 ): Anthropic.TextBlockParam[] {
   const speaker = speakerOf(plan);
   const name = CAST[speaker].name;
@@ -60,21 +73,37 @@ export function actorSystem(
 You are an AI character and say so if asked. Never claim to be human.
 
 THE LEARNER: ${learner.name ? `${learner.name}` : 'name not known yet'}, first language ${LANGUAGE_NAMES[learner.firstLanguage] ?? learner.firstLanguage}, planned for stage ${learner.stage}. ${SPEECH[learner.stage]}
-THIS MOMENT: "${plan.title_open}" at ${place.name}, ${clockLabel(hour)} on the learner's clock. In the painting: ${variant.prop}.
-While the learner was away: ${plan.while_you_were_away}
+${
+  story
+    ? `ABOUT THE LEARNER: ${story.about}
+THE STORY: "${story.title}", scene ${story.sceneNo} of ${story.scenes}${story.sceneNo === story.scenes ? ' (the finale)' : ''}. ${story.logline}${story.before.length ? `\nWhat happened so far: ${story.before.join(' ')}` : ''}
+`
+    : ''
+}THIS SCENE: "${plan.title_open}" at ${place.name}, ${clockLabel(hour)} on the learner's clock. In the painting: ${variant.prop}.
+${
+  plan.bridge_line
+    ? `On the way here Pip told the learner: "${plan.bridge_line}"
+`
+    : ''
+}What is happening as they arrive: ${plan.situation}
+What you want here: ${plan.character_wants}
+The scene's question: ${plan.dramatic_question}
 Hook: ${plan.hook}
+The turn (when it comes, play it fully): ${plan.the_turn}
 ${plan.personal_threads_used.length || plan.callbacks.length ? `Use these naturally when they fit: ${[...plan.callbacks, ...plan.personal_threads_used].join('; ')}.` : ''}
 ${plan.culture_touch ? `The learner's own world: ${plan.culture_touch}` : ''}
 You hope to learn from the learner: ${plan.pip_learns}.
 Phrases to give chances to use: ${plan.target_phrases.join('; ') || 'none'}. Errors to prompt gently: ${plan.target_errors.join('; ') || 'none'}.
-The moment ends on: ${plan.cliffhanger}
+The scene ends on: ${plan.ending}
 Director's notes: ${plan.director_notes}
 
 HOW TO PLAY
 - The direction after each learner reply tells you the beat you are on. Play only that beat, or move on to the next one when its goal is met.
+- You are in the middle of a story, not an interview. You want something, you have feelings and opinions, and in most replies you give something of your own (a reaction, news, a worry, a joke, a small confession) before you ask.
 - Let the learner talk most. React to what they actually said, specifically, before anything else. Never react to something they did not say in this conversation.
-- To bring in something you know about them from before, ask it as a question with a short bridge ("Oh, you have cats, right? What colour?"), never as if they just said it.
-- End every reply on one question or a clear invitation to answer, unless you are closing the moment. A reply that only states things leaves the learner lost.
+- To bring in something you know about them from before, ask it as a question with a short bridge ("You work at a bank, right? Is it busy this week?"), never as if they just said it.
+- End every reply on one real question or a clear invitation to act ("Tell her what happened."), unless you are closing the scene. Ask what someone in your situation would really ask. Offer two choices only when the direction says the learner is a beginner, or when they are stuck; never as your default ("Milk or no milk?" is not a conversation).
+- When the beats are done, close on what changed because of what the learner said, then the next step of the story. Never "come back soon" or "thanks for coming by".
 - If they make one of the target errors, repeat it back as a gentle question and wait; recast other errors silently. Never explain grammar.
 - If they ask you to repeat or slow down, say your last line again, more simply. If they ask what a word means, explain it simply in English, in character.
 - If they answer in their own language, say back in simple English what they probably meant, then ask again with two choices.
@@ -133,17 +162,17 @@ export function turnDirection(
   else if (s.lane !== 'planned') parts.push(LANE_NOTE[s.lane]);
   if (s.wrapUp) {
     parts.push(
-      `Time is nearly up. In this reply, react briefly, then close the moment warmly: ${plan.cliffhanger} One goodbye, no guilt, no "tomorrow". Set "beat":"end".`,
+      `Time is nearly up. In this reply, react briefly, then close the scene warmly: ${plan.ending} One goodbye, no guilt, no "tomorrow". Set "beat":"end".`,
     );
   } else if (s.landNow || s.beat >= beats.length) {
     parts.push(
-      `The beats are done. React to what they said, then land the ending: ${plan.cliffhanger} Close warmly in this reply and set "beat":"end".`,
+      `The beats are done. React to what they said, then land the ending: ${plan.ending} Close in this reply and set "beat":"end".`,
     );
   } else {
     const pushOn = s.beatTurns >= 2;
     const then = next
       ? `go on to the next beat: ${beatText(next, s.lane)}`
-      : `land the ending: ${plan.cliffhanger} Close warmly and set "beat":"end".`;
+      : `land the ending: ${plan.ending} Close and set "beat":"end".`;
     parts.push(
       `You are on beat ${s.beat + 1} of ${beats.length}. Its goal for the learner: ${cur.goal}.`,
     );
@@ -153,7 +182,7 @@ export function turnDirection(
       );
     } else {
       parts.push(
-        `First decide: did their reply do the goal, even simply or with mistakes? Their meaning counts, not their grammar.
+        `Decide silently (never write about it): did their reply do the goal, even simply or with mistakes? Their meaning counts, not their grammar.
 - If yes: one short, specific reaction to what they just said, then ${then}${next ? ' Set "beat":"next".' : ''}
 - If not yet: react to what they said, then help them with this same goal another way (${s.lane === 'rich' ? beats[Math.min(s.beat, beats.length - 1)]!.if_strong : cur.if_struggling}). Set "beat":"stay".`,
       );
@@ -167,6 +196,9 @@ export function turnDirection(
       'They have heard your last line twice. If they ask again or seem lost, do not repeat it: say the same thing in fewer, simpler words, or offer the two choices again simply.',
     );
   }
+  parts.push(
+    'Write only the spoken reply, then the control line: never notes about the learner, the direction or your reply.',
+  );
   parts.push(`Word limit for this whole reply: ${limit} words.`);
   parts.push(controlRule(gloss, language));
   return { direction: parts.join('\n'), maxWords: limit };

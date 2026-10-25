@@ -14,6 +14,7 @@ import {
   turnDirection,
   type Lane,
   type MomentLearner,
+  type MomentStory,
 } from '../director/actor';
 import type { MomentPlan } from '../director/moment';
 import type { Bindings } from '../env';
@@ -90,6 +91,12 @@ export interface MomentData extends SafetyClock {
   readonly meta: MomentMeta;
   readonly plan: MomentPlan;
   learner: MomentLearner;
+  /** Where the moment sits in the learner's story; null for a moment outside one. */
+  story?: MomentStory | null;
+  /** What Pip says on the way in, before the neighbour opens; empty for none. */
+  way?: string;
+  /** Pip's way-in line was said. */
+  wayDone?: boolean;
   beat: number;
   beatTurns: number;
   lane: Lane;
@@ -123,6 +130,7 @@ export function newMomentData(
   meta: MomentMeta,
   plan: MomentPlan,
   learner: MomentLearner,
+  story: { story: MomentStory | null; way: string },
   facts: {
     secondsLeft: number;
     wrapping: boolean;
@@ -136,6 +144,9 @@ export function newMomentData(
     meta,
     plan,
     learner,
+    story: story.story,
+    way: story.way,
+    wayDone: story.way === '',
     beat: 0,
     beatTurns: 0,
     lane: 'planned',
@@ -173,6 +184,8 @@ interface Active {
   played: boolean;
   timer: ReturnType<typeof setTimeout> | null;
   endAfter: CallEndReason | null;
+  /** What follows once it has played, in place of listening (the opening after Pip's way in). */
+  then?: () => void;
 }
 
 /** The answer to one learner turn, until its line is done. */
@@ -376,16 +389,18 @@ export class MomentSession {
 
   // ---- lines ----
 
-  private voice(): TtsVoice {
+  private voiceStage(): ContractStage {
     const { lane } = this.data;
-    const stage: ContractStage =
-      lane === 'simple'
-        ? 'visitor'
-        : lane === 'rich' &&
-            (this.data.learner.stage === 'visitor' || this.data.learner.stage === 'newcomer')
-          ? 'neighbour'
-          : this.data.learner.stage;
-    return stageVoice(this.speaker, stage, null);
+    return lane === 'simple'
+      ? 'visitor'
+      : lane === 'rich' &&
+          (this.data.learner.stage === 'visitor' || this.data.learner.stage === 'newcomer')
+        ? 'neighbour'
+        : this.data.learner.stage;
+  }
+
+  private voice(): TtsVoice {
+    return stageVoice(this.speaker, this.voiceStage(), null);
   }
 
   private lineHost(): LineHost {
@@ -397,8 +412,49 @@ export class MomentSession {
     };
   }
 
-  /** The director's opening, said as written: no model, so the moment starts at once. */
+  /**
+   * Pip's line on the way in (why they are going here, or what happened last time), in Pip's own
+   * voice, then the neighbour's opening.
+   */
   private open(): void {
+    if (this.data.wayDone || !this.data.way) {
+      this.openScene();
+      return;
+    }
+    const line = new SpokenLine(this.lineHost(), {
+      speaker: 'pip',
+      voice: stageVoice('pip', this.voiceStage(), null),
+      source: { kind: 'text', text: this.data.way },
+      gated: false,
+      maxWords: 40,
+      maxSentences: 4,
+      afterReaction: false,
+    });
+    this.opening = line;
+    const active = this.newActive(line.streamId);
+    active.then = () => this.openScene();
+    void line.done.then((result) => {
+      if (this.opening !== line) return;
+      this.opening = null;
+      this.addUsage(line);
+      this.data.wayDone = true;
+      if (result.text) {
+        this.data.transcript.push({
+          speaker: 'pip',
+          text: result.text,
+          at: Date.now(),
+          lineId: null,
+          beatId: 'way-in',
+        });
+      }
+      active.durationMs = result.audioMs;
+      this.ready(active, result.text === '');
+    });
+    line.start();
+  }
+
+  /** The director's opening, said as written: no model, so the moment starts at once. */
+  private openScene(): void {
     const { plan } = this.data;
     const line = new SpokenLine(this.lineHost(), {
       speaker: this.speaker,
@@ -455,7 +511,12 @@ export class MomentSession {
   }
 
   private modelSource(direction: string, pending: TranscriptLine | null): LineSource {
-    const system = actorSystem(this.data.plan, this.data.learner, this.data.meta.hour);
+    const system = actorSystem(
+      this.data.plan,
+      this.data.learner,
+      this.data.meta.hour,
+      this.data.story ?? null,
+    );
     const transcript = pending ? [...this.data.transcript, pending] : this.data.transcript;
     return {
       kind: 'model',
@@ -826,7 +887,8 @@ export class MomentSession {
       return;
     }
     this.persistState();
-    this.listen();
+    if (active.then) active.then();
+    else this.listen();
   }
 
   // ---- safety and minutes ----

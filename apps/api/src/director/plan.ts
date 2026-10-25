@@ -9,92 +9,77 @@ import {
   type LocalTime,
 } from '@yapling/scene';
 
+import { ARRIVAL_STAGE, arrivalText, SCENE_CRAFT, STORY_CRAFT } from './craft';
+import { structured, words, OPUS, SONNET } from './llm';
 import { MOMENT_SCHEMA, MomentPlan, speakerOf } from './moment';
-import { structured, words, OPUS } from './llm';
-import type { Learner, Painting } from './store';
 import {
-  BIBLE,
-  CULTURE_RULES,
-  LANGUAGE_NAMES,
-  LEVEL_GUIDE,
-  countryName,
-  TURN_WORDS,
-  type Stage,
-} from './world';
+  FOLLOW_SCHEMA,
+  FollowOn,
+  NewStory,
+  repeatsStories,
+  STORY_SCHEMA,
+  type StoryOutline,
+} from './story';
+import type { Learner, Painting } from './store';
+import { BIBLE, CULTURE_RULES, LEVEL_GUIDE, TURN_WORDS, type Stage } from './world';
 
 /*
- * The director: plans the learner's next moment from the world, what the town knows about them,
- * the story so far, and who is in town at this hour. Opus writes it in the background after each
- * conversation; code checks it and asks once for a repair.
+ * The director: writes the learner's next story (an outline and its first scene), then each next
+ * scene while the learner plays the one before, and a light rewrite of that scene once the one
+ * before it is played. Opus writes; code checks a plan and asks once for a repair when it must.
  */
 
-export const DIRECTOR_SYSTEM = `You are the story director for Yapling, an English speaking app. Between conversations you plan the learner's NEXT moment: one short live voice conversation (6–10 learner turns, about 5 minutes) in one Natterwick place, with that place's resident. A faster model plays the resident live from your plan, one beat at a time, so the plan must be clear, playable and specific.
+const SHARED = `${BIBLE}
 
-${BIBLE}
+${STORY_CRAFT}
+
+${SCENE_CRAFT}
 
 ${CULTURE_RULES}
 
-${LEVEL_GUIDE}
+${LEVEL_GUIDE}`;
 
-CHOOSING THE PLACE
-- Choose from the places open now (listed with the moment). The resident of the place is the one who speaks; other neighbours can be talked about but are not there.
-- Pick the variant that serves the story: its prop is in the painting, so use it ("a burnt loaf" is a gift for a story about Pip baking).
-- Vary places across moments, but come back to people the learner liked. Early on, keep it close to home: the burrow, the bus stop, the café.
+const PLAN_RULES = `RULES FOR EVERY SCENE PLAN
+- Choose a place open at the hour given (PLACES OPEN NOW) and a variant whose prop serves the scene. The neighbour painted there is the one who speaks; others can be talked about but are not there.
+- 3 to 5 beats. Each beat's goal is something the learner does with English that the story needs. Mark one beat is_door when the story naturally needs something from the learner's own life (their work, a dish from home, how they would handle it); never a beat that only asks about them.
+- Line limits by stage (count the words): Visitor 8, Newcomer 18, others 25 per neighbour line; the opening may be six words longer. Visitor lines are one sentence. Never two questions in one line.
+- Aim the scene at the stage given. Write every if_struggling as a Visitor line (at most 8 words, two short choices to repeat) and every if_strong as an open follow-up a B1–B2 speaker could talk about for a minute: the call switches to those when the learner turns out lower or higher.
+- Target phrases are 2–5 English chunks the learner gets real chances to use.
+- Only Bea says "love". Pip says "I", never "Pip". No stage directions, actions, asterisks or emoji in any line. No phonetic accents.
+- Pip's bridge and recap lines and every neighbour line speak TO the learner ("you said…", "your idea"), never about them by name in the third person.
+- At most two open threads after the scene.`;
 
-WHAT MAKES A MOMENT GREAT
-- A hook in the first line that makes the learner want to answer: a small mystery, a favour, a mix-up, a gruff character's soft side, a plan going sideways kindly, a surprise.
-- It walks into something already happening at this hour: Mei raising the shutters at 7, Hank at the noodle stall after dark, Pip half asleep at midnight. The time and weather are part of the scene.
-- Personal relevance: weave in what we have INFERRED about the learner (work, interests, life, home) lightly and specifically. Never ask for facts up front; let the moment give natural openings for them to tell us more.
-- Continuity: call back things the learner said or chose before; pay off open threads within three moments. A learner may play many moments in a row, or come back after weeks: no calendar, no "tomorrow", and every moment stands on its own for a learner who forgot the last one.
-- Variety: every moment is a new scene. Never build it around the same object, question or task as either of the last two moments (listed as THE LAST MOMENTS), and never open with their question or a near copy of it. A thread pays off in one moment, then rests for at least two before it comes back, and only if something new happens in it. Never ask again what the learner has already answered (WHAT THEY TOLD THE TOWN): build on the answer instead ("You like it with no sugar, right? Today I...").
-- Level fit: aim at the inferred stage, with one beat that stretches slightly. If the level is unknown or low-confidence, aim at Visitor/Newcomer: open with an easy question that offers two choices, write every if_struggling as a Visitor line (one sentence, at most 8 words, two short choices to repeat) and every if_strong as an open follow-up a B1–B2 speaker could talk about for a minute. The call listens to the first two answers and switches the actor to one of those lanes, so both must be playable on their own.
-- A door: until we know three of the learner's interests, one beat is a door, where the story needs something from the learner's own life (what they would order, what their job is like, what they do after work, what food they grew up with). Low levels get two concrete choices plus "or something else?"; high levels an open why/how question. Never a quiz.
-- At most two open threads (open_threads_after ≤ 2). Close an old thread before opening a new mystery; explain any mystery in the first two lines.
-- The learner is needed, never tested. Something small changes because they spoke. The resident wants to learn something from them (pip_learns).
-- End on a thread that pulls them back: a question, a reveal half-shown, a promise.
-- Titles are wry, painting-style: "Waiting For The 45", "Still Life With Unpaid Biscuits", "Portrait Of A Raccoon Who Wants A Discount". The closing title must be true however the learner answers.
+/** The director's own part of each system prompt; the shared world comes first, cached. */
+export const STORY_ROLE = `YOUR JOB: you are the story director for Yapling, an English speaking app. You write the outline of the learner's next STORY in Natterwick. Each scene is planned in full later, one at a time, from your outline and from what the learner really says; a faster model plays each neighbour live, and Pip walks with the learner between scenes.
 
-THE "WHILE YOU WERE AWAY" EVENT
-One small off-screen event that happened in town since the last moment (Mei repainted the sign, Hank's crew is late, Pip learned a new word, a postcard came). It opens the moment and connects to the hook or to an open thread. Never guilt, never "you were gone so long".
+Return only JSON in the given schema: the outline, with exactly the scene count asked for. Every scene's place must be one in the bible; scene 1 starts the story strongly, where the problem lands.`;
 
-OUTPUT
-Return only JSON in the given schema. Write 3 to 5 beats; mark the door beat with is_door when one is needed. The actor sees one beat at a time, so each beat carries what it needs. Each beat has a goal (a can-do, phrased for this learner) and an example line within the stage's word limit (Visitor 8 words, Newcomer 18, others 25; count them). Target phrases are 2–5 English chunks the learner gets chances to use. Keep it playable in 6–10 learner turns. Only Bea says "love". Pip says "I", never "Pip". No stage directions, actions or asterisks in any line.`;
+export const SCENE_ROLE = `YOUR JOB: you are the story director for Yapling, an English speaking app. The learner is in the middle of a story in Natterwick. You write the full plan for its NEXT scene, following the outline and what has really happened so far. A faster model plays the neighbour live from your plan, one beat at a time; Pip says your bridge line on the way there.
+
+${PLAN_RULES}
+
+Follow the outline's scene, but what really happened wins: build on what the learner actually said and chose, and keep the plants and the twist on track. Return only JSON in the given schema.`;
+
+export const FOLLOW_SYSTEM = `You keep a story continuous in Yapling, an English speaking app. The learner just played a scene; the next scene was written before it happened. Rewrite only the next scene's way in, so it follows on from what REALLY happened: the bridge caption, Pip's line on the way, Pip's recap for a learner coming back later, the situation as we arrive, and the neighbour's opening line (plus its gloss). Keep the next scene's story, goals and first question; change only what what happened makes untrue or flat. Use one specific thing the learner said or did. Keep the same length limits as the originals. Pip and the neighbour speak TO the learner ("you said…"), never about them by name in the third person. Only Bea says "love"; Pip says "I", never "Pip"; no stage directions. Return only JSON in the given schema.
+
+${BIBLE}`;
 
 const SEEDS = [
   'a windy day; hats and paper keep flying down the lanes',
   'rain since morning; everyone is crowding indoors',
   'the harbour fog horn is stuck and hoots every ten minutes',
   'the lantern festival is in a week and nobody has a theme yet',
-  'a ferry brought a crate with no label to the dock',
   'the bakery made far too many buns',
   'Bus 45 has a new route sign that nobody can read',
   'the library is giving away old maps',
   'the radio tower is looking for a new jingle',
-  'a lost umbrella has been handed in three times today',
   'the town clock is running ten minutes fast',
   'there is a swap day on Market Lane',
-  'a new bench in the park has a riddle carved on it',
-  'a postcard arrived at the burrow from somewhere far away',
-  'the power went out last night; everyone has a candle story',
-  'seagulls stole the café sign letters again',
   'a talent show sign-up sheet is up in the square',
   'someone is learning the trumpet, badly, somewhere near the burrow',
 ];
 
 const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
-
-export interface PlanContext {
-  readonly learner: Learner;
-  /** Earlier paintings, newest first: the story so far. */
-  readonly paintings: readonly Painting[];
-  /** What the learner told the town (their memory page), newest first. */
-  readonly memories: readonly string[];
-  /** The plans of the last moments played, newest first. */
-  readonly recent: readonly MomentPlan[];
-  readonly played: number;
-  readonly now: number;
-}
-
 const str = (x: unknown) => JSON.stringify(x, null, 1);
 
 export function stageOfModel(learner: Learner): Stage | null {
@@ -109,172 +94,332 @@ export function stageOfModel(learner: Learner): Stage | null {
     : null;
 }
 
-/** The moment's user message: the learner, the story so far, and the town right now. */
-export function planInput(ctx: PlanContext, t: LocalTime, repair?: string): string {
-  const { learner } = ctx;
-  const weather = weatherAt(t);
+/**
+ * The stage to aim at: what the conversations showed once they are sure of it, otherwise the
+ * learner's own feel for their level, otherwise Visitor.
+ */
+export function stageFor(learner: Learner): Stage {
+  const judged = stageOfModel(learner);
+  const own = learner.arrival ? ARRIVAL_STAGE[learner.arrival.level] : undefined;
+  if (judged && (learner.model?.confidence !== 'low' || own === undefined)) return judged;
+  return own ?? judged ?? 'visitor';
+}
+
+/** The story so far, for the director: earlier stories and the scenes played in this one. */
+export interface StoryContext {
+  readonly learner: Learner;
+  /** What the learner told the town (their memory page), newest first. */
+  readonly memories: readonly string[];
+  /** Earlier paintings, newest first. */
+  readonly paintings: readonly Painting[];
+  /** Earlier stories' outlines, newest first. */
+  readonly pastStories: readonly StoryOutline[];
+  /** The plans of the last moments played, newest first. */
+  readonly recent: readonly MomentPlan[];
+  readonly played: number;
+  readonly now: number;
+}
+
+function townInput(t: LocalTime, seed: string): string[] {
+  const date = `${t.year}-${String(t.month).padStart(2, '0')}-${String(t.day).padStart(2, '0')}`;
   const open = openPlaces(t.hour)
     .map((p) => `${p.place} (variants ${p.variants.join(', ')})`)
     .join('; ');
-  const story = [...ctx.paintings]
-    .slice(0, 8)
-    .reverse()
-    .map((p) => ({
-      title: p.title,
-      place: p.place,
-      with: p.speaker,
-      date: p.localDate,
-      summary: p.record?.summary ?? '(not judged)',
-      remember: p.record?.remember ?? [],
-      learned: p.learned,
-    }));
-  const language = LANGUAGE_NAMES[learner.firstLanguage] ?? learner.firstLanguage;
-  const date = `${t.year}-${String(t.month).padStart(2, '0')}-${String(t.day).padStart(2, '0')}`;
   return [
-    `NOW: ${clockLabel(t.hour)} on ${date} on the learner's own clock; the town's weather is ${weather}.`,
+    `NOW: ${clockLabel(t.hour)} on ${date} on the learner's own clock; the town's weather is ${weatherAt(t)}.`,
     `PLACES OPEN NOW: ${open}.`,
-    `TOWN TODAY (use it, or ignore it if it gets in the way): ${SEEDS[hash(`${learner.userId}#${ctx.played}`) % SEEDS.length]}.`,
-    `THE LEARNER: ${learner.name ? `called ${learner.name}` : 'name not known yet'}; first language ${language}; lives in ${countryName(learner.country) ?? 'a country we do not know yet'}. They have played ${ctx.played} moment(s) before this one.`,
-    `LEARNER MODEL (inferred from their conversations only):\n${learner.model ? str(learner.model) : '(none yet)'}`,
-    `WHAT THEY TOLD THE TOWN:\n${ctx.memories.length ? ctx.memories.map((m) => `- ${m}`).join('\n') : '(nothing yet)'}`,
-    `THE LAST MOMENTS (newest first; the next one must be about something else):\n${
-      ctx.recent.length
-        ? ctx.recent
-            .slice(0, 2)
-            .map(
-              (p) => `- "${p.title_open}" at ${p.place}. Hook: ${p.hook} Opened: ${p.opening_line}`,
-            )
-            .join('\n')
-        : '(none yet)'
-    }`,
-    `THE STORY SO FAR (oldest first):\n${story.length ? str(story) : '(nothing yet: this is their first planned moment)'}`,
-    `OPEN THREADS: ${learner.openThreads.length ? learner.openThreads.join(' | ') : '(none)'}`,
+    `TOWN TODAY (use it as texture, or ignore it): ${seed}.`,
+  ];
+}
+
+function learnerInput(ctx: StoryContext, stage: Stage): string[] {
+  const { learner } = ctx;
+  return [
+    `THE LEARNER, AS THEY INTRODUCED THEMSELVES:\n${arrivalText(learner)}`,
+    `AIM AT STAGE: ${stage}. They have played ${ctx.played} conversation(s).`,
+    `WHAT THE CONVERSATIONS SHOWED (learner model):\n${learner.model ? str(learner.model) : '(no conversation judged yet)'}`,
+    `WHAT THEY TOLD THE TOWN IN CONVERSATION:\n${ctx.memories.length ? ctx.memories.map((m) => `- ${m}`).join('\n') : '(nothing yet)'}`,
+  ];
+}
+
+const sceneMemory = (p: Painting) => ({
+  title: p.title,
+  place: p.place,
+  with: p.speaker,
+  summary: p.record?.summary ?? '(not judged yet)',
+  remember: p.record?.remember ?? [],
+  learned: p.learned,
+});
+
+/** Where the learner is in their long journey, by how many stories they have lived. */
+function journeyNote(done: number): string {
+  if (done === 0)
+    return 'They are brand new: keep it close to home, make them feel welcome and needed, and introduce two or three neighbours.';
+  if (done < 3)
+    return 'They know a few neighbours now: bring one back, meet someone new, reach a new part of town.';
+  if (done < 8)
+    return 'They are a regular: neighbours come to them for advice; give them a bigger role and a harder kind of conversation.';
+  return 'They are part of the town: they lead, speak for others, welcome newcomers; stories can reach the far edges of Natterwick.';
+}
+
+/** The user message for a new story. */
+export function storyInput(
+  ctx: StoryContext,
+  t: LocalTime,
+  scenes: number,
+  repair?: string,
+): string {
+  const stage = stageFor(ctx.learner);
+  const past = ctx.pastStories.slice(0, 6).map((o) => ({
+    title: o.title,
+    kind: o.kind,
+    central: o.central,
+    logline: o.logline,
+    grows: o.grows,
+    finale: o.finale_payoff,
+    epilogue: o.epilogue,
+  }));
+  return [
+    ...townInput(t, SEEDS[hash(`${ctx.learner.userId}#${ctx.played}`) % SEEDS.length]!),
+    ...learnerInput(ctx, stage),
+    `THE JOURNEY SO FAR: this is story number ${ctx.pastStories.length + 1}. ${journeyNote(ctx.pastStories.length)}`,
+    `EARLIER STORIES (newest first; the new one is a different kind, centred on someone else than the last two, grows from them, may bring back their people and things, and may pick up the last epilogue's thread):\n${past.length ? str(past) : '(none: this is their first story)'}`,
+    `RECENT SCENES (newest first):\n${ctx.paintings.length ? str(ctx.paintings.slice(0, 4).map(sceneMemory)) : ctx.played > 0 ? '(their first conversation: they just met Pip in the burrow, and Pip wants to go out and see the town with them)' : '(none)'}`,
+    `WRITE A STORY OF ${scenes} SCENES.`,
     repair
-      ? `YOUR LAST PLAN FAILED THE CHECK. Fix this and return the whole plan again:\n${repair}`
-      : 'Plan the next moment.',
+      ? `YOUR LAST ANSWER FAILED THE CHECK. Fix this and return the whole answer again:\n${repair}`
+      : 'Write the story and its first scene.',
   ].join('\n\n');
 }
 
-const PLAIN = new Set(
-  "the and you your are for with what how was were this that have has one can will would like some any not but its it's there here today now".split(
-    ' ',
-  ),
-);
-
-/** The content words of a line's question (its last sentence ending in "?"). */
-function questionWords(line: string): Set<string> {
-  const q = line.match(/[^.!?]*\?/g)?.at(-1) ?? '';
-  return new Set(
-    q
-      .toLowerCase()
-      .replace(/[^a-z' ]/g, ' ')
-      .split(/\s+/)
-      .filter((w) => w.length >= 3 && !PLAIN.has(w)),
-  );
-}
-
-/** Whether two opening lines ask the same question ("Milk or no milk?" twice). */
-export function sameQuestion(a: string, b: string): boolean {
-  const x = questionWords(a);
-  const y = questionWords(b);
-  const small = Math.min(x.size, y.size);
-  if (small === 0) return false;
-  const shared = [...x].filter((w) => y.has(w)).length;
-  return shared / small >= 0.6;
-}
-
-/** What makes a plan a rerun of the last moments: the same opening question, a third visit in a row. */
-export function repeatsRecent(plan: MomentPlan, recent: readonly MomentPlan[]): string[] {
-  const problems: string[] = [];
-  const last = recent.slice(0, 2);
-  const copied = last.find((r) => sameQuestion(plan.opening_line, r.opening_line));
-  if (copied) {
-    problems.push(
-      `The opening asks the same question as a recent moment ("${copied.opening_line}"). Build a new scene around something else.`,
-    );
-  }
-  if (last.length === 2 && last.every((r) => r.place === plan.place)) {
-    problems.push(`The last two moments were at ${plan.place} too; choose another open place.`);
-  }
-  return problems;
-}
-
-/** Code checks a plan must pass: an open place, lines within the limit, the door, two threads. */
-export function checkPlan(
-  plan: MomentPlan,
+/** The user message for the next scene of a story. */
+export function sceneInput(
+  ctx: StoryContext,
+  outline: StoryOutline,
+  sceneNo: number,
+  played: readonly Painting[],
   t: LocalTime,
-  needsDoor: boolean,
-  recent: readonly MomentPlan[] = [],
-): string[] {
-  const problems: string[] = [...repeatsRecent(plan, recent)];
+  repair?: string,
+): string {
+  const stage = stageFor(ctx.learner);
+  return [
+    ...townInput(t, SEEDS[hash(`${ctx.learner.userId}#${ctx.played}`) % SEEDS.length]!),
+    ...learnerInput(ctx, stage),
+    `THE STORY (outline):\n${str(outline)}`,
+    `THE SCENES PLAYED SO FAR IN THIS STORY (oldest first):\n${played.length ? str(played.map(sceneMemory)) : '(none yet)'}`,
+    `THE LAST SCENE'S PLAN ENDED ON: ${ctx.recent[0]?.ending ?? '(nothing)'}`,
+    `PLAN SCENE ${sceneNo} OF ${outline.scenes.length}${sceneNo === outline.scenes.length ? ' (THE FINALE: pay off the plants and the emotional core)' : ''}. Its outline: ${str(outline.scenes[sceneNo - 1])}`,
+    repair
+      ? `YOUR LAST PLAN FAILED THE CHECK. Fix this and return the whole plan again:\n${repair}`
+      : 'Plan the scene.',
+  ].join('\n\n');
+}
+
+/**
+ * What a plan must not break: an open place, a playable count of beats. Soft problems (a long
+ * line) are fixed only if a repair is asked for anyway.
+ */
+export function checkPlan(plan: MomentPlan, t: LocalTime): { hard: string[]; soft: string[] } {
+  const hard: string[] = [];
+  const soft: string[] = [];
   if (!residentIn(plan.place, plan.variant, t.hour)) {
-    problems.push(
+    hard.push(
       `${plan.place} variant ${plan.variant} has nobody in at ${clockLabel(t.hour)}; choose a place open now.`,
     );
   }
+  if (plan.beats.length < 3 || plan.beats.length > 5) hard.push('Write 3 to 5 beats.');
   const limit = TURN_WORDS[plan.stage_aimed];
   const lines = [plan.opening_line, ...plan.beats.map((b) => b.example_line)];
   lines.forEach((line, i) => {
     const max = i === 0 ? limit + 6 : limit;
     const n = words(line.replace(/^[A-Z][\w ]{0,20}:\s*/, ''));
-    if (n > max) problems.push(`This line has ${n} words, over the ${max}-word limit: ${line}`);
+    if (n > max) soft.push(`This line has ${n} words, over the ${max}-word limit: ${line}`);
   });
-  if (plan.beats.length < 3 || plan.beats.length > 5) problems.push('Write 3 to 5 beats.');
-  if (needsDoor && !plan.beats.some((b) => b.is_door))
-    problems.push('One beat must be a door (is_door: true): we know fewer than three interests.');
-  if (plan.open_threads_after.length > 2) problems.push('At most two open threads after.');
+  if (plan.open_threads_after.length > 2) soft.push('At most two open threads after.');
   const speaker = speakerOf(plan);
-  if (speaker !== 'bea' && /\blove\b/i.test(lines.join(' ')))
-    problems.push('Only Bea says "love"; take it out.');
-  // Pip introduces itself ("I'm Pip"), but never talks about itself as "Pip".
-  if (
-    speaker === 'pip' &&
-    /\bPip\b/.test(lines.join(' ').replace(/\bI(?:’|')m Pip\b|\bI am Pip\b/g, ''))
-  )
-    problems.push('Pip says "I", never its own name, in its lines.');
-  return problems;
+  const all = [...lines, plan.bridge_line, plan.recap_line].join(' ');
+  if (speaker !== 'bea' && /\blove\b/i.test(all)) soft.push('Only Bea says "love"; take it out.');
+  if (/\bPip\b/.test([plan.bridge_line, plan.recap_line].join(' ')))
+    soft.push('Pip says "I", never its own name, in its bridge and recap lines.');
+  return { hard, soft };
 }
 
-export interface Planned {
-  readonly plan: MomentPlan;
+/** The hour a plan is written for: a few minutes ahead, when the learner will likely play it. */
+const planTime = (learner: Learner, now: number, aheadMin: number) =>
+  localTime(new Date(now + aheadMin * 60_000), learner.timezone);
+
+export interface Written<T> {
+  readonly value: T;
   readonly hour: number;
   readonly costUsd: number;
   readonly repaired: boolean;
 }
 
-/** Plans the next moment for the learner's local time now; null when no valid plan came back. */
-export async function planMoment(client: Anthropic, ctx: PlanContext): Promise<Planned | null> {
-  // Plan for a few minutes ahead: the learner usually opens the next one soon after.
-  const t = localTime(new Date(ctx.now + 5 * 60_000), ctx.learner.timezone);
-  const needsDoor = (ctx.learner.model?.interests.length ?? 0) < 3;
+async function writeChecked<T>(
+  client: Anthropic,
+  call: {
+    role: string;
+    schema: Record<string, unknown>;
+    input: (repair?: string) => string;
+    planOf: (value: T) => MomentPlan;
+  },
+  parse: (json: unknown) => { success: true; data: T } | { success: false; error: Error },
+  t: LocalTime,
+  extra: (value: T) => string[] = () => [],
+): Promise<Written<T> | null> {
   let cost = 0;
   let repair: string | undefined;
   for (let attempt = 0; attempt < 3; attempt++) {
     const r = await structured<unknown>(client, {
       model: OPUS,
-      system: [DIRECTOR_SYSTEM],
-      user: planInput(ctx, t, repair),
-      schema: MOMENT_SCHEMA,
+      system: [SHARED, call.role],
+      user: call.input(repair),
+      schema: call.schema,
       effort: 'medium',
     });
     cost += r.costUsd;
-    const parsed = MomentPlan.safeParse(r.json);
+    const parsed = parse(r.json);
     if (!parsed.success) {
       repair = `The JSON did not match the schema: ${parsed.error.message.slice(0, 400)}`;
       continue;
     }
-    const plan = parsed.data as MomentPlan;
-    const problems = checkPlan(plan, t, needsDoor, ctx.recent);
-    const open = residentIn(plan.place, plan.variant, t.hour);
-    // After one repair a plan that still breaks a soft rule (a long line) is played; a closed
-    // place never is.
-    if (open && (problems.length === 0 || attempt >= 1)) {
-      return { plan, hour: t.hour, costUsd: cost, repaired: attempt > 0 };
+    const plan = call.planOf(parsed.data);
+    const checked = checkPlan(plan, t);
+    const soft = checked.soft;
+    // A rerun of a recent story is sent back once; after that it is played.
+    const hard = [...checked.hard, ...(attempt === 0 ? extra(parsed.data) : [])];
+    if (soft.length) console.warn('plan soft problems', { soft: soft.map((p) => p.slice(0, 120)) });
+    if (hard.length === 0) {
+      return { value: parsed.data, hour: t.hour, costUsd: cost, repaired: attempt > 0 };
     }
-    console.warn('moment plan repair', { problems: problems.map((p) => p.slice(0, 160)) });
-    repair = problems.join('\n');
+    console.warn('plan repair', { problems: hard.map((p) => p.slice(0, 160)) });
+    repair = [...hard, ...soft].join('\n');
   }
   return null;
+}
+
+/** The learner's next story: its outline, then the plan for its first scene. */
+export async function writeStory(
+  client: Anthropic,
+  ctx: StoryContext,
+  aheadMin: number,
+): Promise<Written<NewStory> | null> {
+  const t = planTime(ctx.learner, ctx.now, aheadMin);
+  const scenes = stageFor(ctx.learner) === 'visitor' ? 4 : 5;
+  let cost = 0;
+  let repair: string | undefined;
+  let outline: StoryOutline | null = null;
+  for (let attempt = 0; attempt < 3 && outline === null; attempt++) {
+    const r = await structured<unknown>(client, {
+      model: OPUS,
+      system: [SHARED, STORY_ROLE],
+      user: storyInput(ctx, t, scenes, repair),
+      schema: STORY_SCHEMA,
+      effort: 'medium',
+    });
+    cost += r.costUsd;
+    const parsed = NewStory.safeParse(r.json);
+    if (!parsed.success) {
+      repair = `The JSON did not match the schema: ${parsed.error.message.slice(0, 400)}`;
+      continue;
+    }
+    // A rerun of a recent story is sent back once; after that it is told.
+    const problems = attempt === 0 ? repeatsStories(parsed.data.outline, ctx.pastStories) : [];
+    if (problems.length === 0) outline = parsed.data.outline as StoryOutline;
+    else {
+      console.warn('story repair', { problems });
+      repair = problems.join('\n');
+    }
+  }
+  if (outline === null) return null;
+  const scene = await planScene(client, ctx, outline, 1, [], aheadMin);
+  if (scene === null) return null;
+  return {
+    value: { outline, scene: scene.value },
+    hour: scene.hour,
+    costUsd: cost + scene.costUsd,
+    repaired: repair !== undefined || scene.repaired,
+  };
+}
+
+/** The plan for scene `sceneNo` (1-based) of a story under way. */
+export async function planScene(
+  client: Anthropic,
+  ctx: StoryContext,
+  outline: StoryOutline,
+  sceneNo: number,
+  played: readonly Painting[],
+  aheadMin: number,
+): Promise<Written<MomentPlan> | null> {
+  const t = planTime(ctx.learner, ctx.now, aheadMin);
+  return writeChecked(
+    client,
+    {
+      role: SCENE_ROLE,
+      schema: MOMENT_SCHEMA,
+      input: (repair) => sceneInput(ctx, outline, sceneNo, played, t, repair),
+      planOf: (plan) => plan,
+    },
+    (json) => {
+      const r = MomentPlan.safeParse(json);
+      return r.success
+        ? { success: true, data: r.data as MomentPlan }
+        : { success: false, error: r.error };
+    },
+    t,
+  );
+}
+
+export interface SpokenLine {
+  readonly who: 'learner' | 'character';
+  readonly text: string;
+}
+
+/** Rewrites the next scene's way in so it follows on from the scene just played. */
+export async function followOn(
+  client: Anthropic,
+  input: {
+    readonly outline: StoryOutline;
+    readonly last: MomentPlan;
+    readonly lines: readonly SpokenLine[];
+    readonly next: MomentPlan;
+    readonly learnerName: string | null;
+  },
+): Promise<{ plan: MomentPlan; costUsd: number } | null> {
+  const speaker = PLACES[input.last.place].resident;
+  const transcript = input.lines
+    .slice(-16)
+    .map((l) => `${l.who === 'learner' ? 'LEARNER' : speaker.toUpperCase()}: ${l.text}`)
+    .join('\n');
+  const { next } = input;
+  const r = await structured<unknown>(client, {
+    model: SONNET,
+    system: [FOLLOW_SYSTEM],
+    effort: 'low',
+    maxTokens: 3_000,
+    schema: FOLLOW_SCHEMA,
+    user: [
+      `THE STORY: "${input.outline.title}": ${input.outline.logline}`,
+      `THE LEARNER: ${input.learnerName ?? 'name not known'}; stage ${next.stage_aimed}.`,
+      `THE SCENE JUST PLAYED: "${input.last.title_open}" at ${input.last.place}. It was meant to end on: ${input.last.ending}`,
+      `WHAT WAS REALLY SAID (speech recognition; the end of the scene):\n${transcript || '(nothing: the learner left at once)'}`,
+      `THE NEXT SCENE'S WAY IN, TO REWRITE:\n${str({
+        place: next.place,
+        neighbour: speakerOf(next),
+        bridge_card: next.bridge_card,
+        bridge_line: next.bridge_line,
+        recap_line: next.recap_line,
+        situation: next.situation,
+        opening_line: next.opening_line,
+        opening_gloss: next.opening_gloss,
+        callbacks: next.callbacks,
+        first_beat_goal: next.beats[0]?.goal,
+      })}`,
+    ].join('\n\n'),
+  });
+  const parsed = FollowOn.safeParse(r.json);
+  if (!parsed.success) return null;
+  return { plan: { ...next, ...parsed.data }, costUsd: r.costUsd };
 }
 
 /** Whether a ready plan can still be played at this local hour (its resident is in). */

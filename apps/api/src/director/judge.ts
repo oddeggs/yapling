@@ -229,7 +229,7 @@ export async function judgeMoment(
         ? `THE LEARNER'S NAME: ${input.name}. It is known: return name null, and no fact about their name or what to call them (speech recognition mishears names).`
         : "THE LEARNER'S NAME: not known yet.",
       `PREVIOUS LEARNER MODEL:\n${input.previous ? JSON.stringify(input.previous, null, 1) : '(none: first conversation)'}`,
-      `THE MOMENT: "${input.plan.title_open}" at ${input.plan.place} with ${speaker} (aimed at ${input.plan.stage_aimed}). Open threads before: ${input.openThreads.join(' | ') || 'none'}. It was meant to end on: ${input.plan.cliffhanger}`,
+      `THE MOMENT: "${input.plan.title_open}" at ${input.plan.place} with ${speaker} (aimed at ${input.plan.stage_aimed}). Open threads before: ${input.openThreads.join(' | ') || 'none'}. It was meant to end on: ${input.plan.ending}`,
       `MEASURED (by code, trust these): ${JSON.stringify(talkStats(input.lines))}`,
       `TRANSCRIPT:\n${transcript || '(nothing was said)'}`,
       'Return the full updated learner model, the session record, the painting notes, the name and new facts.',
