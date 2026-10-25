@@ -1,6 +1,8 @@
 import { isPlaceId, PLACES } from '@yapling/scene';
 import { z } from 'zod';
 
+import { clip } from './clip';
+
 import type { MomentPlan } from './moment';
 
 /*
@@ -26,12 +28,12 @@ const CastId = z.enum(NEIGHBOURS);
 
 export const StoryScene = z.object({
   place: z.string().refine(isPlaceId),
-  purpose: z.string().max(400),
-  dramatic_question: z.string().max(300),
-  situation: z.string().max(600),
-  learner_does: z.string().max(400),
-  the_turn: z.string().max(400),
-  ends_with: z.string().max(400),
+  purpose: clip(400),
+  dramatic_question: clip(300),
+  situation: clip(600),
+  learner_does: clip(400),
+  the_turn: clip(400),
+  ends_with: clip(400),
 });
 export type StoryScene = z.infer<typeof StoryScene>;
 
@@ -53,29 +55,29 @@ export const STORY_KINDS = [
 ] as const;
 
 export const StoryOutline = z.object({
-  title: z.string().min(1).max(80),
+  title: clip(80).pipe(z.string().min(1)),
   kind: z.enum(STORY_KINDS),
-  grows: z.string().max(500),
-  logline: z.string().max(500),
-  why_this_learner: z.string().max(600),
-  emotional_core: z.string().max(500),
-  pip_arc: z.string().max(400),
-  learning_spine: z.string().max(600),
+  grows: clip(500),
+  logline: clip(500),
+  why_this_learner: clip(600),
+  emotional_core: clip(500),
+  pip_arc: clip(400),
+  learning_spine: clip(600),
   central: CastId,
   scenes: z.array(StoryScene).min(3).max(6),
   plants: z
     .array(
       z.object({
-        plant: z.string().max(300),
-        planted_in: z.number().int().min(1).max(6),
-        payoff: z.string().max(300),
+        plant: clip(300),
+        planted_in: z.number().int(),
+        payoff: clip(300),
       }),
     )
-    .max(3),
-  twist: z.string().max(500),
-  finale_payoff: z.string().max(500),
-  epilogue: z.string().max(400),
-  town_now: z.array(z.object({ who: CastId, doing: z.string().max(300) })).max(9),
+    .transform((a) => a.slice(0, 3)),
+  twist: clip(500),
+  finale_payoff: clip(500),
+  epilogue: clip(400),
+  town_now: z.array(z.object({ who: CastId, doing: clip(300) })).transform((a) => a.slice(0, 9)),
 });
 export type StoryOutline = z.infer<typeof StoryOutline>;
 
@@ -183,13 +185,13 @@ export const STORY_SCHEMA = {
 
 /** What the learner's last scene changed, written into the next one before it plays. */
 export const FollowOn = z.object({
-  bridge_card: z.string().max(80),
-  bridge_line: z.string().max(300),
-  recap_line: z.string().max(300),
-  situation: z.string().max(600),
-  opening_line: z.string().max(400),
-  opening_gloss: z.string().max(600),
-  callbacks: z.array(z.string().max(300)).max(6),
+  bridge_card: clip(80),
+  bridge_line: clip(300),
+  recap_line: clip(300),
+  situation: clip(600),
+  opening_line: clip(400),
+  opening_gloss: clip(600),
+  callbacks: z.array(clip(300)).transform((a) => a.slice(0, 6)),
 });
 export type FollowOn = z.infer<typeof FollowOn>;
 

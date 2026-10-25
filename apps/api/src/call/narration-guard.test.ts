@@ -3,8 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { ReplySplitter } from './reply-splitter';
 
 /** Streams `text` through the splitter (and its guard) in pieces of `size` characters. */
-function speak(text: string, speaker: string, size = 3) {
-  const splitter = new ReplySplitter({ maxWords: 25, speaker });
+function speak(text: string, speaker: string, size = 3, learner?: string) {
+  const splitter = new ReplySplitter({
+    maxWords: 25,
+    speaker,
+    ...(learner ? { learner } : {}),
+  });
   const pieces: string[] = [];
   for (let i = 0; i < text.length; i += size) {
     const words = splitter.push(text.slice(i, i + size));
@@ -26,6 +30,18 @@ describe('the narration guard', () => {
       expect(nudge.spoken).toBe('Take your time.');
       expect(nudge.action).toBe('extracted');
     }
+  });
+
+  it('drops a sentence about the learner by name, and keeps them called by name', () => {
+    const run = (text: string) => speak(text, 'Mei', 4, 'Ana').spoken;
+    expect(run("Ana's last message was cut off. Ha, finding it late still counts!")).not.toMatch(
+      /Ana's|cut off/,
+    );
+    expect(run('Ana has covered the goal, so I move on. Fifty years, same life? Brave.')).toMatch(
+      /^Fifty years/,
+    );
+    expect(run('Ana, look at this sign! Can you hold it?')).toMatch(/^Ana, look/);
+    expect(run('Ana! You came back.')).toMatch(/^Ana! You came back/);
   });
 
   it('drops the speaker described in the third person', () => {

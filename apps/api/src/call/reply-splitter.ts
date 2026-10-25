@@ -34,6 +34,8 @@ export interface SplitterOptions {
   readonly afterReaction?: boolean;
   /** The speaker's name, so the guard knows the speaker described in the third person. */
   readonly speaker?: string;
+  /** The learner's name, so the guard knows a sentence about them (not to them). */
+  readonly learner?: string;
   /** False for written text, which never holds narration. */
   readonly guard?: boolean;
 }
@@ -63,7 +65,10 @@ export class ReplySplitter {
   private tagChecked = false;
 
   constructor(private readonly options: SplitterOptions) {
-    this.guard = options.guard === false ? null : new NarrationGuard(options.speaker ?? '');
+    this.guard =
+      options.guard === false
+        ? null
+        : new NarrationGuard(options.speaker ?? '', options.learner ?? '');
   }
 
   /** The case tag the line started with (`[question]` → `question`), or null. */

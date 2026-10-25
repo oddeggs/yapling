@@ -128,7 +128,7 @@ function townInput(t: LocalTime, seed: string): string[] {
   return [
     `NOW: ${clockLabel(t.hour)} on ${date} on the learner's own clock; the town's weather is ${weatherAt(t)}.`,
     `PLACES OPEN NOW: ${open}.`,
-    `TOWN TODAY (use it as texture, or ignore it): ${seed}.`,
+    `TOWN TODAY (background texture for a line or two only; never the premise of a story): ${seed}.`,
   ];
 }
 
@@ -280,6 +280,7 @@ async function writeChecked<T>(
     cost += r.costUsd;
     const parsed = parse(r.json);
     if (!parsed.success) {
+      console.warn('plan schema', { error: parsed.error.message.slice(0, 300) });
       repair = `The JSON did not match the schema: ${parsed.error.message.slice(0, 400)}`;
       continue;
     }
@@ -320,6 +321,7 @@ export async function writeStory(
     cost += r.costUsd;
     const parsed = NewStory.safeParse(r.json);
     if (!parsed.success) {
+      console.warn('story schema', { error: parsed.error.message.slice(0, 300) });
       repair = `The JSON did not match the schema: ${parsed.error.message.slice(0, 400)}`;
       continue;
     }

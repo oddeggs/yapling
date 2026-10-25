@@ -102,6 +102,8 @@ export interface LineOptions {
   readonly onCaseTag?: (tag: Outcome | null) => void;
   /** Spoken instead when the guard leaves nothing of a model line (it was all narration). */
   readonly safeLine?: string;
+  /** The learner's name: a sentence about them in the third person is narration. */
+  readonly learnerName?: string | null;
 }
 
 export class SpokenLine {
@@ -138,6 +140,7 @@ export class SpokenLine {
       ...(options.maxSentences !== undefined ? { maxSentences: options.maxSentences } : {}),
       afterReaction: options.afterReaction,
       speaker: CAST[options.speaker].name,
+      ...(options.learnerName ? { learner: options.learnerName } : {}),
       guard: options.source.kind === 'model',
     });
     this.done = new Promise((resolve) => (this.settle = resolve));

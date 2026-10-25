@@ -422,6 +422,7 @@ export class MomentSession {
       return;
     }
     const line = new SpokenLine(this.lineHost(), {
+      learnerName: this.data.learner.name,
       speaker: 'pip',
       voice: stageVoice('pip', this.voiceStage(), null),
       source: { kind: 'text', text: this.data.way },
@@ -457,6 +458,7 @@ export class MomentSession {
   private openScene(): void {
     const { plan } = this.data;
     const line = new SpokenLine(this.lineHost(), {
+      learnerName: this.data.learner.name,
       speaker: this.speaker,
       voice: this.voice(),
       source: { kind: 'text', text: plan.opening_line },
@@ -578,6 +580,7 @@ export class MomentSession {
   ): SpokenLine {
     const voice = this.voice();
     return new SpokenLine(this.lineHost(), {
+      learnerName: this.data.learner.name,
       speaker: this.speaker,
       voice: slower ? slowerVoice(voice) : voice,
       source: { kind: 'text', text },
@@ -596,6 +599,7 @@ export class MomentSession {
     onFirstAudio?: () => void,
   ): SpokenLine {
     return new SpokenLine(this.lineHost(), {
+      learnerName: this.data.learner.name,
       speaker: this.speaker,
       voice: this.voice(),
       source,

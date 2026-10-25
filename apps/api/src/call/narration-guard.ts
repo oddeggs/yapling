@@ -18,6 +18,9 @@
  *   a clause ("Since…", "Because…"), a request ("You want me to…") or the speaker ("I'll…",
  *   "Let me…"), which is held to the clause's comma or colon and read whole. "Hold the line,
  *   please.", "Let me write that down!" and "You want me to play your manager?" are speech.
+ * - A sentence about the learner by name ("Ana's message was cut off.", "Ana has covered the
+ *   goal.") is narration: characters only ever talk to the learner. "Ana!" and "Ana, look" are
+ *   speech.
  * - Asides in brackets and stage directions in asterisks are dropped wherever they appear, a
  *   speaker label ("Mei:") is dropped, and quotation marks are never spoken.
  */
@@ -81,6 +84,38 @@ const WRITTEN_THINGS = new Set(['line', 'lines', 'prompt', 'dialogue', 'script',
 const WRITTEN_DETERMINERS = new Set(['the', 'my', 'your', 'this', 'next', 'another', 'system']);
 /** Words that only ever name the call's workings, wherever they stand. */
 const MECHANICS = new Set(['prompts', 'roleplay', 'role-play', 'narrator', 'narration']);
+
+/** After the learner's name, a word that makes the sentence about them ("Ana has covered…"). */
+const ABOUT_THEM = new Set([
+  'has',
+  "hasn't",
+  'is',
+  "isn't",
+  'was',
+  "wasn't",
+  'said',
+  'says',
+  'asked',
+  'asks',
+  'gave',
+  'offered',
+  'covered',
+  'did',
+  "didn't",
+  'does',
+  "doesn't",
+  'just',
+  'still',
+  'already',
+  'wants',
+  'answered',
+  'told',
+  'made',
+  'needs',
+  'seems',
+  'hit',
+  'met',
+]);
 
 /** "You …" opens a request about the call when one of these follows ("You want me to write…"). */
 const YOU_LEADS = new Set(['you', "you're", "you've", "you'd"]);
@@ -157,11 +192,14 @@ export class NarrationGuard {
   /** Inside a bracket or asterisk aside, until its closing mark. */
   private aside: ')' | ']' | '*' | null = null;
   private readonly own: string;
+  /** The learner's name, lower case ('' when not known). */
+  private readonly learner: string;
   private readonly droppedText: string[] = [];
   private extractedAny = false;
 
-  constructor(speakerName: string) {
+  constructor(speakerName: string, learnerName = '') {
     this.own = speakerName.toLowerCase();
+    this.learner = learnerName.trim().split(/\s+/)[0]?.toLowerCase() ?? '';
   }
 
   /** What the guard did to the line so far: null when it passed untouched. */
@@ -289,6 +327,14 @@ export class NarrationGuard {
         ? 'narration'
         : 'speech';
     }
+    if (this.learner !== '' && (first === this.learner || first === `${this.learner}'s`)) {
+      if (first !== this.learner) return 'narration';
+      // "Ana!" or "Ana, …": the learner called by name.
+      if (/[!?,.…]["”]?$/.test(words[0] ?? '')) return 'speech';
+      const short = enough(2);
+      if (short) return short;
+      return ABOUT_THEM.has(w[1] ?? '') ? 'narration' : 'speech';
+    }
     if (META_LEADS.has(first)) return 'narration';
     const direction = this.directionShaped(w, ended);
     if (direction !== null) return direction;
@@ -350,6 +396,7 @@ export class NarrationGuard {
     const w = bare(raw);
     return (
       w === this.own ||
+      (this.learner !== '' && (w === this.learner || w === `${this.learner}'s`)) ||
       META_LEADS.has(w) ||
       TELLS.has(w) ||
       w === 'then' ||

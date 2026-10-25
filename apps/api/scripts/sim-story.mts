@@ -84,6 +84,16 @@ const persona = PERSONAS[who];
 if (!persona) throw new Error(`unknown persona ${who}`);
 
 let usd = 0;
+/** The live actor's model (the app's own unless ACTOR_MODEL says otherwise). */
+const ACTOR = process.env['ACTOR_MODEL'] ?? MOMENT_TURN_MODEL;
+let leaks = 0;
+let turns = 0;
+/** A spoken line that talks about the learner, the beat or the direction instead of to them. */
+const leaky = (text: string) =>
+  new RegExp(
+    `\\b(${persona.arrival.name}'s|${persona.arrival.name} (has|hasn't|is|was|said|asked|gave|offered)|the learner|the beat|the goal|the direction|so I (stay|move|go)|I'll react)`,
+    'i',
+  ).test(text);
 let model: LearnerModel | null = null;
 let name: string | null = persona.arrival.name;
 const paintings: Painting[] = [];
@@ -122,16 +132,17 @@ async function learnerSays(lines: TranscriptLine[]): Promise<string> {
     .join('\n');
   const r = await client.messages.create({
     model: SONNET,
-    max_tokens: 200,
+    max_tokens: 500,
     system: `You play a real adult learner of English in a voice app: ${persona.speaks}. You are talking out loud with characters in a story. Reply with ONLY what you say next, as speech recognition would write it (no quotes, no actions). Stay true to your level. React like a real person: engage when it's interesting, be short when it isn't.`,
     messages: [{ role: 'user', content: `${talk}\n\nWhat do you say?` }],
   });
   const u = r.usage;
   usd += (u.input_tokens * 2 + u.output_tokens * 10) / 1e6;
-  return r.content
+  const said = r.content
     .flatMap((b) => (b.type === 'text' ? [b.text] : []))
     .join('')
     .trim();
+  return said || '...';
 }
 
 async function playScene(
@@ -201,7 +212,7 @@ async function playScene(
       wrapUp: false,
     });
     const r = await client.messages.create({
-      ...turnParams(system, messagesFor(speaker, lines, direction), MOMENT_TURN_MODEL),
+      ...turnParams(system, messagesFor(speaker, lines, direction), ACTOR),
       stream: false,
     } as Anthropic.MessageCreateParamsNonStreaming);
     const u = r.usage;
@@ -215,11 +226,14 @@ async function playScene(
     const at = text.indexOf('§');
     const raw = (at >= 0 ? text.slice(0, at) : text).trim();
     // The live call's narration guard, as the voice would hear it.
-    const guard = new NarrationGuard(CAST[speaker].name);
+    const guard = new NarrationGuard(CAST[speaker].name, name ?? '');
     const spoken = [...raw.split(/\s+/).flatMap((w) => guard.push(w)), ...guard.end()].join(' ');
     if (guard.action) out(`  (guard ${guard.action}: ${guard.dropped.join(' ').slice(0, 160)})`);
     const control = parseControl(at >= 0 ? text.slice(at) : null);
     say(speaker, spoken);
+    turns += 1;
+    if (guard.action || leaky(spoken)) leaks += 1;
+    if (leaky(spoken)) out('  (LEAK spoken)');
     beatTurns += 1;
     if (control.beat === 'end') break;
     if (control.beat === 'next' || beatTurns >= 3) {
@@ -324,4 +338,5 @@ for (let s = 0; s < Number(storiesArg); s++) {
     usd += story.costUsd;
   }
 }
+out(`\nACTOR ${ACTOR}: ${leaks} of ${turns} replies leaked or were guarded`);
 out(`\nDONE in ${Math.round((Date.now() - t0) / 1000)} s, about $${usd.toFixed(2)}`);

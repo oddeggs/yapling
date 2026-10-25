@@ -1,6 +1,8 @@
 import { isPlaceId, PLACES, type PlaceId } from '@yapling/scene';
 import { z } from 'zod';
 
+import { clip } from './clip';
+
 import { STAGES, type Stage } from './world';
 
 /*
@@ -10,41 +12,44 @@ import { STAGES, type Stage } from './world';
  */
 
 export const Beat = z.object({
-  what_happens: z.string().max(600),
-  goal: z.string().max(300),
+  what_happens: clip(600),
+  goal: clip(300),
   is_door: z.boolean(),
-  example_line: z.string().max(400),
-  if_struggling: z.string().max(400),
-  if_strong: z.string().max(400),
+  example_line: clip(400),
+  if_struggling: clip(400),
+  if_strong: clip(400),
 });
 export type Beat = z.infer<typeof Beat>;
 
 export const MomentPlan = z.object({
-  title_open: z.string().min(1).max(80),
-  title_close: z.string().min(1).max(80),
+  title_open: clip(80).pipe(z.string().min(1)),
+  title_close: clip(80).pipe(z.string().min(1)),
   place: z.string().refine(isPlaceId),
-  variant: z.number().int().min(0).max(2),
+  variant: z
+    .number()
+    .int()
+    .transform((v) => Math.min(2, Math.max(0, v))),
   stage_aimed: z.enum(STAGES),
-  bridge_card: z.string().max(80),
-  bridge_line: z.string().max(300),
-  recap_line: z.string().max(300),
-  situation: z.string().max(600),
-  character_wants: z.string().max(400),
-  dramatic_question: z.string().max(300),
-  hook: z.string().max(600),
-  opening_line: z.string().max(400),
-  opening_gloss: z.string().max(600),
+  bridge_card: clip(80),
+  bridge_line: clip(300),
+  recap_line: clip(300),
+  situation: clip(600),
+  character_wants: clip(400),
+  dramatic_question: clip(300),
+  hook: clip(600),
+  opening_line: clip(400),
+  opening_gloss: clip(600),
   beats: z.array(Beat).min(1).max(6),
-  the_turn: z.string().max(400),
-  target_phrases: z.array(z.string().max(80)).max(6),
-  target_errors: z.array(z.string().max(160)).max(2),
-  personal_threads_used: z.array(z.string().max(300)).max(6),
-  callbacks: z.array(z.string().max(300)).max(6),
-  culture_touch: z.string().max(400),
-  pip_learns: z.string().max(200),
-  ending: z.string().max(400),
-  open_threads_after: z.array(z.string().max(300)).max(2),
-  director_notes: z.string().max(800),
+  the_turn: clip(400),
+  target_phrases: z.array(clip(80)).transform((a) => a.slice(0, 6)),
+  target_errors: z.array(clip(160)).transform((a) => a.slice(0, 2)),
+  personal_threads_used: z.array(clip(300)).transform((a) => a.slice(0, 6)),
+  callbacks: z.array(clip(300)).transform((a) => a.slice(0, 6)),
+  culture_touch: clip(400),
+  pip_learns: clip(200),
+  ending: clip(400),
+  open_threads_after: z.array(clip(300)).transform((a) => a.slice(0, 2)),
+  director_notes: clip(800),
 });
 export type MomentPlan = z.infer<typeof MomentPlan> & { place: PlaceId };
 
