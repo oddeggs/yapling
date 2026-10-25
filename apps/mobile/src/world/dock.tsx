@@ -192,7 +192,7 @@ export function Dock(p: Props) {
   );
 }
 
-function Glass() {
+export function Glass() {
   if (isLiquidGlassAvailable()) {
     return (
       <GlassView

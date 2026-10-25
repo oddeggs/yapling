@@ -1,5 +1,6 @@
 import {
   API_ROUTES,
+  Arrival,
   DeleteAccountRequest,
   DeleteAccountResponse,
   MemoryList,
@@ -22,6 +23,7 @@ import type { Http, Method } from '../data/http';
  */
 
 export interface WorldApi {
+  arrive(body: Arrival): Promise<void>;
   nextMoment(body: MomentRequest): Promise<NextMoment>;
   freeMoment(body: MomentRequest): Promise<NextMoment>;
   visit(body: VisitRequest): Promise<NextMoment>;
@@ -58,6 +60,7 @@ export function createWorldApi(http: Http, auth: TokenSource): WorldApi {
     }
   }
   return {
+    arrive: (body) => send('PUT', '/api/me/arrival', null, body, Arrival),
     nextMoment: (body) => send('POST', '/api/me/moments/next', NextMoment, body, MomentRequest),
     freeMoment: (body) => send('POST', '/api/me/moments/free', NextMoment, body, MomentRequest),
     visit: (body) => send('POST', '/api/me/moments/visit', NextMoment, body, VisitRequest),

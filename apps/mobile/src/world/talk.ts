@@ -1,5 +1,5 @@
 import type { MomentCard, Painting, SafetyKind } from '@yapling/contracts';
-import { localTime, pipAsleep, weatherAt, type PlaceId } from '@yapling/scene';
+import { clockLabel, localTime, PLACES, pipAsleep, weatherAt, type PlaceId } from '@yapling/scene';
 
 import { apiBase, clientVersion } from '../data/config';
 import { createStore, type Store } from '../data/store';
@@ -89,6 +89,8 @@ export class Talk {
   private stop: (() => void) | null = null;
   private last: CallState | null = null;
   private asked = false;
+  /** The painting's title has been shown for this moment. */
+  private titled = false;
 
   constructor(
     private readonly world: World,
@@ -137,9 +139,13 @@ export class Talk {
       ...(__DEV__ ? { onLog: (m: string) => console.log('voice', m) } : {}),
     });
     this.engine = engine;
+    engine.onAudioRebuilt = (ctx) => {
+      if (this.engine === engine) this.sound.setCallContext(ctx);
+    };
     takeLine(engine);
     this.last = null;
     this.asked = false;
+    this.titled = false;
     this.stop = engine.state.subscribe(() => this.onState(engine));
     engine.connect();
     try {
@@ -224,10 +230,21 @@ export class Talk {
     const s = engine.state.get();
     const before = this.last;
     this.last = s;
-    const who = this.moment?.speaker ?? null;
+    const speaker = this.moment?.speaker ?? null;
+    // Pip on the way in is a voice beside the learner, not a critter in this painting.
+    const who = s.caption && s.caption.character !== speaker ? null : speaker;
     const settings = this.world.state.settings;
 
-    if (s.connected && this.current.stage === 'connecting') this.patch({ stage: 'talking' });
+    if (s.connected && this.current.stage === 'connecting') {
+      this.patch({ stage: 'talking' });
+      const bridge = this.moment?.bridge;
+      if (bridge) this.label(bridge.card, bridge.chapter ?? this.placeLine(), 5_200);
+    }
+    // The painting's title as its neighbour first speaks.
+    if (!this.titled && s.caption && s.caption.character === speaker && this.moment) {
+      this.titled = true;
+      this.label(this.moment.titleOpen, this.placeLine(), 4_200);
+    }
     if (s.phase !== before?.phase) {
       if (this.current.stage !== 'paused') this.send({ t: 'talk', phase: talkPhase(s.phase), who });
       this.patch({ phase: s.phase });
@@ -275,6 +292,17 @@ export class Talk {
       this.patch({ outAfter: true });
     }
     if (s.endReason !== null && before?.endReason == null) void this.ended(engine, s);
+  }
+
+  private label(title: string, sub: string, ms: number): void {
+    this.send({ t: 'label', title, sub, ms });
+  }
+
+  /** "THE HARBOUR · 7:40 PM" for the moment's place on the learner's clock. */
+  private placeLine(): string {
+    const place = (this.moment?.place ?? 'room') as PlaceId;
+    const { t } = placeWeather(place);
+    return `${PLACES[place]?.name ?? ''} · ${clockLabel(t.hour)}`;
   }
 
   private async askMic(engine: VoiceEngine): Promise<void> {

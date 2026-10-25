@@ -1,7 +1,7 @@
 import { CAST } from '@yapling/story';
 import { PLACES, clockLabel } from '@yapling/scene';
 import { usePathname, useRouter } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AppState, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   FadeIn,
@@ -16,6 +16,7 @@ import { useStore } from '../data/store';
 import { useLocale } from '../ui/locale';
 import { useLipsyncClock, type VoiceEngine } from '../voice';
 import { app } from './app';
+import { ArriveScreen } from './arrive';
 import { Dock, type DockMode, type TalkLook } from './dock';
 import { KeptCard } from './kept';
 import { SafetySheet } from './safety/safety-sheet';
@@ -50,7 +51,6 @@ export function SceneScreen() {
   const [now, setNow] = useState(Date.now());
   const [safetyClosed, setSafetyClosed] = useState(false);
   const [aiChip, setAiChip] = useState(false);
-  const lastStage = useRef(tv.stage);
 
   const setStage = useCallback(
     (s: StageHandle | null) => {
@@ -130,21 +130,6 @@ export function SceneScreen() {
     return () => clearInterval(id);
   }, [focused, active, tv.stage, w.moment, w.planning, world]);
 
-  // The painting's title over the scene as a moment opens.
-  useEffect(() => {
-    const before = lastStage.current;
-    lastStage.current = tv.stage;
-    if (tv.stage === 'talking' && before === 'connecting') {
-      const place = PLACES[w.place].name;
-      a.stage?.send({
-        t: 'label',
-        title: w.moment?.titleOpen ?? '',
-        sub: `${place} · ${clockLabel(local.hour)}`,
-        ms: 4_200,
-      });
-    }
-  }, [tv.stage, a, w.moment, w.place, local.hour]);
-
   // The AI disclosure as the conversation opens.
   useEffect(() => {
     if (tv.safety !== 'ai_disclosure') return;
@@ -172,6 +157,11 @@ export function SceneScreen() {
     const id = setTimeout(() => setControls(false), CONTROLS_MS);
     return () => clearTimeout(id);
   }, [controls]);
+
+  // Arriving: the 45 has just pulled in at the real hour.
+  useEffect(() => {
+    if (!w.arrived) world.paint({ place: 'bus', variant: 0 });
+  }, [w.arrived, world]);
 
   // ---- what the learner does ----
   const onScene = () => {
@@ -211,7 +201,8 @@ export function SceneScreen() {
 
   let mode: DockMode = 'hidden';
   let hint = '';
-  if (tv.stage === 'kept') mode = 'go';
+  if (!w.arrived) mode = 'hidden';
+  else if (tv.stage === 'kept') mode = 'go';
   else if (tv.stage === 'out') mode = 'out';
   else if (tv.stage === 'paused') mode = 'paused';
   else if (controls) mode = 'controls';
@@ -323,6 +314,14 @@ export function SceneScreen() {
         onGo={() => setLeaving(true)}
         onOut={() => router.push('/menu/plus')}
       />
+      {!w.arrived && w.ready && (
+        <ArriveScreen
+          onDone={async (answers) => {
+            if (!w.settings.sound) world.setSetting('sound', true);
+            return world.arrive(answers);
+          }}
+        />
+      )}
       {tv.safety === 'crisis' && !safetyClosed && (
         <SafetySheet name={speakerName} onClose={() => setSafetyClosed(true)} />
       )}

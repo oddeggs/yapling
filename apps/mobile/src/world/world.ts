@@ -1,4 +1,4 @@
-import type { MemoryItem, MinutesSummary, MomentCard, Painting } from '@yapling/contracts';
+import type { Arrival, MemoryItem, MinutesSummary, MomentCard, Painting } from '@yapling/contracts';
 import { isPlaceId, type PlaceId } from '@yapling/scene';
 import { randomUUID } from 'expo-crypto';
 
@@ -36,6 +36,8 @@ export interface WorldState {
   readonly planning: boolean;
   /** What the learner said their name is. */
   readonly name: string | null;
+  /** The learner has told the town who they are; false shows the arrival first. */
+  readonly arrived: boolean;
   /** The place painted now, and its variant. */
   readonly place: PlaceId;
   readonly variant: number;
@@ -52,6 +54,7 @@ const INITIAL: WorldState = {
   moment: null,
   planning: false,
   name: null,
+  arrived: true,
   place: 'room',
   variant: 0,
   minutes: null,
@@ -131,13 +134,32 @@ export class World {
   async next(): Promise<MomentCard | null> {
     try {
       const r = await this.api.nextMoment(momentRequest());
-      this.patch({ moment: r.moment, planning: r.planning, name: r.name, offline: false });
+      this.patch({
+        moment: r.moment,
+        planning: r.planning,
+        name: r.name,
+        arrived: r.arrived,
+        offline: false,
+      });
       if (r.moment) this.paint(r.moment);
       return r.moment;
     } catch (error) {
       if (isDataError(error, 'network')) this.patch({ offline: true });
       return null;
     }
+  }
+
+  /** The learner's arrival: who they are, then the first conversation with Pip. */
+  async arrive(arrival: Omit<Arrival, 'firstLanguage' | 'country' | 'timezone'>): Promise<boolean> {
+    try {
+      await this.api.arrive({ ...arrival, ...momentRequest() });
+    } catch (error) {
+      if (isDataError(error, 'network')) this.patch({ offline: true });
+      return false;
+    }
+    this.patch({ arrived: true, name: arrival.name });
+    await this.next();
+    return true;
   }
 
   /** Pip's free moment in the burrow, while the director writes. */
